@@ -1,0 +1,3 @@
+autoCreateLocation("8", "Among the Surf.", "Waves rush along towards the nearby beach to crash against the sand. Under the water schools of fish are visable exploring the sandy depths.", "water", 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+autoCreateLocation("8", "Among the surf", "You're swimming!", "water", 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+autoCreateLocation("8", "Among the Surf.", "You're swimming!", "water", 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);

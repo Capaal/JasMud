@@ -1,0 +1,25 @@
+
+
+8-25-2010 22:6 asdf #12: bug Fix the "Oh snap!" bug. Wtf?
+8-25-2010 22:9 asdf #16: bug Really? I can attack Farmer James? Not Farmer or James, but Farmer James? Nonono...
+
+Attack should also do balance stuff
+
+
+10-9-2010 22:37 Jason #3: bug Make a "max allowed" for lines in a long list, so they have to type "more" to see the rest.
+10-10-2010 20:42 aasdf #1: bug horse didn't die fast enough, hit me after it died...
+10-13-2010 15:2 jasdf #1: bug Deleting items doesn't work perfectly, esp. when in inventory. ... fixed?
+10-13-2010 15:7 jasdf #2: bug items stay in inventory after deleting allItems.ser - ??? yeah...
+
+NullPointerException in PlayerPrompt.run thread when no player is detected, lol.
+
+Item not found in inventory or wielded does not show.
+
+Classes to be turned into Objects:
+MageSkills needs to edited into better categories
+AllSkills will be main interface/abstract
+   AllSkills-DmgSkills, GenSkills, AffectSkills, etc
+
+Item-Weapon-Dagger?10-28-2010 17:34 Jason #1: bug "You have unwieldedRight dirk3." I replaced all, whoops.
+5-6-2011 12:37 asdf #1: bug
+5-6-2011 12:38 asdf #2: bug lol

@@ -1,0 +1,13 @@
+autoGenerateMobs("goblin", 30, 3000, 5, 20);
+autoGenerateMobs("Goblin", 33, 3333, 3, 20);
+autoGenerateMobs("Bob", 50, 3000, 3, 11);
+autoGenerateMobs("Bob", 1, 1, 1, 11);
+autoGenerateMobs("Farmer James", 9999999, 9999999, 0, 11);
+autoGenerateMobs("Farmer James", 9999999, 9999999, 0, 11);
+autoGenerateMobs("Farmer James", 99999999, 99999999, 0, 11);
+autoGenerateMobs("Farmer Bob", 99999, 99999, 0, 11);
+autoGenerateMobs("Monster", "Bah!", 500, 2000, 1, 10, 10, asdf);
+autoGenerateMobs("Monster", "asdf", 300, 2000, 10, 7, 20, asdf);
+autoGenerateMobs("Monster", "Rawr", 100, 1000, 4, 6, 10, asdf);
+autoGenerateMobs("Vizar Harrumph the Third", "Grrrarck.", 20, 50000, 1, 10, 300, He is mighty... ish.);
+autoGenerateMobs("Mobster", "I will Mobster you! Mobster you to hell!", 100, 200, 20, 20, 20, This is a description.);
