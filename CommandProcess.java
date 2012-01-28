@@ -1,4 +1,6 @@
 import java.io.*; //Needed for PrintWriter.
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*; //Needed for String Tokenizer
 
 public class CommandProcess {
@@ -17,7 +19,8 @@ public class CommandProcess {
 		"You blink, realizing that you have no idea what that action implies.", 
 		"You stop, wondering what you should actually be doing.",
 		"Your body halts, questioning your mind's desires.", 
-		"You question your sanity for desiring such an action, but realize that questioning your sanity clearly means you are sane... right?"};
+		"You question your sanity for desiring such an action, but realize that questioning your sanity clearly means you are sane... right?",
+		"You look at yourself expectantly."};
 
 	public CommandProcess(SendMessage sendBack, Player currentPlayer) {
 		this.sendBack = sendBack;
@@ -31,6 +34,24 @@ public class CommandProcess {
 		StringTokenizer st = new StringTokenizer(fullCommand);
 		String command = st.nextToken();
 		boolean commandFound = false;
+		
+		
+		if (WorldServer.skillCommands.containsKey(command)) {
+			Command com = (Command) WorldServer.skillCommands.get(command);
+			com.execute(this);
+		} else {
+			Random rand = new Random();
+			int selection = rand.nextInt(failMessages.length);
+			sendBack.printMessage(failMessages[selection]);
+		}
+		
+		
+		
+		
+		
+		
+		/*
+		
 		// Commands accessible by all
 		if (WorldServer.allAbilities.containsKey(command.toLowerCase())) {
 			int commandNum = WorldServer.allAbilities.get(command.toLowerCase()).commandNum;
@@ -71,6 +92,7 @@ public class CommandProcess {
 			int selection = rand.nextInt(failMessages.length);
 			sendBack.printMessage(failMessages[selection]);
 		}
+	*/
 	}
 	
 	public void DoCommand(Player currentPlayer, String fullCommand, SendMessage sendBack, int commandNum) {
@@ -93,7 +115,35 @@ public class CommandProcess {
 			}
 		}
 		boolean balanceCheck = false;
+		StringTokenizer st = new StringTokenizer(fullCommand);
+		String command = st.nextToken();
+	
 		
+		/*Class c;
+		try {
+			c = Class.forName(command);
+			Method m = c.getDeclaredMethod("action");
+			m.invoke(c);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+	/*	
 		// Entered commands correspond to a number, that number runs the correct "case". 
 		// These commands/numbers are in PossibleCommands.
 		if (commandNum > 11 && commandNum < 50 && 0 <= currentPlayer.generals && 
@@ -318,7 +368,7 @@ public class CommandProcess {
 			int selection = rand.nextInt(failMessages.length);
 			sendBack.printMessage(failMessages[selection]);
 		}
-		
+	*/	
 	}
 	// Checks if the player is off balance or not, used if balance is necessary for a skill.
 	public boolean checkBalance(Player currentPlayer, SendMessage sendBack) {

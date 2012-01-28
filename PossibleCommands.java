@@ -23,6 +23,11 @@ public class PossibleCommands {
 		
 		
 		
+		WorldServer.skillCommands.put("icebolt", new Icebolt());
+		
+		
+		
+		
 		AllSkills look = new AllSkills("look", "", "", "look", 0, "", 0, 12);
 		WorldServer.allAbilities.put("look", look);
 		AllSkills l = new AllSkills("l", "", "", "l", 0, "", 0, 12);

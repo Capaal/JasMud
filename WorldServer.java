@@ -23,6 +23,9 @@ public class WorldServer {
 	static protected Map<String, String> allowableCommandsGeneralsDesc = new TreeMap<String, String>();
 	//ab generals
 	static protected ArrayList<String> allowableCommandsGeneralsShort = new ArrayList<String>();
+	
+	static Map<String, Command> skillCommands = new HashMap<String, Command>();
+	
 	//Mage skills as objects
 	static protected Map<String, AllSkills> mageAbilities = new HashMap <String, AllSkills>();
 	//Skills usable by all as objects
