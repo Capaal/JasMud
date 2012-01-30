@@ -4,26 +4,51 @@ import java.util.*;
 
 // If this file is edited, remember to comment out locationCollection load in WorldServer.
 
-public class Location implements Serializable {
+public class Location implements Serializable, Comparable {
 	
 	static final long serialVersionUID= -8355031359961875724L; 
 	
-	protected String number;
-	protected String name;
-	protected String description;
-	protected ArrayList<Item> groundItems = new ArrayList<Item>();
-	protected String groundType;
+	private int id;
+	private String number;
+	private String name;
+	private String description;
+	private ArrayList<Item> groundItems = new ArrayList<Item>();
+	private String groundType;
+	private Location[] locations;
 	
-	protected int[] exits = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
-	protected int[] exitsOpp = new int[] {4, 5, 6, 7, 0, 1, 2, 3, 9, 8, 11, 10};
+	public static final int[] EXITS = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+	public static final int[] EXITSOPP = new int[] {4, 5, 6, 7, 0, 1, 2, 3, 9, 8, 11, 10};
 	
-	protected int[] roomExits;
-	protected String[] dirNames = new String[] {"north", "northeast", "east", "southeast", "south", 
+	private int[] roomExits;
+	public static final String[] DIRNAMES = new String[] {"north", "northeast", "east", "southeast", "south", 
 		"southwest", "west", "northwest", "in", "out", "up", "down"};
 	protected String[] dirAbbrev = new String[] {"n", "ne", "e", "se", "s", "sw", "w", "nw", "in", "out", "u", "d"};
 	
 	public Location() {
+		locations = new Location[12];
 		roomExits = new int[12];
+	}
+	
+	public Location(int locNum, String name, String desc, String groundType, 
+			int n, int ne, int e, int se, int s, int sw, int w, int nw, int up, int d, int in, int out) {
+		locations = new Location[12];
+		roomExits = new int[12];
+		this.id = locNum;
+		setName(name);
+		directionsBlank(); // ????
+		setDescription(desc);
+		setGroundType(groundType);
+		int[] tempExits = new int[] {n, ne, e, se, s, sw, w, nw, up, d, in, out};
+		for (int i = 0; i <= 11; i++) {
+			if (tempExits[i] != 0 && WorldServer.locationCollection.containsKey(tempExits[i])) {
+				setLocation(tempExits[i], i);
+			//	if (!temp.number.equals("1")) {
+					Location anotherLocation = getLocation(i);
+					anotherLocation.setLocation(this, Location.EXITSOPP[i]);
+			//	}
+			}
+		}
+		WorldServer.locationCollection.put(locNum, this);
 	}
 	
 	public void directionsBlank() {
@@ -40,11 +65,11 @@ public class Location implements Serializable {
 			if (roomExits[i] != 0) {
 				if (firstExit == false) {
 					sb.append("You can see these exits: ");
-					sb.append(dirNames[i]);
+					sb.append(DIRNAMES[i]);
 					firstExit = true;
 				}
 				else {
-					sb.append(", " + dirNames[i]);
+					sb.append(", " + DIRNAMES[i]);
 				}
 			}
 		}
@@ -59,8 +84,8 @@ public class Location implements Serializable {
 		sendBack.printMessage(UsefulCommands.ANSI.MAGENTA + name + UsefulCommands.ANSI.SANE);
 		sendBack.printMessage(UsefulCommands.ANSI.GREEN + description + UsefulCommands.ANSI.SANE);
 		displayItems(sendBack);
-		displayMob(number, sendBack);
-		displayPeople(number, yourName, sendBack);
+		displayMob(sendBack);
+		displayPeople(yourName, sendBack);
 		sendBack.printMessage(UsefulCommands.ANSI.CYAN + displayExits() + UsefulCommands.ANSI.SANE);
 		sendBack.printMessage("(God sight) Location number: " + number + ". Ground type: " + groundType + ".");
 	}
@@ -68,8 +93,8 @@ public class Location implements Serializable {
 	public void glance(SendMessage sendBack, String yourName) {
 		sendBack.printMessage(UsefulCommands.ANSI.MAGENTA + name + UsefulCommands.ANSI.SANE);
 		displayItems(sendBack);
-		displayMob(number, sendBack);
-		displayPeople(number, yourName, sendBack);
+		displayMob(sendBack);
+		displayPeople(yourName, sendBack);
 		sendBack.printMessage(UsefulCommands.ANSI.CYAN + displayExits() + UsefulCommands.ANSI.SANE);
 		sendBack.printMessage("(God sight) Location number: " + number + ". Ground type: " + groundType + ".");
 
@@ -81,8 +106,7 @@ public class Location implements Serializable {
 		sendBack.printMessage(displayExits());
 	}
 	//Displays people
-	public void displayPeople(String location, String yourName, SendMessage sendBack) {
-		int myLocation = Integer.parseInt(location);		
+	private void displayPeople(String yourName, SendMessage sendBack) {		
 		String toSay = "";
 		StringBuffer sb = new StringBuffer();
 		Iterator iter = WorldServer.activeClients.iterator(); //All possible players to be displayed are in activeClients
@@ -90,8 +114,8 @@ public class Location implements Serializable {
 		while (iter.hasNext()) {
 			Player currentPlayer = ((PlayerPrompt) iter.next()).currentPlayer;
 			try {
-				if (currentPlayer.mobLocation == myLocation && !currentPlayer.name.equals(yourName)) {
-					if (currentPlayer.dead == false) {
+				if (currentPlayer.getMobLocation() == this && !currentPlayer.name.equals(yourName)) {
+					if (currentPlayer.isDead()) {
 						sb.append(currentPlayer.name + " is here. ");
 					} else {
 						sb.append(currentPlayer.name + "'s body lies in a bloody heap nearby.");
@@ -110,7 +134,7 @@ public class Location implements Serializable {
 		}
 	}
 	//Displays mobs
-	public static void displayMob(String location, SendMessage sendBack) {
+	private void displayMob(SendMessage sendBack) {
 		StringBuffer sb = new StringBuffer();
 		Set s = WorldServer.mobList.keySet();
 		Iterator iter = s.iterator();
@@ -118,8 +142,8 @@ public class Location implements Serializable {
 			Mobiles mm = WorldServer.mobList.get(iter.next());
 			if (mm instanceof Mob) {
 				Mob m = (Mob) mm;		
-				if (m.mobLocation == Integer.parseInt(location) && m.id != -1 ) {
-					if (m.dead == false) {
+				if (m.getMobLocation() == this && m.id != -1 ) {
+					if (m.isDead()) {
 						sb.append("There is " + m.shortDescription + " here. ");
 					} else if (m.dead == true) {
 						sb.append("Lying on the ground is a dead " + m.name + ".");
@@ -141,5 +165,56 @@ public class Location implements Serializable {
 			}
 			sendBack.printMessage("");
 		}
+	}
+	// NEEDS TO RETURN A COPY
+	public int[] getRoomExits() {
+		return roomExits;
+	}
+	
+	public void setLocation(int locId, int dir) {
+		Location loc = WorldServer.locationCollection.get(locId);
+		this.locations[dir] = loc;
+	}
+	
+	public void setLocation(Location loc, int dir) {
+		this.locations[dir] = loc;
+	}
+	
+	public int compareTo(Object other) {
+		return (this.id - ((Location) other).getId());	
+	}
+	
+	public int getId() {
+		return id;
+	}
+		
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void setDescription(String desc) {
+		this.description = desc;
+	}
+	
+	public void setGroundType(String type) {
+		this.groundType = type;
+	}
+	
+	public Location getLocation(int dir) {
+		return locations[dir];
+	}
+	
+	public Location getLocation(String dir) {
+		for (int i = 0; i <= 11; i ++) {
+			if (DIRNAMES[i].equals(dir)) {
+				return getLocation(i);
+			}
+		}
+		return null;
+		
+	}
+	
+	public String getGroundType() {
+		return groundType;
 	}
 }

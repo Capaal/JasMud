@@ -24,7 +24,7 @@ public class Player extends Mobiles implements Serializable {
 	protected String sex;
 	protected ArrayList<Quest> questList = new ArrayList<Quest>();
 	 
-	public Player(String name, String password, int mobLocation) {
+	public Player(String name, String password, Location mobLocation) {
 		super(name, mobLocation);	
 		this.prefix = ""; 
 		this.suffix = "";

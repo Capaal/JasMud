@@ -24,6 +24,10 @@ public class PossibleCommands {
 //			WorldServer.allAbilities.put(thisLocation.dirAbbrev[i], temp2);
 //		}
 		
+		// Adds move commands, needs work.
+		WorldServer.skillCommands.put("north", new Move());
+		WorldServer.skillCommands.put("south", new Move());
+		
 		
 		WorldServer.skillCommands.put("firebolt", new Firebolt());
 		WorldServer.skillCommands.put("icebolt", new Icebolt());

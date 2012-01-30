@@ -7,7 +7,7 @@ public abstract class Mobiles implements Serializable {
 	public String name;
 	protected int maxHp;
 	protected int currentHp; 
-	protected int mobLocation; 
+	private Location mobLocation; 
 	protected boolean balance;
 	protected boolean dead;
 	protected int maxHit;
@@ -24,7 +24,7 @@ public abstract class Mobiles implements Serializable {
 	public Mobiles() {
 	}
 	
-	public Mobiles(String name, int mobLocation) {
+	public Mobiles(String name, Location mobLocation) {
 		this.name = name;
 		this.maxHp = 50;
 		this.currentHp = 50;
@@ -68,7 +68,7 @@ public abstract class Mobiles implements Serializable {
 		return dead;
 	}
 	
-	public int getMobLocation() {
+	public Location getMobLocation() {
 		return mobLocation;
 	}
 	
@@ -90,5 +90,9 @@ public abstract class Mobiles implements Serializable {
 	
 	public int getXpWorth() {
 		return XpWorth;
+	}
+	
+	public void setMobLocation(Location newLoc) {
+		this.mobLocation = newLoc;
 	}
 }

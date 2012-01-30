@@ -54,7 +54,7 @@ public class PlayerPrompt extends Thread {
 				createPlayer = create;
 			}
 			if (createPlayer.toLowerCase().equals("y")) {
-				this.currentPlayer = new Player(enteredName, enteredPass, 1);
+				this.currentPlayer = new Player(enteredName, enteredPass, WorldServer.locationCollection.get(1));
 //				int posID = 1;
 //				Set s = WorldServer.mobList.keySet();
 //				Iterator iter = s.iterator();
@@ -92,7 +92,7 @@ public class PlayerPrompt extends Thread {
 			if (currentPlayer.messages.size() > 0) {
 				sendBack.printMessage("You have messages. Type RMSG to read your messages.");
 			}
-			Location thisLocation = WorldServer.locationCollection.get(currentPlayer.mobLocation);
+			Location thisLocation = currentPlayer.getMobLocation();
 			thisLocation.look(sendBack, currentPlayer.name);
 		}
 		// The following is the User's infinite loop they play inside.
@@ -157,6 +157,10 @@ public class PlayerPrompt extends Thread {
 	
 	public SendMessage getSendBack() {
 		return sendBack;
+	}
+	
+	public Player getCurrentPlayer() {
+		return currentPlayer;
 	}
 }
 

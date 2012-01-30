@@ -12,12 +12,12 @@ public class Mob extends Mobiles implements Serializable {
 	protected String greetMsg;
 	protected int id;
 	
-	public Mob(String name, int mobLocation) {
+	public Mob(String name, Location mobLocation) {
 		super(name, mobLocation);
 		this.name = name;
 		this.maxHp = 50;
 		this.currentHp = 50;		
-		this.mobLocation = mobLocation;
+//		this.mobLocation = mobLocation;
 		this.maxHit = 2; //player is 10
 		this.speed = 3000;
 		this.inventory = new ArrayList<Item>();

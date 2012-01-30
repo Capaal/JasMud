@@ -8,10 +8,10 @@ public class WorldServer {
 
 
 	// Contains transient sockets of each connected Player.
-	static protected Set activeClients = new HashSet();
+	public static Set activeClients = new HashSet();
 	
 	// Contains all Location objects.
-	static protected Map<Integer, Location> locationCollection = new HashMap<Integer, Location>();
+	public static HashMap<Integer, Location> locationCollection = new HashMap<Integer, Location>();
 	// Mob list
 	public static Map<String, Mobiles> mobList = new HashMap<String, Mobiles>();
 	// List of all items
