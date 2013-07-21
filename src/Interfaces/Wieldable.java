@@ -6,6 +6,6 @@ public interface Wieldable {
 	
 	public String returnAttackerMSG(String target);
 	public String returnAttackedMSG(String player);
-	public int returnDamage();
+	public int getDamage();
 	public void wieldHand(Player currentPlayer);
 }

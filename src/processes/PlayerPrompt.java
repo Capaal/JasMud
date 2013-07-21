@@ -3,6 +3,8 @@ import java.net.*; // Needed for Socket.
 import java.io.*; // Needed for PrintWriter and BufferReader.
 import java.util.*; // Needed for keySet();
 
+import Interfaces.Container;
+
 public class PlayerPrompt extends Thread {
 
 	protected Socket incoming;
@@ -52,7 +54,8 @@ public class PlayerPrompt extends Thread {
 				createPlayer = create;
 			}
 			if (createPlayer.toLowerCase().equals("y")) {
-				this.currentPlayer = new Player(enteredName, enteredPass, WorldServer.locationCollection.get(1), sendBack);
+				this.currentPlayer = new Mobiles.Builder(1, enteredName).password(enteredPass).location(WorldServer.locationCollection.get(1)).build();
+			//	this.currentPlayer = new Player(enteredName, enteredPass, WorldServer.locationCollection.get(1), sendBack);
 //				int posID = 1;
 //				Set s = WorldServer.mobList.keySet();
 //				Iterator iter = s.iterator();
@@ -89,7 +92,7 @@ public class PlayerPrompt extends Thread {
 			if (currentPlayer.getMessagesSize() > 0) {
 				sendBack.printMessage("You have messages. Type RMSG to read your messages.");
 			}
-			Location thisLocation = currentPlayer.getMobLocation();
+			Location thisLocation = (Location) currentPlayer.getMobLocation();
 			thisLocation.look(sendBack, currentPlayer.getName());
 		}
 		// The following is the User's infinite loop they play inside.

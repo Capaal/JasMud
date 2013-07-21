@@ -7,8 +7,16 @@ public class CreateWorld {
 	public static void createWorld() {
 		createGenericStart();
 		createNewbieIsland();
+
+		createMobs();
+
 		createAllItems();
+
 	//	createTestArea();
+	}
+	
+	public static void createMobs() {
+		Mobiles mob = new Mobiles.Builder(1, "James").description("He is a farmer names James.").shortDescription("A farmer.").location(WorldServer.locationCollection.get(1)).build();
 	}
 	
 	public static void createTestArea() {

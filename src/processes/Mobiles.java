@@ -1,12 +1,18 @@
 package processes;
-import items.Item;
+
 import skills.*;
+
 import java.util.*;
 import java.io.*;
 
 
+import processes.Location.Builder;
+
+
+
 import Interfaces.Container;
 import Interfaces.Holdable;
+import Interfaces.Item;
 import Interfaces.Wieldable;
 
 
@@ -19,7 +25,7 @@ public class Mobiles implements Container, Holdable {
 	protected int id;
 	protected int maxHp;
 	protected int currentHp; 
-	protected Location mobLocation; 
+	protected Container mobLocation; 
 	protected boolean balance;// Should this be here?
 	protected int physicalMult;
 	protected boolean isDead;
@@ -36,25 +42,28 @@ public class Mobiles implements Container, Holdable {
 	protected int level;
 	protected int age; 
 	protected SendMessage sendBack;
-	protected HashMap<String, Command> allowedCommands = new HashMap<String, Command>();
+	protected HashMap<String, Command> allowedCommands;
 	
 	public Mobiles() {
 	}
 	
-	public Mobiles(String name, Location mobLocation) {
-		this.name = name;
-		this.maxHp = 50;
-		this.currentHp = 50;
-		this.mobLocation = mobLocation;
+	public Mobiles(Builder build) {
+		this.name = build.name;
+		this.id = build.id;
+		this.password = build.password;
+		this.maxHp = build.maxHp;
+		this.currentHp = maxHp;
+		this.mobLocation = build.location;
 		this.balance = true;
-		this.physicalMult = 1;
+		this.physicalMult = build.physicalMult;
 		this.isDead = false;
-		this.speed = 3000;
-		this.description = "Very generic, and abstract.";
-		this.shortDescription = "This is super Generic.";
-		this.inventory = new ArrayList<Holdable>();
+		this.speed = build.speed;
+		this.description = build.description;
+		this.shortDescription = build.shortDescription;
+		this.inventory = build.inventory;
 		this.bugList = new ArrayList<String>();
 		this.messages = new ArrayList<String>();
+		this.allowedCommands = build.allowedCommands;
 		allowedCommands.put("north", new Move());
 		allowedCommands.put("ne", new Move());
 		allowedCommands.put("nw", new Move());
@@ -71,8 +80,94 @@ public class Mobiles implements Container, Holdable {
 		allowedCommands.put("down", new Move());
 		allowedCommands.put("in", new Move());
 		allowedCommands.put("out", new Move());
+
+		allowedCommands.put("look", new Look());
+		allowedCommands.put("examine", new Examine());
 		allowedCommands.put("get", new Get());  //temporary assumption that all mobs can get
 		allowedCommands.put("create", new Create());
+		WorldServer.mobList.put(name, this);
+	}
+	
+	public static class Builder {
+	
+		private final String name;
+		private final int id;		
+		private String description = "Generic.";
+		private String shortDescription = "Short and Generic.";
+		private int maxHp = 10;
+		private Location location = WorldServer.locationCollection.get(1);
+		private int physicalMult = 1;
+		private int speed = 3000;
+		private int xpWorth = 1;
+		private ArrayList<Holdable> inventory = new ArrayList<Holdable>();
+		private HashMap<String, Command> allowedCommands = new HashMap<String, Command>();
+		private String password = "";
+		
+		
+		public Builder(int id, String name) {
+			if (WorldServer.mobList.containsKey(name + id)) {
+				throw new IllegalStateException("A mobile already exists with that name and id.");
+			}
+			this.id = id;
+			this.name = name;
+		}
+		
+		public Builder password(String val) {
+			password = val;
+			return this;
+		}
+		
+		public Builder description(String val) {
+			description = val;
+			return this;
+		}
+		
+		public Builder shortDescription(String val) {
+			shortDescription = val;
+			return this;
+		}
+		
+		public Builder maxHp(int val) {
+			maxHp = val;
+			return this;
+		}
+		
+		public Builder location(Location val) {
+			location = val;
+			return this;
+		}
+		
+		public Builder physicalMult(int val) {
+			physicalMult = val;
+			return this;
+		}
+		
+		public Builder speed(int val) {
+			speed = val;
+			return this;
+		}
+		
+		public Builder inventory(Item val) {
+			inventory.add(val);
+			return this;
+		}
+		
+		public Builder commands(String name, Command val) {
+			allowedCommands.put(name, val);
+			return this;
+		}
+		
+		public Builder xpWorth(int val) {
+			xpWorth = val;
+			return this;
+		}
+		
+		public Mobiles build() {
+			return new Mobiles(this);
+		}
+
+		
+
 	}
 	
 	public String getName() {
@@ -96,7 +191,7 @@ public class Mobiles implements Container, Holdable {
 		return maxHp;
 	}
 	
-	public Location getMobLocation() {
+	public Container getMobLocation() {
 		return mobLocation;
 	}
 	

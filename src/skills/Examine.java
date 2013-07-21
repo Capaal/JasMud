@@ -3,9 +3,9 @@ package skills;
 import java.util.Iterator;
 
 import Interfaces.Holdable;
+import Interfaces.Item;
 
 import processes.Command;
-import items.Item;
 import processes.Location;
 import processes.Mobiles;
 import processes.Player;
@@ -22,7 +22,7 @@ public class Examine implements Command {
 		
 		boolean success = false;
 		Mobiles currentPlayer = playerPrompt.getCurrentPlayer();
-		Location thisLocation = currentPlayer.getMobLocation();
+		Location thisLocation = (Location) currentPlayer.getMobLocation();
 		int i = 0;
 		while (i < thisLocation.groundItems.size() && success == false) {
 			Holdable posItem = thisLocation.groundItems.get(i);

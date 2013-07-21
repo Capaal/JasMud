@@ -6,6 +6,7 @@ import processes.Player;
 import processes.SendMessage;
 import Interfaces.Container;
 import Interfaces.Holdable;
+import Interfaces.Item;
 import Interfaces.Wieldable;
 
 public class Dagger implements Item, Wieldable  {
@@ -51,19 +52,19 @@ public class Dagger implements Item, Wieldable  {
 		this.weaponBalance = balance;
 	}
 	
-	public int returnDamage() {
+	public int getDamage() {
 		return this.baseDamage;
 	}
 	
-	public String returnDescription() {
+	public String getDescription() {
 		return this.description;
 	}
 	
-	public String returnName() {
+	public String getName() {
 		return name;
 	}
 	
-	public int returnID() {
+	public int getId() {
 		return this.id;
 	}
 	
@@ -117,6 +118,16 @@ public class Dagger implements Item, Wieldable  {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+
+
+
+
+
+
+
+
 
 
 }

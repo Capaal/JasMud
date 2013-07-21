@@ -6,6 +6,8 @@ import java.net.*; // Needed for Socket.
 import java.util.*; // Needed for HashSet.
 import java.io.*; //Serializable, FileReader/Writer
 
+import Interfaces.Item;
+
 public class WorldServer {
 
 

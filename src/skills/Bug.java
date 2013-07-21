@@ -43,7 +43,6 @@ public class Bug implements Command {
 		size ++;
 		//Edit to remove "bug" from write to file
 		String thisBug = date + " " + currentPlayer.getName() + " #" + size + ": " + reportedText;
-		String ReportFull = thisBug;
 		bugList.add(thisBug);
 		
 		FileWriter fw = null;

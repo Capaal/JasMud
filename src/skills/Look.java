@@ -13,7 +13,7 @@ public class Look implements Command {
 	public void execute(PlayerPrompt playerPrompt, String fullCommand) {
 		Mobiles currentPlayer = playerPrompt.getCurrentPlayer();
 		String direction = UsefulCommands.getSecondWord(fullCommand);
-		Location lookLocation = currentPlayer.getMobLocation();
+		Location lookLocation = (Location) currentPlayer.getMobLocation();
 		if (!direction.equals("")) {
 			lookLocation = lookLocation.getLocation(direction);
 		} 

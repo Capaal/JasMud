@@ -1,6 +1,5 @@
 package processes;
 
-import items.Item;
 
 import java.awt.Point;
 import java.io.*;
@@ -8,7 +7,9 @@ import java.util.*;
 
 import Interfaces.Container;
 import Interfaces.Holdable;
+import Interfaces.Item;
 
+// Mobiles should be remembered in the location, for look and stuff, they can go with items and still work atm.
 public class Location implements Container {
 		
 	private int id;

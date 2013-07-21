@@ -1,6 +1,8 @@
 package skills;
 
 import java.util.Iterator;
+
+import Interfaces.Container;
 import processes.Command;
 import processes.Location;
 import processes.Mobiles;
@@ -27,11 +29,11 @@ public class Move implements Command {
 		}
 	}
 	
-	protected boolean detGroundType(Location thisLocation, SendMessage sendBack, String fullCommand) {
+	protected boolean detGroundType(Container container, SendMessage sendBack, String fullCommand) {
 		String dir = fullCommand;
-		Location futureLoc = thisLocation.getLocation(dir);
+		Location futureLoc = (((Location) container).getLocation(dir));
 		if (futureLoc != null) { 
-			if (futureLoc.getGroundType().equals("water") || thisLocation.getGroundType().equals("water")) {
+			if (futureLoc.getGroundType().equals("water") || ((Location)container).getGroundType().equals("water")) {
 				sendBack.printMessage("You'll need to swim to go that way.");
 				return false;
 			}
@@ -41,14 +43,14 @@ public class Move implements Command {
 		return true;
 	}
 	
-	protected void moveMob(SendMessage sendBack, Mobiles currentPlayer, Location thisLocation, String fullCommand) {
-		Location futureLoc = thisLocation.getLocation(fullCommand);
+	protected void moveMob(SendMessage sendBack, Mobiles currentPlayer, Container container, String fullCommand) {
+		Location futureLoc = ((Location)container).getLocation(fullCommand);
 		if (futureLoc != null) {
 			// Prints a message of movement (leaving) to anyone in the Player's pre-move location.		
 			printMovement(LEAVEMSG, currentPlayer, 
 					fullCommand);
 			// Literally changes the players location.
-			currentPlayer.setMobLocation(thisLocation.getLocation(fullCommand));
+			currentPlayer.setMobLocation(((Location)container).getLocation(fullCommand));
 			futureLoc.look(sendBack, currentPlayer.getName());
 			// Prints a message of movement (entering) to those in the post-move location.
 			printMovement(ENTERMSG, currentPlayer, fullCommand);
