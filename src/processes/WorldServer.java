@@ -82,7 +82,7 @@ public class WorldServer {
 			PossibleCommands.create();
 		}
 	
-		// Where to put all of these, eh?		
+		// Where to put all of these, eh?	
 		possibleItems.put("dagger", new Dagger(1));
 	//	possibleItems.put("longsword", 1);
 	//	possibleItems.put("dirk", 2);

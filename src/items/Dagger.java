@@ -4,7 +4,6 @@ import java.io.*; // For Serializable.
 
 import processes.Player;
 import processes.SendMessage;
-
 import Interfaces.Container;
 import Interfaces.Holdable;
 import Interfaces.Wieldable;
@@ -99,6 +98,24 @@ public class Dagger implements Item, Wieldable  {
 	public void acceptItem(Holdable item) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getId() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

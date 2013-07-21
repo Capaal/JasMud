@@ -318,7 +318,7 @@ public class Location implements Container {
 		groundItems.add(newItem);
 	}
 	
-	public void removeItemFromLocation(Item oldItem) {
+	public void removeItemFromLocation(Holdable oldItem) {
 		int indexOfItem = groundItems.indexOf(oldItem);
 		groundItems.remove(indexOfItem);	
 	}

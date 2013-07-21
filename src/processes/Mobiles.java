@@ -1,10 +1,9 @@
 package processes;
 import items.Item;
-
+import skills.*;
 import java.util.*;
 import java.io.*;
 
-import skills.Move;
 
 import Interfaces.Container;
 import Interfaces.Holdable;
@@ -72,6 +71,8 @@ public class Mobiles implements Container, Holdable {
 		allowedCommands.put("down", new Move());
 		allowedCommands.put("in", new Move());
 		allowedCommands.put("out", new Move());
+		allowedCommands.put("get", new Get());  //temporary assumption that all mobs can get
+		allowedCommands.put("create", new Create());
 	}
 	
 	public String getName() {
@@ -148,7 +149,7 @@ public class Mobiles implements Container, Holdable {
 		}
 	}
 	
-	protected void tell(String msg) {
+	public void tell(String msg) {
 		if (this.sendBack == null) {
 			sendBack = UsefulCommands.getPlayerPromptFromPlayer(this).getSendBack();
 		}

@@ -26,7 +26,7 @@ public class Examine implements Command {
 		int i = 0;
 		while (i < thisLocation.groundItems.size() && success == false) {
 			Holdable posItem = thisLocation.groundItems.get(i);
-			String posItemName = posItem.returnName();
+			String posItemName = posItem.getName();
 			if (posItemName.equals(toExamine) || (posItemName + posItem.getId()).equals(toExamine)) {
 				playerPrompt.getSendBack().printMessage(posItem.getDescription());
 				success = true;

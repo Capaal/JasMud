@@ -1,10 +1,13 @@
 package processes;
 
+import items.*;
+
 public class CreateWorld {
 	
 	public static void createWorld() {
 		createGenericStart();
 		createNewbieIsland();
+		createAllItems();
 	//	createTestArea();
 	}
 	
@@ -51,6 +54,11 @@ public class CreateWorld {
 		loc = new Location.Builder(23).name("Edge of the forest near a lake").description("There is a lake to the north and a forest trail to the southeast.")
 				.groundType("land").southEast(19, true).build();
 		loc = new Location.Builder(24).name("Southern edge of a lake").description("There is a forest to the south.").groundType("water").south(23, true).build();
+	}
+	//temporary create items method...
+	public static void createAllItems() {
+		Dagger dag = new Dagger(1);
+		WorldServer.locationCollection.get(1).acceptItem(dag);
 	}
 }
 
