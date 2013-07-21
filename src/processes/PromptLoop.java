@@ -2,9 +2,9 @@ package processes;
 public class PromptLoop extends Thread {
 	
 	protected SendMessage sendBack;
-	protected Player currentPlayer;
+	protected Mobiles currentPlayer;
 	
-	public PromptLoop(SendMessage sendBack, Player currentPlayer) {
+	public PromptLoop(SendMessage sendBack, Mobiles currentPlayer) {
 		this.sendBack = sendBack;
 		this.currentPlayer = currentPlayer;
 	}
@@ -29,7 +29,7 @@ public class PromptLoop extends Thread {
 					currentPlayer.maxHp = (10 + currentPlayer.level * 10);
 				}
 				currentPlayer.currentHp = currentPlayer.maxHp;
-				currentPlayer.shield = false;
+		//		currentPlayer.shield = false;
 			}
 		}
 	}

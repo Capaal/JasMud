@@ -16,7 +16,7 @@ public class MobAttack extends Thread {
 	public void run() {
 		try {
 			Thread.sleep(400);
-			while (thisCreature.mobLocation == attackingPlayer.mobLocation && thisCreature.dead == false) {
+			while (thisCreature.getMobLocation() == attackingPlayer.getMobLocation() && !thisCreature.isDead()) {
 				PlayerPrompt t = UsefulCommands.getPlayerPromptFromPlayer(attackingPlayer);
 				Random rand = new Random();
 				int damage = ((int) (rand.nextInt((int)((thisCreature.maxHit)*.1 + 1))));

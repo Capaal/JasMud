@@ -1,30 +1,35 @@
 package processes;
-import java.net.*;
+
 import java.io.*;
-import java.lang.*;
 import java.util.*;
-import java.awt.*;
+
+import skills.Attachment;
+import skills.Bug;
+
 
 //When editing: comment out registeredPlayers load in WorldServer, delete registeredPlayers in folder.
 //Editing to become child class of Mob
+// NOTE: I think all of this should be in Mobiles, Players should just be mobiles, this file should die.
+//    Adding to above, it should not die, it is more like the basic model for most "heroes" people might play as.
+//    In theory it is not a player, as it can be controlled by AI like anything else.
 
+// I have started copying things from here that are true to players playing as a role,
+// and moving them into mobiles, so duplicated things may exist, then this become "Hero" with general skills.
 public class Player extends Mobiles implements Serializable {
 
 	protected int generals;
 	protected int mage;   
 	protected int survival;
-	protected String password; 
-	protected ArrayList<String> bugList;
-	protected ArrayList<String> messages;
-	protected int experience;
-	protected int level;
-	protected int age; 
 	protected String prefix;
 	protected String suffix;
 	protected String sex;
-	protected ArrayList<Quest> questList = new ArrayList<Quest>();
+	protected ArrayList<Quest> questList = new ArrayList<Quest>(); // Can only heroes complete quests? That makes sense... right?
+	private ArrayList<Attachment> attachments; 
+	private int missChance; // I think we're scrapping this.
+	
+//	transient SendMessage sendBack;
 	 
-	public Player(String name, String password, Location mobLocation) {
+	public Player(String name, String password, Location mobLocation, SendMessage sendBack) {
 		super(name, mobLocation);	
 		this.prefix = ""; 
 		this.suffix = "";
@@ -34,31 +39,18 @@ public class Player extends Mobiles implements Serializable {
 		this.mage = 0;
 		this.survival = 0;
 		this.level = 1;		
-		//Defence variables
-		this.shield = false;
-		this.aura = false;	
+	//	Defence variables
+	//	this.shield = false;
+	//	this.aura = false;	
 		this.password = password;
 		this.bugList = new ArrayList<String>();
 		this.messages = new ArrayList<String>();
+		this.attachments = new ArrayList<Attachment>();
+		this.missChance = 0;
+//		this.sendBack = sendBack;
 	}
 	
-	public void levelPlayer() {
-		PlayerPrompt p = UsefulCommands.getPlayerPromptFromPlayer(this);
-		if (this.level < WorldServer.Levels.length -1) {
-			while (this.experience >= WorldServer.Levels[this.level]) {
-				this.level += 1;
-				p.sendBack.printMessage("Congratulations, you are now level " + this.level + "!");
-				this.maxHp = (120 + this.level * 100);
-			}
-			if (this.level > 1) {
-				while (this.experience < WorldServer.Levels[this.level - 1]) {
-					this.level -= 1;
-					p.sendBack.printMessage("Disaster! You are now level " + this.level + "!");
-					this.maxHp = (120 + this.level * 100);
-				}
-			}
-		}
-	}
+	
 	
 	public String returnSex() {
 		return this.sex;
@@ -76,6 +68,9 @@ public class Player extends Mobiles implements Serializable {
 		}
 	}
 	
+	
+	
+	
 	public void learnSkill(String skill, SendMessage sendBack) {
 		if (skill.equals("generals")) {
 			this.generals = (this.generals + 1);
@@ -89,7 +84,45 @@ public class Player extends Mobiles implements Serializable {
 		}
 	}
 	
-	public void addExperience(int exp) {
-		this.experience += exp;
+	
+	
+	public void checkHp() {
+		
+		
 	}
+	
+	public void addAttachment(Attachment attach) {
+		this.attachments.add(attach);
+	}
+	
+	public boolean searchAttachments(Attachment attach) {
+		return attachments.contains(attach);
+	}
+	
+	public void removeAttachment(Attachment attach) {
+		this.attachments.remove(attach);
+	}
+	
+	public void affectMiss(int missChange) {
+		if ((this.missChance + missChance) < 0) {
+			this.missChance = 0;
+		} else if ((this.missChance + missChance) > 100) {
+			this.missChance = 100;
+		} else {
+			this.missChance += missChange;
+		}
+	}
+	
+	protected int damageAdjustments(int damage) {
+		Random rand = new Random();
+		int random = rand.nextInt(100) + 1;
+		System.out.println(random);
+		if (random <= missChance) {
+//			sendBack.printMessage("Hiding has paid off, you dodge the attack.");
+			return 0;
+		}
+		return damage;
+	}
+
+	
 }

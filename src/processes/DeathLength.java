@@ -15,7 +15,7 @@ public class DeathLength extends Thread {
 			Thread.sleep(12000);
 			mobile.dead = false;
 			mobile.currentHp = mobile.maxHp;	
-			UsefulCommands.displayToAllLocation(mobile.mobLocation, 
+			UsefulCommands.displayToAllLocation(mobile.getMobLocation(), 
 					UsefulCommands.firstToCap(UsefulCommands.firstToCap(mobile.shortDescription)) +  " enters the room, looking revitalized.");		
 		} catch (InterruptedException io) {
 		}

@@ -1,5 +1,7 @@
 package processes;
 
+import items.*;
+
 import java.net.*; // Needed for Socket.
 import java.util.*; // Needed for HashSet.
 import java.io.*; //Serializable, FileReader/Writer
@@ -17,7 +19,7 @@ public class WorldServer {
 	// List of all items
 	static protected ArrayList<Item> allItems = new ArrayList<Item>();
 	// Contains String of weapon names,and an integer that points to a creating case.
-	static protected HashMap<String, Integer> possibleItems = new HashMap<String, Integer>();
+	public static HashMap<String, Item> possibleItems = new HashMap<String, Item>();
 	
 	// Contains all Allowable Commands and leads to their occuring.
 	static protected Map<String, Integer> allowableCommands = new HashMap<String, Integer>();
@@ -27,6 +29,8 @@ public class WorldServer {
 	static protected ArrayList<String> allowableCommandsGeneralsShort = new ArrayList<String>();
 	
 	static Map<String, Command> skillCommands = new HashMap<String, Command>();
+	
+	
 	
 	//Mage skills as objects
 //	static protected Map<String, AllSkills> mageAbilities = new HashMap <String, AllSkills>();
@@ -38,6 +42,19 @@ public class WorldServer {
 	static protected ArrayList<Quest> allQuests = new ArrayList<Quest>();
 	//List of experience to gain player level
 	static protected int[] Levels = new int[] {0, 2, 9, 20, 100, 2000};
+	
+	public static final String[] failMessages = new String[] {
+		"You stumble around uselessly.", 
+		"You stare blankly into the distance.",
+		"Unfortunatly, comprehension fails to dawn.", 
+		"Luckly, your non-sensical action goes unnoticed.", 
+		"Your body fails to enact your command.",
+		"You have no idea how to perform such an action.", 
+		"You blink, realizing that you have no idea what that action implies.", 
+		"You stop, wondering what you should actually be doing.",
+		"Your body halts, questioning your mind's desires.", 
+		"You question your sanity for desiring such an action, but realize that questioning your sanity clearly means you are sane... right?",
+		"You look at yourself expectantly."};
 
 		
 	public static void main(String[] args) throws IOException {
@@ -45,7 +62,7 @@ public class WorldServer {
 		// Loads players, locations, mobs, and skills.		
 //		mobList = loadMobs();
 //		if (mobList.size() == 0) {
-			CreateWorld.generateMobs();
+	//		CreateWorld.generateMobs();
 //		}
 //		allItems = loadItems();
 //		CreateWorld.generateQuests();
@@ -57,7 +74,7 @@ public class WorldServer {
 		// If the above line in commented out, this generates a default start.
 		if (locationCollection.size() == 0) {
 			CreateWorld.createWorld();
-			CreateWorld.generateItems();
+//			CreateWorld.generateItems();
 		}
 
 		// The below line then succededs and re-initilizes all the commands as a HashMap.
@@ -66,9 +83,9 @@ public class WorldServer {
 		}
 	
 		// Where to put all of these, eh?		
-		possibleItems.put("dagger", 0);
-		possibleItems.put("longsword", 1);
-		possibleItems.put("dirk", 2);
+		possibleItems.put("dagger", new Dagger(1));
+	//	possibleItems.put("longsword", 1);
+	//	possibleItems.put("dirk", 2);
 		try {
 			// Sets the port for others to connect to (23)
 			// Host is personal IP at the moment, right now = 192.168.1.101...

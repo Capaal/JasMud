@@ -1,7 +1,7 @@
 package skills;
 
 import processes.Command;
-import processes.CommandProcess;
+import processes.PlayerPrompt;
 
 public class Icebolt implements Command {
 	
@@ -9,8 +9,8 @@ public class Icebolt implements Command {
 		
 	}
 	
-	public void execute(CommandProcess com, String fullCommand) {
-		com.getSendBack().printMessage("Cast Icebolt.");
+	public void execute(PlayerPrompt playerPrompt, String fullCommand) {
+		playerPrompt.getSendBack().printMessage("Cast Icebolt.");
 		System.out.println("Accessed icebolt");
 	}
 }

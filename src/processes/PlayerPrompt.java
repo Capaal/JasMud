@@ -6,15 +6,13 @@ import java.util.*; // Needed for keySet();
 public class PlayerPrompt extends Thread {
 
 	protected Socket incoming;
-	protected CommandProcess here;
 	protected SendMessage sendBack;	
-	protected Player currentPlayer;
+	protected Mobiles currentPlayer;
 	 	
 	public PlayerPrompt(Socket incoming) {
 	
 		this.incoming = incoming;
-		this.sendBack = new SendMessage(incoming);
-		this.here = new CommandProcess(sendBack);	
+		this.sendBack = new SendMessage(incoming);	
 	}
 	
 	public void run() {	
@@ -27,11 +25,11 @@ public class PlayerPrompt extends Thread {
 		boolean oldPlayer = false;
 		boolean wrongPass = true;
 		// Checks if the entered Name exists, if it does, loads it. Assuming password is right.
-		if (WorldServer.mobList.containsKey(enteredName.toLowerCase()) == true && 
-				WorldServer.mobList.get(enteredName.toLowerCase()) instanceof Player) {
-			Player possiblePlayer = (Player)WorldServer.mobList.get(enteredName.toLowerCase());
-			if (enteredPass.equals(possiblePlayer.password)) {
-				if (enteredName.equals(possiblePlayer.name)) {
+		if (enteredName != null && WorldServer.mobList.containsKey(enteredName.toLowerCase()) == true /* && 
+				WorldServer.mobList.get(enteredName.toLowerCase()) instanceof Player*/) {
+			Mobiles possiblePlayer = /*(Player)*/WorldServer.mobList.get(enteredName.toLowerCase());
+			if (enteredPass.equals(possiblePlayer.getPassword())) {
+				if (enteredName.equals(possiblePlayer.getName())) {
 					this.currentPlayer = possiblePlayer;
 					oldPlayer = true;
 					wrongPass = false;
@@ -54,7 +52,7 @@ public class PlayerPrompt extends Thread {
 				createPlayer = create;
 			}
 			if (createPlayer.toLowerCase().equals("y")) {
-				this.currentPlayer = new Player(enteredName, enteredPass, WorldServer.locationCollection.get(1));
+				this.currentPlayer = new Player(enteredName, enteredPass, WorldServer.locationCollection.get(1), sendBack);
 //				int posID = 1;
 //				Set s = WorldServer.mobList.keySet();
 //				Iterator iter = s.iterator();
@@ -66,7 +64,7 @@ public class PlayerPrompt extends Thread {
 //				}
 //				currentPlayer.id = posID;
 				WorldServer.mobList.put(enteredName.toLowerCase(), currentPlayer);
-				boolean answered = false;
+		/*		boolean answered = false;
 				while (answered == false) {
 					sendBack.printMessageLine("Is this character male or female? m/f: ");
 					String sex = sendBack.getMessage();
@@ -77,7 +75,7 @@ public class PlayerPrompt extends Thread {
 					} else {
 						sendBack.printMessage("Unacceptable answer.");
 					}
-				}
+				}*/
 				wrongPass = false;
 			} else {
 				try {
@@ -86,19 +84,18 @@ public class PlayerPrompt extends Thread {
 				}
 			}
 		}
-		here.setCurrentPlayer(currentPlayer);
 		// Displays successful log-on screen of Player.
 		if (wrongPass == false) {
-			if (currentPlayer.messages.size() > 0) {
+			if (currentPlayer.getMessagesSize() > 0) {
 				sendBack.printMessage("You have messages. Type RMSG to read your messages.");
 			}
 			Location thisLocation = currentPlayer.getMobLocation();
-			thisLocation.look(sendBack, currentPlayer.name);
+			thisLocation.look(sendBack, currentPlayer.getName());
 		}
 		// The following is the User's infinite loop they play inside.
 		try {
 			while (wrongPass == false) {
-				WorldServer.saveSystem();
+				//WorldServer.saveSystem();
 				PromptLoop newLoop = new PromptLoop(sendBack, currentPlayer);
 				newLoop.start();
 				// Obtains commands typed by user.
@@ -120,21 +117,48 @@ public class PlayerPrompt extends Thread {
 
 					//	long start = System.nanoTime();
 					//	System.out.println("Start: " + start);
-						for (int i = 0; i < currentPlayer.questList.size(); i++) {
+					/*	for (int i = 0; i < currentPlayer.questList.size(); i++) {
 							Quest tryQuest = currentPlayer.questList.get(i);
 							tryQuest.testFinishQuest(str, sendBack);
+						}*/
+						StringTokenizer st = new StringTokenizer(str);
+						String command = st.nextToken();
+						command = command.toLowerCase();
+						Boolean commandFound = false;
+						if (currentPlayer.commandAllowed(command)) {
+							Command com = currentPlayer.getCommand(command);
+							com.execute(this, str);
+							commandFound = true;
 						}
-
-						here.command(str, currentPlayer);
 						
-						for (int i = 0; i < WorldServer.allQuests.size(); i++) {
+						// containsKey() is constant O(1) time, while iteration is O(n), below is less efficient.
+						Set<String> s = currentPlayer.getCommandKeySet();		
+						Iterator iter = s.iterator();							
+						while (commandFound == false && iter.hasNext()) {
+							String currentCommand = (String) iter.next();
+							if (currentCommand.startsWith(command) && currentPlayer.commandAllowed(currentCommand)) {
+								Command com = currentPlayer.getCommand(currentCommand);
+								com.execute(this, str);
+								commandFound = true;
+							}	
+						}					
+						if (commandFound == false) {
+							printFailMessages();
+						}
+					/*	if (WorldServer.skillCommands.containsKey(command)) {
+							Command com = (Command) WorldServer.skillCommands.get(command);
+							com.execute(this, str);
+						} else {
+							
+						}*/
+					/*	for (int i = 0; i < WorldServer.allQuests.size(); i++) {
 							Quest tryQuest = WorldServer.allQuests.get(i);
 							tryQuest.testQuest(str, currentPlayer);
-						}
-						for (int i = 0; i < currentPlayer.questList.size(); i++) {
+						}*/
+					/*	for (int i = 0; i < currentPlayer.questList.size(); i++) {
 							Quest tryQuest = currentPlayer.questList.get(i);
 							tryQuest.finishQuest(sendBack, str);
-						}
+						}*/
 					//	long end = System.nanoTime();
 				     // System.out.println("End  : " + end);
 
@@ -159,8 +183,14 @@ public class PlayerPrompt extends Thread {
 		return sendBack;
 	}
 	
-	public Player getCurrentPlayer() {
+	public Mobiles getCurrentPlayer() {
 		return currentPlayer;
+	}
+	
+	public void printFailMessages() {
+		Random rand = new Random();
+		int selection = rand.nextInt(WorldServer.failMessages.length);
+		sendBack.printMessage(WorldServer.failMessages[selection]);
 	}
 }
 

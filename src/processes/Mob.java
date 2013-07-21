@@ -1,15 +1,17 @@
 package processes;
-import java.net.*;
 import java.io.*;
-import java.lang.*;
 import java.util.*;
-import java.awt.*;
 
-public class Mob extends Mobiles implements Serializable {
 
-	protected boolean hostile = false;
-	protected Quest mobQuest;
-	protected String greetMsg;
+//I think this should be killed, and be just mobiles, so that players and mobs are the same thing, thus interchangable.
+// It is not a specific type of creature, a tiger is a mobiles, not tiger->mob->mobiles, Hero->Mobiles, Guard->mobiles.
+// THere might be steps in between like Guard->Human->Mobiles, I dunno yet.
+
+public class Mob extends Mobiles {
+
+	protected boolean hostile = false; // Into AI
+	protected Quest mobQuest; // Uhh, revist quests?
+	protected String greetMsg; // I'm not sure. This will be AI
 	protected int id;
 	
 	public Mob(String name, Location mobLocation) {
@@ -20,10 +22,10 @@ public class Mob extends Mobiles implements Serializable {
 //		this.mobLocation = mobLocation;
 		this.maxHit = 2; //player is 10
 		this.speed = 3000;
-		this.inventory = new ArrayList<Item>();
+	//	this.inventory = new ArrayList<Item>();
 		this.greetMsg = (this.name + " looks at you curiously.");	
 	}
-	
+	 //AI
 	public String greet(Player currentPlayer) {		
 //		if (this.mobQuest != null) {
 //			return mobQuest.greetQuest(currentPlayer);
@@ -43,5 +45,28 @@ public class Mob extends Mobiles implements Serializable {
 	public boolean isHostile() {
 		return hostile;
 	}
+	
+	public void startAttacks(Player currentPlayer) {
+		Thread mobAttack = new MobAttack(this, currentPlayer);
+		mobAttack.start();
+		hostile = true;
+	}
+	
+	protected int damageAdjustments(int damage) {
+		return damage;
+	}
+
+	public String returnName() {
+		return name;
+	}
+
+	public int returnID() {
+		return id;
+	}
+
+	public String returnDescription() {
+		return shortDescription;
+	}
+	
 	
 }

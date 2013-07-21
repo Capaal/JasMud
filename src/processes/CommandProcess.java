@@ -1,7 +1,5 @@
 package processes;
 import java.io.*; //Needed for PrintWriter.
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*; //Needed for String Tokenizer
 
 public class CommandProcess {
@@ -10,18 +8,7 @@ public class CommandProcess {
 	private Player currentPlayer; // was protected
 	
 	//Messages when user input command does not exist.
-	static protected String[] failMessages = new String[] {
-		"You stumble around uselessly.", 
-		"You stare blankly into the distance.",
-		"Unfortunatly, comprehension fails to dawn.", 
-		"Luckly, your non-sensical action goes unnoticed.", 
-		"Your body fails to enact your command.",
-		"You have no idea how to perform such an action.", 
-		"You blink, realizing that you have no idea what that action implies.", 
-		"You stop, wondering what you should actually be doing.",
-		"Your body halts, questioning your mind's desires.", 
-		"You question your sanity for desiring such an action, but realize that questioning your sanity clearly means you are sane... right?",
-		"You look at yourself expectantly."};
+	
 
 	public CommandProcess(SendMessage sendBack) {
 		this.sendBack = sendBack;
@@ -31,17 +18,7 @@ public class CommandProcess {
 	public void command(String fullCommand, Player currentPlayer) {
 		System.out.println("CommandProcess opened.");
 	//	this.currentPlayer = currentPlayer;
-		StringTokenizer st = new StringTokenizer(fullCommand);
-		String command = st.nextToken();
-	//	boolean commandFound = false;
-		
-		
-		if (WorldServer.skillCommands.containsKey(command)) {
-			Command com = (Command) WorldServer.skillCommands.get(command);
-			com.execute(this, fullCommand);
-		} else {
-			printFailMessages();
-		}		
+				
 		/*
 		// Commands accessible by all
 		if (WorldServer.allAbilities.containsKey(command.toLowerCase())) {
@@ -86,28 +63,27 @@ public class CommandProcess {
 	*/
 	}
 	
-	public void DoCommand(Player currentPlayer, String fullCommand, SendMessage sendBack, int commandNum) {
+//	public void DoCommand(Player currentPlayer, String fullCommand, SendMessage sendBack, int commandNum) {
 		// Grabs Player's location.
-		int currentLocation = currentPlayer.mobLocation;
+	//	Location thisLocation = currentPlayer.getMobLocation();
 		// Grabs that location's Info from the location HashMap.
-		Location thisLocation = WorldServer.locationCollection.get(currentLocation);
-		
+			
 		// If case 0-11 then it is movement and processed here.
-		if (commandNum >= 0 && commandNum <= 11) {
-			if (currentPlayer.balance == false) {
-				sendBack.printMessage("You are off balance.");
-			} else {
+	//	if (commandNum >= 0 && commandNum <= 11) {
+	//		if (currentPlayer.balance == false) {
+	//			sendBack.printMessage("You are off balance.");
+	//		} else {
 		//		Move movePlayer = new Move();
 //				if (Move.detGroundType(thisLocation, sendBack, commandNum)) {
 //					Move.moveMob(sendBack, currentPlayer, thisLocation, commandNum);
 //				} else if (Move.detFutureLoc(thisLocation, commandNum) == null) {
 //					sendBack.printMessage("You can't go that way.");
 //				}
-			}
-		}
-		boolean balanceCheck = false;
-		StringTokenizer st = new StringTokenizer(fullCommand);
-		String command = st.nextToken();
+	//		}
+	//	}
+	//	boolean balanceCheck = false;
+	//	StringTokenizer st = new StringTokenizer(fullCommand);
+	//	String command = st.nextToken();
 	
 		
 		/*Class c;
@@ -360,9 +336,9 @@ public class CommandProcess {
 			sendBack.printMessage(failMessages[selection]);
 		}
 	*/	
-	}
+//	}
 	// Checks if the player is off balance or not, used if balance is necessary for a skill.
-	public boolean checkBalance(Player currentPlayer, SendMessage sendBack) {
+/*	public boolean checkBalance(Player currentPlayer, SendMessage sendBack) {
 		System.out.println("checkBalance accessed.");
 		if (currentPlayer.balance == false) {
 			sendBack.printMessage("You are off balance");
@@ -380,13 +356,9 @@ public class CommandProcess {
 		return currentPlayer;
 	}
 	
-	public void printFailMessages() {
-		Random rand = new Random();
-		int selection = rand.nextInt(failMessages.length);
-		sendBack.printMessage(failMessages[selection]);
-	}
+	
 	
 	public void setCurrentPlayer(Player currentPlayer) {
 		this.currentPlayer = currentPlayer;
-	}
+	}*/
 }

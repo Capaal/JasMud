@@ -36,6 +36,16 @@ public class UsefulCommands {
 		return command;
 	}
 	
+	public static String getSecondWord(String fullCommand) {
+		StringTokenizer st = new StringTokenizer(fullCommand);
+		st.nextToken();
+		if (st.hasMoreTokens()) {
+			return (st.nextToken()).toString();
+		} else {
+			return "";
+		}
+	}
+	
 	// Converts incoming word so that numbers are stripped out and only letters are returned.
 	public static String getOnlyStrings(String str) {
 		if (str == null) {
@@ -54,7 +64,7 @@ public class UsefulCommands {
 	// Returns a set stringTokenizer.
 	public static StringTokenizer getST(String fullCommand) {
 		StringTokenizer st = new StringTokenizer(fullCommand);
-		String command = st.nextToken();
+		st.nextToken();
 		return st;
 	}
 	
@@ -62,7 +72,7 @@ public class UsefulCommands {
 	public static String returnTarget(String fullCommand) {
 		StringBuffer sb = new StringBuffer();
 		StringTokenizer st = new StringTokenizer(fullCommand);
-		String command = st.nextToken();
+		st.nextToken();
 		if (st.hasMoreTokens()) {
 			sb.append(st.nextToken());
 		} else {
@@ -74,12 +84,12 @@ public class UsefulCommands {
 		return sb.toString();
 	}
 	
-	// Gets player prompt
-	public static PlayerPrompt getPlayerPromptFromPlayer(Player incomingPlayer) {
+	// Gets player prompt (Give all player prompts an ID that represents that connection?)
+	public static PlayerPrompt getPlayerPromptFromPlayer(Mobiles incomingPlayer) {
 		Iterator iter = WorldServer.activeClients.iterator();
 		while (iter.hasNext()) {
 			PlayerPrompt t = (PlayerPrompt) iter.next();
-			if (t.currentPlayer.name.equals(incomingPlayer.name)) {
+			if (t.getCurrentPlayer().getName().equals(incomingPlayer.name)) {
 				return t;
 			}
 		}	
@@ -120,7 +130,7 @@ public class UsefulCommands {
 		private ANSI() {} // disable automatic constructor
 	}
 	
-	public static void displayPrompt(Player currentPlayer) {
+	public static void displayPrompt(Mobiles currentPlayer) {
 		String balance = "b";
 		if (currentPlayer.balance == false) {
 			balance = "-";
@@ -144,11 +154,11 @@ public class UsefulCommands {
 	return posID;
 	}
 	
-	public static void displayToAllLocation(int location, String message) {
+	public static void displayToAllLocation(Location location, String message) {
 		Iterator iter = WorldServer.activeClients.iterator();
 		while (iter.hasNext()) {
 			PlayerPrompt t = (PlayerPrompt) iter.next();
-			if (t.currentPlayer.mobLocation == location) {
+			if (t.currentPlayer.getMobLocation() == location) {
 				t.sendBack.printSpace();
 				t.sendBack.printMessage(message);
 				displayPrompt(t.currentPlayer);
@@ -160,6 +170,5 @@ public class UsefulCommands {
 	//					" " + balance + ": ");
 			}				
 		}
-
-	}
+	}	
 }
