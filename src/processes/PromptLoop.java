@@ -2,9 +2,9 @@ package processes;
 public class PromptLoop extends Thread {
 	
 	protected SendMessage sendBack;
-	protected Mobiles currentPlayer;
+	protected StdMob currentPlayer;
 	
-	public PromptLoop(SendMessage sendBack, Mobiles currentPlayer) {
+	public PromptLoop(SendMessage sendBack, StdMob currentPlayer) {
 		this.sendBack = sendBack;
 		this.currentPlayer = currentPlayer;
 	}

@@ -7,13 +7,15 @@ import Interfaces.Item;
 
 import processes.Command;
 import processes.Location;
-import processes.Mobiles;
+import processes.StdMob;
 import processes.Player;
 import processes.PlayerPrompt;
 import processes.UsefulCommands;
 import processes.WorldServer;
 
 public class Examine implements Command {
+	
+	public static String defaultName = "examine";
 
 	@Override
 	public void execute(PlayerPrompt playerPrompt, String fullCommand) {
@@ -21,21 +23,26 @@ public class Examine implements Command {
 
 		
 		boolean success = false;
-		Mobiles currentPlayer = playerPrompt.getCurrentPlayer();
+		StdMob currentPlayer = playerPrompt.getCurrentPlayer();
 		Location thisLocation = (Location) currentPlayer.getMobLocation();
 		int i = 0;
 		while (i < thisLocation.groundItems.size() && success == false) {
 			Holdable posItem = thisLocation.groundItems.get(i);
 			String posItemName = posItem.getName();
 			if (posItemName.equals(toExamine) || (posItemName + posItem.getId()).equals(toExamine)) {
-				playerPrompt.getSendBack().printMessage(posItem.getDescription());
+				currentPlayer.tell(posItem.getDescription());
 				success = true;
 			}
+			i++;
 		} 
 		
+		if (success == false) {
+			currentPlayer.tell("You examine the space in front of you, it appears empty.");
+		}
 		
-		String toSay = "";
 		
+	//	String toSay = "";
+		/*
 		Iterator iter = WorldServer.activeClients.iterator(); //All possible players to be displayed are in activeClients
 		
 		while (iter.hasNext() && success == false) {
@@ -53,6 +60,6 @@ public class Examine implements Command {
 		
 		if (!toSay.equals("")) {
 			playerPrompt.getSendBack().printMessage(toSay);
-		}				
+		}	*/			
 	}
 }

@@ -1,5 +1,6 @@
 package skills;
 
+import Interfaces.Attachment;
 import processes.Player;
 
 public class HideAttachment implements Attachment {

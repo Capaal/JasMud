@@ -3,8 +3,9 @@ package processes;
 import java.io.*;
 import java.util.*;
 
-import skills.Attachment;
-import skills.Bug;
+import Interfaces.Attachment;
+
+import skills.*;
 
 
 //When editing: comment out registeredPlayers load in WorldServer, delete registeredPlayers in folder.
@@ -15,7 +16,7 @@ import skills.Bug;
 
 // I have started copying things from here that are true to players playing as a role,
 // and moving them into mobiles, so duplicated things may exist, then this become "Hero" with general skills.
-public class Player extends Mobiles implements Serializable {
+public class Player extends StdMob {
 
 	protected int generals;
 	protected int mage;   
@@ -28,13 +29,41 @@ public class Player extends Mobiles implements Serializable {
 	private int missChance; // I think we're scrapping this.
 	
 //	transient SendMessage sendBack;
-	 
-	public Player(String name, String password, Location mobLocation, SendMessage sendBack) {
-		super(name, mobLocation);	
-		this.prefix = ""; 
+	protected static abstract class Init<T extends Init<T>> extends StdMob.Init<T> {
+		public Init(int id, String name) {
+			super(id, name);
+			// TODO Auto-generated constructor stub
+		}
+
+		private String prefix;
+		
+		public T prefix(String val) {
+			this.prefix = val;
+			return self();
+		}
+		
+		public Player build() {
+			return new Player(this);
+		}
+	}
+	
+	public static class Builder extends Init<Builder> {
+		public Builder(int id, String name) {
+			super(id, name);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected Builder self() {
+			return this;
+		}
+	}
+	
+	
+	protected Player(Init<?> build) {
+		super(build);	
+		this.prefix = build.prefix; 
 		this.suffix = "";
-		this.maxHp = 220;
-		this.currentHp = 220;		
 		this.generals = 16;
 		this.mage = 0;
 		this.survival = 0;
@@ -47,8 +76,11 @@ public class Player extends Mobiles implements Serializable {
 		this.messages = new ArrayList<String>();
 		this.attachments = new ArrayList<Attachment>();
 		this.missChance = 0;
+		allowedCommands.put("stab", new Stab());
 //		this.sendBack = sendBack;
 	}
+	
+	
 	
 	
 	

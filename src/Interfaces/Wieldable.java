@@ -2,6 +2,7 @@ package Interfaces;
 
 import processes.Player;
 
+// Probably obsolete, I think we decided that all items can be wielded.
 public interface Wieldable {
 	
 	public String returnAttackerMSG(String target);

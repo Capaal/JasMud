@@ -2,15 +2,8 @@ package skills;
 
 import java.util.Iterator;
 
-import Interfaces.Container;
-import processes.Command;
-import processes.Location;
-import processes.Mobiles;
-import processes.Player;
-import processes.PlayerPrompt;
-import processes.SendMessage;
-import processes.UsefulCommands;
-import processes.WorldServer;
+import Interfaces.*;
+import processes.*;
 
 public class Move implements Command {
 	
@@ -20,52 +13,52 @@ public class Move implements Command {
 	
 	public void execute(PlayerPrompt playerPrompt, String fullCommand) {		
 		
-		Mobiles currentPlayer = playerPrompt.getCurrentPlayer();
-		SendMessage sendBack = playerPrompt.getSendBack();
-		if (detGroundType(currentPlayer.getMobLocation(), sendBack, fullCommand)) {
-			moveMob(sendBack, currentPlayer, currentPlayer.getMobLocation(), fullCommand);
-		} else/* if (Move.detFutureLoc(thisLocation, commandNum) == null)*/ {
-			sendBack.printMessage("You can't go that way.");
-		}
+		Mobile currentPlayer = playerPrompt.getCurrentPlayer();
+		if (detGroundType(currentPlayer.getContainer(), currentPlayer, fullCommand)) {
+			moveMob(currentPlayer, ((Location)currentPlayer.getContainer()), fullCommand);// We already know container is a location.
+		} 
 	}
 	
-	protected boolean detGroundType(Container container, SendMessage sendBack, String fullCommand) {
+	protected boolean detGroundType(Container container, Mobile currentPlayer, String fullCommand) {
+		if (!(container instanceof Location)) {
+			currentPlayer.tell("You'll need to find another way out.");
+			return false;
+		}
+		Location location = ((Location)container);
 		String dir = fullCommand;
-		Location futureLoc = (((Location) container).getLocation(dir));
+		Location futureLoc = location.getLocation(dir);
 		if (futureLoc != null) { 
 			if (futureLoc.getGroundType().equals("water") || ((Location)container).getGroundType().equals("water")) {
-				sendBack.printMessage("You'll need to swim to go that way.");
+				currentPlayer.tell("You'll need to swim to go that way.");
 				return false;
 			}
 		} else {
+			currentPlayer.tell("You can't go that way.");
 			return false;
 		}
 		return true;
 	}
 	
-	protected void moveMob(SendMessage sendBack, Mobiles currentPlayer, Container container, String fullCommand) {
-		Location futureLoc = ((Location)container).getLocation(fullCommand);
-		if (futureLoc != null) {
-			// Prints a message of movement (leaving) to anyone in the Player's pre-move location.		
-			printMovement(LEAVEMSG, currentPlayer, 
-					fullCommand);
-			// Literally changes the players location.
-			currentPlayer.setMobLocation(((Location)container).getLocation(fullCommand));
-			futureLoc.look(sendBack, currentPlayer.getName());
-			// Prints a message of movement (entering) to those in the post-move location.
-			printMovement(ENTERMSG, currentPlayer, fullCommand);
-		}
+	protected void moveMob(Mobile currentPlayer, Location currentLocation, String fullCommand) {
+		Location futureLoc = currentLocation.getLocation(fullCommand);
+		// Prints a message of movement (leaving) to anyone in the Player's pre-move location.		
+		printMovement(LEAVEMSG, currentPlayer, currentLocation, 
+				fullCommand);
+		// Literally changes the players location.
+		currentPlayer.setContainer(futureLoc);
+		futureLoc.look(currentPlayer);
+		// Prints a message of movement (entering) to those in the post-move location.
+		printMovement(ENTERMSG, currentPlayer, futureLoc, fullCommand);
+		
 	}
 	
-	protected void printMovement(String movement, Mobiles currentPlayer, String direction) {
-		Iterator iter = WorldServer.activeClients.iterator();
-		while (iter.hasNext()) {
-			PlayerPrompt t = (PlayerPrompt) iter.next();
-			if (t.getCurrentPlayer().getMobLocation() == currentPlayer.getMobLocation() && !t.getCurrentPlayer().getName().equals(currentPlayer.getName())) {
-				t.getSendBack().printMessage("\n" + currentPlayer.getName() + movement + " the " +  direction);
-				UsefulCommands.displayPrompt(t.getCurrentPlayer());
+	protected void printMovement(String movement, Mobile currentPlayer, Location location, String direction) {
+		for (Holdable h : location.groundItems) {
+			if ((h instanceof Mobile) && (!(h.getName() + h.getId()).equals(currentPlayer.getName() + currentPlayer.getId()))) {
+				((Mobile) h).tell("\n" + currentPlayer.getName() + movement + " the " +  direction);
+				UsefulCommands.displayPrompt((Mobile)h);
 			}
-		}	
+		}			
 	}
 
 }

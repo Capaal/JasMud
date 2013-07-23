@@ -3,7 +3,7 @@ package skills;
 import java.util.*;
 import processes.Command;
 import processes.Location;
-import processes.Mobiles;
+import processes.StdMob;
 import processes.Player;
 import processes.PlayerPrompt;
 import processes.SendMessage;
@@ -43,7 +43,7 @@ public class Swim extends Move implements Command {
 	}
 	
 	@Override
-	protected void moveMob(SendMessage sendBack, Mobiles currentPlayer, Location thisLocation, String fullCommand) {
+	protected void moveMob(SendMessage sendBack, StdMob currentPlayer, Location thisLocation, String fullCommand) {
 		Location futureLoc = thisLocation.getLocation(UsefulCommands.getSecondWord(fullCommand));
 		if (futureLoc != null) {
 			// Prints a message of movement (leaving) to anyone in the Player's pre-move location.		

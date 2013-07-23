@@ -3,9 +3,9 @@ import java.util.*;
 
 public class DeathLength extends Thread {
 	
-	protected Mob mobile;
+	protected StdMob mobile;
 		
-	public DeathLength(Mob mobile) {
+	public DeathLength(StdMob mobile) {
 		this.mobile = mobile;
 	}
 	

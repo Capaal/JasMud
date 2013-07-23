@@ -1,6 +1,8 @@
 package processes;
 import java.util.*;
 
+import Interfaces.Mobile;
+
 public class UsefulCommands {
 	// Converts a single incoming word so that first letter is capitalized.
 	public static String firstToCap(String str) {
@@ -85,11 +87,11 @@ public class UsefulCommands {
 	}
 	
 	// Gets player prompt (Give all player prompts an ID that represents that connection?)
-	public static PlayerPrompt getPlayerPromptFromPlayer(Mobiles incomingPlayer) {
+	public static PlayerPrompt getPlayerPromptFromPlayer(Mobile currentPlayer) {
 		Iterator iter = WorldServer.activeClients.iterator();
 		while (iter.hasNext()) {
 			PlayerPrompt t = (PlayerPrompt) iter.next();
-			if (t.getCurrentPlayer().getName().equals(incomingPlayer.name)) {
+			if (t.getCurrentPlayer().getName().equals(currentPlayer.getName())) {
 				return t;
 			}
 		}	
@@ -130,12 +132,12 @@ public class UsefulCommands {
 		private ANSI() {} // disable automatic constructor
 	}
 	
-	public static void displayPrompt(Mobiles currentPlayer) {
+	public static void displayPrompt(Mobile currentPlayer) {
 		String balance = "b";
-		if (currentPlayer.balance == false) {
+		if (!currentPlayer.hasBalance()) {
 			balance = "-";
 		}
-		(getPlayerPromptFromPlayer(currentPlayer)).sendBack.printMessageLine(currentPlayer.currentHp + "/" + currentPlayer.maxHp + " " + balance + ": ");
+		(getPlayerPromptFromPlayer(currentPlayer)).sendBack.printMessageLine(currentPlayer.getCurrentHp() + "/" + currentPlayer.getMaxHp() + " " + balance + ": ");
 	}
 	
 	public static int getPosID(int i) {

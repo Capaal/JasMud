@@ -3,11 +3,11 @@ import java.util.*;
 
 public class MobAttack extends Thread {
 	
-	protected Mob thisCreature;
+	protected StdMob thisCreature;
 	protected int time;
 	protected Player attackingPlayer;
 	
-	public MobAttack(Mob thisCreature, Player attackingPlayer) {
+	public MobAttack(StdMob thisCreature, Player attackingPlayer) {
 		this.thisCreature = thisCreature;
 		this.time = thisCreature.speed;
 		this.attackingPlayer = attackingPlayer;

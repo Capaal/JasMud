@@ -9,7 +9,7 @@ public class PlayerPrompt extends Thread {
 
 	protected Socket incoming;
 	protected SendMessage sendBack;	
-	protected Mobiles currentPlayer;
+	protected StdMob currentPlayer;
 	 	
 	public PlayerPrompt(Socket incoming) {
 	
@@ -29,7 +29,7 @@ public class PlayerPrompt extends Thread {
 		// Checks if the entered Name exists, if it does, loads it. Assuming password is right.
 		if (enteredName != null && WorldServer.mobList.containsKey(enteredName.toLowerCase()) == true /* && 
 				WorldServer.mobList.get(enteredName.toLowerCase()) instanceof Player*/) {
-			Mobiles possiblePlayer = /*(Player)*/WorldServer.mobList.get(enteredName.toLowerCase());
+			StdMob possiblePlayer = /*(Player)*/WorldServer.mobList.get(enteredName.toLowerCase());
 			if (enteredPass.equals(possiblePlayer.getPassword())) {
 				if (enteredName.equals(possiblePlayer.getName())) {
 					this.currentPlayer = possiblePlayer;
@@ -54,7 +54,7 @@ public class PlayerPrompt extends Thread {
 				createPlayer = create;
 			}
 			if (createPlayer.toLowerCase().equals("y")) {
-				this.currentPlayer = new Mobiles.Builder(1, enteredName).password(enteredPass).location(WorldServer.locationCollection.get(1)).build();
+				this.currentPlayer = new Player.Builder(1, enteredName).password(enteredPass).location(WorldServer.locationCollection.get(1)).build();
 			//	this.currentPlayer = new Player(enteredName, enteredPass, WorldServer.locationCollection.get(1), sendBack);
 //				int posID = 1;
 //				Set s = WorldServer.mobList.keySet();
@@ -93,7 +93,7 @@ public class PlayerPrompt extends Thread {
 				sendBack.printMessage("You have messages. Type RMSG to read your messages.");
 			}
 			Location thisLocation = (Location) currentPlayer.getMobLocation();
-			thisLocation.look(sendBack, currentPlayer.getName());
+			thisLocation.look(currentPlayer);
 		}
 		// The following is the User's infinite loop they play inside.
 		try {
@@ -186,7 +186,7 @@ public class PlayerPrompt extends Thread {
 		return sendBack;
 	}
 	
-	public Mobiles getCurrentPlayer() {
+	public StdMob getCurrentPlayer() {
 		return currentPlayer;
 	}
 	

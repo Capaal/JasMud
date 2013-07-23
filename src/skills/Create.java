@@ -16,7 +16,7 @@ public class Create implements Command {
 		if (WorldServer.possibleItems.containsKey(itemToMake)) {
 			Creatable newItem = WorldServer.possibleItems.get(itemToMake);
 			Creatable finalItem = newItem.create();
-			finalItem.setItemLocation(currentLocation);
+			finalItem.setContainer(currentLocation);
 			currentLocation.acceptItem(finalItem);
 		}
 		

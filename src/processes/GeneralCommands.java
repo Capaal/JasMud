@@ -470,8 +470,8 @@ public class GeneralCommands {
 				Collection c = WorldServer.mobList.values();
 				Iterator iter = c.iterator();
 				while (iter.hasNext() && success == false) {
-					Mob mob = (Mob) iter.next();
-					if ((mob instanceof Mob) && ((infoPlace.toLowerCase().equals(mob.name.toLowerCase()) ||
+					StdMob mob = (StdMob) iter.next();
+					if ((mob instanceof StdMob) && ((infoPlace.toLowerCase().equals(mob.name.toLowerCase()) ||
 							(infoPlace.toLowerCase().equals(mob.name.toLowerCase() + mob.id))))) {
 						sendBack.printMessage(mob.name + mob.id);
 						success = true;
@@ -722,7 +722,7 @@ public class GeneralCommands {
 	// creates mobs.
 	public static void doCreateMob(SendMessage sendBack) {
 		System.out.println("doCreateMob accessed.");
-		Mob creature = new Mob("test", 1);
+		StdMob creature = new StdMob("test", 1);
 		sendBack.printMessage("You are now creating a new Mob.");
 		sendBack.printMessage("  What is the Mob name?");
 		creature.name = sendBack.getMessage();
@@ -787,15 +787,15 @@ public class GeneralCommands {
 		int dmg = 0;
 		String mobNoNum = UsefulCommands.getOnlyStrings(target);
 		String mobNum = UsefulCommands.getOnlyNumerics(target);
-		Mobiles mob = null;
+		StdMob mob = null;
 		if (mobNum.equals("")) {
 			mob = WorldServer.mobList.get(target.toLowerCase());
 		} else {
 			Set s = WorldServer.mobList.keySet();
 			Iterator iter = s.iterator();
 			while (iter.hasNext()) {
-				Mob mobb = (Mob) WorldServer.mobList.get(iter.next());
-				if ( (mobb instanceof Mob) && (mobb.name.toLowerCase() + mobb.id).equals(target)) {
+				StdMob mobb = (StdMob) WorldServer.mobList.get(iter.next());
+				if ( (mobb instanceof StdMob) && (mobb.name.toLowerCase() + mobb.id).equals(target)) {
 					mob = mobb;
 					break;
 				}	
@@ -840,18 +840,18 @@ public class GeneralCommands {
 							sendBack.printMessage("You have killed " + mob.shortDescription + ".");
 							currentPlayer.experience += mob.XPWorth;
 							currentPlayer.levelPlayer();
-							if ((mob instanceof Mob)) {	
-								Mob mobm = (Mob) mob;
+							if ((mob instanceof StdMob)) {	
+								StdMob mobm = (StdMob) mob;
 								DeathLength death = new DeathLength(mobm);
 								death.start();
 								mobm.hostile = false;
 							}
 						}
 					
-						if (((Mob)mob).hostile == false && (mob instanceof Mob)) {
-							Thread mobAttack = new MobAttack(((Mob)mob), currentPlayer);
+						if (((StdMob)mob).hostile == false && (mob instanceof StdMob)) {
+							Thread mobAttack = new MobAttack(((StdMob)mob), currentPlayer);
 							mobAttack.start();
-							((Mob)mob).hostile = true;
+							((StdMob)mob).hostile = true;
 						}
 					} else if (currentPlayer.balance == false) {
 						sendBack.printMessage("You are off balance");
@@ -872,9 +872,9 @@ public class GeneralCommands {
 	public static void doGreet(Player currentPlayer, SendMessage sendBack, String fullCommand) {
 		System.out.println("doGreet accessed.");
 		String target = UsefulCommands.returnTarget(fullCommand);
-		if (WorldServer.mobList.containsKey(target.toLowerCase()) && (WorldServer.mobList.get(target.toLowerCase()) instanceof Mob)) {
-			Mob thisCreature = (Mob) WorldServer.mobList.get(target.toLowerCase());
-			if (currentPlayer.mobLocation == thisCreature.mobLocation && thisCreature instanceof Mob) {
+		if (WorldServer.mobList.containsKey(target.toLowerCase()) && (WorldServer.mobList.get(target.toLowerCase()) instanceof StdMob)) {
+			StdMob thisCreature = (StdMob) WorldServer.mobList.get(target.toLowerCase());
+			if (currentPlayer.mobLocation == thisCreature.mobLocation && thisCreature instanceof StdMob) {
 				sendBack.printMessage(thisCreature.greet(currentPlayer));	
 			}
 		} else {
@@ -1080,7 +1080,7 @@ public class GeneralCommands {
 		while (iter.hasNext()) {
 		//	Object temp = iter.next();
 		//	if (!(temp instanceof Player)) {
-				Mob mob = (Mob) iter.next();
+				StdMob mob = (StdMob) iter.next();
 				if (target.toLowerCase().equals(mob.name.toLowerCase()) ||
 						(target.toLowerCase().equals(mob.name.toLowerCase() + mob.id))) {
 					sendBack.printMessage(mob.description);	
@@ -1215,9 +1215,9 @@ public class GeneralCommands {
 		System.out.println("doGiveItem accessed.");
 		if (giveItem.returnName().toLowerCase().equals(item.toLowerCase()) ||
 				((giveItem.returnName().toLowerCase() + giveItem.returnID()).equals(item.toLowerCase()))) {
-			Mobiles mob = WorldServer.mobList.get(target.toLowerCase());	
+			StdMob mob = WorldServer.mobList.get(target.toLowerCase());	
 			if ((mob.name.toLowerCase().equals(target.toLowerCase()) ||
-					(mob.name.toLowerCase() + ((Mob)mob).id).equals(target.toLowerCase())) && 
+					(mob.name.toLowerCase() + ((StdMob)mob).id).equals(target.toLowerCase())) && 
 					mob.mobLocation == currentPlayer.mobLocation) {
 				if (currentPlayer.wieldedRight == giveItem) {
 					currentPlayer.wieldedRight = null;

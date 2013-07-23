@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import processes.Command;
-import processes.Mobiles;
+import processes.StdMob;
 import processes.Player;
 import processes.PlayerPrompt;
 import processes.UsefulCommands;
@@ -24,7 +24,7 @@ public class Bug implements Command {
 	}
 	
 	public void execute(PlayerPrompt playerPrompt, String fullCommand) {
-		Mobiles currentPlayer = playerPrompt.getCurrentPlayer();
+		StdMob currentPlayer = playerPrompt.getCurrentPlayer();
 		
 		
 		int monthNow = now.get(Calendar.MONTH + 1);

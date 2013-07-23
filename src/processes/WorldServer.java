@@ -17,9 +17,9 @@ public class WorldServer {
 	// Contains all Location objects.
 	public static HashMap<Integer, Location> locationCollection = new HashMap<Integer, Location>();
 	// Mob list
-	public static Map<String, Mobiles> mobList = new HashMap<String, Mobiles>();
+	public static Map<String, StdMob> mobList = new HashMap<String, StdMob>();
 	// List of all items
-	static protected ArrayList<Item> allItems = new ArrayList<Item>();
+	public static HashMap<String, Item> allItems = new HashMap<String, Item>();
 	// Contains String of weapon names,and an integer that points to a creating case.
 	public static HashMap<String, Item> possibleItems = new HashMap<String, Item>();
 	
@@ -170,10 +170,10 @@ public class WorldServer {
 	}	
 	
 	// Loads list of mobs.
-	public static Map<String, Mobiles> loadMobs() throws FileNotFoundException {
+	public static Map<String, StdMob> loadMobs() throws FileNotFoundException {
 		try {
  	 		ObjectInputStream oisL = new ObjectInputStream(new FileInputStream("mobList.ser"));
- 			mobList = (Map<String, Mobiles>)oisL.readObject();
+ 			mobList = (Map<String, StdMob>)oisL.readObject();
  			oisL.close();
  		} catch(IOException ex)	{
  			ex.printStackTrace();

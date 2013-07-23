@@ -4,8 +4,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 import processes.Command;
-import processes.Mob;
-import processes.Mobiles;
+import processes.StdMob;
+import processes.StdMob;
 import processes.Player;
 import processes.SendMessage;
 import processes.UsefulCommands;
@@ -13,7 +13,7 @@ import processes.WorldServer;
 
 public abstract class Skill implements Command {
 	
-	public boolean skillCheck(Mobiles mob, Mobiles currentPlayer, SendMessage sendBack) {
+	public boolean skillCheck(StdMob mob, StdMob currentPlayer, SendMessage sendBack) {
 		if (currentPlayer.hasBalance()) {
 			if (mob != null) {
 				if (!mob.getIsDead()) {
@@ -34,10 +34,10 @@ public abstract class Skill implements Command {
 		return false;
 	}
 	
-	protected Mobiles obtainMobile(String fullCommand) {
+	protected StdMob obtainMobile(String fullCommand) {
 		String target = UsefulCommands.returnTarget(fullCommand);
 		String mobNum = UsefulCommands.getOnlyNumerics(target);	
-		Mobiles mob = null;
+		StdMob mob = null;
 		if (mobNum.equals("")) {
 			return WorldServer.mobList.get(target.toLowerCase());
 		} else {
@@ -46,7 +46,7 @@ public abstract class Skill implements Command {
 			boolean found = false;
 			while (!found && iter.hasNext()) {
 				mob = WorldServer.mobList.get(iter.next());
-				if (mob instanceof Mob && (mob.getName().toLowerCase() + ((Mob) mob).getId()).equals(target)) {
+				if (mob instanceof StdMob && (mob.getName().toLowerCase() + ((StdMob) mob).getId()).equals(target)) {
 					return mob;
 				}	
 			}
@@ -54,7 +54,7 @@ public abstract class Skill implements Command {
 		return null;
 	}
 	
-	protected void mobExtras(Mob mob, Mobiles currentPlayer) {
+	protected void mobExtras(StdMob mob, StdMob currentPlayer) {
 		if (!mob.isHostile()) {
 		//	mob.startAttacks(currentPlayer);												
 		} 

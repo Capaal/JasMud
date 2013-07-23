@@ -21,11 +21,11 @@ public class Map extends Skill implements Command {
 
 	@Override
 	public void execute(PlayerPrompt playerPrompt, String fullCommand) {
-		doneLocations = new ArrayList<Location>();
-		panel = new DrawingPanel(300, 300);
-		g = panel.getGraphics();
-		g.setColor(Color.BLACK);
-		drawLocation(WorldServer.locationCollection.get(1), 150, 250, 150, 250, 25);
+	//	doneLocations = new ArrayList<Location>();
+	//	panel = new DrawingPanel(300, 300);
+	//	g = panel.getGraphics();
+	//	g.setColor(Color.BLACK);
+	//	drawLocation(WorldServer.locationCollection.get(1), 150, 250, 150, 250, 25);
 	}
 	
 	private void drawLocation(Location loc,int x1,int y1,int x2,int y2, int times) {		
