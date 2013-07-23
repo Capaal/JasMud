@@ -30,7 +30,7 @@ public class StdItem implements Item, Holdable, Creatable {
 	private int currentCondition;
 
 	// Example of a Dagger build: 
-	// StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short a sharp.").shortDescription("a dagger").itemCommands("stab", new Stab()).balanceMult(.8).maxCondition(100).itemLocation(WorldServer.locationCollection.get(1)).build(); 
+	// StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short a sharp.").shortDescription("a dagger").itemCommands("stab").balanceMult(.8).maxCondition(100).itemLocation(WorldServer.locationCollection.get(1)).build(); 
 	
 	public StdItem(Init<?> build) {
 		itemCommands = new ArrayList<String>();

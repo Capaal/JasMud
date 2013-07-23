@@ -4,6 +4,7 @@ import java.io.*; // Needed for PrintWriter and BufferReader.
 import java.util.*; // Needed for keySet();
 
 import Interfaces.Container;
+import Interfaces.Mobile;
 
 public class PlayerPrompt extends Thread {
 

@@ -78,6 +78,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		allowedCommands.put("examine", new Examine());
 		allowedCommands.put("get", new Get());  //temporary assumption that all mobs can get
 		allowedCommands.put("create", new Create());
+		allowedCommands.put("drop", new Drop());
 		WorldServer.mobList.put(name, this);
 	}
 	
@@ -354,6 +355,15 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	
 	public void acceptItem(Holdable item) {
 		inventory.add(item);
+	}
+	
+	public boolean removeItem(Holdable item) {
+		if (inventory.contains(item)) {
+			inventory.remove(item);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public int getMessagesSize() {

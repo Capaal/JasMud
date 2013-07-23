@@ -68,7 +68,8 @@ public class CreateWorld {
 				.groundType("land").southEast(19, "northwest").build();
 		loc = new Location.Builder(24).name("Southern edge of a lake").description("There is a forest to the south.").groundType("water").south(23, "north").build();
 	}
-	//temporary create items method...
+	
+	// StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short a sharp.").shortDescription("a dagger").itemCommands("stab").balanceMult(.8).maxCondition(100).itemLocation(WorldServer.locationCollection.get(1)).build(); 
 	public static void createAllItems() {
 		
 		StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short a sharp.").shortDescription("a dagger").itemCommands("stab").balanceMult(.8).maxCondition(100).itemLocation(WorldServer.locationCollection.get(1)).build();

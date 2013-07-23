@@ -278,7 +278,7 @@ public class Location implements Container {
 		//	Location value = entry.getValue(); 
 			if (!atLeastOne) {
 				sb.append("You can see these exits: ");
-				sb.append(key);// VALUE IS WRONG
+				sb.append(key);
 				atLeastOne = true;
 			} else {
 				sb.append(", " + key);
