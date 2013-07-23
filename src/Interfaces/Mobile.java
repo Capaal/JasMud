@@ -1,6 +1,7 @@
 package Interfaces;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -33,6 +34,7 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public boolean commandAllowed(String command);
 	public Command getCommand(String command);
 	public Set<String> getCommandKeySet();
+	public Collection<Command> getCommandValueSet();
 	public void acceptItem(Holdable item);
 	public int getMessagesSize() ;
 	public void addBug(String bugMsg);

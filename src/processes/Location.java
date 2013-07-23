@@ -5,10 +5,7 @@ import java.awt.Point;
 import java.io.*;
 import java.util.*;
 
-import Interfaces.Container;
-import Interfaces.Holdable;
-import Interfaces.Item;
-import Interfaces.Mobile;
+import Interfaces.*;
 
 // Mobiles should be remembered in the location, for look and stuff, they can go with items and still work atm.
 public class Location implements Container {
@@ -22,7 +19,7 @@ public class Location implements Container {
 	private HashMap<String, Location> locationMap;
 	
 	private HashMap<String, String> abbrevNames;
-	
+/*	
 	private Location north;
 	private Location northeast;
 	private Location east;
@@ -34,7 +31,7 @@ public class Location implements Container {
 	private Location up;
 	private Location down;
 	private Location in;
-	private Location out;
+	private Location out;*/
 	//private Location[] locations;
 //	public Point point; // Related to map?
 		

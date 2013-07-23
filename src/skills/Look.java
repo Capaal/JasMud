@@ -1,11 +1,6 @@
 package skills;
 
-import processes.Command;
-import processes.Location;
-import processes.StdMob;
-import processes.Player;
-import processes.PlayerPrompt;
-import processes.UsefulCommands;
+import processes.*;
 
 public class Look implements Command {
 

@@ -55,31 +55,9 @@ public class PlayerPrompt extends Thread {
 				createPlayer = create;
 			}
 			if (createPlayer.toLowerCase().equals("y")) {
+				// Need to figure out allowed id numbers.
 				this.currentPlayer = new Player.Builder(1, enteredName).password(enteredPass).location(WorldServer.locationCollection.get(1)).build();
-			//	this.currentPlayer = new Player(enteredName, enteredPass, WorldServer.locationCollection.get(1), sendBack);
-//				int posID = 1;
-//				Set s = WorldServer.mobList.keySet();
-//				Iterator iter = s.iterator();
-//				while (iter.hasNext()) {
-//					Mobiles testMob = WorldServer.mobList.get(iter.next());
-//					if (posID == testMob.id) {
-//						posID += 1;
-//					} 	
-//				}
-//				currentPlayer.id = posID;
 				WorldServer.mobList.put(enteredName.toLowerCase(), currentPlayer);
-		/*		boolean answered = false;
-				while (answered == false) {
-					sendBack.printMessageLine("Is this character male or female? m/f: ");
-					String sex = sendBack.getMessage();
-					sendBack.printSpace();
-					if (sex.toLowerCase().equals("m") || sex.toLowerCase().equals("f")) {
-						answered = true;
-						currentPlayer.sex = sex;
-					} else {
-						sendBack.printMessage("Unacceptable answer.");
-					}
-				}*/
 				wrongPass = false;
 			} else {
 				try {
@@ -89,7 +67,7 @@ public class PlayerPrompt extends Thread {
 			}
 		}
 		// Displays successful log-on screen of Player.
-		if (wrongPass == false) {
+		if (!wrongPass) {
 			if (currentPlayer.getMessagesSize() > 0) {
 				sendBack.printMessage("You have messages. Type RMSG to read your messages.");
 			}
@@ -136,13 +114,12 @@ public class PlayerPrompt extends Thread {
 						}
 						
 						// containsKey() is constant O(1) time, while iteration is O(n), below is less efficient.
-						Set<String> s = currentPlayer.getCommandKeySet();		
+						Collection<Command> s = currentPlayer.getCommandValueSet();		
 						Iterator iter = s.iterator();							
 						while (commandFound == false && iter.hasNext()) {
-							String currentCommand = (String) iter.next();
-							if (currentCommand.startsWith(command) && currentPlayer.commandAllowed(currentCommand)) {
-								Command com = currentPlayer.getCommand(currentCommand);
-								com.execute(this, str);
+							Command currentCommand = (Command) iter.next();
+							if (currentCommand.defaultName.startsWith(command)) {
+								currentCommand.execute(this, str);
 								commandFound = true;
 							}	
 						}					

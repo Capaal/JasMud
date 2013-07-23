@@ -12,7 +12,7 @@ public class PromptLoop extends Thread {
 	public void run() {
 		while (true) {
 			try {
-			Thread.sleep(10);
+			Thread.sleep(1000);
 			} catch(InterruptedException ie) {
 			}
 			if (currentPlayer.currentHp <= 0) {

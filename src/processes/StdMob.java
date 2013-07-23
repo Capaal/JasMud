@@ -1,14 +1,10 @@
 package processes;
 
 import skills.*;
-
 import java.util.*;
 import java.io.*;
 
-//import com.sun.org.apache.xml.internal.security.Init;
-import processes.Location.Builder;
 import Interfaces.*;
-
 
 // Represents basic truths about anything that can move on its own. It can be both controlled by a player,
 // or be controlled by AI. Rat yes, hero mage yes, dragon yes, wind no, sun no, bird yes, ant yes, tree? No, make a sentient tree.
@@ -36,9 +32,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	protected int level;
 	protected int age; 
 	protected SendMessage sendBack;
-	protected HashMap<String, Command> allowedCommands;
-	
-	
+	protected HashMap<String, Command> allowedCommands;	
 	
 	protected StdMob(Init<?> build) {
 		this.name = build.name;
@@ -62,6 +56,11 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		allowedCommands.put("nw", new Move());
 		allowedCommands.put("sw", new Move());
 		allowedCommands.put("se", new Move());
+		allowedCommands.put("e", new Move());
+		allowedCommands.put("n", new Move());
+		allowedCommands.put("s", new Move());
+		allowedCommands.put("w", new Move());
+		allowedCommands.put("l", new Look());
 		allowedCommands.put("northeast", new Move());
 		allowedCommands.put("east", new Move());
 		allowedCommands.put("south", new Move());
@@ -97,8 +96,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		private HashMap<String, Command> allowedCommands = new HashMap<String, Command>();
 		private String password = "";
 		
-		protected abstract T self();
-		
+		protected abstract T self();		
 		
 		public Init(int id, String name) {
 			if (WorldServer.mobList.containsKey(name + id)) {
@@ -106,126 +104,56 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 			}
 			this.id = id;
 			this.name = name;
-		}
-		
-		public T password(String val) {
-			password = val;
-			return self();
-		}
-		
-		public T description(String val) {
-			description = val;
-			return self();
-		}
-		
-		public T shortDescription(String val) {
-			shortDescription = val;
-			return self();
-		}
-		
-		public T maxHp(int val) {
-			maxHp = val;
-			return self();
-		}
-		
-		public T location(Container val) {
-			location = val;
-			return self();
-		}
-		
-		public T physicalMult(int val) {
-			physicalMult = val;
-			return self();
-		}
-		
-		public T speed(int val) {
-			speed = val;
-			return self();
-		}
-		
-		public T inventory(Item val) {
-			inventory.add(val);
-			return self();
-		}
-		
-		public T commands(String name, Command val) {
-			allowedCommands.put(name, val);
-			return self();
-		}
-		
-		public T xpWorth(int val) {
-			xpWorth = val;
-			return self();
-		}
-		
-		public StdMob build() {
-			return new StdMob(this);
-		}
-
-		
-
-	}
+		}		
+		public T password(String val) {password = val;return self();}		
+		public T description(String val) {description = val;return self();}		
+		public T shortDescription(String val) {shortDescription = val;return self();}		
+		public T maxHp(int val) {maxHp = val;return self();}		
+		public T location(Container val) {location = val;return self();}		
+		public T physicalMult(int val) {physicalMult = val;return self();}		
+		public T speed(int val) {speed = val;return self();}		
+		public T inventory(Item val) {inventory.add(val);return self();}		
+		public T commands(String name, Command val) {allowedCommands.put(name, val);return self();}		
+		public T xpWorth(int val) {xpWorth = val;return self();}		
+		public StdMob build() {return new StdMob(this);}}
 	
 	public static class Builder extends Init<Builder> {
 		public Builder(int id, String name) {
 			super(id, name);
-			// TODO Auto-generated constructor stub
 		}
-
 		@Override
 		protected Builder self() {
 			return this;
 		}
 	}
 	
-	public String getName() {
-		return name;
-	}
-	
+	public String getName() {return name;}	
 	//Turn into a compare password? Is that safer?
-	public String getPassword() {
-		return password;
-	}
-	
-	public int getId() {
-		return id;
-	}
-	
-	public int getCurrentHp() {
-		return currentHp;
-	}
-	
-	public int getMaxHp() {
-		return maxHp;
-	}
-	
-	public Container getMobLocation() {
-		return mobLocation;
-	}
-	
-	public boolean hasBalance() {
-		return balance;
-	}
-	
-	public boolean getIsDead() {
-		return isDead;
-	}
-	
-	public int getSpeed() {
-		return speed;
-	}
-	
-	public String getDescription() {
-		return description;
-	}
-	
-	public String getShortDescription() {
-		return shortDescription;
-	}
-	
-	public int getXpWorth() {
-		return xpWorth;
-	}
+	public String getPassword() {return password;}	
+	public int getId() {return id;}	
+	public int getCurrentHp() {return currentHp;}	
+	public int getMaxHp() {return maxHp;}	
+	public Container getMobLocation() {return mobLocation;}	
+	public boolean hasBalance() {return balance;}	
+	public boolean getIsDead() {return isDead;}	
+	public int getSpeed() {return speed;}	
+	public String getDescription() {return description;}	
+	public String getShortDescription() {return shortDescription;}	
+	public int getXpWorth() {return xpWorth;}	
+	public boolean commandAllowed(String command) {return allowedCommands.containsKey(command);}	
+	public Command getCommand(String command) {return allowedCommands.get(command);}	
+	public Set<String> getCommandKeySet() {return allowedCommands.keySet();}	
+	public Collection<Command> getCommandValueSet() {return allowedCommands.values();}	
+	public void acceptItem(Holdable item) {inventory.add(item);}
+	public int getMessagesSize() {return messages.size();}	
+	public void addBug(String bugMsg) {bugList.add(bugMsg);}
+	public void acceptCommands(HashMap<String, Command> givenCommands) {allowedCommands.putAll(givenCommands);}	
+	// Doesn't do nothin.
+	public void removeCommands(HashMap<String, Command> removedCommands) {	}
+	@Override
+	public void setContainer(Container futureLocation) {mobLocation = futureLocation;}
+	@Override
+	public Container getContainer() {return mobLocation;}
 	
 	public void takeDamage(int damage) {
 		damage = damageAdjustments(damage);
@@ -341,22 +269,6 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		}
 	}*/
 	
-	public boolean commandAllowed(String command) {
-		return allowedCommands.containsKey(command);
-	}
-	
-	public Command getCommand(String command) {
-		return allowedCommands.get(command);
-	}
-	
-	public Set<String> getCommandKeySet() {
-		return allowedCommands.keySet();
-	}
-	
-	public void acceptItem(Holdable item) {
-		inventory.add(item);
-	}
-	
 	public boolean removeItem(Holdable item) {
 		if (inventory.contains(item)) {
 			inventory.remove(item);
@@ -364,45 +276,12 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		} else {
 			return false;
 		}
-	}
-
-	public int getMessagesSize() {
-		return messages.size();
-	}
-	
-	public void addBug(String bugMsg) {
-		bugList.add(bugMsg);
-	}
+	}	
 
 	@Override
 	public Creatable create() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-	
-	public void acceptCommands(HashMap<String, Command> givenCommands) {
-		allowedCommands.putAll(givenCommands);
-	}
-	
-	public void removeCommands(HashMap<String, Command> removedCommands) {
-		
-	}
-
-	@Override
-	public void setContainer(Container futureLocation) {
-		mobLocation = futureLocation;		
-	}
-
-	@Override
-	public Container getContainer() {
-		return mobLocation;
-	}
-
-	
-
-
-
-	
-	
+	}	
 }
 	
