@@ -1,7 +1,7 @@
 package skills;
 
 import processes.Command;
-import processes.CommandProcess;
+
 import processes.DefenceLength;
 import processes.StdMob;
 import processes.StdMob;

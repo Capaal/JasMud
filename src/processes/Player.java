@@ -1,21 +1,9 @@
 package processes;
 
-import java.io.*;
 import java.util.*;
-
-import Interfaces.Attachment;
-
+import Interfaces.*;
 import skills.*;
 
-
-//When editing: comment out registeredPlayers load in WorldServer, delete registeredPlayers in folder.
-//Editing to become child class of Mob
-// NOTE: I think all of this should be in Mobiles, Players should just be mobiles, this file should die.
-//    Adding to above, it should not die, it is more like the basic model for most "heroes" people might play as.
-//    In theory it is not a player, as it can be controlled by AI like anything else.
-
-// I have started copying things from here that are true to players playing as a role,
-// and moving them into mobiles, so duplicated things may exist, then this become "Hero" with general skills.
 public class Player extends StdMob {
 
 	protected int generals;
@@ -28,37 +16,20 @@ public class Player extends StdMob {
 	private ArrayList<Attachment> attachments; 
 	private int missChance; // I think we're scrapping this.
 	
-//	transient SendMessage sendBack;
 	protected static abstract class Init<T extends Init<T>> extends StdMob.Init<T> {
-		public Init(int id, String name) {
-			super(id, name);
-			// TODO Auto-generated constructor stub
-		}
-
-		private String prefix;
 		
-		public T prefix(String val) {
-			this.prefix = val;
-			return self();
-		}
+		private String prefix = "";
 		
-		public Player build() {
-			return new Player(this);
-		}
+		public Init(int id, String name) {super(id, name);}				
+		public T prefix(String val) {this.prefix = val;return self();}		
+		public Player build() {return new Player(this);}
 	}
 	
 	public static class Builder extends Init<Builder> {
-		public Builder(int id, String name) {
-			super(id, name);
-			// TODO Auto-generated constructor stub
-		}
-
+		public Builder(int id, String name) {super(id, name);}
 		@Override
-		protected Builder self() {
-			return this;
-		}
-	}
-	
+		protected Builder self() {return this;}
+	}	
 	
 	protected Player(Init<?> build) {
 		super(build);	
@@ -77,16 +48,9 @@ public class Player extends StdMob {
 		this.attachments = new ArrayList<Attachment>();
 		this.missChance = 0;
 		allowedCommands.put("stab", new Stab());
-//		this.sendBack = sendBack;
-	}
+	}	
 	
-	
-	
-	
-	
-	public String returnSex() {
-		return this.sex;
-	}
+	public String returnSex() {return this.sex;}
 	
 	public String fullName() {
 		if (prefix.equals("null") && !suffix.equals("null")) {
@@ -100,9 +64,6 @@ public class Player extends StdMob {
 		}
 	}
 	
-	
-	
-	
 	public void learnSkill(String skill, SendMessage sendBack) {
 		if (skill.equals("generals")) {
 			this.generals = (this.generals + 1);
@@ -114,26 +75,16 @@ public class Player extends StdMob {
 			this.survival = (this.survival + 1);
 			sendBack.printMessage("You've obtained the rank of " + survival + " in mage.");
 		}
-	}
-	
-	
+	}	
 	
 	public void checkHp() {
 		
 		
 	}
 	
-	public void addAttachment(Attachment attach) {
-		this.attachments.add(attach);
-	}
-	
-	public boolean searchAttachments(Attachment attach) {
-		return attachments.contains(attach);
-	}
-	
-	public void removeAttachment(Attachment attach) {
-		this.attachments.remove(attach);
-	}
+	public void addAttachment(Attachment attach) {this.attachments.add(attach);}	
+	public boolean searchAttachments(Attachment attach) {return attachments.contains(attach);}	
+	public void removeAttachment(Attachment attach) {this.attachments.remove(attach);}
 	
 	public void affectMiss(int missChange) {
 		if ((this.missChance + missChance) < 0) {
@@ -155,6 +106,4 @@ public class Player extends StdMob {
 		}
 		return damage;
 	}
-
-	
 }

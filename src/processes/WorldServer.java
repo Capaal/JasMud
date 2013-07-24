@@ -9,11 +9,8 @@ import java.io.*; //Serializable, FileReader/Writer
 import Interfaces.Item;
 
 public class WorldServer {
-
-
 	// Contains transient sockets of each connected Player.
-	public static Set activeClients = new HashSet();
-	
+	public static Set activeClients = new HashSet();	
 	// Contains all Location objects.
 	public static HashMap<Integer, Location> locationCollection = new HashMap<Integer, Location>();
 	// Mob list
@@ -21,8 +18,7 @@ public class WorldServer {
 	// List of all items
 	public static HashMap<String, Item> allItems = new HashMap<String, Item>();
 	// Contains String of weapon names,and an integer that points to a creating case.
-	public static HashMap<String, Item> possibleItems = new HashMap<String, Item>();
-	
+	public static HashMap<String, Item> possibleItems = new HashMap<String, Item>();	
 	// Contains all Allowable Commands and leads to their occuring.
 	static protected Map<String, Integer> allowableCommands = new HashMap<String, Integer>();
 	//ab generals skill
@@ -30,9 +26,7 @@ public class WorldServer {
 	//ab generals
 	static protected ArrayList<String> allowableCommandsGeneralsShort = new ArrayList<String>();
 	
-	static Map<String, Command> skillCommands = new HashMap<String, Command>();
-	
-	
+	static Map<String, Command> skillCommands = new HashMap<String, Command>();	
 	
 	//Mage skills as objects
 //	static protected Map<String, AllSkills> mageAbilities = new HashMap <String, AllSkills>();

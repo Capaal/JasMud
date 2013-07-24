@@ -137,9 +137,10 @@ public class UsefulCommands {
 		if (!currentPlayer.hasBalance()) {
 			balance = "-";
 		}
-		(getPlayerPromptFromPlayer(currentPlayer)).sendBack.printMessageLine(currentPlayer.getCurrentHp() + "/" + currentPlayer.getMaxHp() + " " + balance + ": ");
+		currentPlayer.tellLine(currentPlayer.getCurrentHp() + "/" + currentPlayer.getMaxHp() + " " + balance + ": ");
 	}
 	
+	//Obsolete?
 	public static int getPosID(int i) {
 		boolean fail = false;
 		int posID = (i);
@@ -156,6 +157,7 @@ public class UsefulCommands {
 	return posID;
 	}
 	
+	/* Obsolete
 	public static void displayToAllLocation(Location location, String message) {
 		Iterator iter = WorldServer.activeClients.iterator();
 		while (iter.hasNext()) {
@@ -172,5 +174,5 @@ public class UsefulCommands {
 	//					" " + balance + ": ");
 			}				
 		}
-	}	
+	}	*/
 }

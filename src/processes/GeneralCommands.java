@@ -1,19 +1,10 @@
 package processes;
+
 import java.io.*;
 import java.util.*;
 
 public class GeneralCommands {
 
-	protected Player currentPlayer;
-	protected SendMessage sendBack;
-
-	
-	// Runs the Location method for looking.
-	public static void doLook(Player currentPlayer, SendMessage sendBack) {
-	   System.out.println("doLook accessed.");
-		Location thisLocation = WorldServer.locationCollection.get(currentPlayer.mobLocation);
-		thisLocation.look(sendBack, currentPlayer.name);
-	}
 	// Punches.
 	public static void doPunch(String fullCommand, Player currentPlayer, SendMessage sendBack) {
 	   System.out.println("doPunch accessed.");

@@ -15,6 +15,7 @@ public interface Item extends Holdable, Creatable {
 //	final Command[] givenCommands = new Command[] {new Get()};
 	
 	public void setContainer(Container con);
+
 	
 //	public void giveCommands(StdMob mob);
 //	public void removeCommands(StdMob mob);

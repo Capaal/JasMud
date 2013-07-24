@@ -40,7 +40,7 @@ public class Move implements Command {
 	}
 	
 	protected void moveMob(Mobile currentPlayer, Location currentLocation, String fullCommand) {
-		Location futureLoc = currentLocation.getLocation(fullCommand);
+		Location futureLoc = currentLocation.getLocation(fullCommand);// Doesn't work if they type "Move North"?
 		// Prints a message of movement (leaving) to anyone in the Player's pre-move location.		
 		printMovement(LEAVEMSG, currentPlayer, currentLocation, 
 				fullCommand);

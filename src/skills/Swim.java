@@ -1,13 +1,8 @@
 package skills;
 
 import java.util.*;
-import processes.Command;
-import processes.Location;
-import processes.StdMob;
-import processes.Player;
-import processes.PlayerPrompt;
-import processes.SendMessage;
-import processes.UsefulCommands;
+import Interfaces.*;
+import processes.*;
 
 public class Swim extends Move implements Command {
 	
@@ -29,31 +24,35 @@ public class Swim extends Move implements Command {
 	
 	
 	@Override
-	protected boolean detGroundType(Location thisLocation, SendMessage sendBack, String fullCommand) {
-		Location futureLoc = thisLocation.getLocation(UsefulCommands.getSecondWord(fullCommand));
-		if (futureLoc == null) {
-			sendBack.printMessage("You can't go that way, let alone swim there.");
+	protected boolean detGroundType(Container thisLocation, Mobile currentPlayer, String fullCommand) {
+		if (!(thisLocation instanceof Location)) {
+			currentPlayer.tell("You'll need to find a different way out.");
 			return false;
 		}
-		if (thisLocation.getGroundType().equals("land") && (futureLoc.getGroundType().equals("land"))) {
-			sendBack.printMessage("You flop onto the ground and flail wildly, but don't seem to make much progress.");
+		Location futureLoc = ((Location)thisLocation).getLocation(UsefulCommands.getSecondWord(fullCommand));
+		if (futureLoc == null) {
+			currentPlayer.tell("You can't go that way, let alone swim there.");
+			return false;
+		}
+		if (((Location) thisLocation).getGroundType().equals("land") && (futureLoc.getGroundType().equals("land"))) {
+			currentPlayer.tell("You flop onto the ground and flail wildly, but don't seem to make much progress.");
 			return false;
 		}
 		return true;
 	}
 	
 	@Override
-	protected void moveMob(SendMessage sendBack, StdMob currentPlayer, Location thisLocation, String fullCommand) {
+	protected void moveMob(Mobile currentPlayer, Location thisLocation, String fullCommand) {
 		Location futureLoc = thisLocation.getLocation(UsefulCommands.getSecondWord(fullCommand));
 		if (futureLoc != null) {
 			// Prints a message of movement (leaving) to anyone in the Player's pre-move location.		
-			printMovement(LEAVEMSG, currentPlayer, 
+			printMovement(LEAVEMSG, currentPlayer, thisLocation, 
 					fullCommand);
 			// Literally changes the players location.
-			currentPlayer.setMobLocation(futureLoc);
-			futureLoc.look(sendBack, currentPlayer.getName());
+			currentPlayer.setContainer(futureLoc);
+			futureLoc.look(currentPlayer);
 			// Prints a message of movement (entering) to those in the post-move location.
-			printMovement(ENTERMSG, currentPlayer, fullCommand);
+			printMovement(ENTERMSG, currentPlayer, futureLoc, fullCommand);
 		}
 	}
 	//Finally moves mob

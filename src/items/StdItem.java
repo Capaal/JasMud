@@ -1,20 +1,8 @@
 package items;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import processes.Command;
-import processes.Location;
-import processes.StdMob;
-import processes.WorldServer;
-import processes.StdMob.Builder;
-
-//import com.sun.org.apache.xml.internal.security.Init;
-
-import Interfaces.Container;
-import Interfaces.Creatable;
-import Interfaces.Holdable;
-import Interfaces.Item;
+import processes.*;
+import Interfaces.*;
 
 public class StdItem implements Item, Holdable, Creatable {
 	
@@ -61,8 +49,7 @@ public class StdItem implements Item, Holdable, Creatable {
 		private Container itemLocation = WorldServer.locationCollection.get(1);
 		private ArrayList<String> itemCommands = new ArrayList<String>();
 		
-		protected abstract T self();
-		
+		protected abstract T self();		
 		
 		public Init(String name, int id) {
 			if (WorldServer.allItems.containsKey(name + id)) {
@@ -70,113 +57,44 @@ public class StdItem implements Item, Holdable, Creatable {
 			}
 			this.id = id;
 			this.name = name;
-		//	for (Command com : givenCommands) {
-		//		itemCommands.put(com.defaultName, com);
-		//	}
 		}
 		
-		public T physicalMult(Double val) {
-			physicalMult = val;
-			return self();
-		}
-		
-		public T description(String val) {
-			description = val;
-			return self();
-		}
-		
-		public T shortDescription(String val) {
-			shortDescription = val;
-			return self();
-		}
-		
-		public T maxCondition(int val) {
-			maxCondition = val;
-			return self();
-		}
-		
-		public T itemLocation(Container val) {
-			itemLocation = val;
-			return self();
-		}
-		
-		public T balanceMult(Double val) {
-			balanceMult = val;
-			return self();
-		}
-		
-		public T itemCommands(String name) {
-			itemCommands.add(name);
-			return self();
-		}	
-		
-		
-		public StdItem build() {
-			return new StdItem(this);
-		}
+		public T physicalMult(Double val) {physicalMult = val;return self();}		
+		public T description(String val) {description = val;return self();}		
+		public T shortDescription(String val) {shortDescription = val;return self();}		
+		public T maxCondition(int val) {maxCondition = val;return self();}		
+		public T itemLocation(Container val) {itemLocation = val;return self();}		
+		public T balanceMult(Double val) {balanceMult = val;return self();}		
+		public T itemCommands(String name) {itemCommands.add(name);return self();}				
+		public StdItem build() {return new StdItem(this);}
 	}
 	
 	public static class Builder extends Init<Builder> {
-		public Builder(String name, int id) {
-			super(name, id);
-			// TODO Auto-generated constructor stub
-		}
-
+		public Builder(String name, int id) {super(name, id);}
 		@Override
-		protected Builder self() {
-			return this;
-		}
+		protected Builder self() {return this;}
 	}
-	
-	
-	
 	@Override
-	public Creatable create() {
-		
-		
+	public Creatable create() {		
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 	@Override
 	public int getDamage() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 	@Override
-	public String getDescription() {
-		return description;
-	}
-	
-	public String getShortDescription() {
-		return shortDescription;
-	}
-
+	public String getDescription() {return description;}	
 	@Override
-	public String getName() {
-		return name;
-	}
-
+	public String getShortDescription() {return shortDescription;}
 	@Override
-	public int getId() {
-		return id;
-	}
-
-	
-
-	
-
+	public String getName() {return name;}
+	@Override
+	public int getId() {return id;}
 	@Override
 	public void setContainer(Container con) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	public Container getContainer() {
-		return itemLocation;
-	}
-
-	
-
+		// TODO Auto-generated method stub		
+	}	
+	public Container getContainer() {return itemLocation;}
 }
