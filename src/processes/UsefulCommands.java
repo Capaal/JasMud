@@ -44,7 +44,7 @@ public class UsefulCommands {
 		if (st.hasMoreTokens()) {
 			return (st.nextToken()).toString();
 		} else {
-			return "";
+			return null;
 		}
 	}
 	
@@ -84,6 +84,38 @@ public class UsefulCommands {
 			sb.append(" " + st.nextToken());
 		} 
 		return sb.toString();
+	}
+	
+	public static TreeMap<String, String> fullDir;
+	
+	public static String getDirName(String dir) {		
+		if (fullDir == null) {
+			fullDir = new TreeMap<String, String>();
+			fullDir.put("n", "north");
+			fullDir.put("ne", "northeast");
+			fullDir.put("e","east");
+			fullDir.put("s", "south");
+			fullDir.put("se", "southeast");			
+			fullDir.put("sw", "southwest");
+			fullDir.put("w", "west");
+			fullDir.put("nw", "northwest");
+			fullDir.put("in", "in");
+			fullDir.put("o", "out");
+			fullDir.put("u", "up");
+			fullDir.put("d", "down");
+		}
+		if (fullDir.containsValue(dir)) {
+			return dir;
+		} else if (fullDir.containsKey(dir)) {
+			return fullDir.get(dir);
+		} else {
+			for (String s : fullDir.values()) {
+				if (s.startsWith(dir)) {
+					return s;
+				}
+			}
+		}
+		return null;
 	}
 	
 	// Gets player prompt (Give all player prompts an ID that represents that connection?)

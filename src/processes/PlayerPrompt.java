@@ -107,6 +107,10 @@ public class PlayerPrompt extends Thread {
 						String command = st.nextToken();
 						command = command.toLowerCase();
 						Boolean commandFound = false;
+						String posDir = UsefulCommands.getDirName(command);
+						if (posDir != null) {
+							command = posDir;
+						}
 						if (currentPlayer.commandAllowed(command)) {
 							Command com = currentPlayer.getCommand(command);
 							com.execute(this, str);
@@ -114,11 +118,15 @@ public class PlayerPrompt extends Thread {
 						}
 						
 						// containsKey() is constant O(1) time, while iteration is O(n), below is less efficient.
-						Collection<Command> s = currentPlayer.getCommandValueSet();		
+						
+						SortedSet<String> s = currentPlayer.getCommandKeySet();		
 						Iterator iter = s.iterator();							
 						while (commandFound == false && iter.hasNext()) {
-							Command currentCommand = (Command) iter.next();
-							if (currentCommand.defaultName.startsWith(command)) {
+							
+							String commandName = (String) iter.next();
+							System.out.println(commandName);
+							if (commandName.startsWith(command)) {
+								Command currentCommand = currentPlayer.getCommand(commandName);
 								currentCommand.execute(this, str);
 								commandFound = true;
 							}	

@@ -32,7 +32,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	protected int level;
 	protected int age; 
 	protected SendMessage sendBack;
-	protected HashMap<String, Command> allowedCommands;	
+	protected TreeMap<String, Command> allowedCommands;	
 	
 	protected StdMob(Init<?> build) {
 		this.name = build.name;
@@ -52,7 +52,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		this.messages = new ArrayList<String>();
 		this.allowedCommands = build.allowedCommands;
 		allowedCommands.put("north", new Move());
-		allowedCommands.put("ne", new Move());
+	/*	allowedCommands.put("ne", new Move());
 		allowedCommands.put("nw", new Move());
 		allowedCommands.put("sw", new Move());
 		allowedCommands.put("se", new Move());
@@ -60,7 +60,8 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		allowedCommands.put("n", new Move());
 		allowedCommands.put("s", new Move());
 		allowedCommands.put("w", new Move());
-		allowedCommands.put("l", new Look());
+		allowedCommands.put("l", new Look());*/
+		allowedCommands.put("move", new Move());
 		allowedCommands.put("northeast", new Move());
 		allowedCommands.put("east", new Move());
 		allowedCommands.put("south", new Move());
@@ -72,13 +73,14 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		allowedCommands.put("down", new Move());
 		allowedCommands.put("in", new Move());
 		allowedCommands.put("out", new Move());
+		allowedCommands.put("swim", new Swim());
 
 		allowedCommands.put("look", new Look());
 		allowedCommands.put("examine", new Examine());
 		allowedCommands.put("get", new Get());  //temporary assumption that all mobs can get
 		allowedCommands.put("create", new Create());
 		allowedCommands.put("drop", new Drop());
-		WorldServer.mobList.put(name, this);
+		WorldServer.mobList.put(name + id, this);
 	}
 	
 	protected static abstract class Init<T extends Init<T>> {
@@ -93,7 +95,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		private int speed = 3000;
 		private int xpWorth = 1;
 		private ArrayList<Holdable> inventory = new ArrayList<Holdable>();
-		private HashMap<String, Command> allowedCommands = new HashMap<String, Command>();
+		private TreeMap<String, Command> allowedCommands = new TreeMap<String, Command>();
 		private String password = "";
 		
 		protected abstract T self();		
@@ -141,8 +143,13 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public String getShortDescription() {return shortDescription;}	
 	public int getXpWorth() {return xpWorth;}	
 	public boolean commandAllowed(String command) {return allowedCommands.containsKey(command);}	
-	public Command getCommand(String command) {return allowedCommands.get(command);}	
-	public Set<String> getCommandKeySet() {return allowedCommands.keySet();}	
+	public Command getCommand(String command) {return allowedCommands.get(command);}
+	
+	public SortedSet<String> getCommandKeySet() {
+		return new TreeSet<String>(allowedCommands.keySet());
+	//	return allowedCommands.keySet();
+	}	
+	
 	public Collection<Command> getCommandValueSet() {return allowedCommands.values();}	
 	public void acceptItem(Holdable item) {inventory.add(item);}
 	public int getMessagesSize() {return messages.size();}	
@@ -282,6 +289,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public Creatable create() {
 		// TODO Auto-generated method stub
 		return null;
-	}	
+	}
+
 }
 	

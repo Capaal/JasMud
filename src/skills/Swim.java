@@ -6,43 +6,27 @@ import processes.*;
 
 public class Swim extends Move implements Command {
 	
-	final String LEAVEMSG = " swims to";
-	final String ENTERMSG = " swims in from";
-	
-	
-	//Pulls out direction of swim
-/*	public static int detDir(Location thisLocation, String fullCommand, int commandNum) {
-		for (int i = 0; i < 12; i++) { 
-			if (thisLocation.DIRNAMES[i].toLowerCase().equals(UsefulCommands.returnTarget(fullCommand)) || 
-					thisLocation.dirAbbrev[i].toLowerCase().equals(UsefulCommands.returnTarget(fullCommand))) {
-				commandNum = i;
-//		  		setFutureLoc(WorldServer.locationCollection.get(thisLocation.roomExits[commandNum]));
-			}
-		}
-		return commandNum;
-	}*/
-	
-	
+	final String LEAVEMSG = " swims to the ";
+	final String ENTERMSG = " swims in from the ";
+	final String FAILMSG = "You can't go that way, let alone swim there.";
+	final String WRONGTYPE = "land"; // Bad, waht about flying?
+	final String WRONGTYPEMSG = "You flop onto the ground and flail wildly, but don't seem to make much progress."; // Bad like above
+		
 	@Override
-	protected boolean detGroundType(Container thisLocation, Mobile currentPlayer, String fullCommand) {
-		if (!(thisLocation instanceof Location)) {
-			currentPlayer.tell("You'll need to find a different way out.");
+	protected boolean canMove(Container currentContainer, Container futureContainer, Mobile currentPlayer, String dir) {
+		if (futureContainer == null) {
+			currentPlayer.tell(FAILMSG);
 			return false;
 		}
-		Location futureLoc = ((Location)thisLocation).getLocation(UsefulCommands.getSecondWord(fullCommand));
-		if (futureLoc == null) {
-			currentPlayer.tell("You can't go that way, let alone swim there.");
-			return false;
-		}
-		if (((Location) thisLocation).getGroundType().equals("land") && (futureLoc.getGroundType().equals("land"))) {
-			currentPlayer.tell("You flop onto the ground and flail wildly, but don't seem to make much progress.");
+		if (((Location) currentContainer).getGroundType().equals(WRONGTYPE) && ((Location)futureContainer).getGroundType().equals(WRONGTYPE)) {
+			currentPlayer.tell(WRONGTYPEMSG);
 			return false;
 		}
 		return true;
 	}
 	
-	@Override
-	protected void moveMob(Mobile currentPlayer, Location thisLocation, String fullCommand) {
+/*	@Override
+	protected void moveMob(Mobile currentPlayer, Location thisLocation, String dir) {
 		Location futureLoc = thisLocation.getLocation(UsefulCommands.getSecondWord(fullCommand));
 		if (futureLoc != null) {
 			// Prints a message of movement (leaving) to anyone in the Player's pre-move location.		
@@ -54,7 +38,7 @@ public class Swim extends Move implements Command {
 			// Prints a message of movement (entering) to those in the post-move location.
 			printMovement(ENTERMSG, currentPlayer, futureLoc, fullCommand);
 		}
-	}
+	}*/
 	//Finally moves mob
 //	public void moveMob(SendMessage sendBack, String fullCommand, Player currentPlayer, 
 //		Location thisLocation, int commandNum) {

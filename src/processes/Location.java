@@ -1,6 +1,7 @@
 package processes;
 
 import java.util.*;
+
 import Interfaces.*;
 
 public class Location implements Container {
@@ -11,9 +12,9 @@ public class Location implements Container {
 	public ArrayList<Holdable> groundItems = new ArrayList<Holdable>();
 	private String groundType;
 	
-	private HashMap<String, Location> locationMap;
+	private TreeMap<String, Location> locationMap;
 	
-	private HashMap<String, String> abbrevNames;
+//	private HashMap<String, String> abbrevNames;
 
 	public static class Builder {
 		
@@ -23,7 +24,7 @@ public class Location implements Container {
 		private String description = "blank";
 		private String groundType = "land";
 			
-		private HashMap<String, Location> locationMap = new HashMap<String, Location>();
+		private TreeMap<String, Location> locationMap = new TreeMap<String, Location>();
 		private HashMap<Integer, String> locationConnections = new HashMap<Integer, String>();
 		
 		public Builder(int val) {
@@ -77,7 +78,7 @@ public class Location implements Container {
 				futureLoc.setLocation(this, currentDirection);
 			}
 		}
-		abbrevNames = new HashMap<String, String>();
+	/*	abbrevNames = new HashMap<String, String>();
 		abbrevNames.put("n", "north");
 		abbrevNames.put("ne", "northeast");
 		abbrevNames.put("e", "east");
@@ -89,7 +90,7 @@ public class Location implements Container {
 		abbrevNames.put("u", "up");
 		abbrevNames.put("d", "down");
 		abbrevNames.put("i", "in");
-		abbrevNames.put("o", "out");
+		abbrevNames.put("o", "out");*/
 	}
 	
 	public void setLocation(Location futureLoc, String currentDirection) {
@@ -155,10 +156,26 @@ public class Location implements Container {
 	public void acceptItem(Holdable newItem) {groundItems.add(newItem);}	
 		
 	public Location getLocation(String dir) {
-		if (locationMap.containsKey(dir)) {
+		String trueLocation = UsefulCommands.getDirName(dir);
+		if (trueLocation != null) {
+			return locationMap.get(trueLocation);
+		}
+		
+	/*	if (locationMap.containsKey(dir)) {
 			return locationMap.get(dir);
-		} 
-		return locationMap.get(abbrevNames.get(dir));		
+	//	} else if (locationMap.get(abbrevNames.get(dir)) != null) {
+	//		return locationMap.get(abbrevNames.get(dir));
+		} else {
+			TreeSet<String> s = new TreeSet<String>(locationMap.keySet());
+			Iterator iter = s.iterator();							
+			while (iter.hasNext()) {				
+				String dirName = (String) iter.next();
+				if (dirName.startsWith(dir)) {
+					return locationMap.get(dirName);
+				}	
+			}	
+		}*/
+		return null;
 	}		
 	
 	public void removeItemFromLocation(Holdable oldItem) {
