@@ -323,11 +323,11 @@ public class GeneralCommands {
 				Iterator itera = c.iterator();
 				while (itera.hasNext() && deleted == false) {
 					Location deleteLocation = (Location) itera.next();
-					for (int z = 0; z < deleteLocation.groundItems.size(); z++) {
-						Item posItem = deleteLocation.groundItems.get(z);
+					for (int z = 0; z < deleteLocation.inventory.size(); z++) {
+						Item posItem = deleteLocation.inventory.get(z);
 						if (posItem.returnID() == Integer.parseInt(itemNumString) && 
 								posItem.returnName().equals(UsefulCommands.getOnlyStrings(toDelete))) {
-							deleteLocation.groundItems.remove(z);
+							deleteLocation.inventory.remove(z);
 							sendBack.printMessage("You have deleted " + toDelete + ".");
 							deleted = true;
 						}
@@ -433,8 +433,8 @@ public class GeneralCommands {
 			} else {
 				boolean success = false;
 				Location thisLocation = WorldServer.locationCollection.get(currentPlayer.mobLocation);
-				for (int i = 0; i < thisLocation.groundItems.size(); i++) {
-					Item posItem = thisLocation.groundItems.get(i);
+				for (int i = 0; i < thisLocation.inventory.size(); i++) {
+					Item posItem = thisLocation.inventory.get(i);
 					String posItemName = posItem.returnName();
 					if (posItemName.equals(infoPlace) || (posItemName + posItem.returnID()).equals(infoPlace)) {
 						sendBack.printMessage(posItem.returnName() + posItem.returnID());
@@ -488,7 +488,7 @@ public class GeneralCommands {
 				String posItemName = posItem.returnName();
 					if (posItemName.equals(dropItem) || (posItemName + posItem.returnID()).equals(dropItem)) {
 					Location dropLocation = WorldServer.locationCollection.get(currentPlayer.mobLocation);
-					dropLocation.groundItems.add(posItem);
+					dropLocation.inventory.add(posItem);
 //					posItem.itemLocation = currentPlayer.mobLocation;
 					currentPlayer.inventory.remove(posItem);
 					sendBack.printMessage("You drop " + posItemName + posItem.returnID() + " onto the ground.");
@@ -505,11 +505,11 @@ public class GeneralCommands {
 		if (st.hasMoreTokens()) {
 			Location thisLocation = WorldServer.locationCollection.get(currentPlayer.mobLocation);
 			item = st.nextToken();
-			for (int i = 0; i < thisLocation.groundItems.size(); i++) {
-				Item posItem = thisLocation.groundItems.get(i);
+			for (int i = 0; i < thisLocation.inventory.size(); i++) {
+				Item posItem = thisLocation.inventory.get(i);
 				String posItemName = posItem.returnName();
 				if (posItemName.equals(item) || (posItemName + posItem.returnID()).equals(item)) {
-					thisLocation.groundItems.remove(i);
+					thisLocation.inventory.remove(i);
 	//				posItem.itemLocation = -1;
 					currentPlayer.inventory.add(posItem);
 					sendBack.printMessage("You pick up " + posItemName + posItem.returnID());
@@ -1040,8 +1040,8 @@ public class GeneralCommands {
 		String target = UsefulCommands.returnTarget(fullCommand);
 		boolean success = false;
 		Location thisLocation = WorldServer.locationCollection.get(currentPlayer.mobLocation);
-		for (int i = 0; i < thisLocation.groundItems.size(); i++) {
-			Item posItem = thisLocation.groundItems.get(i);
+		for (int i = 0; i < thisLocation.inventory.size(); i++) {
+			Item posItem = thisLocation.inventory.get(i);
 			String posItemName = posItem.returnName();
 			if (posItemName.equals(target) || (posItemName + posItem.returnID()).equals(target)) {
 				sendBack.printMessage(posItem.returnDescription());

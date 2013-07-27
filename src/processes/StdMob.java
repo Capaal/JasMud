@@ -80,6 +80,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		allowedCommands.put("get", new Get());  //temporary assumption that all mobs can get
 		allowedCommands.put("create", new Create());
 		allowedCommands.put("drop", new Drop());
+		allowedCommands.put("say", new Say());
 		WorldServer.mobList.put(name + id, this);
 	}
 	

@@ -1,5 +1,7 @@
 package skills;
 
+import java.util.ArrayList;
+
 import Interfaces.*;
 import processes.*;
 
@@ -57,14 +59,17 @@ public class Move implements Command {
 		// Prints a message of movement (leaving) to anyone in the Player's pre-move location.		
 		printMovement(LEAVEMSG, currentPlayer, currentContainer, dir);
 		// Literally changes the players location.
+		((Location)currentContainer).removeItemFromLocation(currentPlayer);
 		currentPlayer.setContainer(futureContainer);
+		futureContainer.acceptItem(currentPlayer);
 		((Location)futureContainer).look(currentPlayer);
 		// Prints a message of movement (entering) to those in the post-move location.
 		printMovement(ENTERMSG, currentPlayer, futureContainer, dir);		
 	}
 	
 	protected void printMovement(String movement, Mobile currentPlayer, Container location, String direction) {
-		for (Holdable h : location.groundItems) {
+		ArrayList<Holdable> inventory = location.getInventory();
+		for (Holdable h : inventory) {
 			if ((h instanceof Mobile) && (!(h.getName() + h.getId()).equals(currentPlayer.getName() + currentPlayer.getId()))) {
 				((Mobile) h).tell("\n" + currentPlayer.getName() + movement +  direction);
 				UsefulCommands.displayPrompt((Mobile)h);

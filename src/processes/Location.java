@@ -9,7 +9,7 @@ public class Location implements Container {
 	private final int id;
 	private String name;
 	private String description;
-	public ArrayList<Holdable> groundItems = new ArrayList<Holdable>();
+	public ArrayList<Holdable> inventory = new ArrayList<Holdable>();
 	private String groundType;
 	
 	private TreeMap<String, Location> locationMap;
@@ -125,6 +125,9 @@ public class Location implements Container {
 		currentPlayer.tell(UsefulCommands.ANSI.MAGENTA + name + UsefulCommands.ANSI.SANE);
 		currentPlayer.tell(UsefulCommands.ANSI.GREEN + description + UsefulCommands.ANSI.SANE);
 		displayAll(currentPlayer);
+		
+		System.out.println(inventory.toString());
+		
 		currentPlayer.tell(UsefulCommands.ANSI.CYAN + displayExits() + UsefulCommands.ANSI.SANE);
 		currentPlayer.tell("(God sight) Location number: " + id + ". Ground type: " + groundType + ".");
 	}
@@ -138,13 +141,14 @@ public class Location implements Container {
 	//Displays items
 	public void displayAll(Mobile currentPlayer) {
 		boolean anItem = false;
-		for (Holdable h : groundItems) {
-			currentPlayer.tellLine("Looking around you see: ");
-			currentPlayer.tellLine(UsefulCommands.ANSI.BLUE + h.getName() + ". " + UsefulCommands.ANSI.SANE);
+		StringBuffer sb = new StringBuffer();
+		sb.append("Looking around you see: ");
+		for (Holdable h : inventory) {
+			sb.append(UsefulCommands.ANSI.BLUE + h.getName() + ". " + UsefulCommands.ANSI.SANE);
 			anItem = true;
 		}
 		if (anItem) {
-			currentPlayer.tell("");
+			currentPlayer.tell(sb.toString());
 		}
 	}
 			
@@ -153,33 +157,27 @@ public class Location implements Container {
 	public void setDescription(String desc) {this.description = desc;}	
 	public void setGroundType(String type) {this.groundType = type;}
 	public String getGroundType() {return groundType;}	
-	public void acceptItem(Holdable newItem) {groundItems.add(newItem);}	
+	public void acceptItem(Holdable newItem) {inventory.add(newItem);}	
 		
 	public Location getLocation(String dir) {
 		String trueLocation = UsefulCommands.getDirName(dir);
 		if (trueLocation != null) {
 			return locationMap.get(trueLocation);
 		}
-		
-	/*	if (locationMap.containsKey(dir)) {
-			return locationMap.get(dir);
-	//	} else if (locationMap.get(abbrevNames.get(dir)) != null) {
-	//		return locationMap.get(abbrevNames.get(dir));
-		} else {
-			TreeSet<String> s = new TreeSet<String>(locationMap.keySet());
-			Iterator iter = s.iterator();							
-			while (iter.hasNext()) {				
-				String dirName = (String) iter.next();
-				if (dirName.startsWith(dir)) {
-					return locationMap.get(dirName);
-				}	
-			}	
-		}*/
 		return null;
 	}		
 	
 	public void removeItemFromLocation(Holdable oldItem) {
-		int indexOfItem = groundItems.indexOf(oldItem);
-		groundItems.remove(indexOfItem);	
+		int indexOfItem = inventory.indexOf(oldItem);
+		inventory.remove(indexOfItem);	
+	}
+	
+	public ArrayList<Holdable> getInventory() {
+		return new ArrayList<Holdable>(this.inventory);
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 }

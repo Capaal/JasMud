@@ -26,8 +26,8 @@ public class Examine implements Command {
 		StdMob currentPlayer = playerPrompt.getCurrentPlayer();
 		Location thisLocation = (Location) currentPlayer.getMobLocation();
 		int i = 0;
-		while (i < thisLocation.groundItems.size() && success == false) {
-			Holdable posItem = thisLocation.groundItems.get(i);
+		while (i < thisLocation.inventory.size() && success == false) {
+			Holdable posItem = thisLocation.inventory.get(i);
 			String posItemName = posItem.getName();
 			if (posItemName.equals(toExamine) || (posItemName + posItem.getId()).equals(toExamine)) {
 				currentPlayer.tell(posItem.getDescription());

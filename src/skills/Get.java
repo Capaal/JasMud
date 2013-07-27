@@ -27,8 +27,8 @@ public class Get implements Command {
 		
 		boolean success = false;
 		int i = 0;
-		while (i < thisLocation.groundItems.size() && success == false) {
-			Holdable posItem = thisLocation.groundItems.get(i);
+		while (i < thisLocation.inventory.size() && success == false) {
+			Holdable posItem = thisLocation.inventory.get(i);
 			String posItemName = posItem.getName().toLowerCase();
 			if (posItemName.equals(toGet) || (posItemName + posItem.getId()).equals(toGet) && posItem instanceof Item) {
 				// check if item is get-able, if player is allowed to get item - currently assuming Holdable=Get-able

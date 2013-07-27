@@ -9,7 +9,7 @@ public class Look implements Command {
 		StdMob currentPlayer = playerPrompt.getCurrentPlayer();
 		String direction = UsefulCommands.getSecondWord(fullCommand);
 		Location lookLocation = (Location) currentPlayer.getMobLocation();
-		if (!direction.equals("")) {
+		if (direction != null) {
 			lookLocation = lookLocation.getLocation(direction);
 		} 
 		if (lookLocation != null) {

@@ -58,6 +58,7 @@ public class PlayerPrompt extends Thread {
 				// Need to figure out allowed id numbers.
 				this.currentPlayer = new Player.Builder(1, enteredName).password(enteredPass).location(WorldServer.locationCollection.get(1)).build();
 				WorldServer.mobList.put(enteredName.toLowerCase(), currentPlayer);
+				WorldServer.locationCollection.get(1).acceptItem(currentPlayer);
 				wrongPass = false;
 			} else {
 				try {
