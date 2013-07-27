@@ -1,7 +1,7 @@
 package processes;
 import java.util.*;
 
-import Interfaces.Mobile;
+import Interfaces.*;
 
 public class UsefulCommands {
 	// Converts a single incoming word so that first letter is capitalized.
@@ -188,6 +188,22 @@ public class UsefulCommands {
 		}
 	return posID;
 	}
+	
+	// string, container to holdable
+	public static Holdable stringToHoldable(String item, Container place) {	
+		Holdable tempItem;
+		
+		for (int i=0; i<place.getInventory().size(); i++) {
+			tempItem = place.getInventory().get(i);
+			String tempItemName = tempItem.getName().toLowerCase();
+			if (tempItemName.equals(item) || (tempItemName + tempItem.getId()).equals(item)) {
+				return tempItem;
+			}
+		}
+		return null;
+			
+	}
+	
 	
 	/* Obsolete
 	public static void displayToAllLocation(Location location, String message) {

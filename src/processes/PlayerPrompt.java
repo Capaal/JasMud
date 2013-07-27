@@ -119,9 +119,8 @@ public class PlayerPrompt extends Thread {
 						}
 						
 						// containsKey() is constant O(1) time, while iteration is O(n), below is less efficient.
-						
-						SortedSet<String> s = currentPlayer.getCommandKeySet();		
-						Iterator iter = s.iterator();							
+						SortedSet<String> s = currentPlayer.getCommandKeySet();
+						Iterator iter = s.iterator();
 						while (commandFound == false && iter.hasNext()) {
 							
 							String commandName = (String) iter.next();
@@ -130,8 +129,8 @@ public class PlayerPrompt extends Thread {
 								Command currentCommand = currentPlayer.getCommand(commandName);
 								currentCommand.execute(this, str);
 								commandFound = true;
-							}	
-						}					
+							}
+						}				
 						if (commandFound == false) {
 							printFailMessages();
 						}

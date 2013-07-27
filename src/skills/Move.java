@@ -68,8 +68,11 @@ public class Move implements Command {
 	}
 	
 	protected void printMovement(String movement, Mobile currentPlayer, Container location, String direction) {
+
+	
 		ArrayList<Holdable> inventory = location.getInventory();
 		for (Holdable h : inventory) {
+
 			if ((h instanceof Mobile) && (!(h.getName() + h.getId()).equals(currentPlayer.getName() + currentPlayer.getId()))) {
 				((Mobile) h).tell("\n" + currentPlayer.getName() + movement +  direction);
 				UsefulCommands.displayPrompt((Mobile)h);

@@ -80,8 +80,15 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		allowedCommands.put("get", new Get());  //temporary assumption that all mobs can get
 		allowedCommands.put("create", new Create());
 		allowedCommands.put("drop", new Drop());
+
+
+		allowedCommands.put("throw", new Throw());
+	
+
 		allowedCommands.put("say", new Say());
+
 		WorldServer.mobList.put(name + id, this);
+
 	}
 	
 	protected static abstract class Init<T extends Init<T>> {
@@ -290,6 +297,45 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public Creatable create() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	@Override
+	public ArrayList<Holdable> getInventory() {
+		return new ArrayList<Holdable>(this.inventory);
+	}
+	@Override
+	public String displayExits() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void look(Mobile currentPlayer) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void glance(Mobile currentPlayer) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void displayAll(Mobile currentPlayer) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void setName(String name) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void setDescription(String desc) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void removeItemFromLocation(Holdable oldItem) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

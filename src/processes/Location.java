@@ -170,6 +170,7 @@ public class Location implements Container {
 	public void removeItemFromLocation(Holdable oldItem) {
 		int indexOfItem = inventory.indexOf(oldItem);
 		inventory.remove(indexOfItem);	
+
 	}
 	
 	public ArrayList<Holdable> getInventory() {
@@ -179,5 +180,6 @@ public class Location implements Container {
 	@Override
 	public String getName() {
 		return name;
+
 	}
 }

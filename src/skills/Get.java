@@ -1,6 +1,5 @@
 package skills;
 
-
 import java.util.Iterator;
 
 import Interfaces.*;
@@ -20,28 +19,18 @@ public class Get implements Command {
 
 	public void execute(PlayerPrompt playerPrompt, String fullCommand) {
 		String toGet = UsefulCommands.returnTarget(fullCommand).toLowerCase();
-
 		Mobile currentPlayer = playerPrompt.getCurrentPlayer();
-
 		Location thisLocation = (Location) currentPlayer.getContainer();
+
+		Holdable item = UsefulCommands.stringToHoldable(toGet, thisLocation);
 		
-		boolean success = false;
-		int i = 0;
-		while (i < thisLocation.inventory.size() && success == false) {
-			Holdable posItem = thisLocation.inventory.get(i);
-			String posItemName = posItem.getName().toLowerCase();
-			if (posItemName.equals(toGet) || (posItemName + posItem.getId()).equals(toGet) && posItem instanceof Item) {
-				// check if item is get-able, if player is allowed to get item - currently assuming Holdable=Get-able
-				// remove item from location
-				thisLocation.removeItemFromLocation(posItem);
-				// add item to player inventory
-				// Container needs removeItem method
-				currentPlayer.acceptItem(posItem);
-				currentPlayer.tell("You pick up a dagger.");
-				success = true;
-	//			((Item)posItem).giveCommands(currentPlayer);
-			}
-		} 
+		if (item!=null && item instanceof Item) {
+			thisLocation.removeItemFromLocation(item);
+			currentPlayer.acceptItem(item);
+			currentPlayer.tell("You pick up a " + item.getShortDescription() + ".");
+		} else {
+			currentPlayer.tell("There is no such item here.");
+		}
 		
 		// display msg of picking up item to all players in same location
 		

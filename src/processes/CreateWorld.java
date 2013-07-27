@@ -69,10 +69,22 @@ public class CreateWorld {
 		loc = new Location.Builder(24).name("Southern edge of a lake").description("There is a forest to the south.").groundType("water").south(23, "north").build();
 	}
 	
-	// StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short a sharp.").shortDescription("a dagger").itemCommands("stab").balanceMult(.8).maxCondition(100).itemLocation(WorldServer.locationCollection.get(1)).build(); 
+	// StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short a sharp.").shortDescription("a dagger").itemCommands("stab").balanceMult(.8).maxCondition(100).
+	//		itemLocation(WorldServer.locationCollection.get(1)).build(); 
 	public static void createAllItems() {
 		
-		StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short a sharp.").shortDescription("a dagger").itemCommands("stab").balanceMult(.8).maxCondition(100).itemLocation(WorldServer.locationCollection.get(1)).build();
+		StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short a sharp.").shortDescription("a dagger").itemCommands("stab").balanceMult(.8).maxCondition(100).
+				itemLocation(WorldServer.locationCollection.get(1)).build();
+		StdItem sword = new StdItem.Builder("Sword", 1).physicalMult(1.2).description("Long and sharp.").shortDescription("a sword").itemCommands("stab").balanceMult(.9).maxCondition(150).
+				itemLocation(WorldServer.locationCollection.get(1)).build();
+		StdItem staff = new StdItem.Builder("Staff", 1).physicalMult(1.4).description("Long and wooden.").shortDescription("a staff").itemCommands("stab").balanceMult(1.2).maxCondition(180).
+				itemLocation(WorldServer.locationCollection.get(1)).build();
+		StdItem vase = new StdItem.Builder("Vase", 1).physicalMult(.2).description("It's a vase.").shortDescription("a vase").balanceMult(1.0).maxCondition(10).
+				itemLocation(WorldServer.locationCollection.get(1)).build();
+		StdItem ring = new StdItem.Builder("Ring", 1).physicalMult(.2).description("A small gold ring.").shortDescription("a ring").balanceMult(1.0).maxCondition(10).
+				itemLocation(WorldServer.locationCollection.get(1)).build();
+		StdItem helmet = new StdItem.Builder("Helmet", 1).physicalMult(.4).description("It goes on your head.").shortDescription("a helmet").balanceMult(1.0).maxCondition(10).
+				itemLocation(WorldServer.locationCollection.get(1)).build();
 		
 	//	Dagger dag = new Dagger(1);
 	//	WorldServer.locationCollection.get(1).acceptItem(dag);
