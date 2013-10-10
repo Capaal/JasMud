@@ -1,9 +1,15 @@
 package processes;
 
 import skills.*;
+import skills.Arcane.*;
+import skills.Arcane.SetTargets.Target;
+
+import java.text.MessageFormat;
 import java.util.*;
 import java.io.*;
 
+import Effects.Bleed;
+import Effects.PierceDefence;
 import Interfaces.*;
 
 // Represents basic truths about anything that can move on its own. It can be both controlled by a player,
@@ -33,6 +39,12 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	protected int age; 
 	protected SendMessage sendBack;
 	protected TreeMap<String, Command> allowedCommands;	
+	protected int baseDamage;
+	protected TickClient tickClient;
+	
+	protected HashMap<String, SkillBook> skillBookList = new HashMap<String, SkillBook>();
+	
+	protected HashMap<String, Effect> effectList;
 	
 	protected StdMob(Init<?> build) {
 		this.name = build.name;
@@ -50,7 +62,14 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		this.inventory = build.inventory;
 		this.bugList = new ArrayList<String>();
 		this.messages = new ArrayList<String>();
+		this.effectList = build.effectList;
 		this.allowedCommands = build.allowedCommands;
+		this.baseDamage = build.baseDamage;
+		this.tickClient = new TickClient(this);
+		tickClient.start();
+		
+	//	effectList.put("piercedefence", new PierceDefence()); // Temporary for testing
+		
 		allowedCommands.put("north", new Move());
 	/*	allowedCommands.put("ne", new Move());
 		allowedCommands.put("nw", new Move());
@@ -80,15 +99,46 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		allowedCommands.put("get", new Get());  //temporary assumption that all mobs can get
 		allowedCommands.put("create", new Create());
 		allowedCommands.put("drop", new Drop());
-
-
-		allowedCommands.put("throw", new Throw());
-	
-
 		allowedCommands.put("say", new Say());
-
+		
+		SkillBook skillBook = new SkillBook();
+		SkillBuilder skillBuild = new SkillBuilder();
+		
+		skillBuild.setup(this, "slash");
+		skillBuild.addAction(1, new SetTargets(0, Target.SINGLE));
+		skillBuild.addAction(2, new Damage(10));
+	//	skillBuild.addAction(0, new Bleed(20));
+	//	skillBuild.addAction(0, new ManaCheck(5));
+	//	skillBuild.addAction(2, new ManaCost(5));
+	//	skillBuild.addAction(2, new PersonalDesc("You slash violently at {1}."));
+		skillBuild.complete(skillBook);
+		
+/*		skillBuild.setup(this, "slash");
+		skillBuild.setDamage("15");
+		skillBuild.setMana("5");
+		skillBuild.setEffect("bleed 20");		
+		skillBuild.setPersonalDesc("You slash violently at {1}.");
+		skillBuild.setTargetDesc("{0} slashes violently at you!");
+		skillBuild.setCanSeeDesc("{0} slashes violently at {1}");
+		skillBuild.complete(skillBook);
+		
+		skillBuild.setup(this, "flurry");
+		skillBuild.setDamage("5");
+		skillBuild.setTarget("ALL");
+		skillBuild.setPersonalDesc("You slash violently at {1}.");
+		skillBuild.setTargetDesc("{0} slashes violently at you!");
+		skillBuild.setCanSeeDesc("{0} slashes violently at {1}");
+		skillBuild.complete(skillBook);*/
+		
+		skillBookList.put("skillbook", skillBook);
+		
+		
+		
+		allowedCommands.put("design", new ArcaneBuilder());
+		allowedCommands.put("adjust", new Adjust());
+		allowedCommands.put("complete", new Complete());
+		
 		WorldServer.mobList.put(name + id, this);
-
 	}
 	
 	protected static abstract class Init<T extends Init<T>> {
@@ -97,14 +147,16 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		private final int id;		
 		private String description = "Generic.";
 		private String shortDescription = "Short and Generic.";
-		private int maxHp = 10;
+		private int maxHp = 100;
 		private Container location = WorldServer.locationCollection.get(1);
 		private int physicalMult = 1;
 		private int speed = 3000;
 		private int xpWorth = 1;
+		private int baseDamage = 5;
 		private ArrayList<Holdable> inventory = new ArrayList<Holdable>();
 		private TreeMap<String, Command> allowedCommands = new TreeMap<String, Command>();
 		private String password = "";
+		private HashMap<String, Effect> effectList = new HashMap<String, Effect>();
 		
 		protected abstract T self();		
 		
@@ -124,7 +176,9 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		public T speed(int val) {speed = val;return self();}		
 		public T inventory(Item val) {inventory.add(val);return self();}		
 		public T commands(String name, Command val) {allowedCommands.put(name, val);return self();}		
-		public T xpWorth(int val) {xpWorth = val;return self();}		
+		public T xpWorth(int val) {xpWorth = val;return self();}	
+		public T baseDamage(int val) {baseDamage = val;return self();}
+		public T effect(String string, Effect effect) {effectList.put(string, effect); return self();}
 		public StdMob build() {return new StdMob(this);}}
 	
 	public static class Builder extends Init<Builder> {
@@ -157,12 +211,17 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		return new TreeSet<String>(allowedCommands.keySet());
 	//	return allowedCommands.keySet();
 	}	
+	@Override
+	public SkillBook getBook(String bookName) {
+		return skillBookList.get(bookName);
+	}
 	
 	public Collection<Command> getCommandValueSet() {return allowedCommands.values();}	
 	public void acceptItem(Holdable item) {inventory.add(item);}
 	public int getMessagesSize() {return messages.size();}	
 	public void addBug(String bugMsg) {bugList.add(bugMsg);}
 	public void acceptCommands(HashMap<String, Command> givenCommands) {allowedCommands.putAll(givenCommands);}	
+	public void acceptCommand(String comName, Command command) {allowedCommands.put(comName,  command);}
 	// Doesn't do nothin.
 	public void removeCommands(HashMap<String, Command> removedCommands) {	}
 	@Override
@@ -170,14 +229,14 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	@Override
 	public Container getContainer() {return mobLocation;}
 	
-	public void takeDamage(int damage) {
-		damage = damageAdjustments(damage);
-		this.currentHp = currentHp - damage;
+	public void takeDamage(double damage) {
+//		damage = damageAdjustments(damage);
+		this.currentHp = (int) (currentHp - damage);
 		checkHp();
 	}
 	
 	// Incoming damage may be negated by armor, enchatments, active skills, whatever.
-	protected int damageAdjustments(int damage) {
+/*	protected int damageAdjustments(int damage) {
 		Random rand = new Random();
 		int random = rand.nextInt(100) + 1;
 		System.out.println(random);
@@ -186,7 +245,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	//		return 0;
 	//	}
 		return damage;
-	}
+	}*/
 	
 	protected void checkHp() {
 		if (currentHp <= 0) {
@@ -304,13 +363,11 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	}
 	@Override
 	public String displayExits() {
-		// TODO Auto-generated method stub
-		return null;
+		return "You are being held by a person!";
 	}
 	@Override
 	public void look(Mobile currentPlayer) {
-		// TODO Auto-generated method stub
-		
+		currentPlayer.tell("You see the player's inventory.");		
 	}
 	@Override
 	public void glance(Mobile currentPlayer) {
@@ -336,6 +393,69 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public void removeItemFromLocation(Holdable oldItem) {
 		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public void addEffect(String effectName, Effect effect) {
+		effectList.put(effectName, effect);
+	}
+	
+	@Override
+	public void removeEffect(String effect) {
+		System.out.println(effectList.toString());
+		effectList.remove(effect);		
+		System.out.println(effectList.toString());
+	}
+	
+	public Effect getEffect(String effect) {
+		if (hasEffect(effect)) {
+			return effectList.get(effect);
+		}
+		return null;
+	}
+	
+	public boolean hasEffect(String effect) {
+		return effectList.containsKey(effect);		
+	}
+	
+	public void runEffects() {
+		Iterator iter = effectList.values().iterator();
+		while (iter.hasNext()) {
+			Effect effect = (Effect) iter.next();
+			boolean removed = effect.doEffect();
+			if (removed) {
+				iter.remove();
+				effect.destroyEffect();
+			}
+		//	if (removed) {
+		//		iter.
+		//	}
+		}
+		
+		
+	//	for (int i = 0; i < effectList.size(); i++) {
+	//		boolean removed = effectList..doEffect();
+	//	}
+		
+	//	for (Effect e : effectList.values()) {
+	//		e.doEffect();
+	//	}
+	}
+	@Override
+	public int getBaseDamage() {
+		return baseDamage;
+	}
+	
+	@Override
+	public int getTick() {
+		return tickClient.getTick();
+	}
+	
+	public boolean hasMana(int mana) {
+		return true;
+	}
+	
+	public void affectMana(int mana) {
+		//meh
 	}
 
 }

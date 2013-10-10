@@ -82,7 +82,7 @@ public class StdItem implements Item, Holdable, Creatable {
 	@Override
 	public int getDamage() {
 		// TODO Auto-generated method stub
-		return 0;
+		return 10;
 	}
 	@Override
 	public String getDescription() {return description;}	
@@ -97,4 +97,14 @@ public class StdItem implements Item, Holdable, Creatable {
 		// TODO Auto-generated method stub		
 	}	
 	public Container getContainer() {return itemLocation;}
+	
+	public boolean hasCommand(String command) {
+		if (itemCommands.contains(command)) {
+			return true;
+		}
+		return false;
+	}
+	public double getPhysicalMult() {
+		return physicalMult;
+	}
 }

@@ -134,6 +134,12 @@ public class PlayerPrompt extends Thread {
 						if (commandFound == false) {
 							printFailMessages();
 						}
+						
+						// Temporarily used in sted of thread timers. tickers clocks w/e
+				//		currentPlayer.runEffects();
+						
+						
+						
 					/*	if (WorldServer.skillCommands.containsKey(command)) {
 							Command com = (Command) WorldServer.skillCommands.get(command);
 							com.execute(this, str);

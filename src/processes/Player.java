@@ -13,7 +13,7 @@ public class Player extends StdMob {
 	protected String suffix;
 	protected String sex;
 	protected ArrayList<Quest> questList = new ArrayList<Quest>(); // Can only heroes complete quests? That makes sense... right?
-	private ArrayList<Attachment> attachments; 
+	private HashMap<String, Effect> effectList; 
 	private int missChance; // I think we're scrapping this.
 	
 	protected static abstract class Init<T extends Init<T>> extends StdMob.Init<T> {
@@ -45,7 +45,7 @@ public class Player extends StdMob {
 		this.password = password;
 		this.bugList = new ArrayList<String>();
 		this.messages = new ArrayList<String>();
-		this.attachments = new ArrayList<Attachment>();
+		this.effectList = new HashMap<String, Effect>();
 		this.missChance = 0;
 		allowedCommands.put("stab", new Stab());
 	}	
@@ -81,10 +81,7 @@ public class Player extends StdMob {
 		
 		
 	}
-	
-	public void addAttachment(Attachment attach) {this.attachments.add(attach);}	
-	public boolean searchAttachments(Attachment attach) {return attachments.contains(attach);}	
-	public void removeAttachment(Attachment attach) {this.attachments.remove(attach);}
+
 	
 	public void affectMiss(int missChange) {
 		if ((this.missChance + missChance) < 0) {

@@ -8,6 +8,7 @@ import java.util.Set;
 import processes.Command;
 import processes.Location;
 import processes.SendMessage;
+import skills.Arcane.SkillBook;
 
 
 
@@ -25,7 +26,7 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public String getDescription();
 	public String getShortDescription();
 	public int getXpWorth();
-	public void takeDamage(int damage);
+	public void takeDamage(double d);
 	public void tell(String msg);
 	public void tellLine(String msg);
 	public void addExperience(int exp);
@@ -41,5 +42,16 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public Creatable create();
 	public void acceptCommands(HashMap<String, Command> givenCommands);
 	public void removeCommands(HashMap<String, Command> removedCommands);
+	public void addEffect(String effectName, Effect effect);
+	public Effect getEffect(String effect);
+	public void runEffects();
+	public boolean hasEffect(String effect);
+	public void removeEffect(String effect);
+	public int getBaseDamage();
+	public int getTick();
+	public void affectMana(int mana);
+	public boolean hasMana(int mana);
+	public SkillBook getBook(String bookName);
+	public void acceptCommand(String comName, Command command);
 	
 }

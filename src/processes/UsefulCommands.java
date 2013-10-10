@@ -34,18 +34,29 @@ public class UsefulCommands {
 	
 	public static String getFirstWord(String fullCommand) {
 		StringTokenizer st = new StringTokenizer(fullCommand);
-		String command = st.nextToken();
-		return command;
+		if (st.hasMoreTokens()) {
+			return st.nextToken();
+		}
+		return null;
 	}
 	
 	public static String getSecondWord(String fullCommand) {
-		StringTokenizer st = new StringTokenizer(fullCommand);
-		st.nextToken();
-		if (st.hasMoreTokens()) {
-			return (st.nextToken()).toString();
-		} else {
-			return null;
-		}
+		return getFirstWord(returnTarget(fullCommand));
+	//	StringTokenizer st = new StringTokenizer(fullCommand);
+	//	st.nextToken();
+	//	if (st.hasMoreTokens()) {
+	//		return (st.nextToken()).toString();
+	//	} else {
+	//		return null;
+	//	}
+	}
+	
+	public static String getThirdWord(String fullCommand) {
+		return getFirstWord(returnTarget(returnTarget(fullCommand)));
+	}
+	
+	public static String getForthWord(String fullCommand) {
+		return getFirstWord(returnTarget(returnTarget(returnTarget(fullCommand))));
 	}
 	
 	// Converts incoming word so that numbers are stripped out and only letters are returned.
@@ -202,6 +213,27 @@ public class UsefulCommands {
 		}
 		return null;
 			
+	}
+	
+	private static ArrayList<String> effectList;
+	public static boolean isValidEffect(String effect) {
+		if (effectList == null) {
+			effectList = new ArrayList<String>();
+			effectList.add("bleed");
+		}
+		if (effectList.contains(effect)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static void tellAllInRoom(String canSeeDesc, Container loc) {
+		for (Holdable i : loc.getInventory()) {
+			if (i instanceof Mobile) {
+				((Mobile) i).tell(canSeeDesc);
+			}
+		}
+		
 	}
 	
 	
