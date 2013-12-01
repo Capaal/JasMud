@@ -55,8 +55,8 @@ public abstract class Skill implements Command {
 	}
 	
 	protected void mobExtras(StdMob mob, StdMob currentPlayer) {
-		if (!mob.isHostile()) {
+	//	if (!mob.isHostile()) {
 		//	mob.startAttacks(currentPlayer);												
-		} 
+	//	} 
 	}
 }

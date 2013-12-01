@@ -3,17 +3,14 @@ import java.net.*; // Needed for Socket.
 import java.io.*; // Needed for PrintWriter and BufferReader.
 import java.util.*; // Needed for keySet();
 
-import Interfaces.Container;
-import Interfaces.Mobile;
-
+// Represents a users connection to the game. They will connect, then choose what hero to play. It handles interaction with the system.
 public class PlayerPrompt extends Thread {
 
 	protected Socket incoming;
 	protected SendMessage sendBack;	
 	protected StdMob currentPlayer;
 	 	
-	public PlayerPrompt(Socket incoming) {
-	
+	public PlayerPrompt(Socket incoming) {	
 		this.incoming = incoming;
 		this.sendBack = new SendMessage(incoming);	
 	}
@@ -28,9 +25,8 @@ public class PlayerPrompt extends Thread {
 		boolean oldPlayer = false;
 		boolean wrongPass = true;
 		// Checks if the entered Name exists, if it does, loads it. Assuming password is right.
-		if (enteredName != null && WorldServer.mobList.containsKey(enteredName.toLowerCase()) == true /* && 
-				WorldServer.mobList.get(enteredName.toLowerCase()) instanceof Player*/) {
-			StdMob possiblePlayer = /*(Player)*/WorldServer.mobList.get(enteredName.toLowerCase());
+		if (enteredName != null && WorldServer.mobList.containsKey(enteredName.toLowerCase()) == true) {
+			StdMob possiblePlayer = WorldServer.mobList.get(enteredName.toLowerCase());
 			if (enteredPass.equals(possiblePlayer.getPassword())) {
 				if (enteredName.equals(possiblePlayer.getName())) {
 					this.currentPlayer = possiblePlayer;
@@ -39,7 +35,10 @@ public class PlayerPrompt extends Thread {
 				}
 			} else {
 				sendBack.printMessage("Incorrect password.");
+				sendBack.printSpace();
+				
 				oldPlayer = true;
+			
 				try {
 					incoming.close();
 				} catch (IOException io) {
@@ -135,17 +134,9 @@ public class PlayerPrompt extends Thread {
 							printFailMessages();
 						}
 						
-						// Temporarily used in sted of thread timers. tickers clocks w/e
+						// Temporarily used instead of thread timers. tickers clocks w/e
 				//		currentPlayer.runEffects();
-						
-						
-						
-					/*	if (WorldServer.skillCommands.containsKey(command)) {
-							Command com = (Command) WorldServer.skillCommands.get(command);
-							com.execute(this, str);
-						} else {
 							
-						}*/
 					/*	for (int i = 0; i < WorldServer.allQuests.size(); i++) {
 							Quest tryQuest = WorldServer.allQuests.get(i);
 							tryQuest.testQuest(str, currentPlayer);

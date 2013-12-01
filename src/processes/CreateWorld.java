@@ -1,23 +1,17 @@
 package processes;
 
-import skills.*;
 import items.*;
 
 // to create a location connection, .south(2, "north") means if I go south from that location, I go to location with the id 2, and
 // if I go north from there, it will take me back to the location I just made.
-
-// This is a comment that should only be in "Fixing" branch.
 
 public class CreateWorld {
 	
 	public static void createWorld() {
 		createGenericStart();
 		createNewbieIsland();
-
 		createMobs();
-
 		createAllItems();
-
 	//	createTestArea();
 	}
 	

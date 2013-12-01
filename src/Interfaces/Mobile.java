@@ -10,8 +10,6 @@ import processes.Location;
 import processes.SendMessage;
 import skills.Arcane.SkillBook;
 
-
-
 public interface Mobile extends Container, Holdable, Creatable {
 	
 	public String getName();
