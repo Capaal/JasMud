@@ -28,8 +28,6 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	protected int speed;
 	public ArrayList<Holdable> inventory;
 	protected String description;
-	//protected boolean shield;
-	//protected boolean aura;
 	protected int xpWorth;
 	protected String shortDescription;
 	protected ArrayList<String> bugList;
@@ -71,15 +69,6 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	//	effectList.put("piercedefence", new PierceDefence()); // Temporary for testing
 		
 		allowedCommands.put("north", new Move());
-	/*	allowedCommands.put("ne", new Move());
-		allowedCommands.put("nw", new Move());
-		allowedCommands.put("sw", new Move());
-		allowedCommands.put("se", new Move());
-		allowedCommands.put("e", new Move());
-		allowedCommands.put("n", new Move());
-		allowedCommands.put("s", new Move());
-		allowedCommands.put("w", new Move());
-		allowedCommands.put("l", new Look());*/
 		allowedCommands.put("move", new Move());
 		allowedCommands.put("northeast", new Move());
 		allowedCommands.put("east", new Move());
@@ -130,9 +119,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		skillBuild.setCanSeeDesc("{0} slashes violently at {1}");
 		skillBuild.complete(skillBook);*/
 		
-		skillBookList.put("skillbook", skillBook);
-		
-		
+		skillBookList.put("skillbook", skillBook);		
 		
 		allowedCommands.put("design", new ArcaneBuilder());
 		allowedCommands.put("adjust", new Adjust());
@@ -267,27 +254,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		}
 		sendBack.printMessageLine(msg);
 	}
-	/* To be figured out again?
-	public void startDefence(String defence) {
-		if (defence.equals("shield")) {
-			this.shield = true;
-		} else if (defence.equals("aura")) {
-			this.aura = true;
-		} else if (defence.equals("balance")) {
-			this.balance = false; 
-		}
-	} */
-/* To be figured out again?
-	public void endDefence(String defence) {
-		if (defence.equals("shield")) {
-			this.shield = false;
-		} else if (defence.equals("aura")) {
-			this.aura = false;
-		} else if (defence.equals("balance")) {
-			this.balance = true;
-		}
-	}*/	
-	
+		
 	public void addExperience(int exp) {
 		this.experience += exp;
 		levelMobile();
@@ -313,22 +280,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		}
 	}
 	
-	// I think anything could learn a new skill, but the below is crap.
-	/*
-	public void learnSkill(String skill, SendMessage sendBack) {
-		if (skill.equals("generals")) {
-			this.generals = (this.generals + 1);
-			sendBack.printMessage("You've obtained the rank of " + generals + " in generals.");
-		} else if (skill.equals("mage")) {
-			this.mage = (this.mage + 1);
-			sendBack.printMessage("You've obtained the rank of " + mage + " in mage.");
-		} else if (skill.equals("survival")) {
-			this.survival = (this.survival + 1);
-			sendBack.printMessage("You've obtained the rank of " + survival + " in mage.");
-		}
-	}*/
 	
-
 	/* Goes into AI?
 	public void checkHp(SendMessage enemySendBack, Player enemyPlayer) {
 		if (this.currentHp <= 0 && !dead) {

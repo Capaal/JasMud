@@ -4,6 +4,9 @@ import java.util.*;
 import Interfaces.*;
 import skills.*;
 
+// Used by players when playing "hero" like classes. They can learn and level and get new titles and perform quests.
+// Where the line is drawn between StdMob and player classes will take time to figure out.
+
 public class Player extends StdMob {
 
 	protected int generals;
@@ -14,12 +17,10 @@ public class Player extends StdMob {
 	protected String sex;
 	protected ArrayList<Quest> questList = new ArrayList<Quest>(); // Can only heroes complete quests? That makes sense... right?
 	private HashMap<String, Effect> effectList; 
-	private int missChance; // I think we're scrapping this.
-	
+		
 	protected static abstract class Init<T extends Init<T>> extends StdMob.Init<T> {
 		
-		private String prefix = "";
-		
+		private String prefix = "";		
 		public Init(int id, String name) {super(id, name);}				
 		public T prefix(String val) {this.prefix = val;return self();}		
 		public Player build() {return new Player(this);}
@@ -39,15 +40,11 @@ public class Player extends StdMob {
 		this.mage = 0;
 		this.survival = 0;
 		this.level = 1;		
-	//	Defence variables
-	//	this.shield = false;
-	//	this.aura = false;	
 		this.password = password;
 		this.bugList = new ArrayList<String>();
 		this.messages = new ArrayList<String>();
 		this.effectList = new HashMap<String, Effect>();
-		this.missChance = 0;
-		allowedCommands.put("stab", new Stab());
+		allowedCommands.put("stab", new Stab()); // This supposed to be here?
 	}	
 	
 	public String returnSex() {return this.sex;}
@@ -77,30 +74,13 @@ public class Player extends StdMob {
 		}
 	}	
 	
-	public void checkHp() {
-		
-		
-	}
-
-	
-	public void affectMiss(int missChange) {
-		if ((this.missChance + missChance) < 0) {
-			this.missChance = 0;
-		} else if ((this.missChance + missChance) > 100) {
-			this.missChance = 100;
-		} else {
-			this.missChance += missChange;
-		}
+	public void checkHp() {	
 	}
 	
 	protected int damageAdjustments(int damage) {
 		Random rand = new Random();
 		int random = rand.nextInt(100) + 1;
 		System.out.println(random);
-		if (random <= missChance) {
-//			sendBack.printMessage("Hiding has paid off, you dodge the attack.");
-			return 0;
-		}
 		return damage;
 	}
 }

@@ -33,7 +33,7 @@ public class PossibleCommands {
 		
 		WorldServer.skillCommands.put("look", new Look());
 		WorldServer.skillCommands.put("examine", new Examine());
-		WorldServer.skillCommands.put("map", new Map());
+//		WorldServer.skillCommands.put("map", new Map());
 		WorldServer.skillCommands.put("create", new Create());
 		WorldServer.skillCommands.put("bug", new Bug());
 		WorldServer.skillCommands.put("bugs", new Bugs());

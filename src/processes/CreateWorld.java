@@ -1,6 +1,5 @@
 package processes;
 
-import skills.*;
 import items.*;
 
 // to create a location connection, .south(2, "north") means if I go south from that location, I go to location with the id 2, and
@@ -11,11 +10,8 @@ public class CreateWorld {
 	public static void createWorld() {
 		createGenericStart();
 		createNewbieIsland();
-
 		createMobs();
-
 		createAllItems();
-
 	//	createTestArea();
 	}
 	

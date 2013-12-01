@@ -3,7 +3,13 @@ package processes;
 import java.io.*;
 import java.util.*;
 
-public class GeneralCommands {
+//*************************************************************************************************
+
+// THIS IS JUNK!!! It exists only as a reference to some potentially useful code to copy later if wanted.
+
+//*************************************************************************************************
+
+/*public class GeneralCommands {
 
 	// Punches.
 	public static void doPunch(String fullCommand, Player currentPlayer, SendMessage sendBack) {
@@ -244,7 +250,7 @@ public class GeneralCommands {
 			success = true;
 		}
 	}
-*/
+
 	// Wields an item, but that item must be wieldable.
 	// This is a very inefficient method.	
 	public static void doWield(String fullCommand, Player currentPlayer, SendMessage sendBack) {
@@ -294,7 +300,7 @@ public class GeneralCommands {
 			sendBack.printMessage("You are not wielding anything.");
 		}
 	}
-	*/
+	
 	public static void doUnwield(Player currentPlayer, SendMessage sendBack, String fullCommand) {
 		System.out.println("doUnwield accessed.");
 		String target = UsefulCommands.returnTarget(fullCommand);
@@ -1240,4 +1246,4 @@ public class GeneralCommands {
 			sendBack.printMessage(t.currentPlayer.fullName() + ": " + locationName);
 		}
 	}
-}
+}*/

@@ -4,6 +4,8 @@ import java.util.*;
 
 import Interfaces.*;
 
+// Contains all information relating to each "room" a player may visit.
+
 public class Location implements Container {
 		
 	private final int id;
@@ -14,12 +16,18 @@ public class Location implements Container {
 	
 	private TreeMap<String, Location> locationMap;
 	
-//	private HashMap<String, String> abbrevNames;
-
+	// The BUILDER is an internal class meant to be used to instantly build a new location.
+	// It allows the constructor to more clearly indicate what is happening, and allow variable information.
+	
+	// Location loc = new Location.Builder(2).name("Mud Shack").description("This is north of the beach on the bridge.").groundType("land").south(1, "north").build();
+	// Builder(2) indicates it is location number 21, there can be no duplicates.
+	// .name("Mud Shack") is the name of the location, and descrption is description, easy to read.
+	// .south(1, "north") means if I go south from that location, I go to location with the id 1, and
+	// if I go north from there, it will take me back to the location I just made.
+	
 	public static class Builder {
 		
-		private final int id;
-		
+		private final int id;		
 		private String name = "blank";
 		private String description = "blank";
 		private String groundType = "land";
@@ -78,19 +86,6 @@ public class Location implements Container {
 				futureLoc.setLocation(this, currentDirection);
 			}
 		}
-	/*	abbrevNames = new HashMap<String, String>();
-		abbrevNames.put("n", "north");
-		abbrevNames.put("ne", "northeast");
-		abbrevNames.put("e", "east");
-		abbrevNames.put("se", "southeast");
-		abbrevNames.put("s", "south");
-		abbrevNames.put("sw", "southwest");
-		abbrevNames.put("w", "west");
-		abbrevNames.put("nw", "northwest");
-		abbrevNames.put("u", "up");
-		abbrevNames.put("d", "down");
-		abbrevNames.put("i", "in");
-		abbrevNames.put("o", "out");*/
 	}
 	
 	public void setLocation(Location futureLoc, String currentDirection) {
@@ -124,10 +119,7 @@ public class Location implements Container {
 	public void look(Mobile currentPlayer) {
 		currentPlayer.tell(UsefulCommands.ANSI.MAGENTA + name + UsefulCommands.ANSI.SANE);
 		currentPlayer.tell(UsefulCommands.ANSI.GREEN + description + UsefulCommands.ANSI.SANE);
-		displayAll(currentPlayer);
-		
-		System.out.println(inventory.toString());
-		
+		displayAll(currentPlayer);				
 		currentPlayer.tell(UsefulCommands.ANSI.CYAN + displayExits() + UsefulCommands.ANSI.SANE);
 		currentPlayer.tell("(God sight) Location number: " + id + ". Ground type: " + groundType + ".");
 	}

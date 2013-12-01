@@ -3,10 +3,8 @@
 import java.util.ArrayList;
 
 public interface Container {
-
 	
 	public ArrayList<Holdable> inventory = new ArrayList<Holdable>();
-
 
 	public ArrayList<Holdable> getInventory();
 	public String displayExits();
