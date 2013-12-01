@@ -78,8 +78,6 @@ public class PlayerPrompt extends Thread {
 		try {
 			while (wrongPass == false) {
 				//WorldServer.saveSystem();
-				PromptLoop newLoop = new PromptLoop(sendBack, currentPlayer);
-				newLoop.start();
 				// Obtains commands typed by user.
 				UsefulCommands.displayPrompt(currentPlayer);
 				String str = sendBack.getMessage();
@@ -89,9 +87,7 @@ public class PlayerPrompt extends Thread {
 					// This is what breaks the infinite loop and kills connection.
 					if (str.trim().toLowerCase().equals("quit")) {
 				//		sendBack.printMessage("Are you sure you want to quit?");
-				//		newLoop.wait(2000);
 				//		if (sendBack.getMessage().equals("y")) {
-							newLoop.stop();
 							break;
 				//		}
 					} else {

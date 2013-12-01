@@ -1,6 +1,7 @@
-package processes;
-import java.io.*;
-import java.util.*;
+package Interfaces;
+
+import processes.Player;
+import processes.SendMessage;
 
 public interface Quest {
 

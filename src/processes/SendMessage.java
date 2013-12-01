@@ -1,7 +1,6 @@
 package processes;
 import java.net.*; // Needed for Socket.
 import java.io.*; // Needed for PrintWriter and Reader.
-import java.util.*; // Needed for StringTokenizer.
 
 public class SendMessage {
 

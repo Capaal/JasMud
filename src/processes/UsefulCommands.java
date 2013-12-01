@@ -42,13 +42,6 @@ public class UsefulCommands {
 	
 	public static String getSecondWord(String fullCommand) {
 		return getFirstWord(returnTarget(fullCommand));
-	//	StringTokenizer st = new StringTokenizer(fullCommand);
-	//	st.nextToken();
-	//	if (st.hasMoreTokens()) {
-	//		return (st.nextToken()).toString();
-	//	} else {
-	//		return null;
-	//	}
 	}
 	
 	public static String getThirdWord(String fullCommand) {
