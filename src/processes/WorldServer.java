@@ -1,13 +1,13 @@
 package processes;
 
+import interfaces.Item;
+import interfaces.Quest;
 import items.*;
 
 import java.net.*; // Needed for Socket.
 import java.util.*; // Needed for HashSet.
 import java.io.*; //Serializable, FileReader/Writer
 
-import Interfaces.Item;
-import Interfaces.Quest;
 
 public class WorldServer {
 	// Contains transient sockets of each connected Player.

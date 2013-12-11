@@ -1,8 +1,9 @@
 package skills;
 
+import interfaces.*;
+
 import java.util.Iterator;
 
-import Interfaces.*;
 
 
 import processes.Command;

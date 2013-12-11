@@ -1,13 +1,14 @@
 package skills.Arcane;
 
+import interfaces.Action;
+import interfaces.Container;
+import interfaces.Holdable;
+import interfaces.Mobile;
+
 import java.util.ArrayList;
 
 import processes.UsefulCommands;
 
-import Interfaces.Action;
-import Interfaces.Container;
-import Interfaces.Holdable;
-import Interfaces.Mobile;
 
 public class SetTargets implements Action {
 	

@@ -2,9 +2,10 @@ package skills;
 
 import java.util.Random;
 
+import effects.Bleed;
+
+import interfaces.*;
 import items.StdItem;
-import Effects.Bleed;
-import Interfaces.*;
 import processes.*;
 
 public class Stab implements Command {

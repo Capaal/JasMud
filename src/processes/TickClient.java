@@ -1,6 +1,6 @@
 package processes;
 
-import Interfaces.Mobile;
+import interfaces.Mobile;
 
 public class TickClient extends Thread {
 	

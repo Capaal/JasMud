@@ -1,13 +1,14 @@
 package items;
 
+import interfaces.Container;
+import interfaces.Holdable;
+import interfaces.Item;
+import interfaces.Wieldable;
+
 import java.io.*; // For Serializable.
 
 import processes.Player;
 import processes.SendMessage;
-import Interfaces.Container;
-import Interfaces.Holdable;
-import Interfaces.Item;
-import Interfaces.Wieldable;
 
 public class Dagger implements Item, Wieldable  {
 	

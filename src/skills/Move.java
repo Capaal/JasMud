@@ -1,8 +1,9 @@
 package skills;
 
+import interfaces.*;
+
 import java.util.ArrayList;
 
-import Interfaces.*;
 import processes.*;
 
 //Needs to be more generic, what if they are flying? WRONGTYPE is bad in that way.

@@ -3,14 +3,26 @@ package processes;
 import skills.*;
 import skills.Arcane.*;
 import skills.Arcane.SetTargets.Target;
+import interfaces.*;
+import interfaces.Action.Where;
+import interfaces.Action.Who;
 
 import java.text.MessageFormat;
 import java.util.*;
 import java.io.*;
 
-import Effects.Bleed;
-import Effects.PierceDefence;
-import Interfaces.*;
+import effects.Bleed;
+import effects.PierceDefence;
+import actions.Chance;
+import actions.Check;
+import actions.Check.CheckType;
+import actions.Cost;
+import actions.Cost.CostType;
+import actions.Damage;
+import actions.Effecter;
+import actions.Effecter.EffectType;
+import actions.Message;
+
 
 // Represents basic truths about anything that can move on its own. It can be both controlled by a player,
 // or be controlled by AI. Rat yes, hero mage yes, dragon yes, wind no, sun no, bird yes, ant yes, tree? No, make a sentient tree.
@@ -91,16 +103,16 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		allowedCommands.put("say", new Say());
 		
 		SkillBook skillBook = new SkillBook();
-		SkillBuilder skillBuild = new SkillBuilder();
+	//	SkillBuilder skillBuild = new SkillBuilder();
 		
-		skillBuild.setup(this, "slash");
-		skillBuild.addAction(1, new SetTargets(0, Target.SINGLE));
-		skillBuild.addAction(2, new Damage(10));
+	//	skillBuild.setup(this, "slash");
+	//	skillBuild.addAction(1, new SetTargets(0, Target.SINGLE));
+	//	skillBuild.addAction(2, new Damage(10));
 	//	skillBuild.addAction(0, new Bleed(20));
 	//	skillBuild.addAction(0, new ManaCheck(5));
 	//	skillBuild.addAction(2, new ManaCost(5));
 	//	skillBuild.addAction(2, new PersonalDesc("You slash violently at {1}."));
-		skillBuild.complete(skillBook);
+	//	skillBuild.complete(skillBook);
 		
 /*		skillBuild.setup(this, "slash");
 		skillBuild.setDamage("15");
@@ -118,6 +130,48 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		skillBuild.setTargetDesc("{0} slashes violently at you!");
 		skillBuild.setCanSeeDesc("{0} slashes violently at {1}");
 		skillBuild.complete(skillBook);*/
+		
+		
+		
+		// BELOW IS BUILT USING NEW ACTIONS USING FORMAT ACTION(ie damage) ACTIONS RELATED INFO(10 target projectile)
+		
+		// build new skill called slash
+		// check balance self
+		// damage 20 target here
+		
+		//***** "slash" is a test skill that does odd stuff, currently it does:
+		// Check balance true, 10 damage to target here, bleed effect on target for 500? s,
+		// It is type sharp, and requires a weapon that is type sharp, It displays messages to everyone in that location.
+		// And then it takes away balance, balance does not come back yet... It has a chance to heal yourself. 10% for 15
+		
+		SkillBuilder skillBuild = new SkillBuilder();
+		
+		skillBuild.setup(this, "slash");
+		skillBuild.addAction(new Check("1", CheckType.BALANCE, Who.SELF, Where.HERE));
+		skillBuild.addAction(new Damage(10, Who.TARGET, Where.HERE));
+		
+		skillBuild.addAction(new Effecter(500, EffectType.BLEED, Who.TARGET, Where.HERE));
+		
+		skillBuild.addAction(new Chance(10, new Damage(-15, Who.SELF, Where.HERE)));
+		
+		skillBuild.addType(Type.SHARP);
+		skillBuild.addAction(new Check(Type.SHARP.name(), CheckType.WEAPON, Who.SELF, Where.HERE));
+		
+		
+		skillBuild.addAction(new Message("You make a sharp slash at %s and then %s turns and fights back.", Where.HERE, Who.TARGET, Who.TARGET, Who.TARGET));
+		skillBuild.addAction(new Message("You watch as %s slashes horribly at %s and %s turns to fight back.", Where.HERE, Who.OTHERS, Who.SELF, Who.TARGET, Who.TARGET)); 
+		skillBuild.addAction(new Message("%s slashes you painfully.", Where.HERE, Who.TARGET, Who.SELF));
+		
+		skillBuild.addAction(new Cost(1, CostType.BALANCE, Who.SELF, Where.HERE));
+		
+		skillBuild.complete(skillBook);
+		
+		skillBuild.setup(this, "getbalance");
+		skillBuild.addAction(new Cost(-1, CostType.BALANCE, Who.SELF, Where.HERE));
+		skillBuild.complete(skillBook);;
+		
+		
+		
 		
 		skillBookList.put("skillbook", skillBook);		
 		
@@ -410,5 +464,13 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		//meh
 	}
 
+	public void setBalance(boolean value) {
+		this.balance = value;
+	}
+	
+	public boolean hasWeaponType(Type type) {
+		return true; // Should actually test for correct equipped weapons.
+	}
+	
 }
 	

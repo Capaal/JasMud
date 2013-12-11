@@ -1,8 +1,9 @@
 package processes;
 
+import interfaces.*;
+
 import java.util.*;
 
-import Interfaces.*;
 
 // Contains all information relating to each "room" a player may visit.
 

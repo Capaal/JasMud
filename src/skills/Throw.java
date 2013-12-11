@@ -1,7 +1,7 @@
 package skills;
 
-import Interfaces.Holdable;
-import Interfaces.Item;
+import interfaces.Holdable;
+import interfaces.Item;
 import processes.*;
 
 public class Throw implements Command {

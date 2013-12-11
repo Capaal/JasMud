@@ -1,21 +1,25 @@
 package skills.Arcane;
 
+import interfaces.*;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Queue;
 
+import effects.*;
+
+import processes.Type;
 import processes.UsefulCommands;
-import skills.Arcane.SkillBuilder.Target;
-import Effects.*;
-import Interfaces.*;
+//import skills.Arcane.SkillBuilder.Target;
 
 public class Skill {
 	
 	private String name;
 	private int damage;
 	private String type;
-	private Target target;
+	//private Target target;
+	private int targetSlot;
 	private int speed;
 	private int mana;	
 	private Mobile currentPlayer;
@@ -27,7 +31,10 @@ public class Skill {
 	
 	private String fullCommand;
 	
-	private Queue<Queue<Action>> stages;
+	private Queue<Action> actions;
+	private ArrayList<Type> types;
+	
+//	private Queue<Queue<Action>> stages;
 	
 //	private Queue<Action> stageOne;
 //	private Queue<Action> stageTwo;
@@ -38,7 +45,8 @@ public class Skill {
 	
 	public Skill(SkillBuilder build, Mobile currentPlayer) {
 		this.name = build.getName();
-		this.stages = build.getStages();
+		this.actions = build.getActions();
+		this.types = build.getTypes();
 	//	this.damage = build.getDamage();
 	//	this.type = build.getType();
 	//	this.target = build.getTarget();
@@ -64,11 +72,15 @@ public class Skill {
 	// Called when attempting to cast the finished spell. May or may not have a target, depending on spell.
 	public void perform(String fullCommand) {
 		this.fullCommand = fullCommand;
-		for (Queue<Action> q : stages) {
-			if (!stageActions(q)) {
-				System.out.println("stages failed?");
+		for (Action a : actions){
+			if (a.activate(this) == false) {
+				System.out.println(a + " returned false.");
 				break;
 			}
+		//	if (!stageActions(q)) {
+		//		System.out.println("stages failed?");
+		//		break;
+		//	}
 	//	if (stageActions(stageOne)) {
 	//		if (stageActions(stageTwo)) {
 	//			stageActions(stageThree);
@@ -98,6 +110,10 @@ public class Skill {
 	
 	public String getFullCommand() {
 		return fullCommand;
+	}
+	
+	public Mobile getCurrentPlayer() {
+		return this.currentPlayer;
 	}
 	
 	private boolean stageActions(Queue<Action> actionList) {

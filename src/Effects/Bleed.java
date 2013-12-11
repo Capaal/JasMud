@@ -1,6 +1,6 @@
-package Effects;
+package effects;
 
-import Interfaces.*;
+import interfaces.*;
 
 public class Bleed implements Effect {
 

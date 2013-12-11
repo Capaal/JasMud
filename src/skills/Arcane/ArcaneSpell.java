@@ -1,13 +1,15 @@
 package skills.Arcane;
 
+import interfaces.Container;
+import interfaces.Holdable;
+import interfaces.Mobile;
+
 import java.util.HashMap;
+
+import effects.*;
 
 import processes.Location;
 import processes.UsefulCommands;
-import Effects.*;
-import Interfaces.Container;
-import Interfaces.Holdable;
-import Interfaces.Mobile;
 
 public class ArcaneSpell extends Skill {
 	

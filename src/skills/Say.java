@@ -1,9 +1,10 @@
 package skills;
 
+import interfaces.*;
+
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
-import Interfaces.*;
 import processes.*;
 
 public class Say implements Command {

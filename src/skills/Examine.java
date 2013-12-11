@@ -1,9 +1,10 @@
 package skills;
 
+import interfaces.Holdable;
+import interfaces.Item;
+
 import java.util.Iterator;
 
-import Interfaces.Holdable;
-import Interfaces.Item;
 
 import processes.Command;
 import processes.Location;

@@ -1,7 +1,8 @@
 package processes;
 
+import interfaces.*;
+
 import java.util.*;
-import Interfaces.*;
 import skills.*;
 
 // Used by players when playing "hero" like classes. They can learn and level and get new titles and perform quests.

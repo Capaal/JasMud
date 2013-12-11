@@ -1,7 +1,8 @@
 package skills;
 
+import interfaces.*;
+
 import java.util.*;
-import Interfaces.*;
 import processes.*;
 
 public class Swim extends Move implements Command {

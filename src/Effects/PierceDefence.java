@@ -1,7 +1,7 @@
-package Effects;
+package effects;
 
-import Interfaces.Effect;
-import Interfaces.Mobile;
+import interfaces.Effect;
+import interfaces.Mobile;
 
 public class PierceDefence implements Effect {
 

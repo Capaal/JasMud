@@ -1,17 +1,20 @@
 package skills.Arcane;
 
+import interfaces.Action;
+import interfaces.Container;
+import interfaces.Holdable;
+import interfaces.Mobile;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import processes.Type;
+
 import processes.Command;
 import processes.PlayerPrompt;
 import processes.UsefulCommands;
-import Interfaces.Action;
-import Interfaces.Container;
-import Interfaces.Holdable;
-import Interfaces.Mobile;
 
 public class SkillBuilder implements Command {
 	
@@ -20,9 +23,12 @@ public class SkillBuilder implements Command {
 //	private final int DEFAULTSPEED = 2000;	
 	private String name;
 	
-	private ArrayList<Queue<Action>> queueList = new ArrayList<Queue<Action>>();
+//	private ArrayList<Queue<Action>> queueList = new ArrayList<Queue<Action>>();
 	
-	private Queue<Queue<Action>> stages = new LinkedList<Queue<Action>>();
+	private Queue<Action> actions = new LinkedList<Action>();
+	private ArrayList<Type> types = new ArrayList<Type>();
+	
+//	private Queue<Queue<Action>> stages = new LinkedList<Queue<Action>>();
 	
 //	private int damage = DEFAULTDAMAGE;
 //	private String type = "local";
@@ -33,7 +39,7 @@ public class SkillBuilder implements Command {
 //	private String personalDesc = "";
 //	private String canSeeDesc = "";
 //	private String targetDesc = "";
-	
+	/*
 	public enum Target {
 		// Enum types.
 		SINGLE() {
@@ -91,7 +97,7 @@ public class SkillBuilder implements Command {
 		}		
 		public abstract ArrayList<Mobile> findTarget(String t, Container loc);
 	}
-	
+	*/
 //	private HashMap<String, Integer> effectList = new HashMap<String, Integer>();
 	
 	private Mobile currentPlayer;
@@ -100,19 +106,14 @@ public class SkillBuilder implements Command {
 	public void execute(PlayerPrompt playerPrompt, String fullCommand) {
 		this.name = UsefulCommands.getSecondWord(fullCommand);
 		this.currentPlayer = playerPrompt.getCurrentPlayer();	
-		queueList.add(new LinkedList<Action>());
-		queueList.add(new LinkedList<Action>());
-		queueList.add(new LinkedList<Action>());
-		queueList.add(new LinkedList<Action>());
+		
+		
 	}
 	
 	public void setup(Mobile mob, String fullCommand) {
 		this.name = fullCommand;
 		this.currentPlayer = mob;	
-		queueList.add(new LinkedList<Action>());
-		queueList.add(new LinkedList<Action>());
-		queueList.add(new LinkedList<Action>());
-		queueList.add(new LinkedList<Action>());
+	
 	}
 	
 	public String getName() {return name;}	
@@ -124,16 +125,18 @@ public class SkillBuilder implements Command {
 //	public String getPersonalDesc() {return personalDesc;}
 //	public String getCanSeeDesc() {return canSeeDesc;}
 //	public String getTargetDesc() {return targetDesc;}	
-	public Queue<Queue<Action>> getStages() {return new LinkedList<Queue<Action>>(stages);}
+	public Queue<Action> getActions() {return new LinkedList<Action>(actions);}
+	public ArrayList<Type> getTypes() {return new ArrayList<Type>(types);}
+	
 
 //	public HashMap<String, Integer> getEffectList() {return new HashMap<String, Integer>(effectList);}
 	
 	public void complete() {
-		for (Queue<Action> q : queueList) {
-			if (!stages.offer(q)) {
-				System.out.println("Stages offering failed.");
-			}
-		}
+	//	for (Queue<Action> q : queueList) {
+	//		if (!stages.offer(q)) {
+	//			System.out.println("Stages offering failed.");
+	//		}
+	//	}
 		SkillBook skillList = currentPlayer.getBook("skillbook");		
 		if (skillList != null && skillList instanceof SkillBook) {
 			((SkillBook)skillList).addSkill(new Skill(this, currentPlayer));
@@ -143,27 +146,33 @@ public class SkillBuilder implements Command {
 	}
 	
 	public void complete(SkillBook skillBook) {
-		for (Queue<Action> q : queueList) {
-			if (!stages.offer(q)) {
-				System.out.println("Stages offering failed.");
-			}
-		}
+	//	for (Queue<Action> q : queueList) {
+	//		if (!stages.offer(q)) {
+	//			System.out.println("Stages offering failed.");
+	//		}
+	//	}
 		skillBook.addSkill(new Skill(this, currentPlayer));	
 		currentPlayer.acceptCommand(name, skillBook);   // Should probably only happen onces, when made.
 		toDefault();
 	}
+	
+	public void addType(Type type) {
+		this.types.add(type);
+	}
+	
+	
 		
-	public void addAction(int position, Action a) {
-		Queue<Action> q;
-		if (queueList.size() > position + 1) {
-			q = queueList.get(position);
-		} else {
-			queueList.add(new LinkedList<Action>());
-			q = queueList.get(position);
-		}
-		if (!q.offer(a)) {
-			System.out.println("Action offer fail in a skill.");
-		}
+	public void addAction(Action a) {
+		actions.add(a);
+	//	if (queueList.size() > position + 1) {
+	//		q = queueList.get(position);
+	//	} else {
+	//		queueList.add(new LinkedList<Action>());
+	//		q = queueList.get(position);
+	//	}
+	//	if (!q.offer(a)) {
+	//		System.out.println("Action offer fail in a skill.");
+	//	}
 	}
 /*	public void setDamage(String incDmg) {
 		int newDamage = Integer.parseInt(incDmg);
@@ -218,6 +227,7 @@ public class SkillBuilder implements Command {
 	//	this.mana = DEFAULTMANA;	
 	//	this.speed = DEFAULTSPEED;		
 	//	effectList = new HashMap<String, Integer>();
-		this.stages.clear();
+		this.actions.clear();
+		this.types.clear();
 	}
 }

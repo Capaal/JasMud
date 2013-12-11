@@ -1,4 +1,4 @@
-package Interfaces;
+package interfaces;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,6 +8,7 @@ import java.util.Set;
 import processes.Command;
 import processes.Location;
 import processes.SendMessage;
+import processes.Type;
 import skills.Arcane.SkillBook;
 
 public interface Mobile extends Container, Holdable, Creatable {
@@ -51,5 +52,6 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public boolean hasMana(int mana);
 	public SkillBook getBook(String bookName);
 	public void acceptCommand(String comName, Command command);
-	
+	public void setBalance(boolean value);
+	public boolean hasWeaponType(Type type);
 }

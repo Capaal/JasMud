@@ -1,7 +1,7 @@
 package skills;
 
-import Interfaces.Creatable;
-import Interfaces.Item;
+import interfaces.Creatable;
+import interfaces.Item;
 import processes.Command;
 import processes.Location;
 import processes.PlayerPrompt;
