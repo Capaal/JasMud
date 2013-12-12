@@ -26,6 +26,14 @@ public enum Type {
 		
 	},
 	
+	BLEED() {
+		
+	},
+	
+	NULL() {
+		
+	},
+	
 	HEAL() {
 		
 	};

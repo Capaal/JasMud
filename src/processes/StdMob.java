@@ -12,7 +12,7 @@ import java.util.*;
 import java.io.*;
 
 import effects.Bleed;
-import effects.PierceDefence;
+import effects.Defence;
 import actions.Chance;
 import actions.Check;
 import actions.Check.CheckType;
@@ -54,7 +54,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	
 	protected HashMap<String, SkillBook> skillBookList = new HashMap<String, SkillBook>();
 	
-	protected HashMap<String, Effect> effectList;
+	protected ArrayList<Effect> effectList;
 	
 	protected StdMob(Init<?> build) {
 		this.name = build.name;
@@ -147,10 +147,14 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		SkillBuilder skillBuild = new SkillBuilder();
 		
 		skillBuild.setup(this, "slash");
-		skillBuild.addAction(new Check("1", CheckType.BALANCE, Who.SELF, Where.HERE));
+//		skillBuild.addAction(new Check("1", CheckType.BALANCE, Who.SELF, Where.HERE)); // Don't need this anymore, cost includes a check
+		// But then we get the problem, that a fail causes lose of balance, I guess they can include a check also if they want to avoid.
+		
+		skillBuild.addAction(new Cost(1, CostType.BALANCE, Who.SELF, Where.HERE));
+		
 		skillBuild.addAction(new Damage(10, Who.TARGET, Where.HERE));
 		
-		skillBuild.addAction(new Effecter(500, EffectType.BLEED, Who.TARGET, Where.HERE));
+		skillBuild.addAction(new Effecter(10, EffectType.BLEED, Type.NULL, Who.TARGET, Where.HERE));
 		
 		skillBuild.addAction(new Chance(10, new Damage(-15, Who.SELF, Where.HERE)));
 		
@@ -161,14 +165,20 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		skillBuild.addAction(new Message("You make a sharp slash at %s and then %s turns and fights back.", Where.HERE, Who.TARGET, Who.TARGET, Who.TARGET));
 		skillBuild.addAction(new Message("You watch as %s slashes horribly at %s and %s turns to fight back.", Where.HERE, Who.OTHERS, Who.SELF, Who.TARGET, Who.TARGET)); 
 		skillBuild.addAction(new Message("%s slashes you painfully.", Where.HERE, Who.TARGET, Who.SELF));
-		
-		skillBuild.addAction(new Cost(1, CostType.BALANCE, Who.SELF, Where.HERE));
-		
+				
 		skillBuild.complete(skillBook);
 		
 		skillBuild.setup(this, "getbalance");
 		skillBuild.addAction(new Cost(-1, CostType.BALANCE, Who.SELF, Where.HERE));
-		skillBuild.complete(skillBook);;
+		skillBuild.complete(skillBook);
+		
+		skillBuild.setup(this, "bleeddefence");
+		skillBuild.addAction(new Effecter(500, EffectType.DEFENCE, Type.BLEED, Who.SELF, Where.HERE));
+		skillBuild.complete(skillBook);
+		
+		skillBuild.setup(this, "slashdefence");
+		skillBuild.addAction(new Effecter(500, EffectType.DEFENCE, Type.SHARP, Who.SELF, Where.HERE));
+		skillBuild.complete(skillBook);
 		
 		
 		
@@ -197,7 +207,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		private ArrayList<Holdable> inventory = new ArrayList<Holdable>();
 		private TreeMap<String, Command> allowedCommands = new TreeMap<String, Command>();
 		private String password = "";
-		private HashMap<String, Effect> effectList = new HashMap<String, Effect>();
+		private ArrayList<Effect> effectList = new ArrayList<Effect>();
 		
 		protected abstract T self();		
 		
@@ -219,7 +229,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		public T commands(String name, Command val) {allowedCommands.put(name, val);return self();}		
 		public T xpWorth(int val) {xpWorth = val;return self();}	
 		public T baseDamage(int val) {baseDamage = val;return self();}
-		public T effect(String string, Effect effect) {effectList.put(string, effect); return self();}
+		public T effect(Effect effect) {effectList.add(effect); return self();}
 		public StdMob build() {return new StdMob(this);}}
 	
 	public static class Builder extends Init<Builder> {
@@ -270,8 +280,9 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	@Override
 	public Container getContainer() {return mobLocation;}
 	
-	public void takeDamage(double damage) {
+	public void takeDamage(List<Type> types, int damage) {
 //		damage = damageAdjustments(damage);
+		damage = runEffects(types, damage);
 		this.currentHp = (int) (currentHp - damage);
 		checkHp();
 	}
@@ -401,51 +412,53 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		
 	}
 	@Override
-	public void addEffect(String effectName, Effect effect) {
-		effectList.put(effectName, effect);
+	public void addEffect(Effect effect) {
+		effectList.add(effect);
 	}
 	
 	@Override
-	public void removeEffect(String effect) {
+	public void removeEffect(Effect effect) {
 		System.out.println(effectList.toString());
 		effectList.remove(effect);		
 		System.out.println(effectList.toString());
 	}
 	
-	public Effect getEffect(String effect) {
-		if (hasEffect(effect)) {
-			return effectList.get(effect);
-		}
-		return null;
+//	public Effect getEffect(String effect) {
+//		if (hasEffect(effect)) {
+//			return effectList.get(effect);
+//		}
+//		return null;
+//	}
+	
+	public boolean hasEffect(Effect effect) {
+		return effectList.contains(effect);		
 	}
 	
-	public boolean hasEffect(String effect) {
-		return effectList.containsKey(effect);		
-	}
-	
-	public void runEffects() {
-		Iterator iter = effectList.values().iterator();
+	public void runTickEffects() {
+		Iterator iter = effectList.iterator();
 		while (iter.hasNext()) {
 			Effect effect = (Effect) iter.next();
-			boolean removed = effect.doEffect();
-			if (removed) {
+			effect.doTickEffect();
+			if (effect.wasRemoved()) {
 				iter.remove();
-				effect.destroyEffect();
+				removeEffect(effect);
 			}
-		//	if (removed) {
-		//		iter.
-		//	}
 		}
-		
-		
-	//	for (int i = 0; i < effectList.size(); i++) {
-	//		boolean removed = effectList..doEffect();
-	//	}
-		
-	//	for (Effect e : effectList.values()) {
-	//		e.doEffect();
-	//	}
 	}
+	
+	public int runEffects(List<Type> incomingTypes, int damage) {
+		Iterator iter = effectList.iterator();
+		while (iter.hasNext()) {
+			Effect effect = (Effect) iter.next();
+			damage = effect.doRunEffect(incomingTypes, damage);
+			if (effect.wasRemoved()) {
+				iter.remove();
+				removeEffect(effect);
+			}
+		}
+		return damage;
+	}
+	
 	@Override
 	public int getBaseDamage() {
 		return baseDamage;
@@ -471,6 +484,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public boolean hasWeaponType(Type type) {
 		return true; // Should actually test for correct equipped weapons.
 	}
+	
 	
 }
 	

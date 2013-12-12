@@ -47,10 +47,21 @@ public class Check implements Action {
 			public boolean processType(String checkValue, Skill s, Who who, Where where) {
 				boolean success = false;
 				for (Mobile m : who.findTarget(s,  where.findLoc(s))) {
-					if (m.hasBalance()) {
-						success = true;
-					} else {
-						return false;
+					switch(checkValue) {
+					case "true":
+						if (m.hasBalance()) {
+							success = true;
+						} else {
+							return false;
+						}
+						break;
+					case "false":
+						if (!m.hasBalance()) {
+							success = true;
+						} else {
+							return false;
+						}
+						break;
 					}
 				}
 				return success;

@@ -21,7 +21,7 @@ public class TickClient extends Thread {
 				} catch(InterruptedException ie) {
 				}
 			tickCount ++;
-			currentPlayer.runEffects();
+			currentPlayer.runTickEffects();
 		}
 		
 	}

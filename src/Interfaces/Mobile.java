@@ -3,6 +3,7 @@ package interfaces;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import processes.Command;
@@ -25,7 +26,7 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public String getDescription();
 	public String getShortDescription();
 	public int getXpWorth();
-	public void takeDamage(double d);
+	public void takeDamage(List<Type> types, int d);
 	public void tell(String msg);
 	public void tellLine(String msg);
 	public void addExperience(int exp);
@@ -41,11 +42,12 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public Creatable create();
 	public void acceptCommands(HashMap<String, Command> givenCommands);
 	public void removeCommands(HashMap<String, Command> removedCommands);
-	public void addEffect(String effectName, Effect effect);
-	public Effect getEffect(String effect);
-	public void runEffects();
-	public boolean hasEffect(String effect);
-	public void removeEffect(String effect);
+	public void addEffect(Effect effect);
+//	public Effect getEffect(String effect);
+	public void runTickEffects();
+	public int runEffects(List<Type> incomingTypes, int damagey);
+	public boolean hasEffect(Effect effect);
+	public void removeEffect(Effect effect);
 	public int getBaseDamage();
 	public int getTick();
 	public void affectMana(int mana);

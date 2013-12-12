@@ -5,10 +5,10 @@ import interfaces.*;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Queue;
 
 import effects.*;
-
 import processes.Type;
 import processes.UsefulCommands;
 //import skills.Arcane.SkillBuilder.Target;
@@ -123,6 +123,10 @@ public class Skill {
 			}
 		}
 		return true;
+	}
+	
+	public List<Type> getTypes() {
+		return types;
 	}
 /*	
 	public Container findLocation() {

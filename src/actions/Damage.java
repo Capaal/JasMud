@@ -28,7 +28,7 @@ public class Damage implements Action {
 		ArrayList<Mobile> target = who.findTarget(s, loc);
 		if (loc != null && target != null) {
 			for (Mobile m : target) {
-				m.takeDamage(intensity);
+				m.takeDamage(s.getTypes(), intensity);
 			}
 			return true;
 			
