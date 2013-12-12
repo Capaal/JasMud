@@ -78,6 +78,8 @@ public interface Action {
 	 * 	costs done
 	 *  type done
 	 *  chance
+	 *  
+	 *  Other POSSIBLE actions: What about things I've made already? Get, Throw, Move, Create, Drop, Look, are those "actions" building blocks?
 	 */
 	
 	// Covers RULES FOR WHERE

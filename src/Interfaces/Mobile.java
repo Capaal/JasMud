@@ -43,7 +43,7 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public void acceptCommands(HashMap<String, Command> givenCommands);
 	public void removeCommands(HashMap<String, Command> removedCommands);
 	public void addEffect(Effect effect);
-//	public Effect getEffect(String effect);
+//	public Effect getEffect(String effect); Can't figure out if I need this yet or not. Can't be a String atm though.
 	public void runTickEffects();
 	public int runEffects(List<Type> incomingTypes, int damagey);
 	public boolean hasEffect(Effect effect);

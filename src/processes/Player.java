@@ -45,7 +45,7 @@ public class Player extends StdMob {
 		this.bugList = new ArrayList<String>();
 		this.messages = new ArrayList<String>();
 		this.effectList = new HashMap<String, Effect>();
-		allowedCommands.put("stab", new Stab()); // This supposed to be here?
+	//	allowedCommands.put("stab", new Stab()); // This supposed to be here?
 	}	
 	
 	public String returnSex() {return this.sex;}

@@ -1,17 +1,12 @@
 package skills.Arcane;
 
 import interfaces.*;
-
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Queue;
-
+import java.util.*;
 import effects.*;
-import processes.Type;
-import processes.UsefulCommands;
-//import skills.Arcane.SkillBuilder.Target;
+import processes.*;
+
+//******* Skill is in an awkward spot, where it was made for the arcane class, then turned into something for all skills. ************//
+
 
 public class Skill {
 	

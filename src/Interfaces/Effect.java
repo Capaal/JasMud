@@ -1,7 +1,6 @@
 package interfaces;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import processes.Type;
 
@@ -23,7 +22,6 @@ public abstract class Effect {
 	}
 
 	public void destroyEffect() {
-	//	currentPlayer.removeEffect(this);
 		this.currentPlayer = null;
 		this.removed = true;
 	}

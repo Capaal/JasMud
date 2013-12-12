@@ -25,12 +25,6 @@ public class PossibleCommands {
 		WorldServer.skillCommands.put("out", new Move());
 		WorldServer.skillCommands.put("swim", new Swim());	
 		
-		WorldServer.skillCommands.put("punch", new Punch());
-		WorldServer.skillCommands.put("kick", new Kick());		
-		WorldServer.skillCommands.put("hide", new Hide());		
-		WorldServer.skillCommands.put("firebolt", new Firebolt());
-		WorldServer.skillCommands.put("icebolt", new Icebolt());
-		
 		WorldServer.skillCommands.put("look", new Look());
 		WorldServer.skillCommands.put("examine", new Examine());
 //		WorldServer.skillCommands.put("map", new Map());

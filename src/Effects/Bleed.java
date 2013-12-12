@@ -1,16 +1,12 @@
 package effects;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import java.util.*;
 import processes.Type;
 import interfaces.*;
 
 public class Bleed extends Effect {
 
 	private int intensity;
-//	private final Mobile currentPlayer;
 	private final int startTick;
 	private final int endTick;
 	private final Type type = Type.BLEED;
@@ -22,12 +18,6 @@ public class Bleed extends Effect {
 		startTick = currentPlayer.getTick();
 		endTick = startTick + duration;
 	}
-	
-//	@Override
-//	public void destroyEffect() {
-//		currentPlayer.removeEffect(this);
-//		this.currentPlayer = null;
-//	}
 
 	@Override
 	public void doTickEffect() {
@@ -42,16 +32,4 @@ public class Bleed extends Effect {
 	public int doRunEffect(List<Type> incomingTypes, int damage) {
 		return damage;
 	}
-
-//	@Override
-//	public Mobile getCurrentPlayer() {
-//		return currentPlayer;
-//		
-//	}
-
-//	@Override
-//	public void setCurrentPlayer(Mobile currentPlayer) {
-//		this.currentPlayer = currentPlayer;
-//		
-//	}
 }

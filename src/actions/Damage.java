@@ -1,13 +1,9 @@
 package actions;
 
 import interfaces.Action;
-import interfaces.Container;
 import interfaces.Mobile;
-
 import java.util.ArrayList;
-
 import processes.Location;
-
 import skills.Arcane.Skill;
 
 public class Damage implements Action {
@@ -30,10 +26,8 @@ public class Damage implements Action {
 			for (Mobile m : target) {
 				m.takeDamage(s.getTypes(), intensity);
 			}
-			return true;
-			
+			return true;			
 		}
 		return false;
 	}
-
 }

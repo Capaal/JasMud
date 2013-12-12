@@ -4,8 +4,6 @@ import processes.Type;
 import skills.Arcane.Skill;
 import interfaces.Action;
 import interfaces.Mobile;
-import interfaces.Action.Where;
-import interfaces.Action.Who;
 
 public class Check implements Action {
 	
@@ -91,7 +89,7 @@ public class Check implements Action {
 		
 		// And probably more for compenent types.
 		
-		// Constructor, leave blank.
+		// Private Constructor, leave blank.
 		private CheckType() {
 		}
 		

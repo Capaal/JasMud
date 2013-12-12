@@ -2,6 +2,7 @@ package actions;
 
 
 // **** NOTE: This probably needs to be changed so that all costs are ALSO checks, I think that will always be true.
+// Balance does a check, but not very well.
 
 import actions.Check.CheckType;
 import skills.Arcane.Skill;

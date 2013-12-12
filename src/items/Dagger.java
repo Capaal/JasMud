@@ -96,6 +96,24 @@ public class Dagger implements Item, Wieldable  {
 //		currentPlayer.wieldedRight = this;
 	}
 
+	@Override
+	public Container getContainer() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getShortDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setContainer(Container con) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 

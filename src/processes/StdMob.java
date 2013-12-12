@@ -283,7 +283,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public void takeDamage(List<Type> types, int damage) {
 //		damage = damageAdjustments(damage);
 		damage = runEffects(types, damage);
-		this.currentHp = (int) (currentHp - damage);
+		this.currentHp = currentHp - damage;
 		checkHp();
 	}
 	
