@@ -6,10 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import processes.Command;
+//import processes.Command;
 import processes.Location;
 import processes.SendMessage;
 import processes.Type;
+import skills.Arcane.Skill;
 import skills.Arcane.SkillBook;
 
 public interface Mobile extends Container, Holdable, Creatable {
@@ -32,16 +33,16 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public void addExperience(int exp);
 	public void levelMobile();
 	public void setContainer(Container newLoc);
-	public boolean commandAllowed(String command);
-	public Command getCommand(String command);
-	public Set<String> getCommandKeySet();
-	public Collection<Command> getCommandValueSet();
+//	public boolean commandAllowed(String command);
+	public Skill getCommand(String command);
+//	public Set<String> getCommandKeySet();
+//	public Collection<Command> getCommandValueSet();
 	public void acceptItem(Holdable item);
 	public int getMessagesSize() ;
 	public void addBug(String bugMsg);
 	public Creatable create();
-	public void acceptCommands(HashMap<String, Command> givenCommands);
-	public void removeCommands(HashMap<String, Command> removedCommands);
+//	public void acceptCommands(HashMap<String, Command> givenCommands);
+//	public void removeCommands(HashMap<String, Command> removedCommands);
 	public void addEffect(Effect effect);
 //	public Effect getEffect(String effect); Can't figure out if I need this yet or not. Can't be a String atm though.
 	public void runTickEffects();
@@ -53,7 +54,8 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public void affectMana(int mana);
 	public boolean hasMana(int mana);
 	public SkillBook getBook(String bookName);
-	public void acceptCommand(String comName, Command command);
+//	public void acceptCommand(String comName, Command command);
 	public void setBalance(boolean value);
 	public boolean hasWeaponType(Type type);
+	public void removeItem(Holdable item);
 }

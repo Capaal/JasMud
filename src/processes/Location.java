@@ -175,4 +175,9 @@ public class Location implements Container {
 		return name;
 
 	}
+
+	@Override
+	public Container getContainer(String dir) {
+		return getLocation(dir);
+	}
 }

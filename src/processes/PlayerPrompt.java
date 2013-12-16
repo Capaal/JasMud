@@ -3,6 +3,8 @@ import java.net.*; // Needed for Socket.
 import java.io.*; // Needed for PrintWriter and BufferReader.
 import java.util.*; // Needed for keySet();
 
+import skills.Arcane.Skill;
+
 // Represents a users connection to the game. They will connect, then choose what hero to play. It handles interaction with the system.
 public class PlayerPrompt extends Thread {
 
@@ -107,25 +109,25 @@ public class PlayerPrompt extends Thread {
 						if (posDir != null) {
 							command = posDir;
 						}
-						if (currentPlayer.commandAllowed(command)) {
-							Command com = currentPlayer.getCommand(command);
-							com.execute(this, str);
+				//		if (currentPlayer.commandAllowed(command)) {
+						Skill com = currentPlayer.getCommand(command);
+						if (com != null) {
+							com.perform(str);
 							commandFound = true;
 						}
 						
 						// containsKey() is constant O(1) time, while iteration is O(n), below is less efficient.
-						SortedSet<String> s = currentPlayer.getCommandKeySet();
-						Iterator iter = s.iterator();
-						while (commandFound == false && iter.hasNext()) {
-							
-							String commandName = (String) iter.next();
-							System.out.println(commandName);
-							if (commandName.startsWith(command)) {
-								Command currentCommand = currentPlayer.getCommand(commandName);
-								currentCommand.execute(this, str);
-								commandFound = true;
-							}
-						}				
+				//		SortedSet<String> s = currentPlayer.getCommandKeySet();
+				//		Iterator iter = s.iterator();
+				//		while (commandFound == false && iter.hasNext()) {							
+				//			String commandName = (String) iter.next();
+				//			System.out.println(commandName);
+				//			if (commandName.startsWith(command)) {
+				//				Command currentCommand = currentPlayer.getCommand(commandName);
+				//				currentCommand.execute(this, str);
+				//				commandFound = true;
+				//			}
+				//		}				
 						if (commandFound == false) {
 							printFailMessages();
 						}

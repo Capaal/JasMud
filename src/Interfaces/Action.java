@@ -2,7 +2,7 @@ package interfaces;
 
 import java.util.ArrayList;
 
-import processes.Location;
+import interfaces.Container;
 import processes.UsefulCommands;
 import processes.WorldServer;
 import skills.Arcane.Skill;
@@ -14,10 +14,10 @@ public interface Action {
 	/* Questions about Targetting:
 	 * A skill will certainly be used.
 	 * We may know the specific target to effect (ourselves, Sastri, goblin12345)
-	 * We may not know the target (fireball here blows up everything in this location)
-	 * We may know both specific and not (fireball north goblin12345 hits that goblin and anything in that location.
+	 * We may not know the target (fireball here blows up everything in this Container)
+	 * We may know both specific and not (fireball north goblin12345 hits that goblin and anything in that Container.
 	 * We might target only allies or only enemies, or not allies or not enemies.
-	 * The spell will be limited to its range, only in current location, 1 location away, 3 locations away, projectile in a direction.
+	 * The spell will be limited to its range, only in current Container, 1 Container away, 3 Containers away, projectile in a direction.
 	 * damage 10 doesn't need to know whether it is allowed or not, there just needs to be a check beforehand that cancels skill if it fails.
 	 * damage 10 does need to know it's target, should it be sent in a mobile and that is it's target? very hard to link actions like this.
 	 * We could set up skill to be "damage 10 self" or "damage 10 target" or "damage 10 I HAVE NO IDEA"
@@ -88,9 +88,9 @@ public interface Action {
 				
 		HERE() {
 			@Override
-			public ArrayList<Location> findLoc(Skill s) {
-				ArrayList<Location> loc = new ArrayList<Location>();
-				loc.add(((Location)s.getLocation()));
+			public ArrayList<Container> findLoc(Skill s) {
+				ArrayList<Container> loc = new ArrayList<Container>();
+				loc.add(s.getContainer());
 				return loc;
 			}
 		},
@@ -98,25 +98,47 @@ public interface Action {
 		// Below probably doesn't account for miss-spellings or leaving out the id? it needs work.
 		TARGET() {
 			@Override
-			public ArrayList<Location> findLoc(Skill s) {			
-				ArrayList<Location> loc = new ArrayList<Location>();				
+			public ArrayList<Container> findLoc(Skill s) {			
+				ArrayList<Container> loc = new ArrayList<Container>();				
 				Mobile t = WorldServer.mobList.get(UsefulCommands.getSecondWord(s.getFullCommand()));
 				if (t != null) {
-					loc.add(((Location)t.getContainer()));
+					loc.add(t.getContainer());
 					return loc;
 				}				
 				return null;
 			}
 		},
 		
+		// This would check personal inventory, rework for Container being anyone's inventory?
+		INVENTORY() {
+			@Override
+			public ArrayList<Container> findLoc(Skill s) {			
+				ArrayList<Container> loc = new ArrayList<Container>();				
+				loc.add(s.getCurrentPlayer());
+				return loc;
+			}
+		},
+		
+		// Only works with second word at the moment.
+		ONEAWAY() {
+			@Override
+			public ArrayList<Container> findLoc(Skill s) {
+				ArrayList<Container> loc = new ArrayList<Container>();
+				String dir = UsefulCommands.getSecondWord(s.getFullCommand());
+				loc.add(s.getContainer().getContainer(dir));
+				return loc;
+			}
+		},
+		
+		// Specifically uses the third word in command, seems a bit odd.
 		PROJECTILE() {
 			@Override
-			public ArrayList<Location> findLoc(Skill s) {
-				ArrayList<Location> loc = new ArrayList<Location>();
+			public ArrayList<Container> findLoc(Skill s) {
+				ArrayList<Container> loc = new ArrayList<Container>();
 				String dir = UsefulCommands.getThirdWord(s.getFullCommand());
-				Location onPath = ((Location) s.getLocation());
+				Container onPath = s.getContainer();
 				loc.add(onPath);
-				onPath = onPath.getLocation(dir);
+				onPath = onPath.getContainer(dir);
 				while (onPath != null) {
 					loc.add(onPath);
 				}
@@ -128,7 +150,7 @@ public interface Action {
 		//Constructor
 		private Where() {			
 		}		
-		public abstract ArrayList<Location> findLoc(Skill s);
+		public abstract ArrayList<Container> findLoc(Skill s);
 	}
 	
 	// Covers RULES FOR WHO
@@ -137,7 +159,7 @@ public interface Action {
 			
 		SELF() {
 			@Override
-			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Location> locations) {
+			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers) {
 				ArrayList<Mobile> targ = new ArrayList<Mobile>();
 				targ.add(s.getCurrentPlayer());
 				return targ;
@@ -146,9 +168,9 @@ public interface Action {
 		
 		ALL() {
 			@Override
-			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Location> locations) {
+			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers) {
 				ArrayList<Mobile> targ = new ArrayList<Mobile>();
-				for (Location l : locations) {
+				for (Container l : Containers) {
 					for (Holdable m : l.getInventory()) {
 						if (m instanceof Mobile) {
 							targ.add((Mobile) m);
@@ -161,9 +183,9 @@ public interface Action {
 		
 		TARGET() {
 			@Override
-			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Location> locations) {
+			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers) {
 				ArrayList<Mobile> targ = new ArrayList<Mobile>();
-				for (Location l : locations) {
+				for (Container l : Containers) {
 					Holdable h = UsefulCommands.stringToHoldable(UsefulCommands.getSecondWord(s.getFullCommand()), l);
 					if (h != null) {
 						targ.add((Mobile)h);
@@ -176,11 +198,11 @@ public interface Action {
 		
 		OTHERS() {
 			@Override
-			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Location> locations) {
+			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers) {
 				ArrayList<Mobile> targ = new ArrayList<Mobile>();
-				Mobile t = (TARGET.findTarget(s, locations)).get(0);
-				Mobile m = (SELF.findTarget(s, locations)).get(0);
-				for (Location l : locations) {
+				Mobile t = (TARGET.findTarget(s, Containers)).get(0);
+				Mobile m = (SELF.findTarget(s, Containers)).get(0);
+				for (Container l : Containers) {
 					Holdable h = UsefulCommands.stringToHoldable(UsefulCommands.getSecondWord(s.getFullCommand()), l);
 					if (h != null && h != t && h != s) {
 						targ.add((Mobile)h);
@@ -193,7 +215,7 @@ public interface Action {
 		
 		ALLIES() {
 			@Override
-			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Location> locations) {
+			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers) {
 				
 				return null;
 			}
@@ -201,7 +223,7 @@ public interface Action {
 		
 		ENEMIES() {
 			@Override
-			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Location> locations) {
+			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers) {
 				
 				return null;
 			}
@@ -210,6 +232,6 @@ public interface Action {
 		//Constructor
 		private Who() {			
 		}		
-		public abstract ArrayList<Mobile> findTarget(Skill s, ArrayList<Location> locations);
+		public abstract ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers);
 	}
 }

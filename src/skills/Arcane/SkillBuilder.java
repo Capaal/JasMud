@@ -12,11 +12,11 @@ import java.util.Queue;
 
 import processes.Type;
 
-import processes.Command;
+
 import processes.PlayerPrompt;
 import processes.UsefulCommands;
 
-public class SkillBuilder implements Command {
+public class SkillBuilder {
 	
 //	private final int DEFAULTDAMAGE = 10;
 //	private final int DEFAULTMANA = 10;
@@ -102,7 +102,7 @@ public class SkillBuilder implements Command {
 	
 	private Mobile currentPlayer;
 		
-	@Override
+
 	public void execute(PlayerPrompt playerPrompt, String fullCommand) {
 		this.name = UsefulCommands.getSecondWord(fullCommand);
 		this.currentPlayer = playerPrompt.getCurrentPlayer();	
@@ -141,7 +141,7 @@ public class SkillBuilder implements Command {
 		if (skillList != null && skillList instanceof SkillBook) {
 			((SkillBook)skillList).addSkill(new Skill(this, currentPlayer));
 		}
-		currentPlayer.acceptCommand(name, skillList);  // Should probably only happen onces, when made.
+//		currentPlayer.acceptCommand(name, skillList);  // Should probably only happen onces, when made.
 		toDefault();
 	}
 	
@@ -152,7 +152,7 @@ public class SkillBuilder implements Command {
 	//		}
 	//	}
 		skillBook.addSkill(new Skill(this, currentPlayer));	
-		currentPlayer.acceptCommand(name, skillBook);   // Should probably only happen onces, when made.
+//		currentPlayer.acceptCommand(name, skillBook);   // Should probably only happen onces, when made.
 		toDefault();
 	}
 	

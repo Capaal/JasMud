@@ -1,8 +1,11 @@
 package actions;
 
 import interfaces.Action;
+import interfaces.Container;
 import interfaces.Mobile;
+
 import java.util.ArrayList;
+
 import processes.Location;
 import skills.Arcane.Skill;
 
@@ -20,7 +23,7 @@ public class Damage implements Action {
 	
 	@Override
 	public boolean activate(Skill s) {
-		ArrayList<Location> loc = where.findLoc(s);
+		ArrayList<Container> loc = where.findLoc(s);
 		ArrayList<Mobile> target = who.findTarget(s, loc);
 		if (loc != null && target != null) {
 			for (Mobile m : target) {

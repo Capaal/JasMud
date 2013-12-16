@@ -1,12 +1,12 @@
 package skills.Arcane;
 
 import java.util.ArrayList;
-import processes.Command;
+//import processes.Command;
 import processes.PlayerPrompt;
 import processes.UsefulCommands;
 
 // Effectively a spellbook for basic skills.
-public class SkillBook implements Command {
+public class SkillBook {
 
 	ArrayList<Skill> skillList;
 	
@@ -14,7 +14,7 @@ public class SkillBook implements Command {
 		skillList = new ArrayList<Skill>();
 	}
 	
-	@Override
+
 	public void execute(PlayerPrompt playerPrompt, String fullCommand) {
 		String info = UsefulCommands.returnTarget(fullCommand);
 		String skill = UsefulCommands.getFirstWord(fullCommand);

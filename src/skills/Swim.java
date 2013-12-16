@@ -3,6 +3,8 @@ package skills;
 import interfaces.*;
 
 import java.util.*;
+
+import actions.Move;
 import processes.*;
 
 public class Swim extends Move implements Command {

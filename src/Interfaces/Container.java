@@ -17,5 +17,6 @@ public interface Container {
 	public void setDescription(String desc);
 	public void acceptItem(Holdable newItem);
 	public void removeItemFromLocation(Holdable oldItem) ;
+	public Container getContainer(String dir);
 
 }
