@@ -1,8 +1,7 @@
 package actions;
 
-import checks.MoveCheck;
+import processes.Skill;
 import interfaces.*;
-import skills.Arcane.Skill;
 
 public class Move implements Action {
 		
@@ -18,10 +17,7 @@ public class Move implements Action {
 	
 	// Currently gets 1 location poorly, need a better Where ENUM to handle 1 location away. Or something else.
 	public boolean activate(Skill s) {	
-		if (!(new MoveCheck(who, where, finalLoc)).activate(s)) {
-			return false;
-		}
-		for (Mobile m : who.findTarget(s,  where.findLoc(s))) {
+		for (Mobile m : who.findTarget(s, where.findLoc(s))) {
 			Container c = finalLoc.findLoc(s).get(0);		
 			m.getContainer().removeItemFromLocation(m);
 			m.setContainer(c);

@@ -1,6 +1,6 @@
 package actions;
 
-import skills.Arcane.Skill;
+import processes.Skill;
 import interfaces.Action;
 
 // Using OR at the moment makes fail messages not work right. You get a fail message but still succeed on a different action.

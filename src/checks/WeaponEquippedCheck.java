@@ -1,7 +1,7 @@
 package checks;
 
+import processes.Skill;
 import processes.Type;
-import skills.Arcane.Skill;
 import interfaces.*;
 
 public class WeaponEquippedCheck implements Action {

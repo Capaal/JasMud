@@ -2,7 +2,6 @@ package actions;
 
 import interfaces.*;
 import processes.*;
-import skills.Arcane.Skill;
 
 public class Examine implements Action {
 	

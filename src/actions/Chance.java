@@ -2,7 +2,7 @@ package actions;
 
 import java.util.Random;
 
-import skills.Arcane.Skill;
+import processes.Skill;
 import interfaces.Action;
 
 public class Chance implements Action {

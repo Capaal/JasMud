@@ -1,8 +1,8 @@
 package effectors;
 
+import processes.Skill;
 import processes.Type;
 import effects.Defence;
-import skills.Arcane.Skill;
 import interfaces.*;
 
 public class DefenceEffect implements Action {

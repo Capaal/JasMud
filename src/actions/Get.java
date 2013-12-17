@@ -1,8 +1,8 @@
 package actions;
 
 import interfaces.*;
+import processes.Skill;
 import processes.UsefulCommands;
-import skills.Arcane.Skill;
 
 public class Get implements Action {
 	

@@ -1,9 +1,11 @@
 package actions;
 
 import interfaces.*;
+
 import java.util.*;
+
 import processes.*;
-import skills.Arcane.Skill;
+import processes.Skill.Syntax;
 
 public class Say implements Action {
 
@@ -11,6 +13,12 @@ public class Say implements Action {
 	public boolean activate(Skill s) {
 		Who who = Who.ALL;
 		Where where = Where.HERE;	
+		StringBuffer sb = new StringBuffer();
+		sb.append(s.getCurrentPlayer().getName() + " says, \"");
+		sb.append(s.getStringInfo(Syntax.LIST));
+		
+		
+	/*	
 		String fullCommand = s.getFullCommand();
 		StringTokenizer st = UsefulCommands.getST(fullCommand);
 		StringBuffer sb = new StringBuffer();
@@ -22,7 +30,7 @@ public class Say implements Action {
 			while (st.hasMoreTokens()) {
 				sb.append(" " + st.nextToken());
 			}
-		}
+		}*/
 		sb.append("\".");
 //		ArrayList<Mobile> targs = who.findTarget(s, where.findLoc(s));
 		for (Mobile m : who.findTarget(s, where.findLoc(s))) {

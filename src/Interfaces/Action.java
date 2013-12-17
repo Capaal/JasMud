@@ -3,9 +3,10 @@ package interfaces;
 import java.util.ArrayList;
 
 import interfaces.Container;
+import processes.Skill;
+import processes.Skill.Syntax;
 import processes.UsefulCommands;
 import processes.WorldServer;
-import skills.Arcane.Skill;
 
 public interface Action {
 
@@ -100,7 +101,7 @@ public interface Action {
 			@Override
 			public ArrayList<Container> findLoc(Skill s) {			
 				ArrayList<Container> loc = new ArrayList<Container>();				
-				Mobile t = WorldServer.mobList.get(UsefulCommands.getSecondWord(s.getFullCommand()));
+				Mobile t = WorldServer.mobList.get(s.getStringInfo(Syntax.TARGET));
 				if (t != null) {
 					loc.add(t.getContainer());
 					return loc;
@@ -124,8 +125,10 @@ public interface Action {
 			@Override
 			public ArrayList<Container> findLoc(Skill s) {
 				ArrayList<Container> loc = new ArrayList<Container>();
-				String dir = UsefulCommands.getSecondWord(s.getFullCommand());
-				loc.add(s.getContainer().getContainer(dir));
+				String dir = s.getStringInfo(Syntax.DIRECTION);
+				if (dir != null) {
+					loc.add(s.getContainer().getContainer(dir));
+				}
 				return loc;
 			}
 		},
@@ -135,7 +138,7 @@ public interface Action {
 			@Override
 			public ArrayList<Container> findLoc(Skill s) {
 				ArrayList<Container> loc = new ArrayList<Container>();
-				String dir = UsefulCommands.getThirdWord(s.getFullCommand());
+				String dir = s.getStringInfo(Syntax.DIRECTION);
 				Container onPath = s.getContainer();
 				loc.add(onPath);
 				onPath = onPath.getContainer(dir);
@@ -186,7 +189,7 @@ public interface Action {
 			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers) {
 				ArrayList<Mobile> targ = new ArrayList<Mobile>();
 				for (Container l : Containers) {
-					Holdable h = UsefulCommands.stringToHoldable(UsefulCommands.getSecondWord(s.getFullCommand()), l);
+					Holdable h = UsefulCommands.stringToHoldable(s.getStringInfo(Syntax.TARGET), l);
 					if (h != null) {
 						targ.add((Mobile)h);
 						return targ;

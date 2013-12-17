@@ -2,8 +2,9 @@ package actions;
 
 import java.util.ArrayList;
 
+import processes.Skill;
+import processes.Skill.Syntax;
 import processes.UsefulCommands;
-import skills.Arcane.Skill;
 import interfaces.*;
 
 
@@ -54,25 +55,119 @@ public class Message implements Action {
 		TARGET() {
 			@Override
 			public String getString(Skill s) {
-				return UsefulCommands.getSecondWord(s.getFullCommand());
+				return s.getStringInfo(Syntax.TARGET);
 			}
 		},
 		
 		MOVE() {
 			@Override
 			public String getString(Skill s) {
-				return UsefulCommands.getSecondWord(s.getFullCommand());
+				return s.getStringInfo(Syntax.DIRECTION);
 			}
 		},
 		
 		OPPMOVE() {
 			@Override
 			public String getString(Skill s) {
-				return "";
+				oppDirections opp = oppDirections.valueOf((s.getStringInfo(Syntax.DIRECTION)).toUpperCase());
+				return opp.getOpp();
 			}
 		};
 		
 		private msgStrings(){}
 		public abstract String getString(Skill s);
+	}
+	
+	//Maybe this should be in MOVE instead? SO far this is the only place using these as opposites, which is why it is here.
+	private enum oppDirections {
+		
+		NORTH() {
+			@Override
+			protected String getOpp() {
+				return "south";
+			}
+		},
+		
+		NORTHEAST() {
+			@Override
+			protected String getOpp() {
+				return "southwest";
+			}
+		},
+		
+		EAST() {
+			@Override
+			protected String getOpp() {
+				return "west";
+			}
+		},
+		
+		SOUTHEAST() {
+			@Override
+			protected String getOpp() {
+				return "northwest";
+			}
+		},
+		
+		SOUTH() {
+			@Override
+			protected String getOpp() {
+				return "north";
+			}
+		},
+		
+		SOUTHWEST() {
+			@Override
+			protected String getOpp() {
+				return "northeast";
+			}
+		},
+		
+		WEST() {
+			@Override
+			protected String getOpp() {
+				return "east";
+			}
+		},
+		
+		NORTHWEST() {
+			@Override
+			protected String getOpp() {
+				return "southeast";
+			}
+		},
+		
+		UP() {
+			@Override
+			protected String getOpp() {
+				return "down";
+			}
+		},
+		
+		DOWN() {
+			@Override
+			protected String getOpp() {
+				return "up";
+			}
+		},
+		
+		IN() {
+			@Override
+			protected String getOpp() {
+				return "out";
+			}
+		},
+		
+		OUT() {
+			@Override
+			protected String getOpp() {
+				return "in";
+			}
+		};
+		
+		private oppDirections() {}
+		
+		protected abstract String getOpp();
+		
 	}
 }

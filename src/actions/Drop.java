@@ -1,8 +1,9 @@
 package actions;
 
 import interfaces.*;
+import processes.Skill;
+import processes.Skill.Syntax;
 import processes.UsefulCommands;
-import skills.Arcane.Skill;
 
 public class Drop implements Action {
 	
@@ -18,7 +19,7 @@ public class Drop implements Action {
 	
 	@Override
 	public boolean activate(Skill s) {
-		String toDrop = UsefulCommands.returnTarget(s.getFullCommand()).toLowerCase();
+		String toDrop = (s.getStringInfo(Syntax.ITEM)).toLowerCase();
 		Boolean success = false;
 		for (Mobile m : who.findTarget(s, where.findLoc(s))) {
 			Holdable item = UsefulCommands.stringToHoldable(toDrop, m);

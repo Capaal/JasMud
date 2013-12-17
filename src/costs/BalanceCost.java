@@ -1,7 +1,7 @@
 package costs;
 
+import processes.Skill;
 import checks.BalanceCheck;
-import skills.Arcane.Skill;
 import interfaces.*;
 
 public class BalanceCost implements Action {

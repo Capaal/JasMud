@@ -1,9 +1,8 @@
-package skills.Arcane;
+package processes;
 
 import java.util.ArrayList;
+
 //import processes.Command;
-import processes.PlayerPrompt;
-import processes.UsefulCommands;
 
 // Effectively a spellbook for basic skills.
 public class SkillBook {
@@ -16,11 +15,10 @@ public class SkillBook {
 	
 
 	public void execute(PlayerPrompt playerPrompt, String fullCommand) {
-		String info = UsefulCommands.returnTarget(fullCommand);
-		String skill = UsefulCommands.getFirstWord(fullCommand);
-		String target = UsefulCommands.getSecondWord(fullCommand);
-		Skill toCast = getSkill(skill);
-		toCast.perform(fullCommand);
+		Skill toCast = getSkill(UsefulCommands.getFirstWord(fullCommand));
+		if (toCast != null) {
+			toCast.perform(fullCommand);
+		}
 	}
 	
 	public void addSkill(Skill newSpell) {

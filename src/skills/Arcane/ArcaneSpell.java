@@ -7,8 +7,8 @@ import interfaces.Mobile;
 import java.util.HashMap;
 
 import effects.*;
-
 import processes.Location;
+import processes.Skill;
 import processes.UsefulCommands;
 
 public class ArcaneSpell extends Skill {

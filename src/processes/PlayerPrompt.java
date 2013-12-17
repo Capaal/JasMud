@@ -3,8 +3,6 @@ import java.net.*; // Needed for Socket.
 import java.io.*; // Needed for PrintWriter and BufferReader.
 import java.util.*; // Needed for keySet();
 
-import skills.Arcane.Skill;
-
 // Represents a users connection to the game. They will connect, then choose what hero to play. It handles interaction with the system.
 public class PlayerPrompt extends Thread {
 
@@ -105,12 +103,14 @@ public class PlayerPrompt extends Thread {
 						String command = st.nextToken();
 						command = command.toLowerCase();
 						Boolean commandFound = false;
+						Skill com;
 						String posDir = UsefulCommands.getDirName(command);
 						if (posDir != null) {
-							command = posDir;
+							com = currentPlayer.getCommand("move");
+							str = posDir;
+						} else {
+							com = currentPlayer.getCommand(command);
 						}
-				//		if (currentPlayer.commandAllowed(command)) {
-						Skill com = currentPlayer.getCommand(command);
 						if (com != null) {
 							com.perform(str);
 							commandFound = true;

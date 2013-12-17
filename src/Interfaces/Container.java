@@ -2,6 +2,8 @@
 
 import java.util.ArrayList;
 
+import processes.Location.GroundType;
+
 public interface Container {
 	
 	public ArrayList<Holdable> inventory = new ArrayList<Holdable>();
@@ -18,5 +20,5 @@ public interface Container {
 	public void acceptItem(Holdable newItem);
 	public void removeItemFromLocation(Holdable oldItem) ;
 	public Container getContainer(String dir);
-
+	public GroundType getGroundType();
 }

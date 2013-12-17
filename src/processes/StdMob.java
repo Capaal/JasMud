@@ -11,6 +11,10 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.io.*;
 
+import processes.Location.GroundType;
+import processes.Skill.Syntax;
+import checks.BalanceCheck;
+import checks.MoveCheck;
 import checks.WeaponEquippedCheck;
 import costs.BalanceCost;
 import effectors.BleedEffect;
@@ -54,7 +58,6 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	protected int level;
 	protected int age; 
 	protected SendMessage sendBack;
-//	protected TreeMap<String, Command> allowedCommands;	
 	protected int baseDamage;
 	protected TickClient tickClient;
 	
@@ -79,66 +82,12 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		this.bugList = new ArrayList<String>();
 		this.messages = new ArrayList<String>();
 		this.effectList = build.effectList;
-//		this.allowedCommands = build.allowedCommands;
 		this.baseDamage = build.baseDamage;
 		this.tickClient = new TickClient(this);
 		tickClient.start();
 		
-	//	effectList.put("piercedefence", new PierceDefence()); // Temporary for testing
-		
-	/*	allowedCommands.put("north", new Move());
-		allowedCommands.put("move", new Move());
-		allowedCommands.put("northeast", new Move());
-		allowedCommands.put("east", new Move());
-		allowedCommands.put("south", new Move());
-		allowedCommands.put("southeast", new Move());		
-		allowedCommands.put("southwest", new Move());
-		allowedCommands.put("west", new Move());
-		allowedCommands.put("northwest", new Move());
-		allowedCommands.put("up", new Move());
-		allowedCommands.put("down", new Move());
-		allowedCommands.put("in", new Move());
-		allowedCommands.put("out", new Move());
-		allowedCommands.put("swim", new Swim());
-
-		allowedCommands.put("look", new Look());
-		allowedCommands.put("examine", new Examine());
-		allowedCommands.put("get", new Get());  //temporary assumption that all mobs can get
-		allowedCommands.put("create", new Create());
-		allowedCommands.put("drop", new Drop());      */
-//		allowedCommands.put("say", new Say());
-		
 		SkillBook skillBook = new SkillBook();
-	//	SkillBuilder skillBuild = new SkillBuilder();
-		
-	//	skillBuild.setup(this, "slash");
-	//	skillBuild.addAction(1, new SetTargets(0, Target.SINGLE));
-	//	skillBuild.addAction(2, new Damage(10));
-	//	skillBuild.addAction(0, new Bleed(20));
-	//	skillBuild.addAction(0, new ManaCheck(5));
-	//	skillBuild.addAction(2, new ManaCost(5));
-	//	skillBuild.addAction(2, new PersonalDesc("You slash violently at {1}."));
-	//	skillBuild.complete(skillBook);
-		
-/*		skillBuild.setup(this, "slash");
-		skillBuild.setDamage("15");
-		skillBuild.setMana("5");
-		skillBuild.setEffect("bleed 20");		
-		skillBuild.setPersonalDesc("You slash violently at {1}.");
-		skillBuild.setTargetDesc("{0} slashes violently at you!");
-		skillBuild.setCanSeeDesc("{0} slashes violently at {1}");
-		skillBuild.complete(skillBook);
-		
-		skillBuild.setup(this, "flurry");
-		skillBuild.setDamage("5");
-		skillBuild.setTarget("ALL");
-		skillBuild.setPersonalDesc("You slash violently at {1}.");
-		skillBuild.setTargetDesc("{0} slashes violently at you!");
-		skillBuild.setCanSeeDesc("{0} slashes violently at {1}");
-		skillBuild.complete(skillBook);*/
-		
-		
-		
+			
 		// BELOW IS BUILT USING NEW ACTIONS USING FORMAT ACTION(ie damage) ACTIONS RELATED INFO(10 target projectile)
 		
 		// build new skill called slash
@@ -160,7 +109,9 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		skillBuild.addAction(new WeaponEquippedCheck(Type.SHARP, Who.SELF, Where.HERE));		
 		skillBuild.addAction(new Message("You make a sharp slash at %s and then %s turns and fights back.", Who.TARGET, Where.HERE, msgStrings.TARGET, msgStrings.TARGET));
 		skillBuild.addAction(new Message("You watch as %s slashes horribly at %s and %s turns to fight back.", Who.OTHERS, Where.HERE, msgStrings.SELF, msgStrings.TARGET, msgStrings.TARGET)); 
-		skillBuild.addAction(new Message("%s slashes you painfully.", Who.TARGET, Where.HERE, msgStrings.SELF));				
+		skillBuild.addAction(new Message("%s slashes you painfully.", Who.TARGET, Where.HERE, msgStrings.SELF));	
+		skillBuild.setFailMsg("You fail to slash.");
+		skillBuild.setSyntax(Syntax.SKILL, Syntax.TARGET);
 		skillBuild.complete(skillBook);
 		
 		skillBuild.setup(this, "getbalance");
@@ -177,29 +128,49 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		
 		skillBuild.setup(this, "say");
 		skillBuild.addAction(new Say());
+		skillBuild.setSyntax(Syntax.SKILL, Syntax.LIST);
 		skillBuild.complete(skillBook);
 		
 		skillBuild.setup(this, "examine");
 		skillBuild.addAction(new Or(new Examine(Where.INVENTORY), new Examine(Where.HERE)));
+		skillBuild.setSyntax(Syntax.SKILL, Syntax.ITEM);
 		skillBuild.complete(skillBook);
 		
 		skillBuild.setup(this, "get");
 		skillBuild.addAction(new Get(Who.SELF, Where.HERE));
+		skillBuild.setSyntax(Syntax.SKILL, Syntax.ITEM);
 		skillBuild.complete(skillBook);
 		
 		skillBuild.setup(this, "drop");
 		skillBuild.addAction(new Drop(Who.SELF, Where.HERE, Where.HERE));
+		skillBuild.setSyntax(Syntax.SKILL, Syntax.ITEM);
 		skillBuild.complete(skillBook);
 		
+		// Can't look north or anything...
 		skillBuild.setup(this, "look");
-		skillBuild.addAction(new Look(Where.HERE));;
+		skillBuild.addAction(new Look(Where.ONEAWAY));
+		skillBuild.setSyntax(Syntax.SKILL, Syntax.DIRECTION);
 		skillBuild.complete(skillBook);
 		
 		skillBuild.setup(this, "move");
+		skillBuild.addAction(new BalanceCheck(true, Who.SELF, Where.HERE));
+		skillBuild.addAction(new MoveCheck(GroundType.GROUND, Who.SELF, Where.HERE, Where.ONEAWAY));
+		skillBuild.addAction(new Message("%s leaves to the %s.", Who.ALL, Where.HERE, msgStrings.SELF, msgStrings.MOVE));
 		skillBuild.addAction(new Move(Who.SELF, Where.HERE, Where.ONEAWAY));
-		skillBuild.addAction(new Message("%s enters from the %s.", Who.ALL, Where.HERE, msgStrings.SELF, msgStrings.MOVE));
+		skillBuild.addAction(new Message("%s enters from the %s.", Who.ALL, Where.HERE, msgStrings.SELF, msgStrings.OPPMOVE));
+		skillBuild.setFailMsg("You cannot walk that way.");
+		skillBuild.setSyntax(Syntax.DIRECTION);
 		skillBuild.complete(skillBook);
 		
+		skillBuild.setup(this, "swim");
+		skillBuild.addAction(new BalanceCheck(true, Who.SELF, Where.HERE));
+		skillBuild.addAction(new MoveCheck(GroundType.WATER, Who.SELF, Where.HERE, Where.ONEAWAY));
+		skillBuild.addAction(new Message("%s swims to the %s.", Who.ALL, Where.HERE, msgStrings.SELF, msgStrings.MOVE));
+		skillBuild.addAction(new Move(Who.SELF, Where.HERE, Where.ONEAWAY));
+		skillBuild.addAction(new Message("%s swims in from the %s.", Who.ALL, Where.HERE, msgStrings.SELF, msgStrings.OPPMOVE));
+		skillBuild.setFailMsg("You cannot swim that way.");
+		skillBuild.setSyntax(Syntax.DIRECTION);
+		skillBuild.complete(skillBook);
 		
 		
 		skillBookList.put("skillbook", skillBook);		
@@ -224,7 +195,6 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		private int xpWorth = 1;
 		private int baseDamage = 5;
 		private ArrayList<Holdable> inventory = new ArrayList<Holdable>();
-//		private TreeMap<String, Command> allowedCommands = new TreeMap<String, Command>();
 		private String password = "";
 		private ArrayList<Effect> effectList = new ArrayList<Effect>();
 		
@@ -245,7 +215,6 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		public T physicalMult(int val) {physicalMult = val;return self();}		
 		public T speed(int val) {speed = val;return self();}		
 		public T inventory(Item val) {inventory.add(val);return self();}		
-//		public T commands(String name, Command val) {allowedCommands.put(name, val);return self();}		
 		public T xpWorth(int val) {xpWorth = val;return self();}	
 		public T baseDamage(int val) {baseDamage = val;return self();}
 		public T effect(Effect effect) {effectList.add(effect); return self();}
@@ -275,16 +244,6 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public String getShortDescription() {return shortDescription;}	
 	public int getXpWorth() {return xpWorth;}	
 	
-//	public Skill commandAllowed(String command) {
-//		for (SkillBook sb : skillBookList) {
-//			Skill skill = sb.getSkill(command);
-//			if (skill != null) {
-//				return skill;
-//			}
-//		}
-//		return null;
-//	}	
-	
 	public Skill getCommand(String command) {
 		for (SkillBook sb : skillBookList.values()) {
 			Skill skill = sb.getSkill(command);
@@ -295,46 +254,26 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		return null;
 	}
 	
-//	public SortedSet<String> getCommandKeySet() {
-//		return new TreeSet<String>(allowedCommands.keySet());
-	//	return allowedCommands.keySet();
-//	}	
 	@Override
 	public SkillBook getBook(String bookName) {
 		return skillBookList.get(bookName);
 	}
 	
-//	public Collection<Command> getCommandValueSet() {return allowedCommands.values();}	
 	public void acceptItem(Holdable item) {inventory.add(item);}
 	public int getMessagesSize() {return messages.size();}	
 	public void addBug(String bugMsg) {bugList.add(bugMsg);}
-//	public void acceptCommands(HashMap<String, Command> givenCommands) {allowedCommands.putAll(givenCommands);}	
-//	public void acceptCommand(String comName, Command command) {allowedCommands.put(comName,  command);}
-	// Doesn't do nothin.
-//	public void removeCommands(HashMap<String, Command> removedCommands) {	}
+
 	@Override
 	public void setContainer(Container futureLocation) {mobLocation = futureLocation;}
+	
 	@Override
 	public Container getContainer() {return mobLocation;}
 	
 	public void takeDamage(List<Type> types, int damage) {
-//		damage = damageAdjustments(damage);
 		damage = runEffects(types, damage);
 		this.currentHp = currentHp - damage;
 		checkHp();
 	}
-	
-	// Incoming damage may be negated by armor, enchatments, active skills, whatever.
-/*	protected int damageAdjustments(int damage) {
-		Random rand = new Random();
-		int random = rand.nextInt(100) + 1;
-		System.out.println(random);
-	//	if (random <= missChance) {
-		//	sendBack.printMessage("Hiding has paid off, you dodge the attack.");
-	//		return 0;
-	//	}
-		return damage;
-	}*/
 	
 	protected void checkHp() {
 		if (currentHp <= 0) {
@@ -522,6 +461,10 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public Container getContainer(String dir) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	@Override
+	public GroundType getGroundType() {
+		return GroundType.CONTAINER;
 	}
 	
 	

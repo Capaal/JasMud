@@ -7,6 +7,7 @@ import interfaces.Mobile;
 
 import java.util.ArrayList;
 
+import processes.Skill;
 import processes.UsefulCommands;
 
 

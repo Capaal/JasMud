@@ -7,7 +7,7 @@ import interfaces.Mobile;
 import java.util.ArrayList;
 
 import processes.Location;
-import skills.Arcane.Skill;
+import processes.Skill;
 
 public class Damage implements Action {
 	

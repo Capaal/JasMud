@@ -1,6 +1,6 @@
 package checks;
 
-import skills.Arcane.Skill;
+import processes.Skill;
 import interfaces.*;
 
 public class BalanceCheck implements Action {

@@ -1,7 +1,8 @@
 package actions;
 
+import processes.Skill;
+import processes.UsefulCommands;
 import interfaces.*;
-import skills.Arcane.Skill;
 
 public class Look implements Action {
 	
@@ -13,9 +14,15 @@ public class Look implements Action {
 
 	@Override
 	public boolean activate(Skill s) {
-		Mobile currentPlayer = s.getCurrentPlayer();
-		for (Container c : where.findLoc(s)) {
-			c.look(currentPlayer);
+		String dir = UsefulCommands.getSecondWord(s.getFullCommand());
+		if (dir != null) {
+			for (Container c : where.findLoc(s)) {
+				c.look(s.getCurrentPlayer());
+			}
+		} else {
+			for (Container c : Where.HERE.findLoc(s)) {
+				c.look(s.getCurrentPlayer());
+			}
 		}
 		return true;
 	}

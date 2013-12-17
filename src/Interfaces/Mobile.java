@@ -6,12 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+
+
 //import processes.Command;
 import processes.Location;
 import processes.SendMessage;
+import processes.Skill;
+import processes.SkillBook;
 import processes.Type;
-import skills.Arcane.Skill;
-import skills.Arcane.SkillBook;
 
 public interface Mobile extends Container, Holdable, Creatable {
 	

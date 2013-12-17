@@ -13,7 +13,7 @@ public class Location implements Container {
 	private String name;
 	private String description;
 	public ArrayList<Holdable> inventory = new ArrayList<Holdable>();
-	private String groundType;
+	private GroundType groundType;
 	
 	private TreeMap<String, Location> locationMap;
 	
@@ -31,7 +31,7 @@ public class Location implements Container {
 		private final int id;		
 		private String name = "blank";
 		private String description = "blank";
-		private String groundType = "land";
+		private GroundType groundType = GroundType.GROUND;
 			
 		private TreeMap<String, Location> locationMap = new TreeMap<String, Location>();
 		private HashMap<Integer, String> locationConnections = new HashMap<Integer, String>();
@@ -45,7 +45,7 @@ public class Location implements Container {
 		
 		public Builder name(String val) {name = val;return this;}		
 		public Builder description(String val) {description = val;return this;}		
-		public Builder groundType(String val) {groundType = val;return this;}		
+		public Builder groundType(GroundType val) {groundType = val;return this;}		
 		public Builder north(int futureId, String connectionDirection) {buildDirections(id, "north", futureId, connectionDirection);return this;}			
 		public Builder northEast(int futureId, String connectionDirection) {buildDirections(id, "northeast", futureId, connectionDirection);return this;}			
 		public Builder east(int futureId, String connectionDirection) {buildDirections(id, "east", futureId, connectionDirection);return this;}				
@@ -122,14 +122,14 @@ public class Location implements Container {
 		currentPlayer.tell(UsefulCommands.ANSI.GREEN + description + UsefulCommands.ANSI.SANE);
 		displayAll(currentPlayer);				
 		currentPlayer.tell(UsefulCommands.ANSI.CYAN + displayExits() + UsefulCommands.ANSI.SANE);
-		currentPlayer.tell("(God sight) Location number: " + id + ". Ground type: " + groundType + ".");
+		currentPlayer.tell("(God sight) Location number: " + id + ". Ground type: " + groundType.name() + ".");
 	}
 	//Glance
 	public void glance(Mobile currentPlayer) {
 		currentPlayer.tell(UsefulCommands.ANSI.MAGENTA + name + UsefulCommands.ANSI.SANE);
 		displayAll(currentPlayer);
 		currentPlayer.tell(UsefulCommands.ANSI.CYAN + displayExits() + UsefulCommands.ANSI.SANE);
-		currentPlayer.tell("(God sight) Location number: " + id + ". Ground type: " + groundType + ".");
+		currentPlayer.tell("(God sight) Location number: " + id + ". Ground type: " + groundType.name() + ".");
 	}	
 	//Displays items
 	public void displayAll(Mobile currentPlayer) {
@@ -148,8 +148,8 @@ public class Location implements Container {
 	public int getId() {return id;}		
 	public void setName(String name) {this.name = name;}	
 	public void setDescription(String desc) {this.description = desc;}	
-	public void setGroundType(String type) {this.groundType = type;}
-	public String getGroundType() {return groundType;}	
+	public void setGroundType(GroundType type) {this.groundType = type;}
+	public GroundType getGroundType() {return groundType;}	
 	public void acceptItem(Holdable newItem) {inventory.add(newItem);}	
 		
 	public Location getLocation(String dir) {
@@ -180,4 +180,28 @@ public class Location implements Container {
 	public Container getContainer(String dir) {
 		return getLocation(dir);
 	}
+	
+	public enum GroundType {
+		
+		// GROUND might get broken up into many types of ground? rock, sand, dirt and so on?
+		GROUND() {
+			
+		},
+		
+		WATER() {
+			
+		},
+		
+		AIR() {
+			
+		},
+		
+		CONTAINER() {
+			
+		};
+		
+		private GroundType() {}
+		
+	}
+
 }

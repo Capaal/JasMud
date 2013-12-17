@@ -1,8 +1,10 @@
 package skills.Arcane;
 
 import java.util.ArrayList;
+
 import processes.Command;
 import processes.PlayerPrompt;
+import processes.SkillBook;
 import processes.UsefulCommands;
 
 
