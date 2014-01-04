@@ -1,8 +1,11 @@
 package processes;
 
+import interfaces.*;
+
 import java.util.*;
 
-import Interfaces.*;
+
+// Contains all information relating to each "room" a player may visit.
 
 public class Location implements Container {
 		
@@ -10,19 +13,25 @@ public class Location implements Container {
 	private String name;
 	private String description;
 	public ArrayList<Holdable> inventory = new ArrayList<Holdable>();
-	private String groundType;
+	private GroundType groundType;
 	
 	private TreeMap<String, Location> locationMap;
 	
-//	private HashMap<String, String> abbrevNames;
-
+	// The BUILDER is an internal class meant to be used to instantly build a new location.
+	// It allows the constructor to more clearly indicate what is happening, and allow variable information.
+	
+	// Location loc = new Location.Builder(2).name("Mud Shack").description("This is north of the beach on the bridge.").groundType("land").south(1, "north").build();
+	// Builder(2) indicates it is location number 21, there can be no duplicates.
+	// .name("Mud Shack") is the name of the location, and descrption is description, easy to read.
+	// .south(1, "north") means if I go south from that location, I go to location with the id 1, and
+	// if I go north from there, it will take me back to the location I just made.
+	
 	public static class Builder {
 		
-		private final int id;
-		
+		private final int id;		
 		private String name = "blank";
 		private String description = "blank";
-		private String groundType = "land";
+		private GroundType groundType = GroundType.GROUND;
 			
 		private TreeMap<String, Location> locationMap = new TreeMap<String, Location>();
 		private HashMap<Integer, String> locationConnections = new HashMap<Integer, String>();
@@ -36,7 +45,7 @@ public class Location implements Container {
 		
 		public Builder name(String val) {name = val;return this;}		
 		public Builder description(String val) {description = val;return this;}		
-		public Builder groundType(String val) {groundType = val;return this;}		
+		public Builder groundType(GroundType val) {groundType = val;return this;}		
 		public Builder north(int futureId, String connectionDirection) {buildDirections(id, "north", futureId, connectionDirection);return this;}			
 		public Builder northEast(int futureId, String connectionDirection) {buildDirections(id, "northeast", futureId, connectionDirection);return this;}			
 		public Builder east(int futureId, String connectionDirection) {buildDirections(id, "east", futureId, connectionDirection);return this;}				
@@ -50,7 +59,11 @@ public class Location implements Container {
 		public Builder in(int futureId, String connectionDirection) {buildDirections(id, "in", futureId, connectionDirection);return this;}			
 		public Builder out(int futureId, String connectionDirection) {buildDirections(id, "out", futureId, connectionDirection);return this;}			
 		
-		private Builder buildDirections(int currentId, String currentDirection,  int futureId, String futureDirection) {
+		private Builder buildDirections(int currentId, String currentDirection,  int futureId, String futureD) {
+			if (currentId == 0 || futureD == null) {
+				return this;
+			}
+			String futureDirection = futureD.toLowerCase();
 			if (WorldServer.locationCollection.containsKey(futureId)) {
 				Location futureLoc = WorldServer.locationCollection.get(futureId);								
 				locationConnections.put(futureId, futureDirection);				
@@ -78,19 +91,6 @@ public class Location implements Container {
 				futureLoc.setLocation(this, currentDirection);
 			}
 		}
-	/*	abbrevNames = new HashMap<String, String>();
-		abbrevNames.put("n", "north");
-		abbrevNames.put("ne", "northeast");
-		abbrevNames.put("e", "east");
-		abbrevNames.put("se", "southeast");
-		abbrevNames.put("s", "south");
-		abbrevNames.put("sw", "southwest");
-		abbrevNames.put("w", "west");
-		abbrevNames.put("nw", "northwest");
-		abbrevNames.put("u", "up");
-		abbrevNames.put("d", "down");
-		abbrevNames.put("i", "in");
-		abbrevNames.put("o", "out");*/
 	}
 	
 	public void setLocation(Location futureLoc, String currentDirection) {
@@ -124,19 +124,16 @@ public class Location implements Container {
 	public void look(Mobile currentPlayer) {
 		currentPlayer.tell(UsefulCommands.ANSI.MAGENTA + name + UsefulCommands.ANSI.SANE);
 		currentPlayer.tell(UsefulCommands.ANSI.GREEN + description + UsefulCommands.ANSI.SANE);
-		displayAll(currentPlayer);
-		
-		System.out.println(inventory.toString());
-		
+		displayAll(currentPlayer);				
 		currentPlayer.tell(UsefulCommands.ANSI.CYAN + displayExits() + UsefulCommands.ANSI.SANE);
-		currentPlayer.tell("(God sight) Location number: " + id + ". Ground type: " + groundType + ".");
+		currentPlayer.tell("(God sight) Location number: " + id + ". Ground type: " + groundType.name() + ".");
 	}
 	//Glance
 	public void glance(Mobile currentPlayer) {
 		currentPlayer.tell(UsefulCommands.ANSI.MAGENTA + name + UsefulCommands.ANSI.SANE);
 		displayAll(currentPlayer);
 		currentPlayer.tell(UsefulCommands.ANSI.CYAN + displayExits() + UsefulCommands.ANSI.SANE);
-		currentPlayer.tell("(God sight) Location number: " + id + ". Ground type: " + groundType + ".");
+		currentPlayer.tell("(God sight) Location number: " + id + ". Ground type: " + groundType.name() + ".");
 	}	
 	//Displays items
 	public void displayAll(Mobile currentPlayer) {
@@ -155,8 +152,8 @@ public class Location implements Container {
 	public int getId() {return id;}		
 	public void setName(String name) {this.name = name;}	
 	public void setDescription(String desc) {this.description = desc;}	
-	public void setGroundType(String type) {this.groundType = type;}
-	public String getGroundType() {return groundType;}	
+	public void setGroundType(GroundType type) {this.groundType = type;}
+	public GroundType getGroundType() {return groundType;}	
 	public void acceptItem(Holdable newItem) {inventory.add(newItem);}	
 		
 	public Location getLocation(String dir) {
@@ -182,4 +179,33 @@ public class Location implements Container {
 		return name;
 
 	}
+
+	@Override
+	public Container getContainer(String dir) {
+		return getLocation(dir);
+	}
+	
+	public enum GroundType {
+		
+		// GROUND might get broken up into many types of ground? rock, sand, dirt and so on?
+		GROUND() {
+			
+		},
+		
+		WATER() {
+			
+		},
+		
+		AIR() {
+			
+		},
+		
+		CONTAINER() {
+			
+		};
+		
+		private GroundType() {}
+		
+	}
+
 }

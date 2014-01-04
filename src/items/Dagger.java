@@ -1,13 +1,14 @@
 package items;
 
+import interfaces.Container;
+import interfaces.Holdable;
+import interfaces.Item;
+import interfaces.Wieldable;
+
 import java.io.*; // For Serializable.
 
 import processes.Player;
 import processes.SendMessage;
-import Interfaces.Container;
-import Interfaces.Holdable;
-import Interfaces.Item;
-import Interfaces.Wieldable;
 
 public class Dagger implements Item, Wieldable  {
 	
@@ -93,6 +94,24 @@ public class Dagger implements Item, Wieldable  {
 	
 	public void wieldHand(Player currentPlayer) {
 //		currentPlayer.wieldedRight = this;
+	}
+
+	@Override
+	public Container getContainer() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getShortDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setContainer(Container con) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

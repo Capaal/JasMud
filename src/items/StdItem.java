@@ -1,8 +1,9 @@
 package items;
 
+import interfaces.*;
+
 import java.util.ArrayList;
 import processes.*;
-import Interfaces.*;
 
 public class StdItem implements Item, Holdable, Creatable {
 	

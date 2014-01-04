@@ -1,12 +1,13 @@
 package processes;
 
+import interfaces.Item;
+import interfaces.Quest;
 import items.*;
 
 import java.net.*; // Needed for Socket.
 import java.util.*; // Needed for HashSet.
 import java.io.*; //Serializable, FileReader/Writer
 
-import Interfaces.Item;
 
 public class WorldServer {
 	// Contains transient sockets of each connected Player.
@@ -26,7 +27,7 @@ public class WorldServer {
 	//ab generals
 	static protected ArrayList<String> allowableCommandsGeneralsShort = new ArrayList<String>();
 	
-	static Map<String, Command> skillCommands = new HashMap<String, Command>();	
+//	static Map<String, Command> skillCommands = new HashMap<String, Command>();	
 	
 	//Mage skills as objects
 //	static protected Map<String, AllSkills> mageAbilities = new HashMap <String, AllSkills>();
@@ -102,6 +103,7 @@ public class WorldServer {
 		}
 	}
 	
+	//Database
 	// Saves Player, Location, and commands. How often? when?
 	public static void saveSystem() throws IOException {
 		// Saves Player Objects.
@@ -163,6 +165,7 @@ public class WorldServer {
 		return locationCollection;
 	}	
 	
+	// Will be in database
 	// Loads list of mobs.
 	public static Map<String, StdMob> loadMobs() throws FileNotFoundException {
 		try {
@@ -177,6 +180,7 @@ public class WorldServer {
 		return mobList;
 	}	
 	
+	// Unnecessary
 	// Loads allowable Commands.
 	public static Map<String, Integer> loadCommands() throws FileNotFoundException {
 		try {
@@ -191,18 +195,19 @@ public class WorldServer {
 		return allowableCommands;
 	}
 	
+	//I think I'm going to do a database, once it gets built...
 	// Loads all Items.
 	public static ArrayList<Item> loadItems() throws FileNotFoundException {
 		try {
  	 		ObjectInputStream ois = new ObjectInputStream(new FileInputStream("allItems.ser"));
- 			allItems = (ArrayList<Item>)ois.readObject();
+ //			allItems = (ArrayList<Item>)ois.readObject();
  			ois.close();
  		} catch(IOException ex)	{
  			ex.printStackTrace();
- 		} catch(ClassNotFoundException ex) {
- 			ex.printStackTrace();
+ //		} catch(ClassNotFoundException ex) {
+ //			ex.printStackTrace();
 		}
-		return allItems;
+		return null /*allItems*/;
 	}	
 	
 //	public static Command getSkillCommand(String key) {

@@ -1,7 +1,8 @@
 package processes;
+import interfaces.*;
+
 import java.util.*;
 
-import Interfaces.*;
 
 public class UsefulCommands {
 	// Converts a single incoming word so that first letter is capitalized.
@@ -42,13 +43,6 @@ public class UsefulCommands {
 	
 	public static String getSecondWord(String fullCommand) {
 		return getFirstWord(returnTarget(fullCommand));
-	//	StringTokenizer st = new StringTokenizer(fullCommand);
-	//	st.nextToken();
-	//	if (st.hasMoreTokens()) {
-	//		return (st.nextToken()).toString();
-	//	} else {
-	//		return null;
-	//	}
 	}
 	
 	public static String getThirdWord(String fullCommand) {
@@ -202,13 +196,10 @@ public class UsefulCommands {
 	
 	// string, container to holdable
 	public static Holdable stringToHoldable(String item, Container place) {	
-		Holdable tempItem;
-		
-		for (int i=0; i<place.getInventory().size(); i++) {
-			tempItem = place.getInventory().get(i);
-			String tempItemName = tempItem.getName().toLowerCase();
-			if (tempItemName.equals(item) || (tempItemName + tempItem.getId()).equals(item)) {
-				return tempItem;
+		for (Holdable h : place.getInventory()) {
+			String tempItemName = h.getName().toLowerCase();
+			if (tempItemName.equals(item) || (tempItemName + h.getId()).equals(item)) {
+				return h;
 			}
 		}
 		return null;

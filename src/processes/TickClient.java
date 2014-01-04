@@ -1,6 +1,6 @@
 package processes;
 
-import Interfaces.Mobile;
+import interfaces.Mobile;
 
 public class TickClient extends Thread {
 	
@@ -21,7 +21,7 @@ public class TickClient extends Thread {
 				} catch(InterruptedException ie) {
 				}
 			tickCount ++;
-			currentPlayer.runEffects();
+			currentPlayer.runTickEffects();
 		}
 		
 	}

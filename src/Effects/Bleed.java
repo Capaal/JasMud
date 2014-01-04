@@ -1,48 +1,35 @@
-package Effects;
+package effects;
 
-import Interfaces.*;
+import java.util.*;
+import processes.Type;
+import interfaces.*;
 
-public class Bleed implements Effect {
+public class Bleed extends Effect {
 
 	private int intensity;
-	private Mobile currentPlayer;
 	private final int startTick;
 	private final int endTick;
+	private final Type type = Type.BLEED;
 	
 
 	public Bleed(Mobile currentPlayer, int duration) {
-		setCurrentPlayer(currentPlayer);
-		intensity = currentPlayer.getMaxHp()/100;
+		super(currentPlayer);
+		intensity = currentPlayer.getMaxHp()/10;
 		startTick = currentPlayer.getTick();
 		endTick = startTick + duration;
 	}
+
+	@Override
+	public void doTickEffect() {
+		if (currentPlayer.getTick() > endTick) {
+			destroyEffect();		
+		}	else {
+			currentPlayer.takeDamage(Arrays.asList(type), intensity);
+		}
+	}
 	
 	@Override
-	public void destroyEffect() {
-	//	currentPlayer.removeEffect("bleed");
-		this.currentPlayer = null;
-	}
-
-	@Override
-	public boolean doEffect() {
-		currentPlayer.takeDamage(intensity);
-		if (currentPlayer.getTick() >= endTick) {
-	//		destroyEffect();
-			return true;
-		}
-		return false;
-		
-	}
-
-	@Override
-	public Mobile getCurrentPlayer() {
-		return currentPlayer;
-		
-	}
-
-	@Override
-	public void setCurrentPlayer(Mobile currentPlayer) {
-		this.currentPlayer = currentPlayer;
-		
+	public int doRunEffect(List<Type> incomingTypes, int damage) {
+		return damage;
 	}
 }

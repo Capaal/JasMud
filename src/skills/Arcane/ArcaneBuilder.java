@@ -1,13 +1,16 @@
 package skills.Arcane;
 
+import interfaces.Effect;
+import interfaces.Mobile;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import effects.*;
 import processes.Command;
 import processes.PlayerPrompt;
+import processes.SkillBuilder;
 import processes.UsefulCommands;
-import Effects.*;
-import Interfaces.Effect;
-import Interfaces.Mobile;
 
 //Class used as the player plans out a spell, once "complete" it'll create a new Spell(this)
 public class ArcaneBuilder extends SkillBuilder implements Command {

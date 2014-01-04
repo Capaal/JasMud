@@ -1,13 +1,15 @@
 package skills.Arcane;
 
+import interfaces.Container;
+import interfaces.Holdable;
+import interfaces.Mobile;
+
 import java.util.HashMap;
 
+import effects.*;
 import processes.Location;
+import processes.Skill;
 import processes.UsefulCommands;
-import Effects.*;
-import Interfaces.Container;
-import Interfaces.Holdable;
-import Interfaces.Mobile;
 
 public class ArcaneSpell extends Skill {
 	
@@ -73,10 +75,10 @@ public class ArcaneSpell extends Skill {
 	}
 	
 	public void castSpell(Container loc, Mobile target) {
-		target.takeDamage(damage);
+//		target.takeDamage(damage);
 		applyEffects(target);
 		currentPlayer.affectMana(-mana);
-		currentPlayer.takeDamage(life);
+//		currentPlayer.takeDamage(life);
 		currentPlayer.tell("You cast " + name + " for " + damage + " costing " + mana + " mana, " + life + " life, " + speed + " speed, " + cost + " cost.");
 	}
 	
@@ -84,7 +86,7 @@ public class ArcaneSpell extends Skill {
 		for (String effect : effectList.keySet()) {
 			switch(effect) {
 				case "bleed":
-					target.addEffect(effect, new Bleed(target, effectList.get(effect)));
+//					target.addEffect(effect, new Bleed(target, effectList.get(effect)));
 					currentPlayer.tell("You've added bleed for " + effectList.get(effect) + " seconds.");
 					break;
 			}			

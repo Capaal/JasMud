@@ -7,7 +7,7 @@ public class PossibleCommands {
 	public static void create() {		
 		// This might still exist as a list of ALL possible skills, don't know if I'd need that or not.
 		// I am moving skills into each mobiles, so mobiles has all moves, players/heroes have firebolt, and so on.
-		WorldServer.skillCommands.put("north", new Move());
+/*		WorldServer.skillCommands.put("north", new Move());
 		WorldServer.skillCommands.put("ne", new Move());
 		WorldServer.skillCommands.put("nw", new Move());
 		WorldServer.skillCommands.put("sw", new Move());
@@ -25,18 +25,12 @@ public class PossibleCommands {
 		WorldServer.skillCommands.put("out", new Move());
 		WorldServer.skillCommands.put("swim", new Swim());	
 		
-		WorldServer.skillCommands.put("punch", new Punch());
-		WorldServer.skillCommands.put("kick", new Kick());		
-		WorldServer.skillCommands.put("hide", new Hide());		
-		WorldServer.skillCommands.put("firebolt", new Firebolt());
-		WorldServer.skillCommands.put("icebolt", new Icebolt());
-		
 		WorldServer.skillCommands.put("look", new Look());
 		WorldServer.skillCommands.put("examine", new Examine());
-		WorldServer.skillCommands.put("map", new Map());
+//		WorldServer.skillCommands.put("map", new Map());
 		WorldServer.skillCommands.put("create", new Create());
 		WorldServer.skillCommands.put("bug", new Bug());
-		WorldServer.skillCommands.put("bugs", new Bugs());
+		WorldServer.skillCommands.put("bugs", new Bugs());*/
 	}		
 }
 

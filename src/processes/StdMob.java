@@ -3,14 +3,36 @@ package processes;
 import skills.*;
 import skills.Arcane.*;
 import skills.Arcane.SetTargets.Target;
+import interfaces.*;
+import interfaces.Action.Where;
+import interfaces.Action.Who;
 
 import java.text.MessageFormat;
 import java.util.*;
 import java.io.*;
 
-import Effects.Bleed;
-import Effects.PierceDefence;
-import Interfaces.*;
+import processes.Location.GroundType;
+import processes.Skill.Syntax;
+import checks.BalanceCheck;
+import checks.MoveCheck;
+import checks.WeaponEquippedCheck;
+import costs.BalanceCost;
+import effectors.BleedEffect;
+import effectors.DefenceEffect;
+import effects.Bleed;
+import effects.Defence;
+import actions.Chance;
+import actions.Damage;
+import actions.Drop;
+import actions.Examine;
+import actions.Get;
+import actions.Look;
+import actions.Message;
+import actions.Message.msgStrings;
+import actions.Move;
+import actions.Or;
+import actions.Say;
+
 
 // Represents basic truths about anything that can move on its own. It can be both controlled by a player,
 // or be controlled by AI. Rat yes, hero mage yes, dragon yes, wind no, sun no, bird yes, ant yes, tree? No, make a sentient tree.
@@ -28,8 +50,6 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	protected int speed;
 	public ArrayList<Holdable> inventory;
 	protected String description;
-	//protected boolean shield;
-	//protected boolean aura;
 	protected int xpWorth;
 	protected String shortDescription;
 	protected ArrayList<String> bugList;
@@ -38,13 +58,12 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	protected int level;
 	protected int age; 
 	protected SendMessage sendBack;
-	protected TreeMap<String, Command> allowedCommands;	
 	protected int baseDamage;
 	protected TickClient tickClient;
 	
-	protected HashMap<String, SkillBook> skillBookList = new HashMap<String, SkillBook>();
+	protected Map<String, SkillBook> skillBookList = new TreeMap<String, SkillBook>();
 	
-	protected HashMap<String, Effect> effectList;
+	protected ArrayList<Effect> effectList;
 	
 	protected StdMob(Init<?> build) {
 		this.name = build.name;
@@ -63,80 +82,102 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		this.bugList = new ArrayList<String>();
 		this.messages = new ArrayList<String>();
 		this.effectList = build.effectList;
-		this.allowedCommands = build.allowedCommands;
 		this.baseDamage = build.baseDamage;
 		this.tickClient = new TickClient(this);
 		tickClient.start();
 		
-	//	effectList.put("piercedefence", new PierceDefence()); // Temporary for testing
-		
-		allowedCommands.put("north", new Move());
-	/*	allowedCommands.put("ne", new Move());
-		allowedCommands.put("nw", new Move());
-		allowedCommands.put("sw", new Move());
-		allowedCommands.put("se", new Move());
-		allowedCommands.put("e", new Move());
-		allowedCommands.put("n", new Move());
-		allowedCommands.put("s", new Move());
-		allowedCommands.put("w", new Move());
-		allowedCommands.put("l", new Look());*/
-		allowedCommands.put("move", new Move());
-		allowedCommands.put("northeast", new Move());
-		allowedCommands.put("east", new Move());
-		allowedCommands.put("south", new Move());
-		allowedCommands.put("southeast", new Move());		
-		allowedCommands.put("southwest", new Move());
-		allowedCommands.put("west", new Move());
-		allowedCommands.put("northwest", new Move());
-		allowedCommands.put("up", new Move());
-		allowedCommands.put("down", new Move());
-		allowedCommands.put("in", new Move());
-		allowedCommands.put("out", new Move());
-		allowedCommands.put("swim", new Swim());
-
-		allowedCommands.put("look", new Look());
-		allowedCommands.put("examine", new Examine());
-		allowedCommands.put("get", new Get());  //temporary assumption that all mobs can get
-		allowedCommands.put("create", new Create());
-		allowedCommands.put("drop", new Drop());
-		allowedCommands.put("say", new Say());
-		
 		SkillBook skillBook = new SkillBook();
-		SkillBuilder skillBuild = new SkillBuilder();
+			
+		// BELOW IS BUILT USING NEW ACTIONS USING FORMAT ACTION(ie damage) ACTIONS RELATED INFO(10 target projectile)
 		
-		skillBuild.setup(this, "slash");
-		skillBuild.addAction(1, new SetTargets(0, Target.SINGLE));
-		skillBuild.addAction(2, new Damage(10));
-	//	skillBuild.addAction(0, new Bleed(20));
-	//	skillBuild.addAction(0, new ManaCheck(5));
-	//	skillBuild.addAction(2, new ManaCost(5));
-	//	skillBuild.addAction(2, new PersonalDesc("You slash violently at {1}."));
+		// build new skill called slash
+		// check balance self
+		// damage 20 target here
+		
+		//***** "slash" is a test skill that does odd stuff, currently it does:
+		// Check balance true, 10 damage to target here, bleed effect on target for 500? s,
+		// It is type sharp, and requires a weapon that is type sharp, It displays messages to everyone in that location.
+		// And then it takes away balance, balance does not come back yet... It has a chance to heal yourself. 10% for 15
+		
+		SkillBuilder skillBuild = new SkillBuilder();		
+		skillBuild.setup(this, "slash");		
+		skillBuild.addAction(new BalanceCost(false, Who.SELF, Where.HERE));		
+		skillBuild.addAction(new Damage(10, Who.TARGET, Where.HERE));		
+		skillBuild.addAction(new BleedEffect(10, Who.TARGET, Where.HERE));		
+		skillBuild.addAction(new Chance(10, new Damage(-15, Who.SELF, Where.HERE)));		
+		skillBuild.addType(Type.SHARP);
+		skillBuild.addAction(new WeaponEquippedCheck(Type.SHARP, Who.SELF, Where.HERE));		
+		skillBuild.addAction(new Message("You make a sharp slash at %s and then %s turns and fights back.", Who.TARGET, Where.HERE, msgStrings.TARGET, msgStrings.TARGET));
+		skillBuild.addAction(new Message("You watch as %s slashes horribly at %s and %s turns to fight back.", Who.OTHERS, Where.HERE, msgStrings.SELF, msgStrings.TARGET, msgStrings.TARGET)); 
+		skillBuild.addAction(new Message("%s slashes you painfully.", Who.TARGET, Where.HERE, msgStrings.SELF));	
+		skillBuild.setFailMsg("You fail to slash.");
+		skillBuild.setSyntax(Syntax.SKILL, Syntax.TARGET);
 		skillBuild.complete(skillBook);
 		
-/*		skillBuild.setup(this, "slash");
-		skillBuild.setDamage("15");
-		skillBuild.setMana("5");
-		skillBuild.setEffect("bleed 20");		
-		skillBuild.setPersonalDesc("You slash violently at {1}.");
-		skillBuild.setTargetDesc("{0} slashes violently at you!");
-		skillBuild.setCanSeeDesc("{0} slashes violently at {1}");
+		skillBuild.setup(this, "getbalance");
+		skillBuild.addAction(new BalanceCost(true, Who.SELF, Where.HERE));
 		skillBuild.complete(skillBook);
 		
-		skillBuild.setup(this, "flurry");
-		skillBuild.setDamage("5");
-		skillBuild.setTarget("ALL");
-		skillBuild.setPersonalDesc("You slash violently at {1}.");
-		skillBuild.setTargetDesc("{0} slashes violently at you!");
-		skillBuild.setCanSeeDesc("{0} slashes violently at {1}");
-		skillBuild.complete(skillBook);*/
+		skillBuild.setup(this, "bleeddefence");
+		skillBuild.addAction(new DefenceEffect(500, Type.BLEED, Who.SELF, Where.HERE));
+		skillBuild.complete(skillBook);
 		
-		skillBookList.put("skillbook", skillBook);
+		skillBuild.setup(this, "sharpdefence");
+		skillBuild.addAction(new DefenceEffect(500, Type.SHARP, Who.SELF, Where.HERE));
+		skillBuild.complete(skillBook);
+		
+		skillBuild.setup(this, "say");
+		skillBuild.addAction(new Say());
+		skillBuild.setSyntax(Syntax.SKILL, Syntax.LIST);
+		skillBuild.complete(skillBook);
+		
+		skillBuild.setup(this, "examine");
+		skillBuild.addAction(new Or(new Examine(Where.INVENTORY), new Examine(Where.HERE)));
+		skillBuild.setSyntax(Syntax.SKILL, Syntax.ITEM);
+		skillBuild.complete(skillBook);
+		
+		skillBuild.setup(this, "get");
+		skillBuild.addAction(new Get(Who.SELF, Where.HERE));
+		skillBuild.setSyntax(Syntax.SKILL, Syntax.ITEM);
+		skillBuild.complete(skillBook);
+		
+		skillBuild.setup(this, "drop");
+		skillBuild.addAction(new Drop(Who.SELF, Where.HERE, Where.HERE));
+		skillBuild.setSyntax(Syntax.SKILL, Syntax.ITEM);
+		skillBuild.complete(skillBook);
+		
+		// Can't look north or anything...
+		skillBuild.setup(this, "look");
+		skillBuild.addAction(new Look(Where.ONEAWAY));
+		skillBuild.setSyntax(Syntax.SKILL, Syntax.DIRECTION);
+		skillBuild.complete(skillBook);
+		
+		skillBuild.setup(this, "move");
+		skillBuild.addAction(new BalanceCheck(true, Who.SELF, Where.HERE));
+		skillBuild.addAction(new MoveCheck(GroundType.GROUND, Who.SELF, Where.HERE, Where.ONEAWAY));
+		skillBuild.addAction(new Message("%s leaves to the %s.", Who.ALL, Where.HERE, msgStrings.SELF, msgStrings.MOVE));
+		skillBuild.addAction(new Move(Who.SELF, Where.HERE, Where.ONEAWAY));
+		skillBuild.addAction(new Message("%s enters from the %s.", Who.ALL, Where.HERE, msgStrings.SELF, msgStrings.OPPMOVE));
+		skillBuild.setFailMsg("You cannot walk that way.");
+		skillBuild.setSyntax(Syntax.DIRECTION);
+		skillBuild.complete(skillBook);
+		
+		skillBuild.setup(this, "swim");
+		skillBuild.addAction(new BalanceCheck(true, Who.SELF, Where.HERE));
+		skillBuild.addAction(new MoveCheck(GroundType.WATER, Who.SELF, Where.HERE, Where.ONEAWAY));
+		skillBuild.addAction(new Message("%s swims to the %s.", Who.ALL, Where.HERE, msgStrings.SELF, msgStrings.MOVE));
+		skillBuild.addAction(new Move(Who.SELF, Where.HERE, Where.ONEAWAY));
+		skillBuild.addAction(new Message("%s swims in from the %s.", Who.ALL, Where.HERE, msgStrings.SELF, msgStrings.OPPMOVE));
+		skillBuild.setFailMsg("You cannot swim that way.");
+		skillBuild.setSyntax(Syntax.DIRECTION);
+		skillBuild.complete(skillBook);
 		
 		
+		skillBookList.put("skillbook", skillBook);		
 		
-		allowedCommands.put("design", new ArcaneBuilder());
-		allowedCommands.put("adjust", new Adjust());
-		allowedCommands.put("complete", new Complete());
+//		allowedCommands.put("design", new ArcaneBuilder());
+//		allowedCommands.put("adjust", new Adjust());
+//		allowedCommands.put("complete", new Complete());
 		
 		WorldServer.mobList.put(name + id, this);
 	}
@@ -154,9 +195,8 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		private int xpWorth = 1;
 		private int baseDamage = 5;
 		private ArrayList<Holdable> inventory = new ArrayList<Holdable>();
-		private TreeMap<String, Command> allowedCommands = new TreeMap<String, Command>();
 		private String password = "";
-		private HashMap<String, Effect> effectList = new HashMap<String, Effect>();
+		private ArrayList<Effect> effectList = new ArrayList<Effect>();
 		
 		protected abstract T self();		
 		
@@ -175,10 +215,9 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		public T physicalMult(int val) {physicalMult = val;return self();}		
 		public T speed(int val) {speed = val;return self();}		
 		public T inventory(Item val) {inventory.add(val);return self();}		
-		public T commands(String name, Command val) {allowedCommands.put(name, val);return self();}		
 		public T xpWorth(int val) {xpWorth = val;return self();}	
 		public T baseDamage(int val) {baseDamage = val;return self();}
-		public T effect(String string, Effect effect) {effectList.put(string, effect); return self();}
+		public T effect(Effect effect) {effectList.add(effect); return self();}
 		public StdMob build() {return new StdMob(this);}}
 	
 	public static class Builder extends Init<Builder> {
@@ -204,48 +243,37 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public String getDescription() {return description;}	
 	public String getShortDescription() {return shortDescription;}	
 	public int getXpWorth() {return xpWorth;}	
-	public boolean commandAllowed(String command) {return allowedCommands.containsKey(command);}	
-	public Command getCommand(String command) {return allowedCommands.get(command);}
 	
-	public SortedSet<String> getCommandKeySet() {
-		return new TreeSet<String>(allowedCommands.keySet());
-	//	return allowedCommands.keySet();
-	}	
+	public Skill getCommand(String command) {
+		for (SkillBook sb : skillBookList.values()) {
+			Skill skill = sb.getSkill(command);
+			if (skill != null) {
+				return skill;
+			}
+		}
+		return null;
+	}
+	
 	@Override
 	public SkillBook getBook(String bookName) {
 		return skillBookList.get(bookName);
 	}
 	
-	public Collection<Command> getCommandValueSet() {return allowedCommands.values();}	
 	public void acceptItem(Holdable item) {inventory.add(item);}
 	public int getMessagesSize() {return messages.size();}	
 	public void addBug(String bugMsg) {bugList.add(bugMsg);}
-	public void acceptCommands(HashMap<String, Command> givenCommands) {allowedCommands.putAll(givenCommands);}	
-	public void acceptCommand(String comName, Command command) {allowedCommands.put(comName,  command);}
-	// Doesn't do nothin.
-	public void removeCommands(HashMap<String, Command> removedCommands) {	}
+
 	@Override
 	public void setContainer(Container futureLocation) {mobLocation = futureLocation;}
+	
 	@Override
 	public Container getContainer() {return mobLocation;}
 	
-	public void takeDamage(double damage) {
-//		damage = damageAdjustments(damage);
-		this.currentHp = (int) (currentHp - damage);
+	public void takeDamage(List<Type> types, int damage) {
+		damage = runEffects(types, damage);
+		this.currentHp = currentHp - damage;
 		checkHp();
 	}
-	
-	// Incoming damage may be negated by armor, enchatments, active skills, whatever.
-/*	protected int damageAdjustments(int damage) {
-		Random rand = new Random();
-		int random = rand.nextInt(100) + 1;
-		System.out.println(random);
-	//	if (random <= missChance) {
-		//	sendBack.printMessage("Hiding has paid off, you dodge the attack.");
-	//		return 0;
-	//	}
-		return damage;
-	}*/
 	
 	protected void checkHp() {
 		if (currentHp <= 0) {
@@ -267,27 +295,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		}
 		sendBack.printMessageLine(msg);
 	}
-	/* To be figured out again?
-	public void startDefence(String defence) {
-		if (defence.equals("shield")) {
-			this.shield = true;
-		} else if (defence.equals("aura")) {
-			this.aura = true;
-		} else if (defence.equals("balance")) {
-			this.balance = false; 
-		}
-	} */
-/* To be figured out again?
-	public void endDefence(String defence) {
-		if (defence.equals("shield")) {
-			this.shield = false;
-		} else if (defence.equals("aura")) {
-			this.aura = false;
-		} else if (defence.equals("balance")) {
-			this.balance = true;
-		}
-	}*/	
-	
+		
 	public void addExperience(int exp) {
 		this.experience += exp;
 		levelMobile();
@@ -313,22 +321,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		}
 	}
 	
-	// I think anything could learn a new skill, but the below is crap.
-	/*
-	public void learnSkill(String skill, SendMessage sendBack) {
-		if (skill.equals("generals")) {
-			this.generals = (this.generals + 1);
-			sendBack.printMessage("You've obtained the rank of " + generals + " in generals.");
-		} else if (skill.equals("mage")) {
-			this.mage = (this.mage + 1);
-			sendBack.printMessage("You've obtained the rank of " + mage + " in mage.");
-		} else if (skill.equals("survival")) {
-			this.survival = (this.survival + 1);
-			sendBack.printMessage("You've obtained the rank of " + survival + " in mage.");
-		}
-	}*/
 	
-
 	/* Goes into AI?
 	public void checkHp(SendMessage enemySendBack, Player enemyPlayer) {
 		if (this.currentHp <= 0 && !dead) {
@@ -343,12 +336,9 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		}
 	}*/
 	
-	public boolean removeItem(Holdable item) {
+	public void removeItem(Holdable item) {
 		if (inventory.contains(item)) {
 			inventory.remove(item);
-			return true;
-		} else {
-			return false;
 		}
 	}	
 
@@ -395,51 +385,53 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		
 	}
 	@Override
-	public void addEffect(String effectName, Effect effect) {
-		effectList.put(effectName, effect);
+	public void addEffect(Effect effect) {
+		effectList.add(effect);
 	}
 	
 	@Override
-	public void removeEffect(String effect) {
+	public void removeEffect(Effect effect) {
 		System.out.println(effectList.toString());
 		effectList.remove(effect);		
 		System.out.println(effectList.toString());
 	}
 	
-	public Effect getEffect(String effect) {
-		if (hasEffect(effect)) {
-			return effectList.get(effect);
-		}
-		return null;
+//	public Effect getEffect(String effect) {
+//		if (hasEffect(effect)) {
+//			return effectList.get(effect);
+//		}
+//		return null;
+//	}
+	
+	public boolean hasEffect(Effect effect) {
+		return effectList.contains(effect);		
 	}
 	
-	public boolean hasEffect(String effect) {
-		return effectList.containsKey(effect);		
-	}
-	
-	public void runEffects() {
-		Iterator iter = effectList.values().iterator();
+	public void runTickEffects() {
+		Iterator iter = effectList.iterator();
 		while (iter.hasNext()) {
 			Effect effect = (Effect) iter.next();
-			boolean removed = effect.doEffect();
-			if (removed) {
+			effect.doTickEffect();
+			if (effect.wasRemoved()) {
 				iter.remove();
-				effect.destroyEffect();
+				removeEffect(effect);
 			}
-		//	if (removed) {
-		//		iter.
-		//	}
 		}
-		
-		
-	//	for (int i = 0; i < effectList.size(); i++) {
-	//		boolean removed = effectList..doEffect();
-	//	}
-		
-	//	for (Effect e : effectList.values()) {
-	//		e.doEffect();
-	//	}
 	}
+	@Override
+	public int runEffects(List<Type> incomingTypes, int damage) {
+		Iterator iter = effectList.iterator();
+		while (iter.hasNext()) {
+			Effect effect = (Effect) iter.next();
+			damage = effect.doRunEffect(incomingTypes, damage);
+			if (effect.wasRemoved()) {
+				iter.remove();
+				removeEffect(effect);
+			}
+		}
+		return damage;
+	}
+	
 	@Override
 	public int getBaseDamage() {
 		return baseDamage;
@@ -458,5 +450,23 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		//meh
 	}
 
+	public void setBalance(boolean value) {
+		this.balance = value;
+	}
+	
+	public boolean hasWeaponType(Type type) {
+		return true; // Should actually test for correct equipped weapons.
+	}
+	@Override
+	public Container getContainer(String dir) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public GroundType getGroundType() {
+		return GroundType.CONTAINER;
+	}
+	
+	
 }
 	

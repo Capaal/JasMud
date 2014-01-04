@@ -1,12 +1,12 @@
- package Interfaces;
+ package interfaces;
 
 import java.util.ArrayList;
 
-public interface Container {
+import processes.Location.GroundType;
 
+public interface Container {
 	
 	public ArrayList<Holdable> inventory = new ArrayList<Holdable>();
-
 
 	public ArrayList<Holdable> getInventory();
 	public String displayExits();
@@ -19,5 +19,6 @@ public interface Container {
 	public void setDescription(String desc);
 	public void acceptItem(Holdable newItem);
 	public void removeItemFromLocation(Holdable oldItem) ;
-
+	public Container getContainer(String dir);
+	public GroundType getGroundType();
 }

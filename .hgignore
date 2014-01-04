@@ -1,3 +1,12 @@
 syntax: glob
 .settings/org.eclipse.jdt.core.prefs
 bin/*
+src/skills/Skill.class
+src/skills/Say.class
+src/skills/Hide.class
+src/skills/Move.class
+src/skills/Kick.class
+src/skills/Icebolt.class
+*.class
+JasMud.mwb.bak
+asdf1.mwb
