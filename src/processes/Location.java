@@ -59,7 +59,11 @@ public class Location implements Container {
 		public Builder in(int futureId, String connectionDirection) {buildDirections(id, "in", futureId, connectionDirection);return this;}			
 		public Builder out(int futureId, String connectionDirection) {buildDirections(id, "out", futureId, connectionDirection);return this;}			
 		
-		private Builder buildDirections(int currentId, String currentDirection,  int futureId, String futureDirection) {
+		private Builder buildDirections(int currentId, String currentDirection,  int futureId, String futureD) {
+			if (currentId == 0 || futureD == null) {
+				return this;
+			}
+			String futureDirection = futureD.toLowerCase();
 			if (WorldServer.locationCollection.containsKey(futureId)) {
 				Location futureLoc = WorldServer.locationCollection.get(futureId);								
 				locationConnections.put(futureId, futureDirection);				

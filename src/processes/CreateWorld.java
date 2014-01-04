@@ -9,11 +9,17 @@ import items.*;
 public class CreateWorld {
 	
 	public static void createWorld() {
-		createGenericStart();
-		createNewbieIsland();
+	//	createGenericStart();
+	//	createNewbieIsland();
+		makeWorldFromDatabase();
 		createMobs();
-		createAllItems();
+//		createAllItems();
 	//	createTestArea();
+	}
+	
+	public static void makeWorldFromDatabase() {
+		SQLInterface.connect("root", "".toCharArray());
+		SQLInterface.loadLocations();
 	}
 	
 	public static void createMobs() {
