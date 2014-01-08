@@ -86,7 +86,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		this.tickClient = new TickClient(this);
 		tickClient.start();
 		
-		SkillBook skillBook = new SkillBook();
+	/*	SkillBook skillBook = new SkillBook();
 			
 		// BELOW IS BUILT USING NEW ACTIONS USING FORMAT ACTION(ie damage) ACTIONS RELATED INFO(10 target projectile)
 		
@@ -174,7 +174,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		
 		
 		skillBookList.put("skillbook", skillBook);		
-		
+		*/
 //		allowedCommands.put("design", new ArcaneBuilder());
 //		allowedCommands.put("adjust", new Adjust());
 //		allowedCommands.put("complete", new Complete());
@@ -465,6 +465,11 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	@Override
 	public GroundType getGroundType() {
 		return GroundType.CONTAINER;
+	}
+	@Override
+	public void addBook(String bookName, SkillBook skillBook) {
+		skillBookList.put(bookName, skillBook);
+		
 	}
 	
 	

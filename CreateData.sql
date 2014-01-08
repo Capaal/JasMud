@@ -17,13 +17,29 @@ insert into itemstats values ('1','Dagger','1.10','Short and sharp.','a dagger',
 ('5','Ring','0.20',"It goes on your head.",'a helmet',null,'1.0','10','1','location');
 select * from itemstats;
 
-insert into mobstats values ('1','James',"He is a farmer named James.",'a farmer','2');
-insert into mobstats values ('2', 'Horse',"It's a horse.",'a horse','2');
-insert into mobstats values ('3','asdf',"James.",'a farmer','1');
+insert into mobstats values ('1','James', '', "He is a farmer named James.",'a farmer','2', 'STDMOB');
+insert into mobstats values ('2', 'Horse', '', "It's a horse.",'a horse','2', 'STDMOB');
+insert into mobstats values ('3','asdf', 'asdf', "James.",'a farmer','1', 'STDMOB');
 select * from mobstats;
 
 insert into SKILLTABLE (MOBID, SKILLID) values('3', '1');
+insert into SKILLTABLE (MOBID, SKILLID) values('3', '2');
+insert into SKILLTABLE (MOBID, SKILLID) values('1', '2');
 
 insert into SKILL values('1', '1', 'DAMAGE', 'FAIL');
+insert into SKILL values('2', 'blah', 'slash', 'FAIL');
 
-insert into DAMAGE values('1', '1', '20', 'TARGET', 'HERE');
+insert into blocktable (SKILLID, BLOCKID) values('1', '1');
+insert into blocktable (SKILLID, BLOCKID) values('1', '2');
+insert into blocktable (SKILLID, BLOCKID) values('2', '2');
+insert into blocktable (SKILLID, BLOCKID) values('2', '3');
+insert into blocktable (SKILLID, BLOCKID) values('2', '4');
+
+insert into block values('1', 'DAMAGE', '1', '20', 'TARGET', 'HERE');
+insert into block values('2', 'DAMAGE', '1', '5', 'TARGET', 'HERE');
+insert into block values('3', 'DAMAGE', '2', '5', 'TARGET', 'HERE');
+insert into block values('4', 'DAMAGE', '3', '5', 'TARGET', 'HERE');
+
+insert into syntaxtable (SKILLID, SYNTAXID) values ('2', '1');
+
+insert into syntax (SYNTAXPOS, SYNTAXTYPE) values ('2', 'TARGET');

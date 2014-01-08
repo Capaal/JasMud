@@ -6,5 +6,6 @@ drop table locationstats;
 drop table skilltable;
 drop table skill;
 drop table blocktable;
-drop table damage;
-drop table mobstats;
+drop table block;
+drop table syntaxtable;
+drop table syntax;

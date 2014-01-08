@@ -12,7 +12,7 @@ public class CreateWorld {
 	//	createGenericStart();
 	//	createNewbieIsland();
 		makeWorldFromDatabase();
-		createMobs();
+//		createMobs();
 //		createAllItems();
 	//	createTestArea();
 	}

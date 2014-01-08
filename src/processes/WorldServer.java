@@ -1,6 +1,7 @@
 package processes;
 
 import interfaces.Item;
+import interfaces.Mobile;
 import interfaces.Quest;
 import items.*;
 
@@ -15,7 +16,7 @@ public class WorldServer {
 	// Contains all Location objects.
 	public static HashMap<Integer, Location> locationCollection = new HashMap<Integer, Location>();
 	// Mob list
-	public static Map<String, StdMob> mobList = new HashMap<String, StdMob>();
+	public static Map<String, Mobile> mobList = new HashMap<String, Mobile>();
 	// List of all items
 	public static HashMap<String, Item> allItems = new HashMap<String, Item>();
 	// Contains String of weapon names,and an integer that points to a creating case.
@@ -164,7 +165,7 @@ public class WorldServer {
 		}
 		return locationCollection;
 	}	
-	
+	/*
 	// Will be in database
 	// Loads list of mobs.
 	public static Map<String, StdMob> loadMobs() throws FileNotFoundException {
@@ -207,8 +208,8 @@ public class WorldServer {
  //		} catch(ClassNotFoundException ex) {
  //			ex.printStackTrace();
 		}
-		return null /*allItems*/;
-	}	
+		return null allItems
+	}	*/
 	
 //	public static Command getSkillCommand(String key) {
 //		if (key == null || !skillCommands.containsKey(key)) {

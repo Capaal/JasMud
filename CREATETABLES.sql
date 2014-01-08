@@ -100,9 +100,11 @@ Create table ITEMCMDS (
 Create table MOBSTATS (
 	MOBID integer not null AUTO_INCREMENT,
 	MOBNAME varchar(50) not null,
+	MOBPASS varchar(15) not null,
 	MOBDESC text null,
 	MOBSHORTD varchar (50) null,
 	MOBLOC integer null,
+	MOBTYPE ENUM('STDMOB') DEFAULT 'STDMOB',
 	PRIMARY KEY (MOBID)
 );
 
@@ -118,22 +120,37 @@ Create table SKILL (
 	SKILLDES text,
 	SKILLNAME tinytext,
 	SKILLFAILMSG text,
+	/* And syntax and type like slash or fire */
 	PRIMARY KEY (SKILLID)
+);
+
+Create table SYNTAXTABLE (
+	SYNTAXTABLEID integer unsigned not null auto_increment,
+	SKILLID integer unsigned not null,
+	SYNTAXID integer unsigned not null,
+	PRIMARY KEY (SYNTAXTABLEID)
+);
+
+Create table SYNTAX (
+	SYNTAXID integer unsigned not null AUTO_INCREMENT,
+	SYNTAXPOS integer unsigned not null,
+	SYNTAXTYPE ENUM('SKILL' , 'TARGET', 'ITEM', 'LIST', 'DIRECTION') not null,
+	PRIMARY KEY(SYNTAXID)
 );
 
 Create table BLOCKTABLE (
 	BLOCKTABLEID integer unsigned not null AUTO_INCREMENT,
 	SKILLID integer unsigned not null,
 	BLOCKID integer unsigned not null,
-	BLOCKTYPE ENUM('DAMAGE'),
 	PRIMARY KEY (BLOCKTABLEID)
 );
 
-Create table DAMAGE (
-	DAMAGEID integer unsigned not null,
-	DAMAGEPOS integer unsigned not null,
-	DAMAGEINTENSITY integer not null,
-	DAMAGEWHO ENUM('SELF', 'ALL', 'TARGET', 'OTHERS', 'ALLIES', 'ENEMIES') not null,
-	DAMAGEWHERE ENUM('HERE', 'TARGET', 'INVENTORY', 'ONEAWAY', 'PROJECTILE') not null,
-	PRIMARY KEY (DAMAGEID)
+Create table BLOCK (
+	BLOCKID integer unsigned AUTO_INCREMENT,
+	BLOCKTYPE ENUM('DAMAGE') not null,
+	BLOCKPOS integer unsigned not null,
+	INTVALUE integer,
+	TARGETWHO ENUM('SELF', 'ALL', 'TARGET', 'OTHERS', 'ALLIES', 'ENEMIES') not null,
+	TARGETWHERE ENUM('HERE', 'TARGET', 'INVENTORY', 'ONEAWAY', 'PROJECTILE') not null,
+	PRIMARY KEY (BLOCKID)
 )

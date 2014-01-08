@@ -8,6 +8,7 @@ import java.util.Set;
 
 
 
+
 //import processes.Command;
 import processes.Location;
 import processes.SendMessage;
@@ -60,4 +61,5 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public void setBalance(boolean value);
 	public boolean hasWeaponType(Type type);
 	public void removeItem(Holdable item);
+	public void addBook(String string, SkillBook skillBook);
 }

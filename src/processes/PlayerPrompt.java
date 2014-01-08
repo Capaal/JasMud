@@ -1,4 +1,6 @@
 package processes;
+import interfaces.Mobile;
+
 import java.net.*; // Needed for Socket.
 import java.io.*; // Needed for PrintWriter and BufferReader.
 import java.util.*; // Needed for keySet();
@@ -8,7 +10,7 @@ public class PlayerPrompt extends Thread {
 
 	protected Socket incoming;
 	protected SendMessage sendBack;	
-	protected StdMob currentPlayer;
+	protected Mobile currentPlayer;
 	 	
 	public PlayerPrompt(Socket incoming) {	
 		this.incoming = incoming;
@@ -20,12 +22,36 @@ public class PlayerPrompt extends Thread {
 		sendBack.printMessage("Your name? ");
 		String enteredName = sendBack.getMessage();
 		sendBack.printMessage("Your password? ");
-		String enteredPass = sendBack.getMessage();
+		String enteredPass = sendBack.getMessage(); // NOT SAFE
 		sendBack.printSpace();
 		boolean oldPlayer = false;
 		boolean wrongPass = true;
 		// Checks if the entered Name exists, if it does, loads it. Assuming password is right.
-		if (enteredName != null && WorldServer.mobList.containsKey(enteredName.toLowerCase()) == true) {
+		
+		if (enteredName != null) {
+			Mobile possiblePlayer = SQLInterface.loadPlayer(enteredName, enteredPass);
+			if (possiblePlayer != null) {
+				currentPlayer = possiblePlayer;
+				oldPlayer = true;
+				wrongPass = false;
+			} else {
+				wrongPass = true;
+				sendBack.printMessage("Incorrect Username or Password");
+				sendBack.printSpace();
+				
+				oldPlayer = true;
+			
+				try {
+					incoming.close();
+				} catch (IOException io) {
+				}
+			}
+		}
+		
+		
+		
+		
+	/*	if (enteredName != null && WorldServer.mobList.containsKey(enteredName.toLowerCase()) == true) {
 			StdMob possiblePlayer = WorldServer.mobList.get(enteredName.toLowerCase());
 			if (enteredPass.equals(possiblePlayer.getPassword())) {
 				if (enteredName.equals(possiblePlayer.getName())) {
@@ -44,7 +70,7 @@ public class PlayerPrompt extends Thread {
 				} catch (IOException io) {
 				}
 			}
-		} 
+		} */
 		// Creates a new player with selected Name.
 		if (oldPlayer == false && enteredName != null) {
 			sendBack.printMessage("Would you like to create a new character? Y/N ");
@@ -71,7 +97,7 @@ public class PlayerPrompt extends Thread {
 			if (currentPlayer.getMessagesSize() > 0) {
 				sendBack.printMessage("You have messages. Type RMSG to read your messages.");
 			}
-			Location thisLocation = (Location) currentPlayer.getMobLocation();
+			Location thisLocation = (Location) currentPlayer.getContainer();
 			thisLocation.look(currentPlayer);
 		}
 		// The following is the User's infinite loop they play inside.
@@ -167,7 +193,7 @@ public class PlayerPrompt extends Thread {
 		return sendBack;
 	}
 	
-	public StdMob getCurrentPlayer() {
+	public Mobile getCurrentPlayer() {
 		return currentPlayer;
 	}
 	
