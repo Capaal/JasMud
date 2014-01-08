@@ -10,3 +10,5 @@ src/skills/Icebolt.class
 *.class
 JasMud.mwb.bak
 asdf1.mwb
+src/Interfaces/Container.java.orig
+src/locationCollection.ser
