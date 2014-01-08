@@ -1,139 +1,29 @@
-Create table LOCATIONSTATS (
-	LOCID integer not null AUTO_INCREMENT,
-	LOCNAME varchar(50) not null,
-	LOCDES text null,
-	LOCTYPE ENUM('GROUND', 'WATER', 'AIR', 'CONTAINTER') NOT NULL DEFAULT 'GROUND',
-	LOCINV integer null,
-	LOCNORTH integer null,
-	LOCNORTHDIR ENUM('NORTH', 'NORTHEAST', 'EAST', 'SOUTHEAST', 'SOUTH', 'SOUTHWEST', 'WEST',
-		'NORTHWEST', 'UP', 'DOWN', 'IN', 'OUT') null,
-	LOCSOUTH integer null,
-	LOCSOUTHDIR ENUM('NORTH', 'NORTHEAST', 'EAST', 'SOUTHEAST', 'SOUTH', 'SOUTHWEST', 'WEST',
-		'NORTHWEST', 'UP', 'DOWN', 'IN', 'OUT') null,
-	LOCEAST integer null,
-	LOCEASTDIR ENUM('NORTH', 'NORTHEAST', 'EAST', 'SOUTHEAST', 'SOUTH', 'SOUTHWEST', 'WEST',
-		'NORTHWEST', 'UP', 'DOWN', 'IN', 'OUT') null,
-	LOCWEST integer null,
-	LOCWESTDIR ENUM('NORTH', 'NORTHEAST', 'EAST', 'SOUTHEAST', 'SOUTH', 'SOUTHWEST', 'WEST',
-		'NORTHWEST', 'UP', 'DOWN', 'IN', 'OUT') null,
-	LOCNE integer null,
-	LOCNEDIR ENUM('NORTH', 'NORTHEAST', 'EAST', 'SOUTHEAST', 'SOUTH', 'SOUTHWEST', 'WEST',
-		'NORTHWEST', 'UP', 'DOWN', 'IN', 'OUT') null,
-	LOCSE integer null,
-	LOCSEDIR ENUM('NORTH', 'NORTHEAST', 'EAST', 'SOUTHEAST', 'SOUTH', 'SOUTHWEST', 'WEST',
-		'NORTHWEST', 'UP', 'DOWN', 'IN', 'OUT') null,
-	LOCSW integer null,
-	LOCSWDIR ENUM('NORTH', 'NORTHEAST', 'EAST', 'SOUTHEAST', 'SOUTH', 'SOUTHWEST', 'WEST',
-		'NORTHWEST', 'UP', 'DOWN', 'IN', 'OUT') null,
-	LOCNW integer null,
-	LOCNWDIR ENUM('NORTH', 'NORTHEAST', 'EAST', 'SOUTHEAST', 'SOUTH', 'SOUTHWEST', 'WEST',
-		'NORTHWEST', 'UP', 'DOWN', 'IN', 'OUT') null,
-	LOCUP integer null,
-	LOCUPDIR ENUM('NORTH', 'NORTHEAST', 'EAST', 'SOUTHEAST', 'SOUTH', 'SOUTHWEST', 'WEST',
-		'NORTHWEST', 'UP', 'DOWN', 'IN', 'OUT') null,
-	LOCDOWN integer null,
-	LOCDOWNDIR ENUM('NORTH', 'NORTHEAST', 'EAST', 'SOUTHEAST', 'SOUTH', 'SOUTHWEST', 'WEST',
-		'NORTHWEST', 'UP', 'DOWN', 'IN', 'OUT') null,
-	LOCOUT integer null,
-	LOCOUTDIR ENUM('NORTH', 'NORTHEAST', 'EAST', 'SOUTHEAST', 'SOUTH', 'SOUTHWEST', 'WEST',
-		'NORTHWEST', 'UP', 'DOWN', 'IN', 'OUT') null,
-	LOCIN int null,
-	LOCINDIR ENUM('NORTH', 'NORTHEAST', 'EAST', 'SOUTHEAST', 'SOUTH', 'SOUTHWEST', 'WEST',
-		'NORTHWEST', 'UP', 'DOWN', 'IN', 'OUT') null,
-	
-	PRIMARY KEY (LOCID)
-);
+insert into locationstats (LOCID, LOCNAME, LOCDES, LOCTYPE) values ('1','Beach','This is start.','GROUND');
+insert into locationstats (LOCID, LOCNAME, LOCDES, LOCTYPE) values ('2','Road north of beach','This is north of start.','GROUND');
+insert into locationstats (LOCID, LOCNAME, LOCDES, LOCTYPE) values ('3','Mud Intro Shack','This will be the mud intro shack.','GROUND');
+insert into locationstats (LOCID, LOCNAME, LOCDES, LOCTYPE) values ('4','East of road','This is east of the road.','GROUND');
+insert into locationstats (LOCID, LOCNAME, LOCDES, LOCTYPE) values ('5','Tidepool','This is south of start.','WATER');
 
-Create table LOCINV (
-	LOCID integer not null AUTO_INCREMENT,
-	ITEM1 integer null,
-	ITEM2 integer null,
-	ITEM3 integer null,
-	ITEM4 integer null,
-	ITEM5 integer null,
-	ITEM6 integer null,
-	ITEM7 integer null,
-	ITEM8 integer null,
-	ITEM9 integer null,
-	ITEM10 integer null,
-	ITEM11 integer null,
-	ITEM12 integer null,
-	ITEM13 integer null,
-	ITEM14 integer null,
-	ITEM15 integer null,
-	ITEM16 integer null,
-	PRIMARY KEY (LOCID)
-);
+update locationstats set locsouth='1',locsouthdir='NORTH' where locid='2';
+update locationstats set locse='1',locsedir='NORTHWEST' where locid='3';
+update locationstats set locwest='2',locwestdir='EAST' where locid='4';
+update locationstats set locnorth='1',locnorthdir='SOUTH' where locid='5';
+select * from locationstats;
 
-Create table ITEMSTATS (
-	ITEMID integer not null AUTO_INCREMENT,
-	ITEMNAME varchar(50) not null,
-	ITEMPHYS decimal(5,2) null,
-	ITEMDESC text null,
-	ITEMSHORTD varchar (50) null,
-	ITEMCMDS integer null,
-	ITEMBAL decimal(5,2) null,
-	ITEMMAXCON integer null,
-	ITEMLOC integer null,
-	ITEMLOCTYPE varchar(20) null,
-	PRIMARY KEY (ITEMID, ITEMNAME)
-);
+insert into itemstats values ('1','Dagger','1.10','Short and sharp.','a dagger','1','0.80','100','1','location'),
+('2','Sword','1.20','Long and sharp.','a sword','1','0.90','150','2','location'),
+('3','Vase','0.20',"It's a vase.",'a vase',null,'1.0','10','1','location'),
+('4','Ring','0.20',"A small gold ring.",'a ring',null,'1.0','10','1','location'),
+('5','Ring','0.20',"It goes on your head.",'a helmet',null,'1.0','10','1','location');
+select * from itemstats;
 
-Create table ITEMCMDS (
-	ITEMCMDS integer not null AUTO_INCREMENT,
-	CMD1 integer null,
-	CMD2 integer null,
-	CMD3 integer null,
-	CMD4 integer null,
-	CMD5 integer null,
-	CMD6 integer null,
-	CMD7 integer null,
-	CMD8 integer null,
-	CMD9 integer null,
-	CMD10 integer null,
-	CMD11 integer null,
-	CMD12 integer null,
-	CMD13 integer null,
-	PRIMARY KEY (ITEMCMDS)
-);
+insert into mobstats values ('1','James',"He is a farmer named James.",'a farmer','2');
+insert into mobstats values ('2', 'Horse',"It's a horse.",'a horse','2');
+insert into mobstats values ('3','asdf',"James.",'a farmer','1');
+select * from mobstats;
 
-Create table MOBSTATS (
-	MOBID integer not null AUTO_INCREMENT,
-	MOBNAME varchar(50) not null,
-	MOBDESC text null,
-	MOBSHORTD varchar (50) null,
-	MOBLOC integer null,
-	PRIMARY KEY (MOBID)
-);
+insert into SKILLTABLE (MOBID, SKILLID) values('3', '1');
 
-Create table SKILLTABLE (
-	SKILLTABLEID integer unsigned not null AUTO_INCREMENT,
-	MOBID integer unsigned not null,
-	SKILLID integer unsigned not null,
-	PRIMARY KEY (SKILLTABLEID)
-);
+insert into SKILL values('1', '1', 'DAMAGE', 'FAIL');
 
-Create table SKILL (
-	SKILLID integer unsigned not null,
-	SKILLDES text,
-	SKILLNAME tinytext,
-	SKILLFAILMSG text,
-	PRIMARY KEY (SKILLID)
-);
-
-Create table BLOCKTABLE (
-	BLOCKTABLEID integer unsigned not null AUTO_INCREMENT,
-	SKILLID integer unsigned not null,
-	BLOCKID integer unsigned not null,
-	BLOCKTYPE ENUM('DAMAGE'),
-	PRIMARY KEY (BLOCKTABLEID)
-);
-
-Create table DAMAGE (
-	DAMAGEID integer unsigned not null,
-	DAMAGEPOS integer unsigned not null,
-	DAMAGEINTENSITY integer not null,
-	DAMAGEWHO ENUM('SELF', 'ALL', 'TARGET', 'OTHERS', 'ALLIES', 'ENEMIES') not null,
-	DAMAGEWHERE ENUM('HERE', 'TARGET', 'INVENTORY', 'ONEAWAY', 'PROJECTILE') not null,
-	PRIMARY KEY (DAMAGEID)
-)
+insert into DAMAGE values('1', '1', '20', 'TARGET', 'HERE');
