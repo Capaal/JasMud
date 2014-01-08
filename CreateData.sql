@@ -17,13 +17,13 @@ insert into itemstats values ('1','Dagger','1.10','Short and sharp.','a dagger',
 ('5','Ring','0.20',"It goes on your head.",'a helmet',null,'1.0','10','1','location');
 select * from itemstats;
 
-insert into mobstats values ('1','James',"He is a farmer named James.",'a farmer','2', '1');
-insert into mobstats values ('2', 'Horse',"It's a horse.",'a horse','2', '1');
-insert into mobstats values ('3','asdf',"James.",'a farmer','1', '2');
+insert into mobstats values ('1','James',"He is a farmer named James.",'a farmer','2');
+insert into mobstats values ('2', 'Horse',"It's a horse.",'a horse','2');
+insert into mobstats values ('3','asdf',"James.",'a farmer','1');
 select * from mobstats;
 
 insert into SKILLTABLE (MOBID, SKILLID) values('3', '1');
 
-insert into SKILL values('1', '1', 'DAMAGE');
+insert into SKILL values('1', '1', 'DAMAGE', 'FAIL');
 
-insert into DAMAGE values('1', '20', 'TARGET', 'HERE');
+insert into DAMAGE values('1', '1', '20', 'TARGET', 'HERE');

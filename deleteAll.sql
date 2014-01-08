@@ -1,0 +1,10 @@
+drop table mobstats;
+drop table itemcmds;
+drop table locinv;
+drop table itemstats;
+drop table locationstats;
+drop table skilltable;
+drop table skill;
+drop table blocktable;
+drop table damage;
+drop table mobstats;
