@@ -12,7 +12,8 @@ public class SkillBuilder {
 	private String name;	
 	private Queue<Action> actions = new LinkedList<Action>();
 	private ArrayList<Type> types = new ArrayList<Type>();
-	private Mobile currentPlayer;	
+	private Mobile currentPlayer;
+	private String description;
 	private String failMsg = null;
 	private ArrayList<Syntax> syntax = new ArrayList<Syntax>();
 
@@ -61,14 +62,25 @@ public class SkillBuilder {
 		return failMsg;
 	}
 	
-	public void setSyntax(Syntax... sList) {
+	public void setSyntax(ArrayList<Syntax> syntaxList) {
 		syntax.clear();
-		for (Syntax s : sList) {
-			syntax.add(s);
-		}
+		syntax.addAll(syntaxList);
+		
+	//	for (Syntax s : sList) {
+	//		syntax.add(s);
+	//	}
 	}
 	
 	public ArrayList<Syntax> getSyntax() {
 		return new ArrayList<Syntax>(syntax);
+	}
+
+	public void setDescription(String desc) {
+		this.description = desc;
+		
+	}
+
+	public void setType(ArrayList<Type> skillTypes) {
+		this.types.addAll(skillTypes);		
 	}
 }

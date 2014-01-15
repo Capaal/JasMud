@@ -20,6 +20,7 @@ public class CreateWorld {
 	public static void makeWorldFromDatabase() {
 		SQLInterface.connect("root", "".toCharArray());
 		SQLInterface.loadLocations();
+		SQLInterface.loadMobs();
 	}
 	
 	public static void createMobs() {
@@ -76,11 +77,11 @@ public class CreateWorld {
 	//		itemLocation(WorldServer.locationCollection.get(1)).build(); 
 	public static void createAllItems() {
 		
-		StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short a sharp.").shortDescription("a dagger").itemCommands("stab").balanceMult(.8).maxCondition(100).
+		StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short a sharp.").shortDescription("a dagger").balanceMult(.8).maxCondition(100).
 				itemLocation(WorldServer.locationCollection.get(1)).build();
-		StdItem sword = new StdItem.Builder("Sword", 1).physicalMult(1.2).description("Long and sharp.").shortDescription("a sword").itemCommands("stab").balanceMult(.9).maxCondition(150).
+		StdItem sword = new StdItem.Builder("Sword", 1).physicalMult(1.2).description("Long and sharp.").shortDescription("a sword").balanceMult(.9).maxCondition(150).
 				itemLocation(WorldServer.locationCollection.get(1)).build();
-		StdItem staff = new StdItem.Builder("Staff", 1).physicalMult(1.4).description("Long and wooden.").shortDescription("a staff").itemCommands("stab").balanceMult(1.2).maxCondition(180).
+		StdItem staff = new StdItem.Builder("Staff", 1).physicalMult(1.4).description("Long and wooden.").shortDescription("a staff").balanceMult(1.2).maxCondition(180).
 				itemLocation(WorldServer.locationCollection.get(1)).build();
 		StdItem vase = new StdItem.Builder("Vase", 1).physicalMult(.2).description("It's a vase.").shortDescription("a vase").balanceMult(1.0).maxCondition(10).
 				itemLocation(WorldServer.locationCollection.get(1)).build();

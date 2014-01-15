@@ -16,13 +16,13 @@ public class Message implements Action {
 	private final Who who;
 	private final Where where;
 //	private final ArrayList<Who> targetNames;
-	private final msgStrings[] msgList;
+	private final ArrayList<msgStrings> msgList;
 
-	public Message(String m, Who who, Where where, msgStrings... msgList) {
+	public Message(String m, Who who, Where where, ArrayList<msgStrings> msgstringslist) {
 		this.msg = m;
 		this.who = who;
 		this.where = where;
-		this.msgList = msgList;
+		this.msgList = msgstringslist;
 	}
 	
 	@Override

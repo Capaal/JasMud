@@ -105,6 +105,7 @@ Create table MOBSTATS (
 	MOBSHORTD varchar (50) null,
 	MOBLOC integer null,
 	MOBTYPE ENUM('STDMOB') DEFAULT 'STDMOB',
+	LOADONSTARTUP boolean not null DEFAULT true,
 	PRIMARY KEY (MOBID)
 );
 
@@ -122,6 +123,19 @@ Create table SKILL (
 	SKILLFAILMSG text,
 	/* And syntax and type like slash or fire */
 	PRIMARY KEY (SKILLID)
+);
+
+Create table SKILLTYPETABLE (
+	SKILLTYPETABLEID integer unsigned not null auto_increment,
+	SKILLID integer unsigned not null,
+	SKILLTYPEID integer unsigned not null,
+	PRIMARY KEY (SKILLTYPETABLEID)
+);
+
+Create table SKILLTYPE (
+	SKILLTYPEID integer unsigned not null auto_increment,
+	SKILLTYPE ENUM('SHARP'),
+	PRIMARY KEY(SKILLTYPEID)
 );
 
 Create table SYNTAXTABLE (
@@ -147,10 +161,28 @@ Create table BLOCKTABLE (
 
 Create table BLOCK (
 	BLOCKID integer unsigned AUTO_INCREMENT,
-	BLOCKTYPE ENUM('DAMAGE') not null,
+	BLOCKTYPE ENUM('DAMAGE', 'BALANCECOST', 'CHANCE', 'WEAPONEQUIPPEDCHECK', 'BLEEDEFFECT', 'MESSAGE') not null,
 	BLOCKPOS integer unsigned not null,
 	INTVALUE integer,
+	BOOLEANONE ENUM('TRUE', 'FALSE'),
+	BLOCKPOINTER integer unsigned,
+	SKILLTYPEID integer unsigned,
+	STRINGONE tinytext,
 	TARGETWHO ENUM('SELF', 'ALL', 'TARGET', 'OTHERS', 'ALLIES', 'ENEMIES') not null,
 	TARGETWHERE ENUM('HERE', 'TARGET', 'INVENTORY', 'ONEAWAY', 'PROJECTILE') not null,
 	PRIMARY KEY (BLOCKID)
-)
+);
+
+Create table MSGSTRINGSTABLE (
+	MSGSTRINGSTABLEID integer unsigned auto_increment,
+	BLOCKID integer unsigned not null,
+	MSGSTRINGSID integer unsigned not null,
+	PRIMARY KEY(MSGSTRINGSTABLEID)
+);
+
+Create table MSGSTRINGS (
+	MSGSTRINGSID integer unsigned auto_increment,
+	MSGSTRINGSPOS integer unsigned,
+	MSGSTRINGSTYPE ENUM('TARGET', 'SELF'),
+	PRIMARY KEY(MSGSTRINGSID)
+);

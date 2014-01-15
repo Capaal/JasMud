@@ -9,3 +9,7 @@ drop table blocktable;
 drop table block;
 drop table syntaxtable;
 drop table syntax;
+drop table skilltypetable;
+drop table skilltype;
+drop table msgstringstable;
+drop table msgstrings;

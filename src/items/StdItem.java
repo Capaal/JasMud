@@ -7,14 +7,13 @@ import processes.*;
 
 public class StdItem implements Item, Holdable, Creatable {
 	
-	private Double physicalMult;
+	private double physicalMult;
 	private final int id;
 	private final String name;
 	private String description;
 	private String shortDescription;
-	private Double balanceMult;
-	private Container itemLocation;
-	public ArrayList<String> itemCommands;
+	private double balanceMult;
+	private Container itemLocation;	
 	private int maxCondition;
 	private int currentCondition;
 
@@ -22,33 +21,30 @@ public class StdItem implements Item, Holdable, Creatable {
 	// StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short a sharp.").shortDescription("a dagger").itemCommands("stab").balanceMult(.8).maxCondition(100).itemLocation(WorldServer.locationCollection.get(1)).build(); 
 	
 	public StdItem(Init<?> build) {
-		itemCommands = new ArrayList<String>();
-		itemCommands = build.itemCommands;
 		this.id = build.id;
 		this.name = build.name;
 		this.physicalMult = build.physicalMult;
 		this.description = build.description;
 		this.balanceMult = build.balanceMult;
-		this.itemLocation = build.itemLocation;
-		this.itemCommands = build.itemCommands;		
+		this.itemLocation = build.itemLocation;		
 		this.shortDescription = build.shortDescription;
 		this.maxCondition = build.maxCondition;
-		this.currentCondition = maxCondition;
+	//	this.currentCondition = maxCondition;
 		WorldServer.allItems.put(name + id, this);
 		itemLocation.acceptItem(this);
 	}
 	
 	protected static abstract class Init<T extends Init<T>> {
 		
-		private Double physicalMult = 1.0;
+		private double physicalMult = 1.0;
 		private final int id;
 		private final String name;
 		private String description = "default";
 		private String shortDescription = "shortDefault";
-		private Double balanceMult = 1.0;
+		private double balanceMult = 1.0;
 		private int maxCondition = 1000;
 		private Container itemLocation = WorldServer.locationCollection.get(1);
-		private ArrayList<String> itemCommands = new ArrayList<String>();
+		
 		
 		protected abstract T self();		
 		
@@ -65,8 +61,7 @@ public class StdItem implements Item, Holdable, Creatable {
 		public T shortDescription(String val) {shortDescription = val;return self();}		
 		public T maxCondition(int val) {maxCondition = val;return self();}		
 		public T itemLocation(Container val) {itemLocation = val;return self();}		
-		public T balanceMult(Double val) {balanceMult = val;return self();}		
-		public T itemCommands(String name) {itemCommands.add(name);return self();}				
+		public T balanceMult(Double val) {balanceMult = val;return self();}					
 		public StdItem build() {return new StdItem(this);}
 	}
 	
@@ -99,12 +94,6 @@ public class StdItem implements Item, Holdable, Creatable {
 	}	
 	public Container getContainer() {return itemLocation;}
 	
-	public boolean hasCommand(String command) {
-		if (itemCommands.contains(command)) {
-			return true;
-		}
-		return false;
-	}
 	public double getPhysicalMult() {
 		return physicalMult;
 	}
