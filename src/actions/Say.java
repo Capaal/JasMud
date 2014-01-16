@@ -34,7 +34,7 @@ public class Say implements Action {
 		sb.append("\".");
 //		ArrayList<Mobile> targs = who.findTarget(s, where.findLoc(s));
 		for (Mobile m : who.findTarget(s, where.findLoc(s))) {
-			if (m != null) {
+			if (m != null && m.isControlled()) {
 				m.tell(sb.toString());
 			}
 		}	

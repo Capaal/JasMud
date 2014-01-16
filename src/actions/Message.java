@@ -34,7 +34,7 @@ public class Message implements Action {
 		ArrayList<Mobile> targs = who.findTarget(s, where.findLoc(s));
 		if (targs != null) {
 			for (Mobile m : targs) {
-				if (m != null) {
+				if (m != null && m.isControlled()) {
 					m.tell(String.format(msg, tNames.toArray()));
 				}
 			}

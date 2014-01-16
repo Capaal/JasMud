@@ -51,12 +51,12 @@ insert into syntax (SYNTAXPOS, SYNTAXTYPE) values ('0', 'SKILL');
 
 
 
-
+/* GASH */
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) values('5', 'BALANCECOST', '1', 'FALSE', 'SELF', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('6', 'DAMAGE', '2', '10', 'TARGET', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('7', 'BLEEDEFFECT', '3', '10', 'TARGET', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('8', 'DAMAGE', '0', '-15', 'SELF', 'HERE');
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BLOCKPOINTER) values('9', 'CHANCE', '4', '8');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BLOCKPOINTERONE) values('9', 'CHANCE', '4', '8');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, SKILLTYPEID, TARGETWHO, TARGETWHERE) values('10', 'WEAPONEQUIPPEDCHECK', '5', '1', 'TARGET', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('11', 'MESSAGE', '6', 'You make a sharp slash at %s and then %s turns and fights back.', 'TARGET', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('12', 'MESSAGE', '7', 'You watch as %s slashes horribly at %s and %s turns to fight back.', 'OTHERS', 'HERE');
@@ -87,18 +87,82 @@ insert into msgstrings (MSGSTRINGSID, MSGSTRINGSPOS, MSGSTRINGSTYPE) values ('3'
 insert into msgstrings (MSGSTRINGSID, MSGSTRINGSPOS, MSGSTRINGSTYPE) values ('4', '2', 'TARGET');
 insert into msgstrings (MSGSTRINGSID, MSGSTRINGSPOS, MSGSTRINGSTYPE) values ('5', '3', 'TARGET');
 
-	
+/* GETBALANCE */
+insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values('4', 'getbalance', 'It gives you back balance instantly.', 'You probably already have balance.');
+insert into SKILLTABLE (MOBID, SKILLID) values('3', '4');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) values('14', 'BALANCECOST', '1', 'TRUE', 'SELF', 'HERE');
+insert into blocktable (SKILLID, BLOCKID) values('4', '14');
+
+/* SAY */
+insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values('5', 'say', 'Speaking to those nearby.', 'You emit no noise.');
+insert into SKILLTABLE (MOBID, SKILLID) values('3', '5');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS) values('15', 'SAY', '1');
+insert into blocktable (SKILLID, BLOCKID) values('5', '15');
+insert into syntax (SYNTAXPOS, SYNTAXTYPE) values ('2', 'LIST');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('5', '3');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('5', '1');
+
+/* EXAMINE */
+insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values('6', 'examine', 'Taking a closer look at objects', 'Examining the air is difficult.');
+insert into SKILLTABLE (MOBID, SKILLID) values('3', '6');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BLOCKPOINTERONE, BLOCKPOINTERTWO) values('16', 'OR', '1', '17', '18');
+insert into block (BLOCKID, BLOCKTYPE, TARGETWHERE) values('17', 'EXAMINE','INVENTORY');
+insert into block (BLOCKID, BLOCKTYPE, TARGETWHERE) values('18', 'EXAMINE','HERE');
+insert into blocktable (SKILLID, BLOCKID) values('6', '16');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('6', '2');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('6', '1');
+
+/* GET */
+insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values ('7', 'get', 'Picking up objects', 'You grab at the air, did you get it?');
+insert into SKILLTABLE (MOBID, SKILLID) values('3', '7');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE) values ('19', 'GET', '1', 'SELF', 'HERE');
+insert into blocktable (SKILLID, BLOCKID) values('7', '19');
+insert into syntax (SYNTAXPOS, SYNTAXTYPE) values ('2', 'ITEM');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('7', '1');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('7', '4');
+
+/* LOOK */
+insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values ('8', 'look', 'Viewing your surroundings.', 'WHY CAN"T YOU SEE????');
+insert into SKILLTABLE (MOBID, SKILLID) values ('3', '8');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TARGETWHERE) values ('20', 'LOOK', '1', 'ONEAWAY');
+insert into blocktable (SKILLID, BLOCKID) values ('8', '20');
+insert into syntax (SYNTAXPOS, SYNTAXTYPE) values ('2', 'DIRECTION');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('8', '1');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('8', '5');
+
+/* MOVE */
+insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values ('9', 'move', 'One foot in front of the other.', 'You cannot move! Take the time to enjoy your surroundings.');
+insert into SKILLTABLE (MOBID, SKILLID) values ('3', '9');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, GROUNDTYPE, TARGETWHO, TARGETWHERE, ENDWHERE) values ('21', 'MOVECHECK', '2', 'GROUND', 'SELF', 'HERE', 'ONEAWAY');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('22', 'MESSAGE', '3', '%s leaves to the %s.', 'ALL', 'HERE');
+insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('22', '3');
+insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('22', '7');
+insert into msgstrings (MSGSTRINGSID, MSGSTRINGSPOS, MSGSTRINGSTYPE) values ('7', '2', 'MOVE');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('23', 'MESSAGE', '5', '%s enters from the %s.', 'ALL', 'HERE');
+insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('23', '3');
+insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('23', '9');
+insert into msgstrings (MSGSTRINGSID, MSGSTRINGSPOS, MSGSTRINGSTYPE) values ('9', '2', 'OPPMOVE');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE, ENDWHERE) values ('24', 'MOVE', '4', 'SELF', 'HERE', 'ONEAWAY');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) values ('25', 'BALANCECHECK', '1', 'TRUE', 'SELF', 'HERE');
+insert into blocktable (SKILLID, BLOCKID) values ('9', '25');
+insert into blocktable (SKILLID, BLOCKID) values ('9', '21');
+insert into blocktable (SKILLID, BLOCKID) values ('9', '22');
+insert into blocktable (SKILLID, BLOCKID) values ('9', '24');
+insert into blocktable (SKILLID, BLOCKID) values ('9', '23');
+insert into syntax (SYNTAXPOS, SYNTAXTYPE) values ('1', 'DIRECTION');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('9', '6');
 
 
 
 /*
+
 
 	LOTS of new blocks we need to make
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) values('5', 'BALANCECOST', '1', 'FALSE', 'SELF', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('6', 'DAMAGE', '2', '10', 'TARGET', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('7', 'BLEEDEFFECT', '3', '10', 'TARGET', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('8', 'DAMAGE', '0', '-15', 'SELF', 'HERE');
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BLOCKPOINTER) values('9', 'CHANCE', '8');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BLOCKPOINTERONE) values('9', 'CHANCE', '8');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, WEAPONTYPE, TARGETWHO, TARGETWHERE) values('10', 'WEAPONEQUIPPEDCHECK', 'SHARP', 'TARGET', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('11', 'MESSAGE', 'You make a sharp slash at %s and then %s turns and fights back.', 'TARGET', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('12', 'MESSAGE', 'You watch as %s slashes horribly at %s and %s turns to fight back.', 'OTHERS', 'HERE');
@@ -142,4 +206,129 @@ insert into SKILLTABLE (MOBID, SKILLID) values('3', '3');
 		skillBuild.addAction(new Message("%s slashes you painfully.", Who.TARGET, Where.HERE, msgStrings.SELF));	
 		skillBuild.setFailMsg("You fail to slash.");
 		skillBuild.setSyntax(Syntax.SKILL, Syntax.TARGET);
+
+
+	To Build 'getbalance":
+insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values('4', 'getbalance', 'It gives you back balance instantly.', 'You probably already have balance.');
+insert into SKILLTABLE (MOBID, SKILLID) values('3', '4');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) values('14', 'BALANCECOST', '1', 'TRUE', 'SELF', 'HERE');
+insert into blocktable (SKILLID, BLOCKID) values('4', '14');
+
+		skillBuild.setup(this, "getbalance");
+		skillBuild.addAction(new BalanceCost(true, Who.SELF, Where.HERE));
+		skillBuild.complete(skillBook);
+
+
+		
+		skillBuild.setup(this, "bleeddefence");
+		skillBuild.addAction(new DefenceEffect(500, Type.BLEED, Who.SELF, Where.HERE));
+		skillBuild.complete(skillBook);
+		
+		skillBuild.setup(this, "sharpdefence");
+		skillBuild.addAction(new DefenceEffect(500, Type.SHARP, Who.SELF, Where.HERE));
+		skillBuild.complete(skillBook);
+		
+To build "say":
+insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values('5', 'say', 'Speaking to those nearby.', 'You emit no noise.');
+insert into SKILLTABLE (MOBID, SKILLID) values('3', '5');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS) values('15', 'SAY', '1');
+insert into blocktable (SKILLID, BLOCKID) values('5', '15');
+insert into syntax (SYNTAXPOS, SYNTAXTYPE) values ('2', 'LIST');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('5', '3');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('5', '1');
+
+		skillBuild.setup(this, "say");
+		skillBuild.addAction(new Say());
+		skillBuild.setSyntax(Syntax.SKILL, Syntax.LIST);
+		skillBuild.complete(skillBook);
+
+To build "examine": THIS USED "OR"
+insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values('6', 'examine', 'Taking a closer look at objects', 'Examining the air is difficult.');
+insert into SKILLTABLE (MOBID, SKILLID) values('3', '6');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS) values('16', 'EXAMINE', '1');
+insert into blocktable (SKILLID, BLOCKID) values('6', '16');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('6', '2');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('6', '1');
+		
+		skillBuild.setup(this, "examine");
+		skillBuild.addAction(new Or(new Examine(Where.INVENTORY), new Examine(Where.HERE)));
+		skillBuild.setSyntax(Syntax.SKILL, Syntax.ITEM);
+		skillBuild.complete(skillBook);
+		
+To build "get": Well, kind of need items to be working...
+insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values ('7', 'get', 'Picking up objects', 'You grab at the air, did you get it?');
+insert into SKILLTABLE (MOBID, SKILLID) values('3', '7');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE) values ('19', 'GET', '1', 'SELF', 'HERE');
+insert into blocktable (SKILLID, BLOCKID) values('7', '19');
+insert into syntax (SYNTAXPOS, SYNTAXTYPE) values ('2', 'ITEM');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('7', '1');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('7', '4');
+
+
+		skillBuild.setup(this, "get");
+		skillBuild.addAction(new Get(Who.SELF, Where.HERE));
+		skillBuild.setSyntax(Syntax.SKILL, Syntax.ITEM);
+		skillBuild.complete(skillBook);
+		
+		skillBuild.setup(this, "drop");
+		skillBuild.addAction(new Drop(Who.SELF, Where.HERE, Where.HERE));
+		skillBuild.setSyntax(Syntax.SKILL, Syntax.ITEM);
+		skillBuild.complete(skillBook);
+		
+To build "look":
+insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values ('8', 'look', 'Viewing your surroundings.', 'WHY CAN"T YOU SEE????');
+insert into SKILLTABLE (MOBID, SKILLID) values ('3', '8');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TARGETWHERE) values ('20', 'LOOK', '1', 'ONEAWAY');
+insert into blocktable (SKILLID, BLOCKID) values ('8', '20');
+insert into syntax (SYNTAXPOS, SYNTAXTYPE) values ('2', 'DIRECTION');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('8', '1');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('8', '5');
+
+		skillBuild.setup(this, "look");
+		skillBuild.addAction(new Look(Where.ONEAWAY));
+		skillBuild.setSyntax(Syntax.SKILL, Syntax.DIRECTION);
+		skillBuild.complete(skillBook);
+		
+To build "move":
+insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values ('9', 'move', 'One foot in front of the other.', 'You can't move! Take the time to enjoy your surroundings.');
+insert into SKILLTABLE (MOBID, SKILLID) values ('3', '9');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, GROUNDTYPEID, TARGETWHO, TARGETWHERE, ENDWHERE) values ('21', 'MOVECHECK', '2', 'GROUND', 'SELF', 'HERE', 'ONEAWAY');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('22', 'MESSAGE', '3', '%s leaves to the %s.', 'ALL', 'HERE');
+insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('22', '3');
+insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('22', '7');
+insert into msgstrings (MSGSTRINGSID, MSGSTRINGSPOS, MSGSTRINGSTYPE) values ('7', '2', 'MOVE');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('23', 'MESSAGE', '5', '%s enters from the %s.', 'ALL', 'HERE');
+insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('23', '3');
+insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('23', '9');
+insert into msgstrings (MSGSTRINGSID, MSGSTRINGSPOS, MSGSTRINGSTYPE) values ('9', '2', 'OPPMOVE');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE, ENDWHERE) values ('24', 'MOVE', '4', 'SELF', 'HERE', 'ONEAWAY');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) values ('25', 'BALANCECHECK', '1', 'TRUE', 'SELF', 'HERE');
+insert into blocktable (SKILLID, BLOCKID) values ('9', '25');
+insert into blocktable (SKILLID, BLOCKID) values ('9', '21');
+insert into blocktable (SKILLID, BLOCKID) values ('9', '22');
+insert into blocktable (SKILLID, BLOCKID) values ('9', '24');
+insert into blocktable (SKILLID, BLOCKID) values ('9', '23');
+insert into syntax (SYNTAXPOS, SYNTAXTYPE) values ('1', 'DIRECTION');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('9', '6');
+
+
+		skillBuild.setup(this, "move");
+		skillBuild.addAction(new BalanceCheck(true, Who.SELF, Where.HERE));
+		skillBuild.addAction(new MoveCheck(GroundType.GROUND, Who.SELF, Where.HERE, Where.ONEAWAY));
+		skillBuild.addAction(new Message("%s leaves to the %s.", Who.ALL, Where.HERE, msgStrings.SELF, msgStrings.MOVE));
+		skillBuild.addAction(new Move(Who.SELF, Where.HERE, Where.ONEAWAY));
+		skillBuild.addAction(new Message("%s enters from the %s.", Who.ALL, Where.HERE, msgStrings.SELF, msgStrings.OPPMOVE));
+		skillBuild.setFailMsg("You cannot walk that way.");
+		skillBuild.setSyntax(Syntax.DIRECTION);
+		skillBuild.complete(skillBook);
+		
+		skillBuild.setup(this, "swim");
+		skillBuild.addAction(new BalanceCheck(true, Who.SELF, Where.HERE));
+		skillBuild.addAction(new MoveCheck(GroundType.WATER, Who.SELF, Where.HERE, Where.ONEAWAY));
+		skillBuild.addAction(new Message("%s swims to the %s.", Who.ALL, Where.HERE, msgStrings.SELF, msgStrings.MOVE));
+		skillBuild.addAction(new Move(Who.SELF, Where.HERE, Where.ONEAWAY));
+		skillBuild.addAction(new Message("%s swims in from the %s.", Who.ALL, Where.HERE, msgStrings.SELF, msgStrings.OPPMOVE));
+		skillBuild.setFailMsg("You cannot swim that way.");
+		skillBuild.setSyntax(Syntax.DIRECTION);
+		skillBuild.complete(skillBook);
 */

@@ -32,6 +32,7 @@ public class PlayerPrompt extends Thread {
 			Mobile possiblePlayer = SQLInterface.loadPlayer(enteredName, enteredPass);
 			if (possiblePlayer != null) {
 				currentPlayer = possiblePlayer;
+				currentPlayer.controlStatus(true);
 				oldPlayer = true;
 				wrongPass = false;
 			} else {

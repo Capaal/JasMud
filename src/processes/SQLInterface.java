@@ -252,7 +252,7 @@ public class SQLInterface {
 				return new Message(rs.getString("STRINGONE"), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")), msgstringslist);
 						
 			case "CHANCE":
-				int internalActionNum = rs.getInt("BLOCKPOINTER");
+				int internalActionNum = rs.getInt("BLOCKPOINTERONE");
 				Statement stmt2 = con.createStatement();
 				ResultSet rs2 = stmt2.executeQuery("SELECT * FROM block WHERE BLOCKID='" + internalActionNum + "'");
 				
@@ -262,8 +262,45 @@ public class SQLInterface {
 				}
 				return null;			
 			
+			case "SAY":
+				return new Say();
+				
+			case "EXAMINE":
+				return new Examine(Where.valueOf(rs.getString("TARGETWHERE")));
+				
+			case "OR":
+				int internalActionNumOrOne = rs.getInt("BLOCKPOINTERONE");
+				int internalActionNumOrTwo = rs.getInt("BLOCKPOINTERTWO");
+				Statement stmtOR = con.createStatement();
+				ResultSet rsOR = stmtOR.executeQuery("SELECT * FROM block WHERE BLOCKID='" + internalActionNumOrOne + "'");
+				Action innerOrActionOne = null;
+				Action innerOrActionTwo = null;
+				if (rsOR.next()) {
+					innerOrActionOne = determineAction(rsOR);
+				}
+				rsOR = stmtOR.executeQuery("SELECT * FROM block WHERE BLOCKID='" + internalActionNumOrTwo + "'");
+				if (rsOR.next()) {
+					innerOrActionTwo = determineAction(rsOR);
+				}
+				return new Or(innerOrActionOne, innerOrActionTwo);
+				
+			case "GET":
+				return new Get(Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")));
+				
+			case "LOOK":
+				return new Look(Where.valueOf(rs.getString("TARGETWHERE")));
+				
+			case "MOVE":
+				return new Move(Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")), Where.valueOf(rs.getString("ENDWHERE")));
+				
+			case "BALANCECHECK":
+				return new BalanceCheck(checkBoolean(rs.getString("BOOLEANONE")), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")));
+				
+			case "MOVECHECK":
+				return new MoveCheck(GroundType.valueOf(rs.getString("GROUNDTYPE")), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")), Where.valueOf(rs.getString("ENDWHERE")));
+				
 			default:
-				System.out.println("Determine Action could not find appropriate case, failed.");
+				System.out.println("Determine Action could not find appropriate case, failed: " + rs.getString("BLOCKTYPE"));
 				return null;
 		}
 	}

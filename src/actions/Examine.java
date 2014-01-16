@@ -22,7 +22,7 @@ public class Examine implements Action {
 				}
 			}
 		}
-		s.getCurrentPlayer().tell("You search around for " + toExamine + " but find nothing to examine.");
+//		s.getCurrentPlayer().tell("You search around for " + toExamine + " but find nothing to examine.");
 		return false;	
 	}
 }

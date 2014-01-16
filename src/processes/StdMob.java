@@ -60,6 +60,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	protected SendMessage sendBack;
 	protected int baseDamage;
 	protected TickClient tickClient;
+	protected boolean isControlled = false;
 	
 	protected Map<String, SkillBook> skillBookList = new TreeMap<String, SkillBook>();
 	
@@ -286,7 +287,9 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		if (this.sendBack == null) {
 			sendBack = UsefulCommands.getPlayerPromptFromPlayer(this).getSendBack();
 		}
-		sendBack.printMessage(msg);
+		if (this.sendBack != null) {
+			sendBack.printMessage(msg);
+		}
 	}
 	
 	public void tellLine(String msg) {
@@ -471,7 +474,15 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		skillBookList.put(bookName, skillBook);
 		
 	}
+	@Override
+	public boolean isControlled() {
+		return isControlled;
+	}
 	
+	@Override
+	public void controlStatus(boolean statusChange) {
+		isControlled = statusChange;
+	}
 	
 }
 	
