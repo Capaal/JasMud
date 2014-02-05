@@ -1,10 +1,14 @@
 package actions;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import interfaces.*;
+import processes.SQLInterface;
 import processes.Skill;
 import processes.UsefulCommands;
 
-public class Get implements Action {
+public class Get extends Action {
 	
 	private final Who who;
 	private final Where where;
@@ -14,20 +18,35 @@ public class Get implements Action {
 		this.where = where;
 	}	
 	
+	// need to write a transfer ownership method, so that I don't keep forgetting steps.
 	// Forcing 1 locations right now, need a better way to ensure no duplications of items
 	@Override
 	public boolean activate(Skill s) {
 		String toGet = UsefulCommands.returnTarget(s.getFullCommand()).toLowerCase();
 		for (Container c : where.findLoc(s)) {
-			Holdable item = UsefulCommands.stringToHoldable(toGet, c);
-			if (item != null && item instanceof Item) { // Is instanceof Item correct? Or are other things dropable here? Isn't holdable more true?
+			ArrayList<Holdable> inv = c.getInventory();
+			Holdable item = UsefulCommands.stringToHoldable(toGet, inv);
+			if (item != null && item instanceof Holdable) { 
 				c.removeItemFromLocation(item);
 				Mobile m = who.findTarget(s, where.findLoc(s)).get(0);
 				m.acceptItem(item);
+				item.setContainer(m);
 				m.tell("You pick up a " + item.getShortDescription() + ".");
 				return true;
 			} 
 		}
 		return false;
+	}
+	
+	public HashMap<String, Object> selectOneself(int position) {
+		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='GET' AND BLOCKPOS=" + position
+				+ " AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
+		return SQLInterface.returnBlockView(blockQuery);
+	}
+	
+	protected void insertOneself(int position) {
+		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE) VALUES ('DAMAGE', " 
+				+ position + ", '" + who.toString() + "', '" + where.toString() + "');";
+		SQLInterface.saveAction(sql);
 	}
 }

@@ -1,7 +1,9 @@
 package effects;
 
 import java.util.*;
+
 import processes.Type;
+import processes.UsefulCommands;
 import interfaces.*;
 
 public class Bleed extends Effect {
@@ -25,6 +27,7 @@ public class Bleed extends Effect {
 			destroyEffect();		
 		}	else {
 			currentPlayer.takeDamage(Arrays.asList(type), intensity);
+			UsefulCommands.displayPrompt(currentPlayer);
 		}
 	}
 	

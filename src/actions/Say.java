@@ -7,7 +7,7 @@ import java.util.*;
 import processes.*;
 import processes.Skill.Syntax;
 
-public class Say implements Action {
+public class Say extends Action {
 
 	@Override
 	public boolean activate(Skill s) {
@@ -39,5 +39,16 @@ public class Say implements Action {
 			}
 		}	
 		return true;
+	}
+	
+	public HashMap<String, Object> selectOneself(int position) {
+		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='SAY' AND BLOCKPOS=" + position +";";
+		return SQLInterface.returnBlockView(blockQuery);
+	}
+	
+	protected void insertOneself(int position) {
+		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS) VALUES ('SAY', " 
+				+ position + ");";
+		SQLInterface.saveAction(sql);
 	}
 }

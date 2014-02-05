@@ -1,10 +1,13 @@
 package costs;
 
+import java.util.HashMap;
+
+import processes.SQLInterface;
 import processes.Skill;
 import checks.BalanceCheck;
 import interfaces.*;
 
-public class BalanceCost implements Action {
+public class BalanceCost extends Action {
 	
 	private final Who who;
 	private final Where where;
@@ -26,5 +29,17 @@ public class BalanceCost implements Action {
 			m.setBalance(goesTo);
 		}
 		return true;
+	}
+	
+	public HashMap<String, Object> selectOneself(int position) {
+		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='BALANCECOST' AND BLOCKPOS=" + position + " AND BOOLEANONE='" + goesTo
+				+ "' AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
+		return SQLInterface.returnBlockView(blockQuery);
+	}
+	
+	protected void insertOneself(int position) {
+		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) VALUES ('BALANCECOST', " 
+				+ position + ", '" + goesTo + ", '" + who.toString() + "', '" + where.toString() + "');";
+		SQLInterface.saveAction(sql);
 	}
 }

@@ -1,16 +1,12 @@
 package actions;
 
-import interfaces.Action;
-import interfaces.Container;
-import interfaces.Mobile;
+import interfaces.*;
+import java.util.*;
+import processes.*;
 
-import java.util.ArrayList;
-
-import processes.Location;
-import processes.Skill;
-
-public class Damage implements Action {
+public class Damage extends Action {
 	
+	private int id;
 	private final int intensity;
 	private final Who who;
 	private final Where where;
@@ -33,4 +29,33 @@ public class Damage implements Action {
 		}
 		return false;
 	}
+	
+	/*@Override
+	public boolean save(int position) {	
+		HashMap<String, Object> blockView = selectOneself(position);
+		if (blockView == null) {
+			insertOneself(position);
+			blockView = selectOneself(position);
+		}
+		this.id = (int) blockView.get("BLOCKID");
+		return true;
+	}*/
+	
+	public HashMap<String, Object> selectOneself(int position) {
+		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='DAMAGE' AND INTVALUE=" + intensity + " AND BLOCKPOS=" + position
+				+ " AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
+		return SQLInterface.returnBlockView(blockQuery);
+	}
+	
+	protected void insertOneself(int position) {
+		String sql = "INSERT IGNORE INTO BLOCK (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) VALUES ('DAMAGE', " 
+				+ position + ", " +  intensity + ", '" + who.toString() + "', '" + where.toString() + "');";
+		SQLInterface.saveAction(sql);
+	}
+	
+/*	@Override
+	public int getId() {
+		return id;
+	}*/
+
 }

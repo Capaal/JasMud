@@ -21,6 +21,7 @@ public class CreateWorld {
 		SQLInterface.connect("root", "".toCharArray());
 		SQLInterface.loadLocations();
 		SQLInterface.loadMobs();
+		SQLInterface.loadItems();
 	}
 	
 	public static void createMobs() {
@@ -75,7 +76,7 @@ public class CreateWorld {
 	
 	// StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short a sharp.").shortDescription("a dagger").itemCommands("stab").balanceMult(.8).maxCondition(100).
 	//		itemLocation(WorldServer.locationCollection.get(1)).build(); 
-	public static void createAllItems() {
+	/*public static void createAllItems() {
 		
 		StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short a sharp.").shortDescription("a dagger").balanceMult(.8).maxCondition(100).
 				itemLocation(WorldServer.locationCollection.get(1)).build();
@@ -90,5 +91,5 @@ public class CreateWorld {
 		StdItem helmet = new StdItem.Builder("Helmet", 1).physicalMult(.4).description("It goes on your head.").shortDescription("a helmet").balanceMult(1.0).maxCondition(10).
 				itemLocation(WorldServer.locationCollection.get(1)).build();
 		
-	}
+	} */
 }

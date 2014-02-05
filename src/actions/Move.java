@@ -1,9 +1,12 @@
 package actions;
 
+import java.util.HashMap;
+
+import processes.SQLInterface;
 import processes.Skill;
 import interfaces.*;
 
-public class Move implements Action {
+public class Move extends Action {
 		
 	private final Who who;
 	private final Where where;
@@ -25,6 +28,18 @@ public class Move implements Action {
 			c.look(m);
 		}
 		return true;
+	}
+	
+	public HashMap<String, Object> selectOneself(int position) {
+		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='MOVE' AND BLOCKPOS=" + position
+				+ " AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "' AND ENDWHERE='" + finalLoc.toString() + "';";
+		return SQLInterface.returnBlockView(blockQuery);
+	}
+	
+	protected void insertOneself(int position) {
+		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE, ENDWHERE) VALUES ('MOVE', " 
+				+ position + ", '" + who.toString() + "', '" + where.toString() + "', '" + finalLoc.toString() + "');";
+		SQLInterface.saveAction(sql);
 	}
 }
 	

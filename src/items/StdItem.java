@@ -1,24 +1,72 @@
 package items;
 
-import interfaces.*;
+/**
+ * Ok, current idea for items. Many items will be StdItem, where the only differences will be name id description, short description and other stats.
+ * Other ideas that require special code will extend stditem, such as stackable items, wearable items, consumable items, rideable items.
+ * There will exist in a secret room a single version of each unique type, which is defined by a class. These unique defaults will be used
+ * as copyable versions to be changed and then used.
+ * Consumable items will use actions blocks just like skills in order to define their use and their effects.
+ * 
+ * id
+ * description
+ * shortdescription
+ * current durability
+ * max durability
+ * physical multiplier
+ * balance multiplier
+ * location
+ * location type (location, inventory, pack, pouch)
+ * types list (SHARP, BLUNT, PIERCE, TWOHANDED and so on.)
+ * item type (tags for how they can be used, ie metal crafted for skills to know they can be crafted by metalworkers, materials, plants, tools etc.)
+ * weight
+ * 
+ * special things:
+ * coins/herbs, stackables
+ * horses/turtles, rideables
+ * food/potions/enchanted items with spells, consumables
+ * packs/pouches, containers, though those two examples might need to be seperated?
+ * wearable? it needs to change stats or other things, needs to know where to be worn
+ * 
+ * Need to implement item? Item makes things holdable and creatable, both of which all items are. But what about trees? They are unmovable.
+ * Is there any item that is NOT holdable? Creatable? (Creatable by gods, different from craftable).
+ * 
+ * A REASON to use HOLDABLE and CREATABLE, is because other things might be these things as well as item.
+ * Such as mobiles are holdable and creatable as well? I think thats it though, so interfaces for these seem silly.
+ * So really, just some interface that represents everything all mobiles and items have in common, and have both impletement this seems best.
+ * 
+ * DATABASE INFORMATION:
+ * 		The database will be designed on a super-table principle. ONE table representing ALL items. This means there will be a lot of tables needed
+ * 		for more complicated item types that will be unused by other times, and that the item type will define what is loaded.
+ * 		It shouldn't matter though, as it only defines what info is loaded, and any unused columns aren't even viewed.
+ */
 
-import java.util.ArrayList;
+
+
+import java.util.*;
+
+import interfaces.*;
 import processes.*;
 
-public class StdItem implements Item, Holdable, Creatable {
+public class StdItem implements Holdable {
 	
-	private double physicalMult;
-	private final int id;
 	private final String name;
-	private String description;
-	private String shortDescription;
-	private double balanceMult;
+	private final int id;	
+	private final String description;
+	private final String shortDescription;
+	private final double physicalMult;
+	private final double balanceMult;
 	private Container itemLocation;	
-	private int maxCondition;
-	private int currentCondition;
+	private final int maxDurability;
+	private int currentDurability;
+	private final ArrayList<Type> types;
+	private final ArrayList<ItemType> itemTags;
+	
+	private final ArrayList<String> allowedSlots;
 
 	// Example of a Dagger build: 
-	// StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short a sharp.").shortDescription("a dagger").itemCommands("stab").balanceMult(.8).maxCondition(100).itemLocation(WorldServer.locationCollection.get(1)).build(); 
+	// StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short and sharp.").shortDescription("a dagger")
+	// .types("SHARP", "PIERCE").itemTags("METALCRAFT", "ENCHANTABLE").balanceMult(.8).maxDurability(100)
+	// .itemLocation(WorldServer.locationCollection.get(1)).build(); 
 	
 	public StdItem(Init<?> build) {
 		this.id = build.id;
@@ -28,8 +76,11 @@ public class StdItem implements Item, Holdable, Creatable {
 		this.balanceMult = build.balanceMult;
 		this.itemLocation = build.itemLocation;		
 		this.shortDescription = build.shortDescription;
-		this.maxCondition = build.maxCondition;
-	//	this.currentCondition = maxCondition;
+		this.maxDurability = build.maxDurability;
+		this.currentDurability = build.currentDurability;
+		this.types = build.types;
+		this.itemTags = build.itemTags;
+		this.allowedSlots = build.allowedSlots;
 		WorldServer.allItems.put(name + id, this);
 		itemLocation.acceptItem(this);
 	}
@@ -42,8 +93,13 @@ public class StdItem implements Item, Holdable, Creatable {
 		private String description = "default";
 		private String shortDescription = "shortDefault";
 		private double balanceMult = 1.0;
-		private int maxCondition = 1000;
+		private int maxDurability = 1;
+		private int currentDurability = 1;
+		private ArrayList<Type> types = new ArrayList<Type>();
+		private ArrayList<ItemType> itemTags = new ArrayList<ItemType>();
 		private Container itemLocation = WorldServer.locationCollection.get(1);
+		
+		private ArrayList<String> allowedSlots = new ArrayList<String>();
 		
 		
 		protected abstract T self();		
@@ -59,9 +115,13 @@ public class StdItem implements Item, Holdable, Creatable {
 		public T physicalMult(Double val) {physicalMult = val;return self();}		
 		public T description(String val) {description = val;return self();}		
 		public T shortDescription(String val) {shortDescription = val;return self();}		
-		public T maxCondition(int val) {maxCondition = val;return self();}		
+		public T maxDurability(int val) {maxDurability = val;return self();}		
 		public T itemLocation(Container val) {itemLocation = val;return self();}		
-		public T balanceMult(Double val) {balanceMult = val;return self();}					
+		public T balanceMult(Double val) {balanceMult = val;return self();}		
+		public T types(Type ...val) {types.addAll(Arrays.asList(val)); return self();}
+		public T itemTags(ItemType ...val) {itemTags.addAll(Arrays.asList(val)); return self();}
+		public T currentDurability(int val) {currentDurability = val; return self();}
+		public T allowedSlots(String val) {allowedSlots.add(val); return self();}
 		public StdItem build() {return new StdItem(this);}
 	}
 	
@@ -70,31 +130,75 @@ public class StdItem implements Item, Holdable, Creatable {
 		@Override
 		protected Builder self() {return this;}
 	}
-	@Override
-	public Creatable create() {		
+	
+	// Probably not what I want? as a skill will probably handle what this handles, and it'll just make a new version.
+	// But do I need a method here that handles creating a copy? As all items will probably be copies?
+	// Plus, items are no longer
+	public StdItem create() {		
 		// TODO Auto-generated method stub
 		return null;
 	}
-	@Override
-	public int getDamage() {
-		// TODO Auto-generated method stub
-		return 10;
-	}
-	@Override
-	public String getDescription() {return description;}	
-	@Override
-	public String getShortDescription() {return shortDescription;}
-	@Override
-	public String getName() {return name;}
-	@Override
-	public int getId() {return id;}
-	@Override
-	public void setContainer(Container con) {
-		// TODO Auto-generated method stub		
-	}	
-	public Container getContainer() {return itemLocation;}
 	
-	public double getPhysicalMult() {
-		return physicalMult;
+	public String getName() {return name;}
+	public int getId() {return id;}
+	public String getDescription() {return description;}	
+	public String getShortDescription() {return shortDescription;}
+	public double getPhysicalMult() {return physicalMult;}
+	public double getBalanceMult() {return balanceMult;}
+	public void setContainer(Container con) {this.itemLocation = con;}	
+	public Container getContainer() {return itemLocation;}
+	public int getCurrentDurability() {return currentDurability;}
+	public int getMaxDurability() {return maxDurability;}
+	public void setDurability(int newDurability) {this.currentDurability = newDurability;}
+	public ArrayList<String> getAllowedSlots() {return allowedSlots;}
+	public ArrayList<Type> getTypes() {return types;}
+	public ArrayList<ItemType> getItemTags() {return itemTags;}
+
+	public void addSlot(String slot) {
+		allowedSlots.add(slot);		
 	}
+	
+	public boolean save() {		
+		String locationType = null;
+		if (itemLocation instanceof Location) {
+			locationType = "LOCATION";
+		} else if (itemLocation instanceof StdMob) {
+			locationType = "INVENTORY";
+		} else {
+			locationType = "CONTAINER";
+		}
+		String updateItem = "UPDATE ITEMSTATS SET ITEMCURDUR=" + currentDurability + ", ITEMLOC=" + itemLocation.getId() 
+				+ ", ITEMLOCTYPE='" + locationType + "';";
+		System.out.println(updateItem);
+		return SQLInterface.saveAction(updateItem);
+	}
+	
+	public enum ItemType {
+		
+		MATERIAL() {
+			
+		},
+		
+		PLANT() {
+			
+		},
+		
+		WOODWORKING() {
+			
+		},
+		
+		ENCHANTABLE() {
+			
+		},
+		
+		METALWORKING() {
+			
+		};
+		
+		private ItemType() {};
+		
+		
+	}
+
+	
 }

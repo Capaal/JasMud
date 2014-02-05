@@ -42,10 +42,13 @@ public class SendMessage {
 		out.println();*/
 	//	long start = System.nanoTime();
 		out.println(msg);
-//		long end = System.nanoTime();
-//		long elapsedTime = end - start;
-//		System.out.println(elapsedTime*(10E-7) + " milliseconds.");
+	//		long end = System.nanoTime();
+	//		long elapsedTime = end - start;
+	//		System.out.println(elapsedTime*(10E-7) + " milliseconds.");
 		out.flush();
+		if (out.checkError()) {
+			System.out.println("Sendback error");
+		}
 	}
 	
 	// Sends back what user types to be analyzed.

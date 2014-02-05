@@ -1,16 +1,17 @@
 package actions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import processes.SQLInterface;
 import processes.Skill;
 import processes.Skill.Syntax;
 import processes.UsefulCommands;
 import interfaces.*;
 
-
 // Does not seem to be safe from developer mistakes when making new skills.
 // At the moment it can only accept directions to subsitute %s with names, not anything else like "north".
-public class Message implements Action {
+public class Message extends Action {
 	
 	private final String msg;
 	private final Who who;
@@ -35,11 +36,52 @@ public class Message implements Action {
 		if (targs != null) {
 			for (Mobile m : targs) {
 				if (m != null && m.isControlled()) {
+					System.out.println(msg);
+					System.out.println(tNames);
 					m.tell(String.format(msg, tNames.toArray()));
 				}
 			}
 		}
 		return true;
+	}
+	
+	@Override
+	public boolean save(int position) {	
+		if (!super.save(position)) {
+			return false;
+		}		
+		int msgStringsCount = 1;
+		for (msgStrings ms : msgList) {
+			String msgStringsInsert = "INSERT IGNORE INTO MSGSTRINGS (MSGSTRINGSPOS, MSGSTRINGSTYPE) values (" + msgStringsCount + ", '" + ms.toString() + "');"; 
+			if (!SQLInterface.saveAction(msgStringsInsert)) {
+				return false;
+			}
+			String msgStringsTableInsert = "INSERT IGNORE INTO msgstringstable (BLOCKID, MSGSTRINGSID) values (" + id + ", "
+					+ selectMsgStringsId(msgStringsCount, ms.toString()) + ");";
+			if (!SQLInterface.saveAction(msgStringsTableInsert)) {
+				return false;
+			}
+			msgStringsCount ++;
+		}				
+		return true;			
+	}
+	
+	private int selectMsgStringsId(int pos, String type) {
+		String blockQuery = "SELECT * FROM MSGSTRINGS WHERE MSGSTRINGSPOS=" + pos + " AND MSGSTRINGSTYPE='" + type.toString() + "';"; 
+		HashMap<String, Object> blockView = SQLInterface.returnBlockView(blockQuery);
+		return (int) blockView.get("MSGSTRINGSID");
+	}
+	
+	public HashMap<String, Object> selectOneself(int position) {
+		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='MESSAGE' AND BLOCKPOS=" + position + " AND STRINGONE='" + msg
+				+ "' AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "';"; 
+		return SQLInterface.returnBlockView(blockQuery);
+	}
+	
+	protected void insertOneself(int position) {
+		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) VALUES ('MESSAGE', " 
+				+ position + ", '" +  msg + "', '" + who.toString() + "', '" + where.toString() + "');";
+		SQLInterface.saveAction(sql);
 	}
 	
 	public enum msgStrings {

@@ -1,10 +1,13 @@
 package actions;
 
+import java.util.HashMap;
+
+import processes.SQLInterface;
 import processes.Skill;
 import processes.UsefulCommands;
 import interfaces.*;
 
-public class Look implements Action {
+public class Look extends Action {
 	
 	private Where where;
 	
@@ -25,5 +28,17 @@ public class Look implements Action {
 			}
 		}
 		return true;
+	}
+	
+	public HashMap<String, Object> selectOneself(int position) {
+		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='LOOK' AND BLOCKPOS=" + position
+				+ " AND TARGETWHERE='" + where.toString() + "';";
+		return SQLInterface.returnBlockView(blockQuery);
+	}
+	
+	protected void insertOneself(int position) {
+		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, TARGETWHERE) VALUES ('LOOK', " 
+				+ position + ", '" + where.toString() + "');";
+		SQLInterface.saveAction(sql);
 	}
 }

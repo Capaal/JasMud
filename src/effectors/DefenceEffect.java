@@ -1,11 +1,14 @@
 package effectors;
 
+import java.util.HashMap;
+
+import processes.SQLInterface;
 import processes.Skill;
 import processes.Type;
 import effects.Defence;
 import interfaces.*;
 
-public class DefenceEffect implements Action {
+public class DefenceEffect extends Action {
 	
 	private final int duration;
 	private final Who who;
@@ -26,5 +29,17 @@ public class DefenceEffect implements Action {
 			m.addEffect(new Defence(m, duration, type));
 		}
 		return true;
+	}
+	
+	public HashMap<String, Object> selectOneself(int position) {
+		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='DEFENCEEFFECT' AND BLOCKPOS=" + position + " AND INTVALUE=" + duration
+				+ " AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
+		return SQLInterface.returnBlockView(blockQuery);
+	}
+	
+	protected void insertOneself(int position) {
+		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) VALUES ('DEFENCEEFFECT', "
+				+ position + ", " + duration + ", '" + who.toString() + "', '" + where.toString() + "');";
+		SQLInterface.saveAction(sql);
 	}
 }

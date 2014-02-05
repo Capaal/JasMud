@@ -12,13 +12,13 @@ import java.io.*; //Serializable, FileReader/Writer
 
 public class WorldServer {
 	// Contains transient sockets of each connected Player.
-	public static Set activeClients = new HashSet();	
+	public static Set<PlayerPrompt> activeClients = new HashSet<PlayerPrompt>();	
 	// Contains all Location objects.
 	public static HashMap<Integer, Location> locationCollection = new HashMap<Integer, Location>();
 	// Mob list
 	public static Map<String, Mobile> mobList = new HashMap<String, Mobile>();
 	// List of all items
-	public static HashMap<String, Item> allItems = new HashMap<String, Item>();
+	public static HashMap<String, StdItem> allItems = new HashMap<String, StdItem>();
 	// Contains String of weapon names,and an integer that points to a creating case.
 	public static HashMap<String, Item> possibleItems = new HashMap<String, Item>();	
 	// Contains all Allowable Commands and leads to their occuring.
@@ -27,6 +27,8 @@ public class WorldServer {
 	static protected Map<String, String> allowableCommandsGeneralsDesc = new TreeMap<String, String>();
 	//ab generals
 	static protected ArrayList<String> allowableCommandsGeneralsShort = new ArrayList<String>();
+	
+	static protected HashMap<Integer, SkillBook> AllSkillBooks = new HashMap<Integer, SkillBook>();
 	
 //	static Map<String, Command> skillCommands = new HashMap<String, Command>();	
 	
@@ -94,6 +96,7 @@ public class WorldServer {
 				Socket incoming = s.accept();
 				// Each socket controls incoming prompt info and out messages
 				// for each person.
+
 				PlayerPrompt newClient = new PlayerPrompt(incoming);
 				activeClients.add(newClient);
 				// newClient is effectively a person, programmed poorly.
@@ -101,6 +104,7 @@ public class WorldServer {
 			}
 		}
 		catch (Exception e) {
+			System.out.println(e);
 		}
 	}
 	

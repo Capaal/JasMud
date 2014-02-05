@@ -11,4 +11,5 @@ public interface Holdable {
 	public void setContainer(Container con);
 	public Container getContainer();
 	public String getShortDescription();
+	public boolean save();
 }

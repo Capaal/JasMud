@@ -1,6 +1,7 @@
 package interfaces;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import interfaces.Container;
 import processes.Skill;
@@ -8,9 +9,32 @@ import processes.Skill.Syntax;
 import processes.UsefulCommands;
 import processes.WorldServer;
 
-public interface Action {
+public abstract class Action {
+	
+	protected int id;
 
 	public abstract boolean activate(Skill s);
+	
+	public boolean save(int position) {	
+		HashMap<String, Object> blockView = selectOneself(position);
+		if (blockView.size() == 0) {
+			insertOneself(position);
+			blockView = selectOneself(position);
+		}
+		this.id = (int) blockView.get("BLOCKID");
+		return true;
+	}
+	
+	protected abstract void insertOneself(int position);
+	public abstract HashMap<String, Object> selectOneself(int position);
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
 	
 	/* Questions about Targetting:
 	 * A skill will certainly be used.
@@ -189,7 +213,8 @@ public interface Action {
 			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers) {
 				ArrayList<Mobile> targ = new ArrayList<Mobile>();
 				for (Container l : Containers) {
-					Holdable h = UsefulCommands.stringToHoldable(s.getStringInfo(Syntax.TARGET), l);
+					ArrayList<Holdable> inv = l.getInventory();
+					Holdable h = UsefulCommands.stringToHoldable(s.getStringInfo(Syntax.TARGET), inv);
 					if (h != null) {
 						targ.add((Mobile)h);
 						return targ;
@@ -206,7 +231,8 @@ public interface Action {
 				Mobile t = (TARGET.findTarget(s, Containers)).get(0);
 				Mobile m = (SELF.findTarget(s, Containers)).get(0);
 				for (Container l : Containers) {
-					Holdable h = UsefulCommands.stringToHoldable(UsefulCommands.getSecondWord(s.getFullCommand()), l);
+					ArrayList<Holdable> inv = l.getInventory();
+					Holdable h = UsefulCommands.stringToHoldable(UsefulCommands.getSecondWord(s.getFullCommand()), inv);
 					if (h != null && h != t && h != s) {
 						targ.add((Mobile)h);
 						return targ;

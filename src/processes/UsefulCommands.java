@@ -195,8 +195,8 @@ public class UsefulCommands {
 	}
 	
 	// string, container to holdable
-	public static Holdable stringToHoldable(String item, Container place) {	
-		for (Holdable h : place.getInventory()) {
+	public static Holdable stringToHoldable(String item, Collection<Holdable> place) {
+		for (Holdable h : place) {
 			String tempItemName = h.getName().toLowerCase();
 			if (tempItemName.equals(item) || (tempItemName + h.getId()).equals(item)) {
 				return h;

@@ -1,11 +1,14 @@
 package checks;
 
+import java.util.HashMap;
+
+import processes.SQLInterface;
 import processes.Skill;
 import interfaces.*;
 
-public class BalanceCheck implements Action {
+public class BalanceCheck extends Action {
 	
-	private final Boolean isItThis;
+	private final boolean isItThis;
 	private final Who who;
 	private final Where where;
 	
@@ -26,5 +29,17 @@ public class BalanceCheck implements Action {
 			}
 		}
 		return success;
+	}
+	
+	public HashMap<String, Object> selectOneself(int position) {
+		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='BALANCECHECK' AND BLOCKPOS=" + position + " AND BOOLEANONE='" + isItThis
+				+ "' AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
+		return SQLInterface.returnBlockView(blockQuery);
+	}
+	
+	protected void insertOneself(int position) {
+		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) VALUES ('BALANCECHECK', " 
+				+ position + ", '" + isItThis + "', '" + who.toString() + "', '" + where.toString() + "');";
+		SQLInterface.saveAction(sql);
 	}
 }

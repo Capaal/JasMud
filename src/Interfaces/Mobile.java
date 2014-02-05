@@ -1,14 +1,21 @@
 package interfaces;
 
+import items.StdItem;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
 
 
+
+
+
+import processes.EquipMap;
 //import processes.Command;
 import processes.Location;
 import processes.SendMessage;
@@ -61,7 +68,16 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public void setBalance(boolean value);
 	public boolean hasWeaponType(Type type);
 	public void removeItem(Holdable item);
-	public void addBook(String string, SkillBook skillBook);
+	public void addBook(int id, SkillBook skillBook);
 	public boolean isControlled();
 	public void controlStatus(boolean statusChange);
+	public boolean save();
+	//public static Mobile newMobile();
+	public void setStartup(boolean b);
+	public SendMessage getSendBack();
+	public Map<Integer, SkillBook> getSkillBookList();
+	public void getNewSkillBooks(Mobile player);
+	public EquipMap<String, StdItem> getEquipment();
+	public void equip(String slot, StdItem item);
+	public void unequip(StdItem item);
 }

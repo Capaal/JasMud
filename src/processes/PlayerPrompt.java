@@ -36,16 +36,16 @@ public class PlayerPrompt extends Thread {
 				oldPlayer = true;
 				wrongPass = false;
 			} else {
-				wrongPass = true;
-				sendBack.printMessage("Incorrect Username or Password");
-				sendBack.printSpace();
+			//	wrongPass = true;
+			//	sendBack.printMessage("Incorrect Username or Password");
+			//	sendBack.printSpace();
 				
-				oldPlayer = true;
+			//	oldPlayer = true;
 			
-				try {
-					incoming.close();
-				} catch (IOException io) {
-				}
+		//		try {
+		//			incoming.close();
+		//		} catch (IOException io) {
+		//		}
 			}
 		}
 		
@@ -82,10 +82,31 @@ public class PlayerPrompt extends Thread {
 			}
 			if (createPlayer.toLowerCase().equals("y")) {
 				// Need to figure out allowed id numbers.
-				this.currentPlayer = new Player.Builder(1, enteredName).password(enteredPass).location(WorldServer.locationCollection.get(1)).build();
-				WorldServer.mobList.put(enteredName.toLowerCase(), currentPlayer);
-				WorldServer.locationCollection.get(1).acceptItem(currentPlayer);
+		//		this.currentPlayer = new StdMob.Builder(10, enteredName).password(enteredPass).location(WorldServer.locationCollection.get(1)).build();
+		//		Mobile godSkin = SQLInterface.loadPlayer("defaultGod", "defaultGod");
+				String insertStats = "INSERT INTO MOBSTATS (MOBNAME, MOBPASS, MOBDESC, MOBSHORTD, MOBLOC, MOBTYPE, LOADONSTARTUP) values "
+						+ "('" + enteredName + "', '" + enteredPass + "', 'A boring looking youth.', 'Young and stupid', 1, 'StdMob', 0);";
+				if (!SQLInterface.saveAction(insertStats)) {
+					System.out.println("New character creation failed to save to database.");
+				}
+				String blockQuery ="Select MOBID from MOBSTATS where  MOBNAME='" + enteredName + "';";
+				int mobId = (int) SQLInterface.viewData(blockQuery, "MOBID");
+				String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values(" + mobId + ", 1, 1);";
+				if (!SQLInterface.saveAction(insertBook)) {
+					System.out.println("New Book Addition failed to save to database.");
+				}
+				this.currentPlayer = SQLInterface.loadPlayer(enteredName, enteredPass);
+				currentPlayer.controlStatus(true);
+		//		currentPlayer.getNewSkillBooks(godSkin); 
+		//		WorldServer.mobList.remove(godSkin.getName().toLowerCase() + godSkin.getId());
+		//		godSkin.getContainer().removeItemFromLocation(godSkin);
+				currentPlayer.save();
+			//	currentPlayer.setStartup(false);
+			//	WorldServer.mobList.put(enteredName.toLowerCase(), currentPlayer);
+			//	System.out.println(WorldServer.locationCollection.size());
+			//	WorldServer.locationCollection.get(1).acceptItem(currentPlayer);
 				wrongPass = false;
+			
 			} else {
 				try {
 					incoming.close();
@@ -113,6 +134,10 @@ public class PlayerPrompt extends Thread {
 				} else {
 					// This is what breaks the infinite loop and kills connection.
 					if (str.trim().toLowerCase().equals("quit")) {
+						currentPlayer.save();
+						WorldServer.mobList.remove(currentPlayer.getName().toLowerCase() + currentPlayer.getId());
+						
+						currentPlayer.getContainer().removeItemFromLocation(currentPlayer);
 				//		sendBack.printMessage("Are you sure you want to quit?");
 				//		if (sendBack.getMessage().equals("y")) {
 							break;
