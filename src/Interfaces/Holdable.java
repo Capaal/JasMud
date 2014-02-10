@@ -12,4 +12,5 @@ public interface Holdable {
 	public Container getContainer();
 	public String getShortDescription();
 	public boolean save();
+	public void removeFromWorld();
 }

@@ -166,7 +166,7 @@ public class StdItem implements Holdable {
 	public boolean containsType(Type type) {
 		return types.contains(type);
 	}
-	
+	// not sure how packs will work yet...
 	public boolean save() {		
 		String locationType = null;
 		if (itemLocation instanceof Location) {
@@ -174,12 +174,17 @@ public class StdItem implements Holdable {
 		} else if (itemLocation instanceof StdMob) {
 			locationType = "INVENTORY";
 		} else {
-			locationType = "CONTAINER";
+			locationType = "EQUIPMENT";
 		}
 		String updateItem = "UPDATE ITEMSTATS SET ITEMCURDUR=" + currentDurability + ", ITEMLOC=" + itemLocation.getId() 
 				+ ", ITEMLOCTYPE='" + locationType + "';";
-		System.out.println(updateItem);
+	//	System.out.println(updateItem);
 		return SQLInterface.saveAction(updateItem);
+	}
+	
+	public void removeFromWorld() {
+		save();
+		WorldServer.allItems.remove(this.getName() + this.getId());
 	}
 	
 	public enum ItemType {

@@ -634,7 +634,17 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public SendMessage getSendBack() {
 		return sendBack;
 	}	
-	public void removeFromWorld() {
+
+	public void removeFromWorld() {		
+		for (Holdable inventoryItem : inventory) {
+			inventoryItem.removeFromWorld();
+		}
+		for (Holdable equipmentItem : equipment.values()) {
+			equipmentItem.removeFromWorld();
+		}
+		save();
+		mobLocation.removeItemFromLocation(this);
+		WorldServer.mobList.remove(this.getName() + this.getId());
 		
 	}
 }

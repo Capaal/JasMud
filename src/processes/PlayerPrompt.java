@@ -135,10 +135,8 @@ public class PlayerPrompt extends Thread {
 				} else {
 					// This is what breaks the infinite loop and kills connection.
 					if (str.trim().toLowerCase().equals("quit")) {
-						currentPlayer.save();
-						WorldServer.mobList.remove(currentPlayer.getName().toLowerCase() + currentPlayer.getId());
-						
-						currentPlayer.getContainer().removeItemFromLocation(currentPlayer);
+						currentPlayer.removeFromWorld();
+				//		currentPlayer.getContainer().removeItemFromLocation(currentPlayer);
 				//		sendBack.printMessage("Are you sure you want to quit?");
 				//		if (sendBack.getMessage().equals("y")) {
 							break;

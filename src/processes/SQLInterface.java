@@ -127,6 +127,7 @@ public class SQLInterface {
 			int itemMaxDurability = 1;
 			int itemCurrentDurability = 1;
 			int itemLocation = 1;
+			String equipSlot = "";
 			String itemLocType = "";
 			ArrayList<String> allowedEquipSlots = new ArrayList<String>();
 			while (rs.next()) {
@@ -142,6 +143,12 @@ public class SQLInterface {
 								new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
 										.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
 										.allowedSlots(allowedEquipSlots).itemLocation(container).build();
+								break;
+							case "EQUIPMENT":
+								StdItem item = new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
+										.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
+										.allowedSlots(allowedEquipSlots).itemLocation(container).build();
+								((Mobile)container).equip(equipSlot, item);
 								break;
 							default:
 								System.out.println("itemLocType mismatch on item " + itemId + " giving " + itemLocType);
@@ -161,13 +168,31 @@ public class SQLInterface {
 					itemMaxDurability = rs.getInt("ITEMMAXDUR");
 					itemCurrentDurability = rs.getInt("ITEMCURDUR");
 					itemLocation = rs.getInt("ITEMLOC");
+					equipSlot = rs.getString("EQUIPSLOT");
 					itemLocType = rs.getString("ITEMLOCTYPE");
 				} 
 			}
 			if (itemId != -1) {
-				new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
-						.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
-						.allowedSlots(allowedEquipSlots).itemLocation(WorldServer.locationCollection.get(itemLocation)).build();
+				switch(itemLocType) {
+					case "LOCATION":
+						new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
+								.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
+								.allowedSlots(allowedEquipSlots).itemLocation(WorldServer.locationCollection.get(itemLocation)).build();
+						break;
+					case "INVENTORY":
+						new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
+								.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
+								.allowedSlots(allowedEquipSlots).itemLocation(container).build();
+						break;
+					case "EQUIPMENT":
+						StdItem item = new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
+								.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
+								.allowedSlots(allowedEquipSlots).itemLocation(container).build();
+						((Mobile)container).equip(equipSlot, item);
+						break;
+					default:
+						System.out.println("itemLocType mismatch on item " + itemId + " giving " + itemLocType);
+				}
 			}
 		} catch(SQLException e) {
 			System.out.println("Error " + e.toString());
@@ -209,7 +234,7 @@ public class SQLInterface {
 							+ " LEFT JOIN SLOT ON slottable.SLOTID = slot.SLOTID"
 							+ " WHERE ITEMLOC=" + loadedPlayer.getId() + " AND ITEMLOCTYPE='INVENTORY';";
 					loadItems(sql, loadedPlayer);					
-					WorldServer.mobList.put(name.toLowerCase(), loadedPlayer);
+					WorldServer.mobList.put(mobname + mobid, loadedPlayer);
 					loadedPlayer.getContainer().acceptItem(loadedPlayer);
 				break;				
 				}

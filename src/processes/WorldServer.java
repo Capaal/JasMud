@@ -15,9 +15,9 @@ public class WorldServer {
 	public static Set<PlayerPrompt> activeClients = new HashSet<PlayerPrompt>();	
 	// Contains all Location objects.
 	public static HashMap<Integer, Location> locationCollection = new HashMap<Integer, Location>();
-	// Mob list
+	// Mob list name + id
 	public static Map<String, Mobile> mobList = new HashMap<String, Mobile>();
-	// List of all items
+	// List of all items name + id
 	public static HashMap<String, StdItem> allItems = new HashMap<String, StdItem>();
 	// Contains String of weapon names,and an integer that points to a creating case.
 	public static HashMap<String, Item> possibleItems = new HashMap<String, Item>();	
