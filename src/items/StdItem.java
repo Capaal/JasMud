@@ -159,9 +159,9 @@ public class StdItem implements Holdable {
 	public ArrayList<Type> getTypes() {return types;}
 	public ArrayList<ItemType> getItemTags() {return itemTags;}
 
-	public void addEquipSlot(String slot) {
-		allowedEquipSlots.add(slot);		
-	}
+//	public void addEquipSlot(String slot) {
+//		allowedEquipSlots.add(slot);		
+//	}
 	
 	public boolean containsType(Type type) {
 		return types.contains(type);

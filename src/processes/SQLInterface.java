@@ -107,12 +107,16 @@ public class SQLInterface {
 	}
 	
 	// ONLY LOADS ITEMS ON THE GROUND
-	public static void loadItems() {
+	public static void loadLocationItems() {
+		String sql = "SELECT itemstats.*, slot.SLOT FROM itemstats LEFT JOIN SLOTTABLE ON itemstats.ITEMID = slottable.ITEMID"
+				+ " LEFT JOIN SLOT ON slottable.SLOTID = slot.SLOTID WHERE ITEMLOCTYPE='LOCATION';";
+		loadItems(sql, null);
+	}
+	
+	public static void loadItems(String sql, Container container) {
 		makeConnection();
 		try {
-			stmt = con.createStatement();
-			String sql = "SELECT itemstats.*, slot.SLOT FROM itemstats LEFT JOIN SLOTTABLE ON itemstats.ITEMID = slottable.ITEMID"
-					+ " LEFT JOIN SLOT ON slottable.SLOTID = slot.SLOTID WHERE ITEMLOCTYPE='LOCATION';";
+			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
 			int itemId = -1;
 			String itemName = "";
@@ -123,13 +127,25 @@ public class SQLInterface {
 			int itemMaxDurability = 1;
 			int itemCurrentDurability = 1;
 			int itemLocation = 1;
+			String itemLocType = "";
 			ArrayList<String> allowedEquipSlots = new ArrayList<String>();
 			while (rs.next()) {
 				if (rs.getInt("ITEMID") != itemId) {
 					if (itemId != -1) {
-						new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
-								.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
-								.allowedSlots(allowedEquipSlots).itemLocation(WorldServer.locationCollection.get(itemLocation)).build();
+						switch(itemLocType) {
+							case "LOCATION":
+								new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
+										.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
+										.allowedSlots(allowedEquipSlots).itemLocation(WorldServer.locationCollection.get(itemLocation)).build();
+								break;
+							case "INVENTORY":
+								new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
+										.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
+										.allowedSlots(allowedEquipSlots).itemLocation(container).build();
+								break;
+							default:
+								System.out.println("itemLocType mismatch on item " + itemId + " giving " + itemLocType);
+						}
 					}
 					allowedEquipSlots = new ArrayList<String>();
 					itemId = -1;
@@ -141,57 +157,22 @@ public class SQLInterface {
 					itemPhysicalMult = rs.getDouble("ITEMPHYS");
 					itemBalanceMult = rs.getDouble("ITEMBAL");
 					itemDescription = rs.getString("ITEMDESC");
-					 itemShortDescription = rs.getString("ITEMSHORTD");
+					itemShortDescription = rs.getString("ITEMSHORTD");
 					itemMaxDurability = rs.getInt("ITEMMAXDUR");
 					itemCurrentDurability = rs.getInt("ITEMCURDUR");
 					itemLocation = rs.getInt("ITEMLOC");
+					itemLocType = rs.getString("ITEMLOCTYPE");
 				} 
-				// StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short and sharp.").shortDescription("a dagger")
-				// .types("SHARP", "PIERCE").itemTags("METALCRAFT", "ENCHANTABLE").balanceMult(.8).maxDurability(100)
-				// .itemLocation(WorldServer.locationCollection.get(1)).build(); 
-				
-			//	sql = "SELECT slot.SLOT from SLOT JOIN SLOTTABLE ON slottable.SLOTID = slot.SLOTID WHERE slottable.ITEMID=" + itemId + ";";
-			//	rs = stmt.executeQuery(sql);
-			//	while (rs.next()) {
-			//		item.addEquipSlot(rs.getString("SLOT"));
-			//	}
-			//	rs.close();
 			}
 			if (itemId != -1) {
 				new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
 						.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
 						.allowedSlots(allowedEquipSlots).itemLocation(WorldServer.locationCollection.get(itemLocation)).build();
-			}			
-		} catch (SQLException e) {
-			System.out.println("Error: " + e.toString());
+			}
+		} catch(SQLException e) {
+			System.out.println("Error " + e.toString());
 		}
 		disconnect();
-	}
-	
-	public static ArrayList<Holdable> loadInventory(ResultSet rs, String mobName) {
-	//	makeConnection();
-		ArrayList<Holdable> inv = new ArrayList<Holdable>();
-		try {
-			while (rs.next()) {
-				int itemId = rs.getInt("ITEMID");
-				String itemName = rs.getString("ITEMNAME");
-				double itemPhysicalMult = rs.getDouble("ITEMPHYS");
-				double itemBalanceMult = rs.getDouble("ITEMBAL");
-				String itemDescription = rs.getString("ITEMDESC");
-				String itemShortDescription = rs.getString("ITEMSHORTD");
-				int itemMaxDurability = rs.getInt("ITEMMAXDUR");
-				int itemCurrentDurability = rs.getInt("ITEMCURDUR");
-				int itemLocation = rs.getInt("ITEMLOC");
-				inv.add(new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
-						.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
-						.itemLocation(WorldServer.mobList.get(mobName + itemLocation)).build());
-			}
-			
-		} catch (SQLException e) {
-			System.out.println("Error: " + e.toString());
-		}		
-	//	disconnect();
-		return inv;
 	}
 	
 	/**
@@ -224,10 +205,10 @@ public class SQLInterface {
 					} else {
 						loadedPlayer.setStartup(false);
 					}
-					sql = "SELECT * FROM ITEMSTATS WHERE ITEMLOC=" + loadedPlayer.getId() + " AND ITEMLOCTYPE='INVENTORY';";
-					rs = stmt.executeQuery(sql);
-					loadedPlayer.getInventory().addAll(loadInventory(rs, mobname));
-					
+					sql = "SELECT itemstats.*, slot.SLOT FROM itemstats LEFT JOIN SLOTTABLE ON itemstats.ITEMID = slottable.ITEMID"
+							+ " LEFT JOIN SLOT ON slottable.SLOTID = slot.SLOTID"
+							+ " WHERE ITEMLOC=" + loadedPlayer.getId() + " AND ITEMLOCTYPE='INVENTORY';";
+					loadItems(sql, loadedPlayer);					
 					WorldServer.mobList.put(name.toLowerCase(), loadedPlayer);
 					loadedPlayer.getContainer().acceptItem(loadedPlayer);
 				break;				
@@ -487,6 +468,7 @@ public class SQLInterface {
 						
 			case "CHANCE":
 				int internalActionNum = rs.getInt("BLOCKPOINTERONE");
+				makeConnection();
 				Statement stmt2 = con.createStatement();
 				ResultSet rs2 = stmt2.executeQuery("SELECT * FROM block WHERE BLOCKID='" + internalActionNum + "'");
 				
