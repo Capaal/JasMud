@@ -21,4 +21,5 @@ public interface Container {
 	public void removeItemFromLocation(Holdable oldItem) ;
 	public Container getContainer(String dir);
 	public GroundType getGroundType();
+	public Holdable getHoldableFromString(String holdableString);
 }

@@ -86,7 +86,7 @@ public class EquipChange extends Action {
 		if (loc != null && target != null) {
 			for (Mobile m : target) {
 				if (equip) {
-					Holdable toMove = UsefulCommands.stringToHoldable(s.getStringInfo(Syntax.TARGET), m.getInventory());
+					Holdable toMove = m.getHoldableFromString(s.getStringInfo(Syntax.TARGET));
 					if (!(toMove instanceof StdItem)) {
 						return false;
 					}

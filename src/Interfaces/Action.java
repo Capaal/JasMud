@@ -213,8 +213,7 @@ public abstract class Action {
 			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers) {
 				ArrayList<Mobile> targ = new ArrayList<Mobile>();
 				for (Container l : Containers) {
-					ArrayList<Holdable> inv = l.getInventory();
-					Holdable h = UsefulCommands.stringToHoldable(s.getStringInfo(Syntax.TARGET), inv);
+					Holdable h = l.getHoldableFromString(s.getStringInfo(Syntax.TARGET));
 					if (h != null) {
 						targ.add((Mobile)h);
 						return targ;
@@ -227,16 +226,16 @@ public abstract class Action {
 		OTHERS() {
 			@Override
 			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers) {
-				ArrayList<Mobile> targ = new ArrayList<Mobile>();
-				Mobile t = (TARGET.findTarget(s, Containers)).get(0);
-				Mobile m = (SELF.findTarget(s, Containers)).get(0);
+				ArrayList<Mobile> targs = new ArrayList<Mobile>();
+				Mobile target = (TARGET.findTarget(s, Containers)).get(0);
+				Mobile self = (SELF.findTarget(s, Containers)).get(0);
 				for (Container l : Containers) {
-					ArrayList<Holdable> inv = l.getInventory();
-					Holdable h = UsefulCommands.stringToHoldable(UsefulCommands.getSecondWord(s.getFullCommand()), inv);
-					if (h != null && h != t && h != s) {
-						targ.add((Mobile)h);
-						return targ;
+					for (Holdable h : l.getInventory()) {
+						if (h instanceof Mobile && h != target && h != self) {
+							targs.add((Mobile)h);
+						}
 					}
+					return targs;
 				}
 				return null;					
 			}

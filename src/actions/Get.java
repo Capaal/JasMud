@@ -6,6 +6,7 @@ import java.util.HashMap;
 import interfaces.*;
 import processes.SQLInterface;
 import processes.Skill;
+import processes.Skill.Syntax;
 import processes.UsefulCommands;
 
 public class Get extends Action {
@@ -19,14 +20,13 @@ public class Get extends Action {
 	}	
 	
 	// need to write a transfer ownership method, so that I don't keep forgetting steps.
-	// Forcing 1 locations right now, need a better way to ensure no duplications of items
+	// Forcing 1 locations right now, need a better way to ensure no duplications of item.
 	@Override
 	public boolean activate(Skill s) {
-		String toGet = UsefulCommands.returnTarget(s.getFullCommand()).toLowerCase();
+		String toGet = s.getStringInfo(Syntax.ITEM);
 		for (Container c : where.findLoc(s)) {
-			ArrayList<Holdable> inv = c.getInventory();
-			Holdable item = UsefulCommands.stringToHoldable(toGet, inv);
-			if (item != null && item instanceof Holdable) { 
+			Holdable item = c.getHoldableFromString(toGet);
+			if (item != null) { 
 				c.removeItemFromLocation(item);
 				Mobile m = who.findTarget(s, where.findLoc(s)).get(0);
 				m.acceptItem(item);

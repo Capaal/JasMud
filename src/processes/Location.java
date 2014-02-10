@@ -1,6 +1,7 @@
 package processes;
 
 import interfaces.*;
+
 import java.util.*;
 
 
@@ -171,6 +172,17 @@ public class Location implements Container {
 	
 	public ArrayList<Holdable> getInventory() {
 		return new ArrayList<Holdable>(this.inventory);
+	}
+	
+	@Override
+	public Holdable getHoldableFromString(String holdableString) {
+		for (Holdable h : inventory) {
+			String tempItemName = h.getName().toLowerCase();
+			if (tempItemName.equals(holdableString) || (tempItemName + h.getId()).equals(holdableString)) {
+				return h;
+			}
+		}
+		return null;			
 	}
 
 	@Override

@@ -24,15 +24,11 @@ public class Drop extends Action {
 	
 	@Override
 	public boolean activate(Skill s) {
-		String toDrop = (s.getStringInfo(Syntax.ITEM)).toLowerCase();
-		if (toDrop.equals("")) {
-			return false;
-		}
+		String toDrop = s.getStringInfo(Syntax.ITEM);
 		Boolean success = false;
 		for (Mobile m : who.findTarget(s, where.findLoc(s))) {
-			ArrayList<Holdable> inv = m.getInventory();
-			Holdable item = UsefulCommands.stringToHoldable(toDrop, inv);
-			if (item != null && item instanceof Holdable) { 
+			Holdable item = m.getHoldableFromString(toDrop);
+			if (item != null) { 
 				m.removeItem(item);
 				Container loc = finalLoc.findLoc(s).get(0);
 				item.setContainer(loc);
@@ -40,6 +36,7 @@ public class Drop extends Action {
 				loc.acceptItem(item); 
 				success = true;
 			} else {
+				// At the moment you can run this for all, but if 2nd out of 3 can't drop item, 3rd won't try to drop it.
 				return false;
 			}
 		}

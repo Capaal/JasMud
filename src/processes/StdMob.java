@@ -384,6 +384,23 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	}
 	
 	@Override
+	public Holdable getHoldableFromString(String holdableString) {
+		for (Holdable h : inventory) {
+			String tempItemName = h.getName().toLowerCase();
+			if (tempItemName.equals(holdableString) || (tempItemName + h.getId()).equals(holdableString)) {
+				return h;
+			}
+		}
+		for (Holdable h : equipment.values()) {
+			String tempItemName = h.getName().toLowerCase();
+			if (tempItemName.equals(holdableString) || (tempItemName + h.getId()).equals(holdableString)) {
+				return h;
+			}
+		}
+		return null;			
+	}
+	
+	@Override
 	public EquipMap<String, StdItem> getEquipment() {
 		return new EquipMap<String, StdItem>(equipment);
 	}
@@ -419,7 +436,14 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	}
 	@Override
 	public void removeItemFromLocation(Holdable oldItem) {
-		inventory.remove(oldItem);
+		if (inventory.contains(oldItem)) {
+			inventory.remove(oldItem);
+		} else if (equipment.values().contains(oldItem)) {
+			equipment.unequipItem((StdItem)oldItem);
+			removeItemFromLocation(oldItem);
+		} else {
+			System.out.println("An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
+		}
 		
 	}
 	@Override
@@ -591,8 +615,13 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	
 	
 	private boolean saveItems() {
-		for (Holdable si : inventory) {
-			if (!si.save()) {
+		for (Holdable saveInventoryItem : inventory) {
+			if (!saveInventoryItem.save()) {
+				return false;
+			}
+		}
+		for (Holdable saveEquipmentItem : equipment.values()) {
+			if (!saveEquipmentItem.save()) {
 				return false;
 			}
 		}
@@ -605,5 +634,8 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public SendMessage getSendBack() {
 		return sendBack;
 	}	
+	public void removeFromWorld() {
+		
+	}
 }
 	

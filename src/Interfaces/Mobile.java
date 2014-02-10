@@ -80,4 +80,5 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public EquipMap<String, StdItem> getEquipment();
 	public void equip(String slot, StdItem item);
 	public void unequip(StdItem item);
+	public void removeFromWorld();
 }

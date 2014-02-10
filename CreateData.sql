@@ -55,11 +55,11 @@ insert into syntax (SYNTAXPOS, SYNTAXTYPE) values ('0', 'SKILL');
 
 /* GASH */
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) values('5', 'BALANCECOST', '1', 'FALSE', 'SELF', 'HERE');
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('6', 'DAMAGE', '2', '10', 'TARGET', 'HERE');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('6', 'DAMAGE', 5, '10', 'TARGET', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('7', 'BLEEDEFFECT', '3', '10', 'TARGET', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('8', 'DAMAGE', '0', '-15', 'SELF', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BLOCKPOINTERONE) values('9', 'CHANCE', '4', '8');
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TYPE, TARGETWHO, TARGETWHERE) values('10', 'WEAPONEQUIPPEDCHECK', '5', 'SHARP', 'TARGET', 'HERE');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TYPE, TARGETWHO, TARGETWHERE) values('10', 'WEAPONEQUIPPEDCHECK', 2, 'SHARP', 'TARGET', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('11', 'MESSAGE', '6', 'You make a sharp slash at %s and then %s turns and fights back.', 'SELF', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('12', 'MESSAGE', '7', 'You watch as %s slashes horribly at %s and %s turns to fight back.', 'OTHERS', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('13', 'MESSAGE', '8',  '%s slashes you painfully.', 'TARGET', 'HERE');
@@ -119,8 +119,8 @@ insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values ('7', 'get
 insert into SKILLTABLE (SKILLBOOKID, SKILLID) values(1, 7);
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE) values ('19', 'GET', '1', 'SELF', 'HERE');
 insert into blocktable (SKILLID, BLOCKID) values('7', '19');
-insert into syntax (SYNTAXPOS, SYNTAXTYPE) values ('2', 'ITEM');
-insert into syntaxtable (SKILLID, SYNTAXID) values ('7', '1');
+insert into syntax (SYNTAXPOS, SYNTAXTYPE) values ('1', 'ITEM');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('7', '2');
 insert into syntaxtable (SKILLID, SYNTAXID) values ('7', '4');
 
 /* DROP */
@@ -128,7 +128,7 @@ insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values ('10', 'dr
 insert into SKILLTABLE (SKILLBOOKID, SKILLID) values(1, 10);
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE, ENDWHERE) values ('26', 'DROP', '1', 'SELF', 'HERE', 'HERE');
 insert into blocktable (SKILLID, BLOCKID) values('10', '26');
-insert into syntaxtable (SKILLID, SYNTAXID) values ('10', '1');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('10', '2');
 insert into syntaxtable (SKILLID, SYNTAXID) values ('10', '4');
 
 /* LOOK */
