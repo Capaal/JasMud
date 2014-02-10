@@ -90,7 +90,7 @@ public class EquipChange extends Action {
 					if (!(toMove instanceof StdItem)) {
 						return false;
 					}
-					ArrayList<String> slots = ((StdItem)toMove).getAllowedSlots();
+					ArrayList<String> slots = ((StdItem)toMove).getAllowedEquipSlots();
 					if (slots.size() == 0) {
 						return false;
 					}

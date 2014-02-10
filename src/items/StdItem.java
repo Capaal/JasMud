@@ -35,8 +35,8 @@ package items;
  * So really, just some interface that represents everything all mobiles and items have in common, and have both impletement this seems best.
  * 
  * DATABASE INFORMATION:
- * 		The database will be designed on a super-table principle. ONE table representing ALL items. This means there will be a lot of tables needed
- * 		for more complicated item types that will be unused by other times, and that the item type will define what is loaded.
+ * 		The database will be designed on a super-table principle. ONE table representing ALL items. This means there will be a lot of columns needed
+ * 		for more complicated item types that will be unused by other items, and that the item type will define what is loaded.
  * 		It shouldn't matter though, as it only defines what info is loaded, and any unused columns aren't even viewed.
  */
 
@@ -61,7 +61,7 @@ public class StdItem implements Holdable {
 	private final ArrayList<Type> types;
 	private final ArrayList<ItemType> itemTags;
 	
-	private final ArrayList<String> allowedSlots;
+	private final ArrayList<String> allowedEquipSlots;
 
 	// Example of a Dagger build: 
 	// StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short and sharp.").shortDescription("a dagger")
@@ -80,7 +80,7 @@ public class StdItem implements Holdable {
 		this.currentDurability = build.currentDurability;
 		this.types = build.types;
 		this.itemTags = build.itemTags;
-		this.allowedSlots = build.allowedSlots;
+		this.allowedEquipSlots = build.allowedSlots;
 		WorldServer.allItems.put(name + id, this);
 		itemLocation.acceptItem(this);
 	}
@@ -121,7 +121,7 @@ public class StdItem implements Holdable {
 		public T types(Type ...val) {types.addAll(Arrays.asList(val)); return self();}
 		public T itemTags(ItemType ...val) {itemTags.addAll(Arrays.asList(val)); return self();}
 		public T currentDurability(int val) {currentDurability = val; return self();}
-		public T allowedSlots(String val) {allowedSlots.add(val); return self();}
+		public T allowedSlots(ArrayList<String> val) {allowedSlots.addAll(val); return self();}
 		public StdItem build() {return new StdItem(this);}
 	}
 	
@@ -149,13 +149,22 @@ public class StdItem implements Holdable {
 	public Container getContainer() {return itemLocation;}
 	public int getCurrentDurability() {return currentDurability;}
 	public int getMaxDurability() {return maxDurability;}
-	public void setDurability(int newDurability) {this.currentDurability = newDurability;}
-	public ArrayList<String> getAllowedSlots() {return allowedSlots;}
+	public void setDurability(int newDurability) {
+		if (newDurability > maxDurability) {
+			newDurability = maxDurability;
+		}
+		this.currentDurability = newDurability;
+	}
+	public ArrayList<String> getAllowedEquipSlots() {return allowedEquipSlots;}
 	public ArrayList<Type> getTypes() {return types;}
 	public ArrayList<ItemType> getItemTags() {return itemTags;}
 
-	public void addSlot(String slot) {
-		allowedSlots.add(slot);		
+	public void addEquipSlot(String slot) {
+		allowedEquipSlots.add(slot);		
+	}
+	
+	public boolean containsType(Type type) {
+		return types.contains(type);
 	}
 	
 	public boolean save() {		

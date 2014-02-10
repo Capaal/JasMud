@@ -32,7 +32,7 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public int getCurrentHp();
 	public Container getContainer();
 	public boolean hasBalance();
-	public boolean getIsDead();
+	public boolean isDead();
 	public int getSpeed();
 	public String getDescription();
 	public String getShortDescription();

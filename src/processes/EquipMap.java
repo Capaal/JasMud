@@ -9,27 +9,27 @@ public class EquipMap<Key, Value> {
 	private HashMap<Key, Value> keyToVal = new HashMap<Key, Value>();
 	private HashMap<Value, Key> valToKey = new HashMap<Value, Key>();
 	
-	public EquipMap() {
-		
+	public EquipMap() {		
 	}
 	
-	public EquipMap(Map<Key, Value> set) {
-	
+	public EquipMap(Map<Key, Value> set) {	
 		for (Key k : set.keySet()) {
 			equip(k, set.get(k));
 		}
 	}
 	
-	public EquipMap(EquipMap<Key, Value> set) {
-	
+	public EquipMap(EquipMap<Key, Value> set) {	
 		for (Key k : set.getKeyToValMap().keySet()) {
 			equip(k, set.getKeyToValMap().get(k));
 		}
 	}
 	
-	public void equip(Key k, Value v) {			
-		keyToVal.put(k, v);
-		valToKey.put(v, k);		
+	// This allows gear switching, rather than unequiping then equiping.
+	public void equip(Key k, Value v) {
+		if (keyToVal.containsKey(k)) {
+			keyToVal.put(k, v);
+			valToKey.put(v, k);		
+		}
 	}
 	
 	public void unequipSlot(Key slot) {

@@ -111,32 +111,57 @@ public class SQLInterface {
 		makeConnection();
 		try {
 			stmt = con.createStatement();
-			String sql = "SELECT * FROM itemstats WHERE ITEMLOCTYPE='LOCATION';";
+			String sql = "SELECT itemstats.*, slot.SLOT FROM itemstats LEFT JOIN SLOTTABLE ON itemstats.ITEMID = slottable.ITEMID"
+					+ " LEFT JOIN SLOT ON slottable.SLOTID = slot.SLOTID WHERE ITEMLOCTYPE='LOCATION';";
 			ResultSet rs = stmt.executeQuery(sql);
+			int itemId = -1;
+			String itemName = "";
+			double itemPhysicalMult = 1;
+			double itemBalanceMult = 1;
+			String itemDescription = "";
+			String itemShortDescription = "";
+			int itemMaxDurability = 1;
+			int itemCurrentDurability = 1;
+			int itemLocation = 1;
+			ArrayList<String> allowedEquipSlots = new ArrayList<String>();
 			while (rs.next()) {
-				int itemId = rs.getInt("ITEMID");
-				String itemName = rs.getString("ITEMNAME");
-				double itemPhysicalMult = rs.getDouble("ITEMPHYS");
-				double itemBalanceMult = rs.getDouble("ITEMBAL");
-				String itemDescription = rs.getString("ITEMDESC");
-				String itemShortDescription = rs.getString("ITEMSHORTD");
-				int itemMaxDurability = rs.getInt("ITEMMAXDUR");
-				int itemCurrentDurability = rs.getInt("ITEMCURDUR");
-				int itemLocation = rs.getInt("ITEMLOC");
+				if (rs.getInt("ITEMID") != itemId) {
+					if (itemId != -1) {
+						new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
+								.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
+								.allowedSlots(allowedEquipSlots).itemLocation(WorldServer.locationCollection.get(itemLocation)).build();
+					}
+					allowedEquipSlots = new ArrayList<String>();
+					itemId = -1;
+				}
+				allowedEquipSlots.add(rs.getString("SLOT"));
+				if (itemId == -1) {
+					itemId = rs.getInt("ITEMID");
+					itemName = rs.getString("ITEMNAME");
+					itemPhysicalMult = rs.getDouble("ITEMPHYS");
+					itemBalanceMult = rs.getDouble("ITEMBAL");
+					itemDescription = rs.getString("ITEMDESC");
+					 itemShortDescription = rs.getString("ITEMSHORTD");
+					itemMaxDurability = rs.getInt("ITEMMAXDUR");
+					itemCurrentDurability = rs.getInt("ITEMCURDUR");
+					itemLocation = rs.getInt("ITEMLOC");
+				} 
 				// StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short and sharp.").shortDescription("a dagger")
 				// .types("SHARP", "PIERCE").itemTags("METALCRAFT", "ENCHANTABLE").balanceMult(.8).maxDurability(100)
 				// .itemLocation(WorldServer.locationCollection.get(1)).build(); 
-				StdItem item = new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
-						.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
-						.itemLocation(WorldServer.locationCollection.get(itemLocation)).build();
-				sql = "SELECT slot.SLOT from SLOT JOIN SLOTTABLE ON slottable.SLOTID = slot.SLOTID WHERE slottable.ITEMID=" + itemId + ";";
-				rs = stmt.executeQuery(sql);
-				while (rs.next()) {
-					item.addSlot(rs.getString("SLOT"));
-				}
+				
+			//	sql = "SELECT slot.SLOT from SLOT JOIN SLOTTABLE ON slottable.SLOTID = slot.SLOTID WHERE slottable.ITEMID=" + itemId + ";";
+			//	rs = stmt.executeQuery(sql);
+			//	while (rs.next()) {
+			//		item.addEquipSlot(rs.getString("SLOT"));
+			//	}
+			//	rs.close();
 			}
-			
-			
+			if (itemId != -1) {
+				new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
+						.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
+						.allowedSlots(allowedEquipSlots).itemLocation(WorldServer.locationCollection.get(itemLocation)).build();
+			}			
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.toString());
 		}
@@ -157,9 +182,6 @@ public class SQLInterface {
 				int itemMaxDurability = rs.getInt("ITEMMAXDUR");
 				int itemCurrentDurability = rs.getInt("ITEMCURDUR");
 				int itemLocation = rs.getInt("ITEMLOC");
-				// StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short and sharp.").shortDescription("a dagger")
-				// .types("SHARP", "PIERCE").itemTags("METALCRAFT", "ENCHANTABLE").balanceMult(.8).maxDurability(100)
-				// .itemLocation(WorldServer.locationCollection.get(1)).build(); 
 				inv.add(new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
 						.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
 						.itemLocation(WorldServer.mobList.get(mobName + itemLocation)).build());

@@ -91,6 +91,7 @@ public class PlayerPrompt extends Thread {
 				}
 				String blockQuery ="Select MOBID from MOBSTATS where  MOBNAME='" + enteredName + "';";
 				int mobId = (int) SQLInterface.viewData(blockQuery, "MOBID");
+				// Only accounts for a single book at the moment.
 				String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values(" + mobId + ", 1, 1);";
 				if (!SQLInterface.saveAction(insertBook)) {
 					System.out.println("New Book Addition failed to save to database.");

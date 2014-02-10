@@ -29,8 +29,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	protected int speed;
 	protected ArrayList<Holdable> inventory;
 	// Below's string might be better as an enum, so that equipping messages and stuff can be stored there.
-	protected EquipMap<String, StdItem> equipment;
-	
+	protected EquipMap<String, StdItem> equipment;	
 	
 	protected String description;
 	protected int xpWorth;
@@ -241,10 +240,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		public T xpWorth(int val) {xpWorth = val;return self();}	
 		public T baseDamage(int val) {baseDamage = val;return self();}
 		public T effect(Effect effect) {effectList.add(effect); return self();}
-		public StdMob build() {return new StdMob(this);}}
-	
-		
-	
+		public StdMob build() {return new StdMob(this);}}	
 	
 	public static class Builder extends Init<Builder> {
 		public Builder(int id, String name) {
@@ -262,10 +258,9 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public int getId() {return id;}	
 	public int getCurrentHp() {return currentHp;}	
 	public int getMaxHp() {return maxHp;}	
-	public Container getMobLocation() {return mobLocation;}	
-	public boolean hasBalance() {return balance;}	
-	public boolean getIsDead() {return isDead;}	
+	public boolean isDead() {return isDead;}	
 	public int getSpeed() {return speed;}	
+	public boolean hasBalance() {return balance;}
 	public String getDescription() {return description;}	
 	public String getShortDescription() {return shortDescription;}	
 	public int getXpWorth() {return xpWorth;}	
@@ -286,6 +281,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		return null;
 	}
 	
+	// copy or original?
 	@Override
 	public SkillBook getBook(String bookName) {
 		return skillBookList.get(bookName);
@@ -301,6 +297,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	@Override
 	public Container getContainer() {return mobLocation;}
 	
+	// should the runEffects be in the skill?
 	public void takeDamage(List<Type> types, int damage) {
 		damage = runEffects(types, damage);
 		this.currentHp = currentHp - damage;
@@ -412,16 +409,17 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	@Override
 	public void setName(String name) {
 		// TODO Auto-generated method stub
+		// probably shouldn't even be possible....
 		
 	}
 	@Override
 	public void setDescription(String desc) {
-		// TODO Auto-generated method stub
+		description = desc;
 		
 	}
 	@Override
 	public void removeItemFromLocation(Holdable oldItem) {
-		// TODO Auto-generated method stub
+		inventory.remove(oldItem);
 		
 	}
 	@Override
@@ -483,10 +481,12 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	}
 	
 	public boolean hasMana(int mana) {
+		// TODO
 		return true;
 	}
 	
 	public void affectMana(int mana) {
+		// TODO
 		//meh
 	}
 
@@ -503,9 +503,16 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	}
 	
 	public boolean hasWeaponType(Type type) {
-		
-		return true; // Should actually test for correct equipped weapons.
+		StdItem right = equipment.getValue("rightarm");
+		StdItem left = equipment.getValue("leftarm");
+		if (right != null && right.containsType(type)) {
+			return true;
+		} else if (left != null && left.containsType(type)) {
+			return true;
+		}
+		return false;
 	}
+	
 	@Override
 	public Container getContainer(String dir) {
 		// TODO Auto-generated method stub
