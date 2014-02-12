@@ -8,14 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-
-
-
-
-
-
-import processes.EquipMap;
+import processes.Equipment;
+import processes.Equipment.EquipmentEnum;
 //import processes.Command;
 import processes.Location;
 import processes.SendMessage;
@@ -77,8 +71,11 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public SendMessage getSendBack();
 	public Map<Integer, SkillBook> getSkillBookList();
 	public void getNewSkillBooks(Mobile player);
-	public EquipMap<String, StdItem> getEquipment();
-	public void equip(String slot, StdItem item);
-	public void unequip(StdItem item);
+//	public Equipment getEquipment();
+	public void equip(EquipmentEnum slot, Equipable item);
+	public void unequip(Equipable item);
+	public void unequipFromSlot(EquipmentEnum slot);
+	public EquipmentEnum findEquipment(String itemName);
+	public Equipable getEquipmentInSlot(EquipmentEnum slot);
 	public void removeFromWorld();
 }

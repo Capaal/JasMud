@@ -179,8 +179,10 @@ insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('27', '10');
 insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('27', '3');
 insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('29', '3');
 insert into msgstrings (MSGSTRINGSPOS, MSGSTRINGSTYPE) values (2, 'ITEM');
+insert into syntax (SYNTAXPOS, SYNTAXTYPE) values (3, 'SLOT');
 insert into syntaxtable (SKILLID, SYNTAXID) values (11, 4);
 insert into syntaxtable (SKILLID, SYNTAXID) values (11, 2);
+insert into syntaxtable (SKILLID, SYNTAXID) values (11, 7);
 
 
 /*

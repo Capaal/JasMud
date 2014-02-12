@@ -114,6 +114,13 @@ public class Message extends Action {
 				oppDirections opp = oppDirections.valueOf((s.getStringInfo(Syntax.DIRECTION)).toUpperCase());
 				return opp.getOpp();
 			}
+		},
+		
+		ITEM() {
+			@Override
+			public String getString(Skill s) {
+				return s.getStringInfo(Syntax.ITEM);
+			}
 		};
 		
 		private msgStrings(){}

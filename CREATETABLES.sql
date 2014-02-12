@@ -82,8 +82,7 @@ Create table ITEMSTATS (
 	/* The below enum might have pouch and/or pack? */
 	ITEMLOCTYPE ENUM('LOCATION', 'INVENTORY', 'CONTAINER', 'EQUIPMENT') not null DEFAULT 'LOCATION',
 	PRIMARY KEY (ITEMID, ITEMNAME),
-	index (ITEMLOC),
-	FOREIGN KEY (ITEMLOC) REFERENCES LOCATIONSTATS (LOCID)
+	index (ITEMLOC) 
 );
 
 Create table SLOTTABLE (
@@ -214,7 +213,7 @@ Create table SYNTAXTABLE (
 Create table SYNTAX (
 	SYNTAXID integer unsigned not null AUTO_INCREMENT,
 	SYNTAXPOS integer unsigned not null,
-	SYNTAXTYPE ENUM('SKILL' , 'TARGET', 'ITEM', 'LIST', 'DIRECTION') not null,
+	SYNTAXTYPE ENUM('SKILL' , 'TARGET', 'ITEM', 'LIST', 'DIRECTION', 'SLOT') not null,
 	PRIMARY KEY(SYNTAXID)
 );
 
@@ -267,7 +266,7 @@ Create table MSGSTRINGSTABLE (
 Create table MSGSTRINGS (
 	MSGSTRINGSID integer unsigned auto_increment,
 	MSGSTRINGSPOS integer unsigned,
-	MSGSTRINGSTYPE ENUM('TARGET', 'SELF', 'MOVE', 'OPPMOVE'),
+	MSGSTRINGSTYPE ENUM('TARGET', 'SELF', 'MOVE', 'OPPMOVE', 'ITEM'),
 	PRIMARY KEY(MSGSTRINGSID)
 );
 

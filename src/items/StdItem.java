@@ -46,8 +46,9 @@ import java.util.*;
 
 import interfaces.*;
 import processes.*;
-
-public class StdItem implements Holdable {
+import processes.Equipment.EquipmentEnum;
+// all items are not actually equipable, should be pushed down to subclass
+public class StdItem implements Holdable, Equipable {
 	
 	private final String name;
 	private final int id;	
@@ -61,7 +62,7 @@ public class StdItem implements Holdable {
 	private final ArrayList<Type> types;
 	private final ArrayList<ItemType> itemTags;
 	
-	private final ArrayList<String> allowedEquipSlots;
+	private final EnumSet<EquipmentEnum> allowedEquipSlots;
 
 	// Example of a Dagger build: 
 	// StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short and sharp.").shortDescription("a dagger")
@@ -99,7 +100,7 @@ public class StdItem implements Holdable {
 		private ArrayList<ItemType> itemTags = new ArrayList<ItemType>();
 		private Container itemLocation = WorldServer.locationCollection.get(1);
 		
-		private ArrayList<String> allowedSlots = new ArrayList<String>();
+		private EnumSet<EquipmentEnum> allowedSlots;
 		
 		
 		protected abstract T self();		
@@ -121,7 +122,7 @@ public class StdItem implements Holdable {
 		public T types(ArrayList<Type> val) {types.addAll(val); return self();}
 		public T itemTags(ArrayList<ItemType> val) {itemTags.addAll(val); return self();}
 		public T currentDurability(int val) {currentDurability = val; return self();}
-		public T allowedSlots(ArrayList<String> val) {allowedSlots.addAll(val); return self();}
+		public T allowedSlots(EnumSet<EquipmentEnum> val) {allowedSlots = EnumSet.copyOf(val); return self();}
 		public StdItem build() {return new StdItem(this);}
 	}
 	
@@ -155,7 +156,7 @@ public class StdItem implements Holdable {
 		}
 		this.currentDurability = newDurability;
 	}
-	public ArrayList<String> getAllowedEquipSlots() {return allowedEquipSlots;}
+	public EnumSet<EquipmentEnum> getAllowedEquipSlots() {return allowedEquipSlots;}
 	public ArrayList<Type> getTypes() {return types;}
 	public ArrayList<ItemType> getItemTags() {return itemTags;}
 
@@ -171,13 +172,19 @@ public class StdItem implements Holdable {
 		String locationType = null;
 		if (itemLocation instanceof Location) {
 			locationType = "LOCATION";
+			String updateItem = "UPDATE ITEMSTATS SET EQUIPSLOT=null WHERE ITEMID=" + getId() + ";";
+			SQLInterface.saveAction(updateItem);
 		} else if (itemLocation instanceof StdMob) {
 			locationType = "INVENTORY";
+			String updateItem = "UPDATE ITEMSTATS SET EQUIPSLOT=null WHERE ITEMID=" + getId() + ";";
+			SQLInterface.saveAction(updateItem);
 		} else {
 			locationType = "EQUIPMENT";
-		}
+			String updateItem = "UPDATE ITEMSTATS SET EQUIPSLOT='" + ((Equipment)getContainer()).getKey(this) + "' WHERE ITEMID=" + getId() + ";";
+			SQLInterface.saveAction(updateItem);
+		} 
 		String updateItem = "UPDATE ITEMSTATS SET ITEMCURDUR=" + currentDurability + ", ITEMLOC=" + itemLocation.getId() 
-				+ ", ITEMLOCTYPE='" + locationType + "';";
+				+ ", ITEMLOCTYPE='" + locationType + "' WHERE ITEMID=" + getId() + ";";
 	//	System.out.println(updateItem);
 		return SQLInterface.saveAction(updateItem);
 	}

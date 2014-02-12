@@ -1,3 +1,4 @@
+set foreign_key_checks=0;
 drop table mobstats;
 drop table mobinv;
 drop table locinv;

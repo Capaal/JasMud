@@ -2,14 +2,17 @@ package actions;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashMap;
 
+import processes.Equipment.EquipmentEnum;
 import processes.SQLInterface;
 import processes.Skill;
 import processes.Skill.Syntax;
 import processes.UsefulCommands;
 import interfaces.Action;
 import interfaces.Container;
+import interfaces.Equipable;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import interfaces.Action.Where;
@@ -83,43 +86,53 @@ public class EquipChange extends Action {
 	public boolean activate(Skill s) {
 		ArrayList<Container> loc = where.findLoc(s);
 		ArrayList<Mobile> target = who.findTarget(s, loc);
+		String slotString = s.getStringInfo(Syntax.SLOT);
+		EquipmentEnum slotEnum;
+		if (slotString.toLowerCase().equals("left")) {
+			slotEnum = EquipmentEnum.LEFTHAND;
+		} else if (slotString.toLowerCase().equals("right")) {
+			slotEnum = EquipmentEnum.RIGHTHAND;
+		} else {
+			slotEnum = null;
+		}
 		if (loc != null && target != null) {
 			for (Mobile m : target) {
 				if (equip) {
 					Holdable toMove = m.getHoldableFromString(s.getStringInfo(Syntax.ITEM));
-					if (!(toMove instanceof StdItem)) {
+					if (!(toMove instanceof Equipable)) {
 						return false;
 					}
-					ArrayList<String> slots = ((StdItem)toMove).getAllowedEquipSlots();
-					if (slots.size() == 0) {
+					EnumSet<EquipmentEnum> slots = ((Equipable)toMove).getAllowedEquipSlots();
+					if (slots == null) {
 						return false;
 					}
-					// ???
-					String slot = slots.get(0);
-					if (slots.size() > 1) {
-						for (String st : slots) {
-							if (m.getEquipment().getValue(st.toLowerCase()) == null) {
-								slot = st;
+					if (slotEnum == null) {
+						for (EquipmentEnum st : slots) {
+							if (m.getEquipmentInSlot(st) == null) {
+								slotEnum = st;
 								break;
 							}
 						}
 					}
-					m.equip(slot.toLowerCase(), (StdItem)toMove);
-				
+					m.equip(slotEnum, (Equipable)toMove);				
 				} else {
-					Collection<StdItem> e = m.getEquipment().values();
-					String item = s.getStringInfo(Syntax.ITEM);
-					boolean success = false;
-					for (StdItem i : e) {
-						String posName = i.getName().toLowerCase();					
-						if (posName.equals(item) || (posName + i.getId()).equals(item)) {
-							m.getEquipment().unequipItem(i);
-							success = true;
+					if (slotEnum == null) {
+						slotEnum = m.findEquipment(s.getStringInfo(Syntax.ITEM));
+					/*	Collection<StdItem> e = m.getEquipment().values();
+						String slot = s.getStringInfo(Syntax.SLOT);
+						boolean success = false;
+						for (StdItem i : e) {
+							String posName = i.getName().toLowerCase();					
+							if (posName.equals(item) || (posName + i.getId()).equals(item)) {
+								m.getEquipment().unequipItem(i);
+								success = true;
+							}
 						}
+						if (!success) {
+							return false;
+						}*/
 					}
-					if (!success) {
-						return false;
-					}
+					m.unequipFromSlot(slotEnum);
 					
 				}
 				
@@ -127,6 +140,19 @@ public class EquipChange extends Action {
 		}
 		return true;
 	}
+	
+	/*private EquipmentEnum determineSlot() {
+		EquipmentEnum slot;
+		if (slot.equals(null)) {
+			for (EquipmentEnum st : slots) {
+				if (m.getEquipmentInSlot(st) == null) {
+					slot = st;
+					break;
+				}
+			}
+		}
+		return slot;
+	}*/
 
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {

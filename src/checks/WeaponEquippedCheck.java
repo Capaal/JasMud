@@ -2,12 +2,9 @@ package checks;
 
 import java.util.*;
 
-import processes.EquipMap;
-import processes.SQLInterface;
-import processes.Skill;
-import processes.Type;
+import processes.*;
+import processes.Equipment.EquipmentEnum;
 import interfaces.*;
-import items.StdItem;
 
 public class WeaponEquippedCheck extends Action {
 	
@@ -25,9 +22,8 @@ public class WeaponEquippedCheck extends Action {
 	public boolean activate(Skill s) {
 		boolean success = false;
 		for (Mobile m : who.findTarget(s, where.findLoc(s))) {
-			EquipMap<String, StdItem> equipment = m.getEquipment();
-			StdItem leftHandItem = equipment.getValue("lefthand");
-			StdItem rightHandItem = equipment.getValue("righthand");
+			Equipable leftHandItem = m.getEquipmentInSlot(EquipmentEnum.LEFTHAND);
+			Equipable rightHandItem = m.getEquipmentInSlot(EquipmentEnum.RIGHTHAND);
 			if (rightHandItem != null && rightHandItem.containsType(isItThis)) {
 				success = true;				 
 			} else if (leftHandItem != null && leftHandItem.containsType(isItThis)) {

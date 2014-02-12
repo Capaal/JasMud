@@ -8,6 +8,7 @@ import items.StdItem.ItemType;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import costs.*;
 import effectors.*;
 import actions.*;
 import actions.Message.msgStrings;
+import processes.Equipment.EquipmentEnum;
 import processes.Location.GroundType;
 import processes.Skill.Syntax;
 
@@ -131,9 +133,9 @@ public class SQLInterface {
 			int itemMaxDurability = 1;
 			int itemCurrentDurability = 1;
 			int itemLocation = 1;
-			String equipSlot = "";
+			EquipmentEnum equipSlot = null;
 			String itemLocType = "";
-			ArrayList<String> allowedEquipSlots = new ArrayList<String>();
+			EnumSet<EquipmentEnum> allowedEquipSlots = EnumSet.noneOf(EquipmentEnum.class);
 			ArrayList<ItemType> itemTags = new ArrayList<ItemType>();
 			ArrayList<Type> itemTypes = new ArrayList<Type>();
 			while (rs.next()) {
@@ -163,12 +165,12 @@ public class SQLInterface {
 								System.out.println("itemLocType mismatch on item " + itemId + " giving " + itemLocType);
 						}
 					}
-					allowedEquipSlots = new ArrayList<String>();
+					allowedEquipSlots = EnumSet.noneOf(EquipmentEnum.class);
 					itemTypes = new ArrayList<Type>();
 				//	itemTags = new ArrayList<ItemType>();
 					itemId = -1;
 				}
-				allowedEquipSlots.add(rs.getString("SLOT"));
+				allowedEquipSlots.add(EquipmentEnum.valueOf(rs.getString("SLOT")));
 				itemTypes.add(Type.valueOf(rs.getString("TYPE")));
 			//	itemTags.add(ItemType.valueOf(rs.getString("TAG")));
 				if (itemId == -1) {
@@ -180,9 +182,11 @@ public class SQLInterface {
 					itemShortDescription = rs.getString("ITEMSHORTD");
 					itemMaxDurability = rs.getInt("ITEMMAXDUR");
 					itemCurrentDurability = rs.getInt("ITEMCURDUR");
-					itemLocation = rs.getInt("ITEMLOC");
-					equipSlot = rs.getString("EQUIPSLOT");
+					itemLocation = rs.getInt("ITEMLOC");					
 					itemLocType = rs.getString("ITEMLOCTYPE");
+					if (itemLocType.equals("EQUIPMENT")) {
+						equipSlot = EquipmentEnum.valueOf(rs.getString("EQUIPSLOT"));
+					}
 				} 
 			}
 			if (itemId != -1) {
@@ -246,11 +250,11 @@ public class SQLInterface {
 					} else {
 						loadedPlayer.setStartup(false);
 					}
-					sql = "SELECT itemstats.*, slot.SLOT FROM itemstats LEFT JOIN SLOTTABLE ON itemstats.ITEMID = slottable.ITEMID"
+					sql = "SELECT itemstats.*, slot.SLOT, type.TYPE FROM itemstats LEFT JOIN SLOTTABLE ON itemstats.ITEMID = slottable.ITEMID"
 							+ " LEFT JOIN SLOT ON slottable.SLOTID = slot.SLOTID"
 							+ " LEFT JOIN ITEMTYPETABLE ON itemstats.ITEMID = itemtypetable.ITEMID"
 							+ " LEFT JOIN TYPE ON itemtypetable.TYPEID = type.TYPEID"
-							+ " WHERE ITEMLOC=" + loadedPlayer.getId() + " AND ITEMLOCTYPE='INVENTORY';";
+							+ " WHERE ITEMLOC=" + loadedPlayer.getId() + " AND (ITEMLOCTYPE='INVENTORY' OR ITEMLOCTYPE ='EQUIPMENT');";
 					loadItems(sql, loadedPlayer);					
 					WorldServer.mobList.put(mobname + mobid, loadedPlayer);
 					loadedPlayer.getContainer().acceptItem(loadedPlayer);

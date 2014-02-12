@@ -222,12 +222,16 @@ public abstract class Action {
 				return null;					
 			}
 		},
-		
+		// handles grabbing JUST one target or JUST self poorly.
 		OTHERS() {
 			@Override
 			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers) {
 				ArrayList<Mobile> targs = new ArrayList<Mobile>();
-				Mobile target = (TARGET.findTarget(s, Containers)).get(0);
+				ArrayList<Mobile> targets = TARGET.findTarget(s, Containers);
+				Mobile target = null;
+				if (targets != null) {
+					target = targets.get(0);
+				}
 				Mobile self = (SELF.findTarget(s, Containers)).get(0);
 				for (Container l : Containers) {
 					for (Holdable h : l.getInventory()) {

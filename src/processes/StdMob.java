@@ -5,6 +5,7 @@ import items.StdItem;
 
 import java.util.*;
 
+import processes.Equipment.EquipmentEnum;
 import processes.Location.GroundType;
 
 /**
@@ -29,7 +30,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	protected int speed;
 	protected ArrayList<Holdable> inventory;
 	// Below's string might be better as an enum, so that equipping messages and stuff can be stored there.
-	protected EquipMap<String, StdItem> equipment;	
+	protected Equipment equipment;	
 	
 	protected String description;
 	protected int xpWorth;
@@ -68,6 +69,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		this.shortDescription = build.shortDescription;
 		this.inventory = build.inventory;
 		this.equipment = build.equipment;
+		equipment.setOwner(this);
 		
 		this.bugList = new ArrayList<String>();
 		this.messages = new ArrayList<String>();
@@ -193,7 +195,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		private int xpWorth = 1;
 		private int baseDamage = 5;
 		private ArrayList<Holdable> inventory = new ArrayList<Holdable>();
-		private EquipMap<String, StdItem> equipment = new EquipMap<String, StdItem>();
+		private Equipment equipment = new Equipment();
 		
 		private String password = "";
 		private ArrayList<Effect> effectList = new ArrayList<Effect>();
@@ -211,17 +213,17 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 			}
 			this.id = id;
 			this.name = name;
-			equipment("head",  null);
-			equipment("neck",  null);
-			equipment("leftear",  null);
-			equipment("rightear",  null);
-			equipment("lefthand",  null);
-			equipment("righthand",  null);
-			equipment("chest",  null);
-			equipment("legs",  null);
-			equipment("feet",  null);
-			equipment("leftfinger",  null);
-			equipment("rightfinger",  null);
+			equipment(EquipmentEnum.HEAD,  null);
+			equipment(EquipmentEnum.NECK,  null);
+			equipment(EquipmentEnum.LEFTEAR,  null);
+			equipment(EquipmentEnum.RIGHTEAR,  null);
+			equipment(EquipmentEnum.LEFTHAND,  null);
+			equipment(EquipmentEnum.RIGHTHAND,  null);
+			equipment(EquipmentEnum.CHEST,  null);
+			equipment(EquipmentEnum.LEGS,  null);
+			equipment(EquipmentEnum.FEET,  null);
+			equipment(EquipmentEnum.LEFTFINGER,  null);
+			equipment(EquipmentEnum.RIGHTFINGER,  null);
 		}		
 		
 		
@@ -235,7 +237,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		public T physicalMult(int val) {physicalMult = val;return self();}		
 		public T speed(int val) {speed = val;return self();}		
 		public T inventory(Holdable val) {inventory.add(val);return self();}
-		public T equipment(String slot, StdItem val) {equipment.forceEquip(slot.toLowerCase(), val); return self();}
+		public T equipment(EquipmentEnum slot, StdItem val) {equipment.forceEquip(slot, val); return self();}
 		
 		public T xpWorth(int val) {xpWorth = val;return self();}	
 		public T baseDamage(int val) {baseDamage = val;return self();}
@@ -298,6 +300,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public Container getContainer() {return mobLocation;}
 	
 	// should the runEffects be in the skill?
+	@Override
 	public void takeDamage(List<Type> types, int damage) {
 		damage = runEffects(types, damage);
 		this.currentHp = currentHp - damage;
@@ -391,19 +394,22 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 				return h;
 			}
 		}
-		for (Holdable h : equipment.values()) {
-			String tempItemName = h.getName().toLowerCase();
-			if (tempItemName.equals(holdableString) || (tempItemName + h.getId()).equals(holdableString)) {
-				return h;
+		Collection<Equipable> items =  equipment.values();
+		for (Equipable item : items) {
+			if (item != null) {
+				String posName = item.getName().toLowerCase();					
+				if (posName.equals(holdableString) || (posName + item.getId()).equals(holdableString)) {
+					return item;
+				}
 			}
 		}
-		return null;			
+		return null;		
 	}
-	
-	@Override
-	public EquipMap<String, StdItem> getEquipment() {
+	// SHould I allow this?
+/*	@Override
+	public Equipment getEquipment() {
 		return equipment;
-	}
+	}*/
 	
 	@Override
 	public String displayExits() {
@@ -517,13 +523,42 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public void setBalance(boolean value) {
 		this.balance = value;
 	}
-	
-	public void equip(String slot, StdItem item) {
-		equipment.equip(slot.toLowerCase(), item);
+	@Override
+	public void equip(EquipmentEnum slot, Equipable item) {
+		if (inventory.remove(item)) {
+			equipment.equip(slot, item);
+		} else {
+			System.out.println("Attempt to equip illegal item " + item.toString() + " into slot " + slot.toString());
+		}
+	}
+	@Override
+	public void unequip(Equipable item) {
+		equipment.unequipItem(item);
+		inventory.add(item);
+	}
+	@Override
+	public Equipable getEquipmentInSlot(EquipmentEnum slot) {
+		return equipment.getValue(slot);
+	}
+	@Override
+	public EquipmentEnum findEquipment(String itemName) {
+		Collection<Equipable> items =  equipment.values();
+		for (Equipable item : items) {
+			if (item != null) {
+				String posName = item.getName().toLowerCase();					
+				if (posName.equals(itemName) || (posName + item.getId()).equals(itemName)) {
+					return equipment.getKey(item);
+				}
+			}
+		}
+		return null;
 	}
 	
-	public void unequip(StdItem item) {
-		equipment.unequipItem(item);
+	@Override
+	public void unequipFromSlot(EquipmentEnum slot) {
+		Equipable item = equipment.getValue(slot);
+		equipment.unequipSlot(slot);		
+		inventory.add(item);
 	}
 	
 	/*public boolean hasWeaponType(Type type) {
@@ -641,8 +676,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		for (Holdable inventoryItem : inventory) {
 			inventoryItem.removeFromWorld();
 		}
-		Collection<StdItem> test = equipment.values();
-		for (Holdable equipmentItem : equipment.values()) {
+		for (Equipable equipmentItem : equipment.values()) {
 			if (equipmentItem != null) {
 				equipmentItem.removeFromWorld();
 			}
@@ -652,5 +686,6 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		WorldServer.mobList.remove(this.getName() + this.getId());
 		
 	}
+	
 }
 	

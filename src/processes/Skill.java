@@ -168,6 +168,10 @@ public class Skill {
 		
 		DIRECTION() {
 			
+		},
+		
+		SLOT() {
+			
 		};
 		
 		
