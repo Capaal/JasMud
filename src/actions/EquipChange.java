@@ -86,7 +86,7 @@ public class EquipChange extends Action {
 		if (loc != null && target != null) {
 			for (Mobile m : target) {
 				if (equip) {
-					Holdable toMove = m.getHoldableFromString(s.getStringInfo(Syntax.TARGET));
+					Holdable toMove = m.getHoldableFromString(s.getStringInfo(Syntax.ITEM));
 					if (!(toMove instanceof StdItem)) {
 						return false;
 					}
@@ -94,20 +94,21 @@ public class EquipChange extends Action {
 					if (slots.size() == 0) {
 						return false;
 					}
+					// ???
 					String slot = slots.get(0);
 					if (slots.size() > 1) {
 						for (String st : slots) {
-							if (m.getEquipment().getValue(st) == null) {
+							if (m.getEquipment().getValue(st.toLowerCase()) == null) {
 								slot = st;
 								break;
 							}
 						}
 					}
-					m.equip(slot, (StdItem)toMove);
+					m.equip(slot.toLowerCase(), (StdItem)toMove);
 				
 				} else {
 					Collection<StdItem> e = m.getEquipment().values();
-					String item = s.getStringInfo(Syntax.TARGET);
+					String item = s.getStringInfo(Syntax.ITEM);
 					boolean success = false;
 					for (StdItem i : e) {
 						String posName = i.getName().toLowerCase();					

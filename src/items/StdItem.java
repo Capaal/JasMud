@@ -118,8 +118,8 @@ public class StdItem implements Holdable {
 		public T maxDurability(int val) {maxDurability = val;return self();}		
 		public T itemLocation(Container val) {itemLocation = val;return self();}		
 		public T balanceMult(Double val) {balanceMult = val;return self();}		
-		public T types(Type ...val) {types.addAll(Arrays.asList(val)); return self();}
-		public T itemTags(ItemType ...val) {itemTags.addAll(Arrays.asList(val)); return self();}
+		public T types(ArrayList<Type> val) {types.addAll(val); return self();}
+		public T itemTags(ArrayList<ItemType> val) {itemTags.addAll(val); return self();}
 		public T currentDurability(int val) {currentDurability = val; return self();}
 		public T allowedSlots(ArrayList<String> val) {allowedSlots.addAll(val); return self();}
 		public StdItem build() {return new StdItem(this);}

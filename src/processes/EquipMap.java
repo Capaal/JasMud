@@ -1,9 +1,12 @@
 package processes;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.HashMap;
 
+// Would this thing be better as an enumMap? Then I'm restricting down to the few allowedEquipSlots I want.
+// Or rather, a double representation of one.
 public class EquipMap<Key, Value> {
 	
 	private HashMap<Key, Value> keyToVal = new HashMap<Key, Value>();
@@ -32,6 +35,11 @@ public class EquipMap<Key, Value> {
 		}
 	}
 	
+	public void forceEquip(Key k, Value v) {
+		keyToVal.put(k, v);
+		valToKey.put(v, k);			
+	}
+	
 	public void unequipSlot(Key slot) {
 		equip(slot, null);
 	}
@@ -50,7 +58,11 @@ public class EquipMap<Key, Value> {
 	}
 	
 	public Collection<Value> values() {
-		return getKeyToValMap().values();
+		Collection<Value> values = getKeyToValMap().values();
+		if (values.isEmpty()) {
+			return new ArrayList<Value>();
+		}
+		return values;
 	}
 	
 	private HashMap<Key, Value> getKeyToValMap() {

@@ -4,6 +4,7 @@ import interfaces.*;
 import interfaces.Action.Where;
 import interfaces.Action.Who;
 import items.StdItem;
+import items.StdItem.ItemType;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -108,7 +109,10 @@ public class SQLInterface {
 	
 	// ONLY LOADS ITEMS ON THE GROUND
 	public static void loadLocationItems() {
-		String sql = "SELECT itemstats.*, slot.SLOT FROM itemstats LEFT JOIN SLOTTABLE ON itemstats.ITEMID = slottable.ITEMID"
+		String sql = "SELECT itemstats.*, slot.SLOT, type.TYPE FROM itemstats"
+				+ " LEFT JOIN SLOTTABLE ON itemstats.ITEMID = slottable.ITEMID"
+				+ " LEFT JOIN ITEMTYPETABLE ON itemstats.ITEMID = itemtypetable.ITEMID"
+				+ " LEFT JOIN TYPE ON itemtypetable.TYPEID = type.TYPEID"
 				+ " LEFT JOIN SLOT ON slottable.SLOTID = slot.SLOTID WHERE ITEMLOCTYPE='LOCATION';";
 		loadItems(sql, null);
 	}
@@ -130,6 +134,8 @@ public class SQLInterface {
 			String equipSlot = "";
 			String itemLocType = "";
 			ArrayList<String> allowedEquipSlots = new ArrayList<String>();
+			ArrayList<ItemType> itemTags = new ArrayList<ItemType>();
+			ArrayList<Type> itemTypes = new ArrayList<Type>();
 			while (rs.next()) {
 				if (rs.getInt("ITEMID") != itemId) {
 					if (itemId != -1) {
@@ -137,16 +143,19 @@ public class SQLInterface {
 							case "LOCATION":
 								new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
 										.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
+										.types(itemTypes).itemTags(itemTags)
 										.allowedSlots(allowedEquipSlots).itemLocation(WorldServer.locationCollection.get(itemLocation)).build();
 								break;
 							case "INVENTORY":
 								new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
 										.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
+										.types(itemTypes).itemTags(itemTags)
 										.allowedSlots(allowedEquipSlots).itemLocation(container).build();
 								break;
 							case "EQUIPMENT":
 								StdItem item = new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
 										.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
+										.types(itemTypes).itemTags(itemTags)
 										.allowedSlots(allowedEquipSlots).itemLocation(container).build();
 								((Mobile)container).equip(equipSlot, item);
 								break;
@@ -155,9 +164,13 @@ public class SQLInterface {
 						}
 					}
 					allowedEquipSlots = new ArrayList<String>();
+					itemTypes = new ArrayList<Type>();
+				//	itemTags = new ArrayList<ItemType>();
 					itemId = -1;
 				}
 				allowedEquipSlots.add(rs.getString("SLOT"));
+				itemTypes.add(Type.valueOf(rs.getString("TYPE")));
+			//	itemTags.add(ItemType.valueOf(rs.getString("TAG")));
 				if (itemId == -1) {
 					itemId = rs.getInt("ITEMID");
 					itemName = rs.getString("ITEMNAME");
@@ -177,16 +190,19 @@ public class SQLInterface {
 					case "LOCATION":
 						new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
 								.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
+								.types(itemTypes).itemTags(itemTags)
 								.allowedSlots(allowedEquipSlots).itemLocation(WorldServer.locationCollection.get(itemLocation)).build();
 						break;
 					case "INVENTORY":
 						new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
 								.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
+								.types(itemTypes).itemTags(itemTags)
 								.allowedSlots(allowedEquipSlots).itemLocation(container).build();
 						break;
 					case "EQUIPMENT":
 						StdItem item = new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
 								.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
+								.types(itemTypes).itemTags(itemTags)
 								.allowedSlots(allowedEquipSlots).itemLocation(container).build();
 						((Mobile)container).equip(equipSlot, item);
 						break;
@@ -232,6 +248,8 @@ public class SQLInterface {
 					}
 					sql = "SELECT itemstats.*, slot.SLOT FROM itemstats LEFT JOIN SLOTTABLE ON itemstats.ITEMID = slottable.ITEMID"
 							+ " LEFT JOIN SLOT ON slottable.SLOTID = slot.SLOTID"
+							+ " LEFT JOIN ITEMTYPETABLE ON itemstats.ITEMID = itemtypetable.ITEMID"
+							+ " LEFT JOIN TYPE ON itemtypetable.TYPEID = type.TYPEID"
 							+ " WHERE ITEMLOC=" + loadedPlayer.getId() + " AND ITEMLOCTYPE='INVENTORY';";
 					loadItems(sql, loadedPlayer);					
 					WorldServer.mobList.put(mobname + mobid, loadedPlayer);

@@ -1,11 +1,13 @@
 package checks;
 
-import java.util.HashMap;
+import java.util.*;
 
+import processes.EquipMap;
 import processes.SQLInterface;
 import processes.Skill;
 import processes.Type;
 import interfaces.*;
+import items.StdItem;
 
 public class WeaponEquippedCheck extends Action {
 	
@@ -23,8 +25,13 @@ public class WeaponEquippedCheck extends Action {
 	public boolean activate(Skill s) {
 		boolean success = false;
 		for (Mobile m : who.findTarget(s, where.findLoc(s))) {
-			if (m.hasWeaponType(isItThis)) {
-				success = true;
+			EquipMap<String, StdItem> equipment = m.getEquipment();
+			StdItem leftHandItem = equipment.getValue("lefthand");
+			StdItem rightHandItem = equipment.getValue("righthand");
+			if (rightHandItem != null && rightHandItem.containsType(isItThis)) {
+				success = true;				 
+			} else if (leftHandItem != null && leftHandItem.containsType(isItThis)) {
+				success = true;				 
 			} else {
 				return false;
 			}

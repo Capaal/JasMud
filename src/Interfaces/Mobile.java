@@ -66,7 +66,7 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public SkillBook getBook(String bookName);
 //	public void acceptCommand(String comName, Command command);
 	public void setBalance(boolean value);
-	public boolean hasWeaponType(Type type);
+//	public boolean hasWeaponType(Type type);
 	public void removeItem(Holdable item);
 	public void addBook(int id, SkillBook skillBook);
 	public boolean isControlled();

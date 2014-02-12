@@ -12,7 +12,11 @@ select * from locationstats;
 
 
 insert into itemstats (ITEMNAME, ITEMPHYS, ITEMBAL, ITEMDESC, ITEMSHORTD, ITEMMAXDUR, ITEMCURDUR, ITEMLOC, ITEMLOCTYPE)
-values ('Dagger', 1.10, 1.5, 'Short and sharp.','a dagger',100, 100, 1, 'LOCATION');
+		values ('Dagger', 1.10, 1.5, 'Short and sharp.','a dagger',100, 100, 1, 'LOCATION');
+
+insert into itemtypetable (ITEMID, TYPEID) values (1, 2);
+insert into type (TYPE) values ('PIERCE');
+insert into itemtypetable (ITEMID, TYPEID) values (1, 1);
 
 insert into SLOTTABLE (ITEMID, SLOTID) values (1, 1);
 insert into SLOTTABLE (ITEMID, SLOTID) values (1, 2);
@@ -59,7 +63,7 @@ insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHER
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('7', 'BLEEDEFFECT', '3', '10', 'TARGET', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('8', 'DAMAGE', '0', '-15', 'SELF', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BLOCKPOINTERONE) values('9', 'CHANCE', '4', '8');
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TYPE, TARGETWHO, TARGETWHERE) values('10', 'WEAPONEQUIPPEDCHECK', 2, 'SHARP', 'TARGET', 'HERE');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TYPE, TARGETWHO, TARGETWHERE) values('10', 'WEAPONEQUIPPEDCHECK', 2, 'SHARP', 'SELF', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('11', 'MESSAGE', '6', 'You make a sharp slash at %s and then %s turns and fights back.', 'SELF', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('12', 'MESSAGE', '7', 'You watch as %s slashes horribly at %s and %s turns to fight back.', 'OTHERS', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('13', 'MESSAGE', '8',  '%s slashes you painfully.', 'TARGET', 'HERE');
@@ -166,13 +170,16 @@ insert into syntaxtable (SKILLID, SYNTAXID) values ('9', '6');
 insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values (11, 'wield', 'The act of readying something in your hands.', 'You cannot wield that.');
 insert into SKILLTABLE (SKILLBOOKID, SKILLID) values(1, 11);
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE, BOOLEANONE) values ('28', 'EQUIPCHANGE', 2, 'SELF', 'HERE', 'TRUE');
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('27', 'MESSAGE', 3, '%s wields a %s.', 'ALL', 'HERE');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('27', 'MESSAGE', 3, '%s wields a %s.', 'OTHERS', 'HERE');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('29', 'MESSAGE', 4, 'You wield a %s.', 'SELF', 'HERE');
 insert into blocktable (SKILLID, BLOCKID) values (11, '25');
 insert into blocktable (SKILLID, BLOCKID) values (11, '28');
 insert into blocktable (SKILLID, BLOCKID) values (11, '27');
-insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('27', '4');
+insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('27', '10');
 insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('27', '3');
-insert into syntaxtable (SKILLID, SYNTAXID) values (11, 1);
+insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('29', '3');
+insert into msgstrings (MSGSTRINGSPOS, MSGSTRINGSTYPE) values (2, 'ITEM');
+insert into syntaxtable (SKILLID, SYNTAXID) values (11, 4);
 insert into syntaxtable (SKILLID, SYNTAXID) values (11, 2);
 
 

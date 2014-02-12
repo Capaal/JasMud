@@ -211,17 +211,17 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 			}
 			this.id = id;
 			this.name = name;
-			equipment.equip("head",  null);
-			equipment.equip("neck",  null);
-			equipment.equip("leftear",  null);
-			equipment.equip("rightear",  null);
-			equipment.equip("leftarm",  null);
-			equipment.equip("rightarm",  null);
-			equipment.equip("chest",  null);
-			equipment.equip("legs",  null);
-			equipment.equip("feet",  null);
-			equipment.equip("leftfinger",  null);
-			equipment.equip("rightfinger",  null);
+			equipment("head",  null);
+			equipment("neck",  null);
+			equipment("leftear",  null);
+			equipment("rightear",  null);
+			equipment("lefthand",  null);
+			equipment("righthand",  null);
+			equipment("chest",  null);
+			equipment("legs",  null);
+			equipment("feet",  null);
+			equipment("leftfinger",  null);
+			equipment("rightfinger",  null);
 		}		
 		
 		
@@ -235,7 +235,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		public T physicalMult(int val) {physicalMult = val;return self();}		
 		public T speed(int val) {speed = val;return self();}		
 		public T inventory(Holdable val) {inventory.add(val);return self();}
-		public T equipment(String slot, StdItem val) {equipment.equip(slot, val); return self();}
+		public T equipment(String slot, StdItem val) {equipment.forceEquip(slot.toLowerCase(), val); return self();}
 		
 		public T xpWorth(int val) {xpWorth = val;return self();}	
 		public T baseDamage(int val) {baseDamage = val;return self();}
@@ -402,7 +402,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	
 	@Override
 	public EquipMap<String, StdItem> getEquipment() {
-		return new EquipMap<String, StdItem>(equipment);
+		return equipment;
 	}
 	
 	@Override
@@ -519,14 +519,14 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	}
 	
 	public void equip(String slot, StdItem item) {
-		equipment.equip(slot, item);
+		equipment.equip(slot.toLowerCase(), item);
 	}
 	
 	public void unequip(StdItem item) {
 		equipment.unequipItem(item);
 	}
 	
-	public boolean hasWeaponType(Type type) {
+	/*public boolean hasWeaponType(Type type) {
 		StdItem right = equipment.getValue("rightarm");
 		StdItem left = equipment.getValue("leftarm");
 		if (right != null && right.containsType(type)) {
@@ -535,7 +535,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 			return true;
 		}
 		return false;
-	}
+	}*/
 	
 	@Override
 	public Container getContainer(String dir) {
@@ -621,8 +621,10 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 			}
 		}
 		for (Holdable saveEquipmentItem : equipment.values()) {
-			if (!saveEquipmentItem.save()) {
-				return false;
+			if (saveEquipmentItem != null) {
+				if (!saveEquipmentItem.save()) {
+					return false;
+				}
 			}
 		}
 		return true;
@@ -639,8 +641,11 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		for (Holdable inventoryItem : inventory) {
 			inventoryItem.removeFromWorld();
 		}
+		Collection<StdItem> test = equipment.values();
 		for (Holdable equipmentItem : equipment.values()) {
-			equipmentItem.removeFromWorld();
+			if (equipmentItem != null) {
+				equipmentItem.removeFromWorld();
+			}
 		}
 		save();
 		mobLocation.removeItemFromLocation(this);
