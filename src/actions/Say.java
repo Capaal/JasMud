@@ -2,6 +2,7 @@ package actions;
 
 import interfaces.*;
 
+import java.sql.SQLException;
 import java.util.*;
 
 import processes.*;
@@ -49,6 +50,11 @@ public class Say extends Action {
 	protected void insertOneself(int position) {
 		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS) VALUES ('SAY', " 
 				+ position + ");";
-		SQLInterface.saveAction(sql);
+		try {
+			SQLInterface.saveAction(sql);
+		} catch (SQLException e) {
+			System.out.println("Say failed to save via sql : " + sql);
+			e.printStackTrace();
+		}
 	}
 }

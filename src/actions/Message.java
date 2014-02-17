@@ -1,5 +1,6 @@
 package actions;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -53,14 +54,22 @@ public class Message extends Action {
 		int msgStringsCount = 1;
 		for (msgStrings ms : msgList) {
 			String msgStringsInsert = "INSERT IGNORE INTO MSGSTRINGS (MSGSTRINGSPOS, MSGSTRINGSTYPE) values (" + msgStringsCount + ", '" + ms.toString() + "');"; 
-			if (!SQLInterface.saveAction(msgStringsInsert)) {
-				return false;
+			try {
+				SQLInterface.saveAction(msgStringsInsert);				
+			} catch (SQLException e) {
+				System.out.println("Msgstrings failed to save via sql : " + msgStringsInsert);
+				e.printStackTrace();
+				return false;				
 			}
 			String msgStringsTableInsert = "INSERT IGNORE INTO msgstringstable (BLOCKID, MSGSTRINGSID) values (" + id + ", "
 					+ selectMsgStringsId(msgStringsCount, ms.toString()) + ");";
-			if (!SQLInterface.saveAction(msgStringsTableInsert)) {
+			try {
+				SQLInterface.saveAction(msgStringsTableInsert);
+			} catch (SQLException e) {
+				System.out.println("Msgstringstable failed to save via sql : " + msgStringsTableInsert);
+				e.printStackTrace();
 				return false;
-			}
+			}		
 			msgStringsCount ++;
 		}				
 		return true;			
@@ -81,7 +90,12 @@ public class Message extends Action {
 	protected void insertOneself(int position) {
 		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) VALUES ('MESSAGE', " 
 				+ position + ", '" +  msg + "', '" + who.toString() + "', '" + where.toString() + "');";
-		SQLInterface.saveAction(sql);
+		try {
+			SQLInterface.saveAction(sql);
+		} catch (SQLException e) {
+			System.out.println("Message failed to save via sql : " + sql);
+			e.printStackTrace();
+		}
 	}
 	
 	public enum msgStrings {

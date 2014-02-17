@@ -22,6 +22,7 @@ public class CreateWorld {
 		SQLInterface.loadLocations();
 		SQLInterface.loadMobs();
 		SQLInterface.loadLocationItems();
+		SQLInterface.disconnect();
 	}
 	
 	public static void createMobs() {

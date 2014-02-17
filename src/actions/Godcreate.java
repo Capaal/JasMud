@@ -1,5 +1,6 @@
 package actions;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import processes.SQLInterface;
@@ -76,7 +77,12 @@ public class Godcreate extends Action {
 	
 	protected void insertOneself(int position) {
 		String sql = "INSERT IGNORE INTO BLOCK (BLOCKTYPE, BLOCKPOS) VALUES ('GODCREATE', " + position + ",);";
-		SQLInterface.saveAction(sql);
+		try {
+			SQLInterface.saveAction(sql);
+		} catch (SQLException e) {
+			System.out.println("Godcreate failed to save via sql : " + sql);
+			e.printStackTrace();
+		}
 	}
 
 }

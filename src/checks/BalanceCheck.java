@@ -1,5 +1,6 @@
 package checks;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import processes.SQLInterface;
@@ -40,6 +41,11 @@ public class BalanceCheck extends Action {
 	protected void insertOneself(int position) {
 		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) VALUES ('BALANCECHECK', " 
 				+ position + ", '" + isItThis + "', '" + who.toString() + "', '" + where.toString() + "');";
-		SQLInterface.saveAction(sql);
+		try {
+			SQLInterface.saveAction(sql);
+		} catch (SQLException e) {
+			System.out.println("BalanceCheck failed to save via sql : " + sql);
+			e.printStackTrace();
+		}
 	}
 }

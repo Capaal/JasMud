@@ -1,7 +1,10 @@
 package actions;
 
 import interfaces.*;
+
+import java.sql.SQLException;
 import java.util.*;
+
 import processes.*;
 
 public class Damage extends Action {
@@ -50,7 +53,12 @@ public class Damage extends Action {
 	protected void insertOneself(int position) {
 		String sql = "INSERT IGNORE INTO BLOCK (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) VALUES ('DAMAGE', " 
 				+ position + ", " +  intensity + ", '" + who.toString() + "', '" + where.toString() + "');";
-		SQLInterface.saveAction(sql);
+		try {
+			SQLInterface.saveAction(sql);
+		} catch (SQLException e) {
+			System.out.println("Damage failed to save via sql : " + sql);
+			e.printStackTrace();
+		}
 	}
 	
 /*	@Override

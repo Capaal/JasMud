@@ -1,5 +1,6 @@
 package actions;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import interfaces.*;
@@ -37,6 +38,11 @@ public class Examine extends Action {
 	protected void insertOneself(int position) {
 		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, TARGETWHERE) VALUES ('EXAMINE', " 
 				+ position + ", '" + where.toString() + "');";
-		SQLInterface.saveAction(sql);
+		try {
+			SQLInterface.saveAction(sql);
+		} catch (SQLException e) {
+			System.out.println("Examine failed to save via sql : " + sql);
+			e.printStackTrace();
+		}
 	}
 }

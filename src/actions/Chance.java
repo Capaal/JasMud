@@ -1,5 +1,6 @@
 package actions;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -45,6 +46,11 @@ public class Chance extends Action {
 	protected void insertOneself(int position) {
 		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, INTVALUE, BLOCKPOINTERONE) VALUES ('CHANCE', " 
 				+ position + ", " +  chance + ", " + action.getId() + ");";
-		SQLInterface.saveAction(sql);
+		try {
+			SQLInterface.saveAction(sql);
+		} catch (SQLException e) {
+			System.out.println("Chance failed to save via sql : " + sql);
+			e.printStackTrace();
+		}
 	}
 }

@@ -42,6 +42,7 @@ package items;
 
 
 
+import java.sql.SQLException;
 import java.util.*;
 
 import interfaces.*;
@@ -146,49 +147,71 @@ public class StdItem implements Holdable, Equipable {
 	public String getShortDescription() {return shortDescription;}
 	public double getPhysicalMult() {return physicalMult;}
 	public double getBalanceMult() {return balanceMult;}
-	public void setContainer(Container con) {this.itemLocation = con;}	
-	public Container getContainer() {return itemLocation;}
-	public int getCurrentDurability() {return currentDurability;}
+	public synchronized void setContainer(Container con) {this.itemLocation = con;}	
+	public synchronized Container getContainer() {return itemLocation;}	
 	public int getMaxDurability() {return maxDurability;}
-	public void setDurability(int newDurability) {
+	public synchronized int getCurrentDurability() {return currentDurability;}
+	public synchronized void setDurability(int newDurability) {
 		if (newDurability > maxDurability) {
 			newDurability = maxDurability;
 		}
 		this.currentDurability = newDurability;
 	}
+	@Override
 	public EnumSet<EquipmentEnum> getAllowedEquipSlots() {return allowedEquipSlots;}
 	public ArrayList<Type> getTypes() {return types;}
 	public ArrayList<ItemType> getItemTags() {return itemTags;}
-
-//	public void addEquipSlot(String slot) {
-//		allowedEquipSlots.add(slot);		
-//	}
 	
+	@Override
 	public boolean containsType(Type type) {
 		return types.contains(type);
 	}
 	// not sure how packs will work yet...
+	@Override
 	public boolean save() {		
 		String locationType = null;
 		if (itemLocation instanceof Location) {
 			locationType = "LOCATION";
 			String updateItem = "UPDATE ITEMSTATS SET EQUIPSLOT=null WHERE ITEMID=" + getId() + ";";
-			SQLInterface.saveAction(updateItem);
+			try {
+				SQLInterface.saveAction(updateItem);
+			} catch (SQLException e) {
+				System.out.println(this.getName() + " failed to save in a location via : " + updateItem);
+				e.printStackTrace();
+			}
 		} else if (itemLocation instanceof StdMob) {
 			locationType = "INVENTORY";
 			String updateItem = "UPDATE ITEMSTATS SET EQUIPSLOT=null WHERE ITEMID=" + getId() + ";";
-			SQLInterface.saveAction(updateItem);
+			try {
+				SQLInterface.saveAction(updateItem);
+			} catch (SQLException e) {
+				System.out.println(this.getName() + " failed to save in an inventory via : " + updateItem);
+				e.printStackTrace();
+			}
 		} else {
 			locationType = "EQUIPMENT";
 			String updateItem = "UPDATE ITEMSTATS SET EQUIPSLOT='" + ((Equipment)getContainer()).getKey(this) + "' WHERE ITEMID=" + getId() + ";";
-			SQLInterface.saveAction(updateItem);
+			try {
+				SQLInterface.saveAction(updateItem);
+			} catch (SQLException e) {
+				System.out.println(this.getName() + " failed to save in an equipment via : " + updateItem);
+				e.printStackTrace();
+			}
 		} 
 		String updateItem = "UPDATE ITEMSTATS SET ITEMCURDUR=" + currentDurability + ", ITEMLOC=" + itemLocation.getId() 
 				+ ", ITEMLOCTYPE='" + locationType + "' WHERE ITEMID=" + getId() + ";";
 	//	System.out.println(updateItem);
-		return SQLInterface.saveAction(updateItem);
+		try {
+			SQLInterface.saveAction(updateItem);
+			return true;
+		} catch (SQLException e) {
+			System.out.println(this.getName() + " failed to save overall as an item via : " + updateItem);
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
+	@Override
 	public void removeFromWorld() {
 		save();
 		WorldServer.allItems.remove(this.getName() + this.getId());

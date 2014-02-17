@@ -1,5 +1,6 @@
 package actions;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import processes.SQLInterface;
@@ -39,7 +40,12 @@ public class Move extends Action {
 	protected void insertOneself(int position) {
 		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE, ENDWHERE) VALUES ('MOVE', " 
 				+ position + ", '" + who.toString() + "', '" + where.toString() + "', '" + finalLoc.toString() + "');";
-		SQLInterface.saveAction(sql);
+		try {
+			SQLInterface.saveAction(sql);
+		} catch (SQLException e) {
+			System.out.println("Move failed to save via sql : " + sql);
+			e.printStackTrace();
+		}
 	}
 }
 	

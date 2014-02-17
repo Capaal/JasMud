@@ -6,7 +6,6 @@ import java.util.HashMap;
 import interfaces.Container;
 import processes.Skill;
 import processes.Skill.Syntax;
-import processes.UsefulCommands;
 import processes.WorldServer;
 
 public abstract class Action {

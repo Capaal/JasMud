@@ -9,6 +9,11 @@ import java.util.*;
 
 import processes.Location.GroundType;
 
+// EQUIPMENT SHOULD USE HOLDABLE not equipable, all StdItems can be wielded in hands, so this should be able to take anything.
+// Most items won't qualify for slots.
+// Should an interface exist for each slot. all items can be held in hands, chest in chest legs on legs
+// And so on, and then I will extend StdItems to each of these new classes, the big difference being where they can be worn.
+// Flaw might be, can anything be worn in multiple places?
 public class Equipment implements Container {
 
 	private Map<EquipmentEnum, Equipable> equipmentToItemMap;

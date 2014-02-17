@@ -2,10 +2,11 @@ package interfaces;
 
 import java.util.EnumSet;
 
-import processes.Equipment.EquipmentEnum;
 import processes.Type;
+import processes.Equipment.EquipmentEnum;
 
 public interface Equipable extends Holdable {
-	public EnumSet<EquipmentEnum> getAllowedEquipSlots();
+
 	public boolean containsType(Type type);
+	public EnumSet<EquipmentEnum> getAllowedEquipSlots();
 }

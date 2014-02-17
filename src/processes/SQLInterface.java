@@ -105,8 +105,9 @@ public class SQLInterface {
 			}			
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.toString());
+			System.out.println("Locations failed to load, critical error, sql: SELECT * FROM locationstats ORDER BY locid ASC");
 		}
-		disconnect();
+//		disconnect();
 	}
 	
 	// ONLY LOADS ITEMS ON THE GROUND
@@ -116,12 +117,24 @@ public class SQLInterface {
 				+ " LEFT JOIN ITEMTYPETABLE ON itemstats.ITEMID = itemtypetable.ITEMID"
 				+ " LEFT JOIN TYPE ON itemtypetable.TYPEID = type.TYPEID"
 				+ " LEFT JOIN SLOT ON slottable.SLOTID = slot.SLOTID WHERE ITEMLOCTYPE='LOCATION';";
-		loadItems(sql, null);
+		try {
+			loadItems(sql, null);
+		} catch (SQLException e) {
+			System.out.println("Error: " + e.toString());
+			System.out.println("No ground items loaded, critical error, sql string = " + sql);
+		}
+		disconnect();		
 	}
 	
-	public static void loadItems(String sql, Container container) {
+	public static void loadItems(String sql, Container container) throws SQLException {
+		if (sql == null) {
+			throw new NullPointerException("Sql string may not be null.");
+		}
+		if (container == null) {
+			throw new NullPointerException("Container may not be null.");
+		}
 		makeConnection();
-		try {
+	//	try {
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
 			int itemId = -1;
@@ -214,12 +227,12 @@ public class SQLInterface {
 						System.out.println("itemLocType mismatch on item " + itemId + " giving " + itemLocType);
 				}
 			}
-		} catch(SQLException e) {
-			System.out.println("Error " + e.toString());
-		}
-		disconnect();
+	//	} catch(SQLException e) {
+	//		System.out.println("Error " + e.toString());
+	//	}
+	//	disconnect();
 	}
-	
+	// Needs to be refactored to use a single query.
 	/**
 	 * Loads a single Mobile from the database into the game, including all items, skills, saved stats, and position.
 	 * <p>
@@ -228,11 +241,14 @@ public class SQLInterface {
 	 * @param password Password of the mobile being loaded, however correct password will have been checked previously.
 	 * @return Returns the loaded and completely built and registered Mobile.
 	 */
-	public static Mobile loadPlayer(String name, String password) {
+	public static Mobile loadPlayer(String name, String password) throws SQLException {
+		if (name == null || password == null) {
+			throw new NullPointerException("Name or password may not be null.");
+		}
 		makeConnection();
 		Mobile loadedPlayer = null;
 		int mobid = -1;
-		try {
+	//	try {
 			stmt = con.createStatement();			
 			String sql = ("SELECT * FROM mobstats WHERE MOBNAME='" + name + "' AND MOBPASS='" + password + "'");			
 			ResultSet rs = stmt.executeQuery(sql);	
@@ -346,25 +362,23 @@ public class SQLInterface {
 			
 			
 					
-		} catch (SQLException e) {
-			System.out.println("Error: " + e.toString());
-		}
+//		} catch (SQLException e) {
+//			System.out.println("Error: " + e.toString());
+//		}
 		disconnect();
 		return loadedPlayer;
 	}
 	
-	public static boolean saveAction(String sql) {
+	public static void saveAction(String sql) throws SQLException {
 		makeConnection();
-		try {
-			stmt = con.createStatement();
-		
+	//	try {
+			stmt = con.createStatement();		
 			stmt.executeUpdate(sql);
-		} catch (SQLException e) {
-			System.out.println("Error: " + e.toString());
-			return false;
-		}
-		disconnect();
-		return true;		
+	//	} catch (SQLException e) {
+	//		System.out.println("Error: " + e.toString());
+	//		return false;
+	//	}
+		disconnect();		
 	}
 	
 	public static Object viewData(String blockQuery, String column) {
@@ -429,11 +443,13 @@ public class SQLInterface {
 	 * This connection does not auto-close, it is recommended that "disconnect()" is ran after each immediate use of the database connection.
 	 */
 	public static void makeConnection() {
-		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			con = DriverManager.getConnection(url, username, String.valueOf(password));	
-		} catch (Exception e) {
-			System.out.println("Problem: " + e.toString());
+		if (con == null) {
+			try {
+				Class.forName("com.mysql.jdbc.Driver").newInstance();
+				con = DriverManager.getConnection(url, username, String.valueOf(password));	
+			} catch (Exception e) {
+				System.out.println("Problem: " + e.toString());
+			}
 		}
 	}
 	

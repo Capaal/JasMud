@@ -1,10 +1,12 @@
 package checks;
 
+import java.sql.SQLException;
 import java.util.*;
 
 import processes.*;
 import processes.Equipment.EquipmentEnum;
 import interfaces.*;
+import items.StdItem;
 
 public class WeaponEquippedCheck extends Action {
 	
@@ -44,6 +46,11 @@ public class WeaponEquippedCheck extends Action {
 	protected void insertOneself(int position) {
 		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, SKILLTYPEID, TARGETWHO, TARGETWHERE) VALUES ('WEAPONEQUIPPEDCHECK', " 
 				+ position + ", " + isItThis.returnTypeId() + ", '" + who.toString() + "', '" + where.toString() + "');";
-		SQLInterface.saveAction(sql);
+		try {
+			SQLInterface.saveAction(sql);
+		} catch (SQLException e) {
+			System.out.println("WeaponEquippedCheck failed to save via sql : " + sql);
+			e.printStackTrace();
+		}
 	}
 }

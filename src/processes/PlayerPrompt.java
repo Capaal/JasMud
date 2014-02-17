@@ -3,6 +3,7 @@ import interfaces.Mobile;
 
 import java.net.*; // Needed for Socket.
 import java.io.*; // Needed for PrintWriter and BufferReader.
+import java.sql.SQLException;
 import java.util.*; // Needed for keySet();
 
 // Represents a users connection to the game. They will connect, then choose what hero to play. It handles interaction with the system.
@@ -29,7 +30,19 @@ public class PlayerPrompt extends Thread {
 		// Checks if the entered Name exists, if it does, loads it. Assuming password is right.
 		
 		if (enteredName != null) {
-			Mobile possiblePlayer = SQLInterface.loadPlayer(enteredName, enteredPass);
+			Mobile possiblePlayer = null;
+			try {
+				possiblePlayer = SQLInterface.loadPlayer(enteredName, enteredPass);
+			} catch (SQLException e) {
+				System.out.println("Critical error, loadPlayer: " + enteredName + ", dropping connection.");
+				e.printStackTrace();
+				try {
+					incoming.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
 			if (possiblePlayer != null) {
 				currentPlayer = possiblePlayer;
 				currentPlayer.controlStatus(true);
@@ -86,17 +99,34 @@ public class PlayerPrompt extends Thread {
 		//		Mobile godSkin = SQLInterface.loadPlayer("defaultGod", "defaultGod");
 				String insertStats = "INSERT INTO MOBSTATS (MOBNAME, MOBPASS, MOBDESC, MOBSHORTD, MOBLOC, MOBTYPE, LOADONSTARTUP) values "
 						+ "('" + enteredName + "', '" + enteredPass + "', 'A boring looking youth.', 'Young and stupid', 1, 'StdMob', 0);";
-				if (!SQLInterface.saveAction(insertStats)) {
-					System.out.println("New character creation failed to save to database.");
-				}
+				try {
+					SQLInterface.saveAction(insertStats);
+				} catch (SQLException e) {
+					System.out.println("New character creation failed to save to database via: " + insertStats);
+					e.printStackTrace();
+				}			
 				String blockQuery ="Select MOBID from MOBSTATS where  MOBNAME='" + enteredName + "';";
 				int mobId = (int) SQLInterface.viewData(blockQuery, "MOBID");
 				// Only accounts for a single book at the moment.
 				String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values(" + mobId + ", 1, 1);";
-				if (!SQLInterface.saveAction(insertBook)) {
-					System.out.println("New Book Addition failed to save to database.");
+				try {
+					SQLInterface.saveAction(insertBook);
+				} catch (SQLException e) {
+					System.out.println("New Book Addition failed to save to database via: " + insertBook);
+					e.printStackTrace();
+				}				
+				try {
+					this.currentPlayer = SQLInterface.loadPlayer(enteredName, enteredPass);
+				} catch (SQLException e) {
+					System.out.println("Critical error loading player: " + enteredName + ", closing connection.");
+					e.printStackTrace();
+					try {
+						incoming.close();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
-				this.currentPlayer = SQLInterface.loadPlayer(enteredName, enteredPass);
 				currentPlayer.controlStatus(true);
 		//		currentPlayer.getNewSkillBooks(godSkin); 
 		//		WorldServer.mobList.remove(godSkin.getName().toLowerCase() + godSkin.getId());
@@ -211,13 +241,15 @@ public class PlayerPrompt extends Thread {
 			// Breaks socket, then saves Players and Locations. Too often?
 			WorldServer.saveSystem();
 			} catch (IOException e) {
+				//TODO
 		}
 	}
-	
+	// This maybe shouldn't be available, need to look at what is calling this.
 	public SendMessage getSendBack() {
 		return sendBack;
 	}
 	
+	// This maybe shouldn't be available, need to look at what is calling this.
 	public Mobile getCurrentPlayer() {
 		return currentPlayer;
 	}

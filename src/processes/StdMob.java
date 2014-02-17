@@ -3,6 +3,7 @@ package processes;
 import interfaces.*;
 import items.StdItem;
 
+import java.sql.SQLException;
 import java.util.*;
 
 import processes.Equipment.EquipmentEnum;
@@ -25,11 +26,10 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	protected int currentHp; 
 	protected Container mobLocation; 
 	protected boolean balance;
-	protected int physicalMult;
+	protected int physicalMult; //???
 	protected boolean isDead;
-	protected int speed;
-	protected ArrayList<Holdable> inventory;
-	// Below's string might be better as an enum, so that equipping messages and stuff can be stored there.
+	protected int speed; // ??? Or should this and physical mult be class constants?
+	protected ArrayList<Holdable> inventory; // Make this be combined with equipment as its own class?
 	protected Equipment equipment;	
 	
 	protected String description;
@@ -77,100 +77,6 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		this.baseDamage = build.baseDamage;
 		this.tickClient = new TickClient(this);
 		tickClient.start();
-		
-	/*	SkillBook skillBook = new SkillBook();
-			
-		// BELOW IS BUILT USING NEW ACTIONS USING FORMAT ACTION(ie damage) ACTIONS RELATED INFO(10 target projectile)
-		
-		// build new skill called slash
-		// check balance self
-		// damage 20 target here
-		
-		//***** "slash" is a test skill that does odd stuff, currently it does:
-		// Check balance true, 10 damage to target here, bleed effect on target for 500? s,
-		// It is type sharp, and requires a weapon that is type sharp, It displays messages to everyone in that location.
-		// And then it takes away balance, balance does not come back yet... It has a chance to heal yourself. 10% for 15
-		
-		SkillBuilder skillBuild = new SkillBuilder();		
-		skillBuild.setup(this, "slash");		
-		skillBuild.addAction(new BalanceCost(false, Who.SELF, Where.HERE));		
-		skillBuild.addAction(new Damage(10, Who.TARGET, Where.HERE));		
-		skillBuild.addAction(new BleedEffect(10, Who.TARGET, Where.HERE));		
-		skillBuild.addAction(new Chance(10, new Damage(-15, Who.SELF, Where.HERE)));		
-		skillBuild.addType(Type.SHARP);
-		skillBuild.addAction(new WeaponEquippedCheck(Type.SHARP, Who.SELF, Where.HERE));		
-		skillBuild.addAction(new Message("You make a sharp slash at %s and then %s turns and fights back.", Who.TARGET, Where.HERE, msgStrings.TARGET, msgStrings.TARGET));
-		skillBuild.addAction(new Message("You watch as %s slashes horribly at %s and %s turns to fight back.", Who.OTHERS, Where.HERE, msgStrings.SELF, msgStrings.TARGET, msgStrings.TARGET)); 
-		skillBuild.addAction(new Message("%s slashes you painfully.", Who.TARGET, Where.HERE, msgStrings.SELF));	
-		skillBuild.setFailMsg("You fail to slash.");
-		skillBuild.setSyntax(Syntax.SKILL, Syntax.TARGET);
-		skillBuild.complete(skillBook);
-		
-		skillBuild.setup(this, "getbalance");
-		skillBuild.addAction(new BalanceCost(true, Who.SELF, Where.HERE));
-		skillBuild.complete(skillBook);
-		
-		skillBuild.setup(this, "bleeddefence");
-		skillBuild.addAction(new DefenceEffect(500, Type.BLEED, Who.SELF, Where.HERE));
-		skillBuild.complete(skillBook);
-		
-		skillBuild.setup(this, "sharpdefence");
-		skillBuild.addAction(new DefenceEffect(500, Type.SHARP, Who.SELF, Where.HERE));
-		skillBuild.complete(skillBook);
-		
-		skillBuild.setup(this, "say");
-		skillBuild.addAction(new Say());
-		skillBuild.setSyntax(Syntax.SKILL, Syntax.LIST);
-		skillBuild.complete(skillBook);
-		
-		skillBuild.setup(this, "examine");
-		skillBuild.addAction(new Or(new Examine(Where.INVENTORY), new Examine(Where.HERE)));
-		skillBuild.setSyntax(Syntax.SKILL, Syntax.ITEM);
-		skillBuild.complete(skillBook);
-		
-		skillBuild.setup(this, "get");
-		skillBuild.addAction(new Get(Who.SELF, Where.HERE));
-		skillBuild.setSyntax(Syntax.SKILL, Syntax.ITEM);
-		skillBuild.complete(skillBook);
-		
-		skillBuild.setup(this, "drop");
-		skillBuild.addAction(new Drop(Who.SELF, Where.HERE, Where.HERE));
-		skillBuild.setSyntax(Syntax.SKILL, Syntax.ITEM);
-		skillBuild.complete(skillBook);
-		
-		// Can't look north or anything...
-		skillBuild.setup(this, "look");
-		skillBuild.addAction(new Look(Where.ONEAWAY));
-		skillBuild.setSyntax(Syntax.SKILL, Syntax.DIRECTION);
-		skillBuild.complete(skillBook);
-		
-		skillBuild.setup(this, "move");
-		skillBuild.addAction(new BalanceCheck(true, Who.SELF, Where.HERE));
-		skillBuild.addAction(new MoveCheck(GroundType.GROUND, Who.SELF, Where.HERE, Where.ONEAWAY));
-		skillBuild.addAction(new Message("%s leaves to the %s.", Who.ALL, Where.HERE, msgStrings.SELF, msgStrings.MOVE));
-		skillBuild.addAction(new Move(Who.SELF, Where.HERE, Where.ONEAWAY));
-		skillBuild.addAction(new Message("%s enters from the %s.", Who.ALL, Where.HERE, msgStrings.SELF, msgStrings.OPPMOVE));
-		skillBuild.setFailMsg("You cannot walk that way.");
-		skillBuild.setSyntax(Syntax.DIRECTION);
-		skillBuild.complete(skillBook);
-		
-		skillBuild.setup(this, "swim");
-		skillBuild.addAction(new BalanceCheck(true, Who.SELF, Where.HERE));
-		skillBuild.addAction(new MoveCheck(GroundType.WATER, Who.SELF, Where.HERE, Where.ONEAWAY));
-		skillBuild.addAction(new Message("%s swims to the %s.", Who.ALL, Where.HERE, msgStrings.SELF, msgStrings.MOVE));
-		skillBuild.addAction(new Move(Who.SELF, Where.HERE, Where.ONEAWAY));
-		skillBuild.addAction(new Message("%s swims in from the %s.", Who.ALL, Where.HERE, msgStrings.SELF, msgStrings.OPPMOVE));
-		skillBuild.setFailMsg("You cannot swim that way.");
-		skillBuild.setSyntax(Syntax.DIRECTION);
-		skillBuild.complete(skillBook);
-		
-		
-		skillBookList.put("skillbook", skillBook);		
-		*/
-//		allowedCommands.put("design", new ArcaneBuilder());
-//		allowedCommands.put("adjust", new Adjust());
-//		allowedCommands.put("complete", new Complete());
-		
 		WorldServer.mobList.put(name + id, this);
 	}
 	
@@ -266,13 +172,15 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public String getDescription() {return description;}	
 	public String getShortDescription() {return shortDescription;}	
 	public int getXpWorth() {return xpWorth;}	
+	// Look into refactoring?
 	public void getNewSkillBooks(Mobile player) {
 		this.skillBookList = player.getSkillBookList();
 	}
+	// Need refactoring?
 	public Map<Integer, SkillBook> getSkillBookList() {
 		return new HashMap<Integer, SkillBook>(skillBookList);
 	}
-	
+	// why the null check?
 	public Skill getCommand(String command) {
 		for (SkillBook sb : skillBookList.values()) {
 			Skill skill = sb.getSkill(command);
@@ -283,6 +191,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		return null;
 	}
 	
+	//Refactor with other book stuff?
 	// copy or original?
 	@Override
 	public SkillBook getBook(String bookName) {
@@ -290,16 +199,19 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	}
 	
 	public void acceptItem(Holdable item) {inventory.add(item);}
+	// Not implemented
 	public int getMessagesSize() {return messages.size();}	
+	// Not implemented
 	public void addBug(String bugMsg) {bugList.add(bugMsg);}
 
 	@Override
-	public void setContainer(Container futureLocation) {mobLocation = futureLocation;}
+	public synchronized void setContainer(Container futureLocation) {this.mobLocation = futureLocation;}
 	
 	@Override
-	public Container getContainer() {return mobLocation;}
+	public synchronized Container getContainer() {return mobLocation;}
 	
 	// should the runEffects be in the skill?
+	// Take damage should be here, so that an undead knows it takes double damage from holy without the skill needing to know this is undead.
 	@Override
 	public void takeDamage(List<Type> types, int damage) {
 		damage = runEffects(types, damage);
@@ -307,6 +219,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		checkHp();
 	}
 	
+	// Needs to actually involving dying...
 	protected void checkHp() {
 		if (currentHp <= 0) {
 			tell("You colapse to the ground, unable to fight on.");
@@ -314,6 +227,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		}
 	}
 	
+	// Is this lazy init of sendBack, or the signs of some odd bug?
 	public void tell(String msg) {
 		if (this.sendBack == null) {
 			sendBack = UsefulCommands.getPlayerPromptFromPlayer(this).getSendBack();
@@ -322,19 +236,19 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 			sendBack.printMessage(msg);
 		}
 	}
-	
+	// Same as above, lazy init or bug?
 	public void tellLine(String msg) {
 		if (this.sendBack == null) {
 			sendBack = UsefulCommands.getPlayerPromptFromPlayer(this).getSendBack();
 		}
 		sendBack.printMessageLine(msg);
 	}
-		
+	// Not implemented
 	public void addExperience(int exp) {
 		this.experience += exp;
 		levelMobile();
 	}
-	
+	// Not implemented
 	//Check this? Good for mobiles or too specific?
 	public void levelMobile() {
 		if (this.level < WorldServer.Levels.length -1) { // Too specific?
@@ -370,10 +284,13 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		}
 	}*/
 	
-	public void removeItem(Holdable item) {
+	
+	public synchronized void removeItem(Holdable item) {
 		if (inventory.contains(item)) {
 			inventory.remove(item);
 		}
+		// TODO
+		// DOES NOT DO ANYTHING IF IT DOESN"T CONTAIN? 
 	}	
 
 	@Override
@@ -556,7 +473,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	
 	@Override
 	public void unequipFromSlot(EquipmentEnum slot) {
-		Equipable item = equipment.getValue(slot);
+		Holdable item = equipment.getValue(slot);
 		equipment.unequipSlot(slot);		
 		inventory.add(item);
 	}
@@ -627,8 +544,15 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		// probably be best somewhere else that get updated right when the change occurs.
 		String updateStats = "UPDATE MOBSTATS SET MOBDESC='" + description + "', MOBSHORTD='" + shortDescription 
 				+ "', MOBLOC=" + mobLocation.getId() + " WHERE MOBID=" + id + ";";
-		System.out.println(updateStats);
-		return SQLInterface.saveAction(updateStats);
+//		System.out.println(updateStats);
+		try {
+			SQLInterface.saveAction(updateStats);
+			return true;
+		} catch (SQLException e) {
+			System.out.println(this.getName() + " failed to save via sql: " + updateStats);
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	/*public static Mobile newMobile() {
@@ -676,7 +600,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		for (Holdable inventoryItem : inventory) {
 			inventoryItem.removeFromWorld();
 		}
-		for (Equipable equipmentItem : equipment.values()) {
+		for (Holdable equipmentItem : equipment.values()) {
 			if (equipmentItem != null) {
 				equipmentItem.removeFromWorld();
 			}
@@ -686,6 +610,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		WorldServer.mobList.remove(this.getName() + this.getId());
 		
 	}
+	
 	
 }
 	

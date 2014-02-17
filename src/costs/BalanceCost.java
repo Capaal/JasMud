@@ -1,5 +1,6 @@
 package costs;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import processes.SQLInterface;
@@ -40,6 +41,11 @@ public class BalanceCost extends Action {
 	protected void insertOneself(int position) {
 		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) VALUES ('BALANCECOST', " 
 				+ position + ", '" + goesTo + ", '" + who.toString() + "', '" + where.toString() + "');";
-		SQLInterface.saveAction(sql);
+		try {
+			SQLInterface.saveAction(sql);
+		} catch (SQLException e) {
+			System.out.println("BalanceCost failed to save via sql : " + sql);
+			e.printStackTrace();
+		}
 	}
 }

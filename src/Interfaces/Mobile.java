@@ -1,17 +1,8 @@
 package interfaces;
 
-import items.StdItem;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import processes.Equipment;
 import processes.Equipment.EquipmentEnum;
-//import processes.Command;
-import processes.Location;
 import processes.SendMessage;
 import processes.Skill;
 import processes.SkillBook;

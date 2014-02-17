@@ -1,7 +1,7 @@
 package actions;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
 
@@ -9,14 +9,11 @@ import processes.Equipment.EquipmentEnum;
 import processes.SQLInterface;
 import processes.Skill;
 import processes.Skill.Syntax;
-import processes.UsefulCommands;
 import interfaces.Action;
 import interfaces.Container;
 import interfaces.Equipable;
 import interfaces.Holdable;
 import interfaces.Mobile;
-import interfaces.Action.Where;
-import interfaces.Action.Who;
 import items.StdItem;
 
 public class EquipChange extends Action {
@@ -98,7 +95,7 @@ public class EquipChange extends Action {
 		if (loc != null && target != null) {
 			for (Mobile m : target) {
 				if (equip) {
-					Holdable toMove = m.getHoldableFromString(s.getStringInfo(Syntax.ITEM));
+					Equipable toMove = (Equipable) m.getHoldableFromString(s.getStringInfo(Syntax.ITEM));
 					if (!(toMove instanceof Equipable)) {
 						return false;
 					}
@@ -114,7 +111,7 @@ public class EquipChange extends Action {
 							}
 						}
 					}
-					m.equip(slotEnum, (Equipable)toMove);				
+					m.equip(slotEnum, toMove);				
 				} else {
 					if (slotEnum == null) {
 						slotEnum = m.findEquipment(s.getStringInfo(Syntax.ITEM));
@@ -132,10 +129,8 @@ public class EquipChange extends Action {
 							return false;
 						}*/
 					}
-					m.unequipFromSlot(slotEnum);
-					
-				}
-				
+					m.unequipFromSlot(slotEnum);					
+				}				
 			}		
 		}
 		return true;
@@ -165,7 +160,11 @@ public class EquipChange extends Action {
 	protected void insertOneself(int position) {
 		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) VALUES ('EQUIPCHANGE', " 
 				+ position + ", '" + equip + "', '" + who.toString() + "', '" + where.toString() + "');";
-		SQLInterface.saveAction(sql);
+		try {
+			SQLInterface.saveAction(sql);
+		} catch (SQLException e) {
+			System.out.println("Equipchange failed to insert itself: " + sql);
+		}
 	}
 
 }

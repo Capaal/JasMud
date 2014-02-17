@@ -1,5 +1,6 @@
 package effectors;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import processes.SQLInterface;
@@ -40,6 +41,11 @@ public class DefenceEffect extends Action {
 	protected void insertOneself(int position) {
 		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) VALUES ('DEFENCEEFFECT', "
 				+ position + ", " + duration + ", '" + who.toString() + "', '" + where.toString() + "');";
-		SQLInterface.saveAction(sql);
+		try {
+			SQLInterface.saveAction(sql);
+		} catch (SQLException e) {
+			System.out.println("DefenceEffect failed to save via sql : " + sql);
+			e.printStackTrace();
+		}
 	}
 }
