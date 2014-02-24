@@ -13,7 +13,7 @@ public class PlayerPrompt extends Thread {
 	protected SendMessage sendBack;	
 	protected Mobile currentPlayer;
 	 	
-	public PlayerPrompt(Socket incoming) {	
+	public PlayerPrompt(Socket incoming) throws IOException {	
 		this.incoming = incoming;
 		this.sendBack = new SendMessage(incoming);	
 	}

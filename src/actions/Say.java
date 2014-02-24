@@ -1,6 +1,8 @@
 package actions;
 
 import interfaces.*;
+import interfaces.Action.Where;
+import interfaces.Action.Who;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -9,6 +11,9 @@ import processes.*;
 import processes.Skill.Syntax;
 
 public class Say extends Action {
+	
+	public Say() {
+	}
 
 	@Override
 	public boolean activate(Skill s) {
@@ -41,12 +46,16 @@ public class Say extends Action {
 		}	
 		return true;
 	}
-	
+	@Override
+	public Action newBlock(Mobile player) {
+		return new Say();
+	}
+	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='SAY' AND BLOCKPOS=" + position +";";
 		return SQLInterface.returnBlockView(blockQuery);
 	}
-	
+	@Override
 	protected void insertOneself(int position) {
 		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS) VALUES ('SAY', " 
 				+ position + ");";
@@ -56,5 +65,10 @@ public class Say extends Action {
 			System.out.println("Say failed to save via sql : " + sql);
 			e.printStackTrace();
 		}
+	}
+	@Override
+	public void explainOneself(Mobile player) {
+		player.tell("Very specific case of message that is specifically formatted to represent someone talking out loud.");
+		player.tell("There are no variables, as everything depends on input upon use of the skill.");
 	}
 }

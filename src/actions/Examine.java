@@ -10,6 +10,10 @@ public class Examine extends Action {
 	
 	private final Where where;
 
+	public Examine() {
+		this(Where.HERE);
+	}
+	
 	public Examine(Where where) {
 		this.where = where;
 	}
@@ -28,6 +32,17 @@ public class Examine extends Action {
 //		s.getCurrentPlayer().tell("You search around for " + toExamine + " but find nothing to examine.");
 		return false;	
 	}	
+	@Override
+	public Action newBlock(Mobile player) {
+		Where newWhere = where;
+		try {
+			newWhere = Where.valueOf((Godcreate.askQuestion("Where will they look for the item? (this is using Syntax).", player)).toUpperCase());
+		} catch (IllegalArgumentException e) {
+			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE)");
+			return this.newBlock(player);
+		}
+		return new Examine(newWhere);
+	}
 
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='EXAMINE' AND BLOCKPOS=" + position
@@ -44,5 +59,10 @@ public class Examine extends Action {
 			System.out.println("Examine failed to save via sql : " + sql);
 			e.printStackTrace();
 		}
+	}
+	@Override
+	public void explainOneself(Mobile player) {
+		player.tell("Examines an item in a particular spot, indicated by where.");
+		player.tell("Where: " + where.toString());
 	}
 }

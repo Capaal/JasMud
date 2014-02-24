@@ -5,6 +5,8 @@ import items.StdItem;
 
 import java.sql.SQLException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import processes.Equipment.EquipmentEnum;
 import processes.Location.GroundType;
@@ -114,8 +116,16 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		 * @param name Mobile name desired.
 		 */
 		public Init(int id, String name) {
+			if (name == null) {
+				throw new IllegalArgumentException("Name may not be null.");
+			}
+			Pattern pattern = Pattern.compile("[~#@*+%{}<>\\[\\]|\"\\_^]");
+			Matcher matcher = pattern.matcher(name);
 			if (WorldServer.mobList.containsKey(name + id)) {
 				throw new IllegalStateException("A mobile already exists with that name and id.");
+			}
+			if (name.matches(".*\\d.*") || matcher.find() || name.equals("")) {
+				throw new IllegalArgumentException("Name is considered invalid: " + name);	
 			}
 			this.id = id;
 			this.name = name;
@@ -530,10 +540,10 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		return true;
 	}
 	
-	private boolean saveSkills() {	
+	private boolean saveSkills() {			
 		for (SkillBook sb : skillBookList.values()) {			
 			if (!sb.save()) {
-					return false;
+				return false;
 			}			
 		}	
 		return true;

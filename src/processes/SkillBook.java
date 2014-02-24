@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class SkillBook {
 
 	private ArrayList<Skill> skillList;
-	private String name;
+	private final String name;
 	private final int id;
 	public boolean toBeSaved = false;
 	
@@ -27,6 +27,7 @@ public class SkillBook {
 	
 	public void addSkill(Skill newSpell) {
 		skillList.add(newSpell);
+		this.toBeSaved = true;
 	}
 	
 	public Skill getSkill(String spell) {
@@ -60,6 +61,14 @@ public class SkillBook {
 		return newSkillList;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
 	private ArrayList<Skill> copySkills(Mobile newPlayer) {
 		ArrayList<Skill> newSkillList = new ArrayList<Skill>();
 		for (Skill s : skillList) {
@@ -79,7 +88,8 @@ public class SkillBook {
 					return false;
 				}
 			}
-		}
+			toBeSaved = false;
+		}		
 		return true;
 	}
 }

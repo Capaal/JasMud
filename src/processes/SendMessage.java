@@ -9,16 +9,13 @@ public class SendMessage {
 	protected Socket incoming;
 	protected final int width = 80;
 	
-	public SendMessage(Socket incoming) {
-		this.incoming = incoming;
-		// Following creates the reader and writer for each user.
-		try {
-			if (incoming != null) {
-				this.in = new BufferedReader(new InputStreamReader(incoming.getInputStream()));
-				this.out = new PrintWriter(new OutputStreamWriter(incoming.getOutputStream()));
-			}
-		} catch (Exception e) {
+	public SendMessage(Socket incoming) throws IOException {
+		if (incoming == null) {
+			throw new IllegalArgumentException("Socket may not be null.");
 		}
+		this.incoming = incoming;
+		this.in = new BufferedReader(new InputStreamReader(incoming.getInputStream()));
+		this.out = new PrintWriter(new OutputStreamWriter(incoming.getOutputStream()));	
 	}
 	// Prints message to user, does not "return" to next line.
 	public void printMessageLine(String msg) {

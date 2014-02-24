@@ -1,11 +1,8 @@
 package processes;
 
 import interfaces.*;
-
 import java.sql.SQLException;
 import java.util.*;
-
-import processes.Skill.Syntax;
 
 public class Skill {
 	
@@ -16,7 +13,7 @@ public class Skill {
 	private String fullCommand;	
 	private Queue<Action> actions;
 	private ArrayList<Type> types;
-	private ArrayList<Syntax> syntax;
+	private ArrayList<Syntax> syntax; //Are we sure we'll be maintaining order?
 	private ArrayList<String> fullCommandArray;
 	
 	public String failMsg = "default";
@@ -24,11 +21,10 @@ public class Skill {
 	public Skill() {
 	}
 	
-	public Skill(SkillBuilder build, Mobile currentPlayer) {
+	public Skill(SkillBuilder build) {
 		this.name = build.getName();
 		this.actions = build.getActions();
 		this.types = build.getTypes();
-		this.currentPlayer = currentPlayer;
 		this.failMsg = build.getFailMsg();
 		this.syntax = build.getSyntax();
 	}
@@ -52,10 +48,6 @@ public class Skill {
 				break;
 			}
 		}
-	}
-	
-	public Container getContainer() {
-		return currentPlayer.getContainer();
 	}
 	
 	public String getFullCommand() {
@@ -152,9 +144,17 @@ public class Skill {
 		return true;		
 	}
 	
-//	public void changePlayer(Mobile newPlayer) {
-//		this.currentPlayer = newPlayer;		
-//	}
+	public void preview(Mobile player) {
+		player.tell("Name: " + name);
+		player.tell("Description: " + description);
+		// make actions
+		player.tell("Actions: " + description);
+		// make types
+		player.tell("Types: " + description);
+		// make syntax
+		player.tell("Syntax: " + description);
+		player.tell("Fail Message: " + failMsg);
+	}
 	
 	public Skill copy(Mobile newPlayer) {
 		Skill newSkill = new Skill();

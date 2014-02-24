@@ -14,6 +14,8 @@ import interfaces.Container;
 import interfaces.Equipable;
 import interfaces.Holdable;
 import interfaces.Mobile;
+import interfaces.Action.Where;
+import interfaces.Action.Who;
 import items.StdItem;
 
 public class EquipChange extends Action {
@@ -21,6 +23,10 @@ public class EquipChange extends Action {
 	private final Who who;
 	private final Where where;
 	private final boolean equip;
+	
+	public EquipChange() {
+		this(Who.SELF, Where.HERE, true);
+	}
 
 	public EquipChange(Who who, Where where, boolean equip) {
 		this.who = who;
@@ -148,7 +154,27 @@ public class EquipChange extends Action {
 		}
 		return slot;
 	}*/
-
+	@Override
+	public Action newBlock(Mobile player) {
+		Who newWho = who;
+		Where newWhere = where;
+		boolean newEquip = equip;
+		String answerEquip = Godcreate.askQuestion("Is this equiping the item? true/false.", player);
+		if ("true".equals(answerEquip) || "false".equals(answerEquip)) {
+			newEquip = Boolean.parseBoolean(answerEquip);
+		} else {
+			player.tell("Error, your answer was not detected as a boolean.");
+			return this.newBlock(player);
+		}
+		try {
+			newWho = Who.valueOf((Godcreate.askQuestion("Who do you want to equip the item? (this is using Syntax).", player)).toUpperCase());
+			newWhere = Where.valueOf((Godcreate.askQuestion("Where must this target be? (this is using Syntax).", player)).toUpperCase());
+		} catch (IllegalArgumentException e) {
+			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE)");
+			return this.newBlock(player);
+		}
+		return new EquipChange(newWho, newWhere, newEquip);
+	}
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='EQUIPCHANGE' AND BLOCKPOS=" + position + " AND BOOLEANONE='" 
@@ -166,5 +192,9 @@ public class EquipChange extends Action {
 			System.out.println("Equipchange failed to insert itself: " + sql);
 		}
 	}
-
+	@Override
+	public void explainOneself(Mobile player) {
+		player.tell("Used to equip and unequip a Mobile.");
+		player.tell("True means equip: " + equip + " Who: " + who.toString() + "Where: " + where.toString());
+	}
 }

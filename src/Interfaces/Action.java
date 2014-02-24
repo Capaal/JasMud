@@ -35,6 +35,10 @@ public abstract class Action {
 		this.id = id;
 	}
 	
+	public abstract Action newBlock(Mobile player);
+	
+	public abstract void explainOneself(Mobile player);
+	
 	/* Questions about Targetting:
 	 * A skill will certainly be used.
 	 * We may know the specific target to effect (ourselves, Sastri, goblin12345)
@@ -114,7 +118,7 @@ public abstract class Action {
 			@Override
 			public ArrayList<Container> findLoc(Skill s) {
 				ArrayList<Container> loc = new ArrayList<Container>();
-				loc.add(s.getContainer());
+				loc.add(s.getCurrentPlayer().getContainer());
 				return loc;
 			}
 		},
@@ -150,7 +154,7 @@ public abstract class Action {
 				ArrayList<Container> loc = new ArrayList<Container>();
 				String dir = s.getStringInfo(Syntax.DIRECTION);
 				if (dir != null) {
-					loc.add(s.getContainer().getContainer(dir));
+					loc.add(s.getCurrentPlayer().getContainer().getContainer(dir));
 				}
 				return loc;
 			}
@@ -162,7 +166,7 @@ public abstract class Action {
 			public ArrayList<Container> findLoc(Skill s) {
 				ArrayList<Container> loc = new ArrayList<Container>();
 				String dir = s.getStringInfo(Syntax.DIRECTION);
-				Container onPath = s.getContainer();
+				Container onPath = s.getCurrentPlayer().getContainer();
 				loc.add(onPath);
 				onPath = onPath.getContainer(dir);
 				while (onPath != null) {

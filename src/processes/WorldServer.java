@@ -28,7 +28,7 @@ public class WorldServer {
 	//ab generals
 	static protected ArrayList<String> allowableCommandsGeneralsShort = new ArrayList<String>();
 	
-	static protected HashMap<Integer, SkillBook> AllSkillBooks = new HashMap<Integer, SkillBook>();
+	public static HashMap<Integer, SkillBook> AllSkillBooks = new HashMap<Integer, SkillBook>();
 	
 //	static Map<String, Command> skillCommands = new HashMap<String, Command>();	
 	

@@ -29,6 +29,8 @@ import processes.Skill.Syntax;
  * @author Jason
  */
 
+
+// NEED TO CHECK FOR SQL INJECTIONS. Things like ";" in the name or anything else the use can input.
 public class SQLInterface {
 
 	private static java.sql.Connection con = null;
@@ -129,9 +131,6 @@ public class SQLInterface {
 	public static void loadItems(String sql, Container container) throws SQLException {
 		if (sql == null) {
 			throw new NullPointerException("Sql string may not be null.");
-		}
-		if (container == null) {
-			throw new NullPointerException("Container may not be null.");
 		}
 		makeConnection();
 	//	try {
@@ -286,86 +285,19 @@ public class SQLInterface {
 			ArrayList<Integer> mobSkillBooks = new ArrayList<Integer>();
 			while (rs.next()) {
 				mobSkillBooks.add(rs.getInt("SKILLBOOKID"));			
-			}
-			
+			}			
 			for (int skillBookId : mobSkillBooks) {
 				SkillBook skillBook = null;
 				if (!WorldServer.AllSkillBooks.containsKey(skillBookId)) {					
-					
-					
-					SkillBuilder skillBuild = new SkillBuilder();				
-					sql = ("SELECT skillbook.SKILLBOOKNAME, skill.SKILLID FROM skilltable JOIN skillbook ON skilltable.SKILLBOOKID = skillbook.SKILLBOOKID "
-							+ " JOIN skill ON skill.SKILLID = skilltable.SKILLID WHERE skilltable.SKILLBOOKID='" + skillBookId + "'");
-					rs = stmt.executeQuery(sql);
-					
-					ArrayList<Integer> mobSkills = new ArrayList<Integer>();
-					String skillBookName = null;
-					while (rs.next()) {
-						mobSkills.add(rs.getInt("SKILLID"));
-						if (skillBookName == null) {
-							skillBookName = rs.getString("SKILLBOOKNAME");
-						}
-					}
-					
-					for (int i : mobSkills) {
-						if (skillBook == null)	{
-							skillBook = new SkillBook(skillBookName, skillBookId);
-						}
-						String sql1 = "SELECT * FROM skill WHERE SKILLID=" + i + ";";
-						ResultSet rs1 = stmt.executeQuery(sql1);
-						if (!rs1.next()) {
-							System.out.println("Select skill in SQLInterface failed.");
-						}						
-						skillBuild.setup(loadedPlayer, rs1.getString("SKILLNAME"));		
-						skillBuild.setFailMsg(rs1.getString("SKILLFAILMSG"));
-						skillBuild.setDescription(rs1.getString("SKILLDES"));	
-						int skillId = i;
-						sql1 = ("SELECT syntax.* FROM syntaxtable JOIN syntax ON syntaxtable.SYNTAXID = syntax.SYNTAXID"
-								+ " WHERE syntaxtable.SKILLID = '" + skillId + "' ORDER BY SYNTAXPOS ASC");
-						rs1 = stmt.executeQuery(sql1);
-						if (!rs1.isBeforeFirst() ) {    
-							 System.out.println("No data for syntax"); 					} 
-						ArrayList<Syntax> skillSyntax = new ArrayList<Syntax>();
-						while (rs1.next()) {						
-							skillSyntax.add(Syntax.valueOf(rs1.getString("SYNTAXTYPE")));
-						}
-						skillBuild.setSyntax(skillSyntax);					
-						sql1 = ("SELECT type.TYPE FROM skilltypetable JOIN type ON skilltypetable.TYPEID = type.TYPEID"
-								+ " WHERE skilltypetable.SKILLID = " + skillId + ";");
-						rs1 = stmt.executeQuery(sql1);
-						if (!rs1.isBeforeFirst() ) {    
-							 System.out.println("No data for skilltable for skill: " + skillId); 
-						} 
-						ArrayList<Type> skillType = new ArrayList<Type>();
-						while (rs1.next()) {						
-							skillType.add(Type.valueOf(rs1.getString("TYPE")));
-						}
-						skillBuild.setType(skillType);						
-						
-						sql1 = ("SELECT block.* FROM blocktable JOIN block ON blocktable.BLOCKID = block.BLOCKID"
-								+ " WHERE blocktable.SKILLID = '" + skillId + "' ORDER BY BLOCKPOS ASC");
-						rs1 = stmt.executeQuery(sql1);							
-						
-						while (rs1.next()) {						
-							skillBuild.addAction(determineAction(rs1));					
-						}
-						
-						skillBuild.complete(skillBook);	
-												
-					}
-					
-					WorldServer.AllSkillBooks.put(skillBookId, skillBook);
+					throw new IllegalStateException("Critical error, skillbooks do not align.");				
 				}
 				loadedPlayer.addBook(skillBookId, WorldServer.AllSkillBooks.get(skillBookId));
-			}
-			
-			
-			
+			}		
 					
 //		} catch (SQLException e) {
 //			System.out.println("Error: " + e.toString());
 //		}
-		disconnect();
+//		disconnect();
 		return loadedPlayer;
 	}
 	
@@ -378,7 +310,7 @@ public class SQLInterface {
 	//		System.out.println("Error: " + e.toString());
 	//		return false;
 	//	}
-		disconnect();		
+	//	disconnect();		
 	}
 	
 	public static Object viewData(String blockQuery, String column) {
@@ -492,6 +424,77 @@ public class SQLInterface {
 		disconnect();
 	}
 	
+	public static void loadSkillBooks() throws SQLException {
+		String sql = ("SELECT DISTINCT SKILLBOOKID FROM skillbooktable");
+		ResultSet rs = stmt.executeQuery(sql);		
+		ArrayList<Integer> skillBooks = new ArrayList<Integer>();
+		while (rs.next()) {
+			skillBooks.add(rs.getInt("SKILLBOOKID"));			
+		}		
+		for (int skillBookId : skillBooks) {
+			SkillBook skillBook = null;
+			if (!WorldServer.AllSkillBooks.containsKey(skillBookId)) {	
+				SkillBuilder skillBuild = new SkillBuilder();				
+				sql = ("SELECT skillbook.SKILLBOOKNAME, skill.SKILLID FROM skilltable JOIN skillbook ON skilltable.SKILLBOOKID = skillbook.SKILLBOOKID "
+						+ " JOIN skill ON skill.SKILLID = skilltable.SKILLID WHERE skilltable.SKILLBOOKID='" + skillBookId + "'");
+				rs = stmt.executeQuery(sql);
+				
+				ArrayList<Integer> mobSkills = new ArrayList<Integer>();
+				String skillBookName = null;
+				while (rs.next()) {
+					mobSkills.add(rs.getInt("SKILLID"));
+					if (skillBookName == null) {
+						skillBookName = rs.getString("SKILLBOOKNAME");
+					}
+				}				
+				for (int i : mobSkills) {
+					if (skillBook == null)	{
+						skillBook = new SkillBook(skillBookName, skillBookId);
+					}
+					String sql1 = "SELECT * FROM skill WHERE SKILLID=" + i + ";";
+					ResultSet rs1 = stmt.executeQuery(sql1);
+					if (!rs1.next()) {
+						System.out.println("Select skill in SQLInterface failed.");
+					}						
+					skillBuild.setName(rs1.getString("SKILLNAME"));		
+					skillBuild.setFailMsg(rs1.getString("SKILLFAILMSG"));
+					skillBuild.setDescription(rs1.getString("SKILLDES"));	
+					int skillId = i;
+					sql1 = ("SELECT syntax.* FROM syntaxtable JOIN syntax ON syntaxtable.SYNTAXID = syntax.SYNTAXID"
+							+ " WHERE syntaxtable.SKILLID = '" + skillId + "' ORDER BY SYNTAXPOS ASC");
+					rs1 = stmt.executeQuery(sql1);
+					if (!rs1.isBeforeFirst() ) {    
+						 System.out.println("No data for syntax"); 					} 
+					ArrayList<Syntax> skillSyntax = new ArrayList<Syntax>();
+					while (rs1.next()) {						
+						skillSyntax.add(Syntax.valueOf(rs1.getString("SYNTAXTYPE")));
+					}
+					skillBuild.setSyntax(skillSyntax);					
+					sql1 = ("SELECT type.TYPE FROM skilltypetable JOIN type ON skilltypetable.TYPEID = type.TYPEID"
+							+ " WHERE skilltypetable.SKILLID = " + skillId + ";");
+					rs1 = stmt.executeQuery(sql1);
+					if (!rs1.isBeforeFirst() ) {    
+						 System.out.println("No data for skilltable for skill: " + skillId); 
+					} 
+					ArrayList<Type> skillType = new ArrayList<Type>();
+					while (rs1.next()) {						
+						skillType.add(Type.valueOf(rs1.getString("TYPE")));
+					}
+					skillBuild.setType(skillType);
+					sql1 = ("SELECT block.* FROM blocktable JOIN block ON blocktable.BLOCKID = block.BLOCKID"
+							+ " WHERE blocktable.SKILLID = '" + skillId + "' ORDER BY BLOCKPOS ASC");
+					rs1 = stmt.executeQuery(sql1);						
+					while (rs1.next()) {						
+						skillBuild.addAction(determineAction(rs1));					
+					}
+					skillBuild.addBook(skillBook);
+					skillBuild.complete();	
+				}
+			}
+			WorldServer.AllSkillBooks.put(skillBookId, skillBook);
+		}
+	}
+	
 	/**
 	 * Takes a very specific ResultSet from "loadPlayer()" or recursively in order to exactly rebuild skills as they were designed.
 	 * <p>
@@ -583,7 +586,10 @@ public class SQLInterface {
 				
 			case "EQUIPCHANGE":
 				return new EquipChange(Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")), checkBoolean(rs.getString("BOOLEANONE")));
-				
+			
+			case "GODCREATE":
+				return new Godcreate();
+			
 			default:
 				System.out.println("Determine Action could not find appropriate case, failed: " + rs.getString("BLOCKTYPE"));
 				return null;
