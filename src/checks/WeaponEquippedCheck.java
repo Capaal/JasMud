@@ -60,14 +60,14 @@ public class WeaponEquippedCheck extends Action {
 	}
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
-		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='WEAPONEQUIPPEDCHECK' AND BLOCKPOS=" + position + " AND SKILLTYPEID=" 
-				+ isItThis.returnTypeId() + " AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
+		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='WEAPONEQUIPPEDCHECK' AND BLOCKPOS=" + position + " AND TYPE='" 
+				+ isItThis.toString() + "' AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
 		return SQLInterface.returnBlockView(blockQuery);
 	}
 	@Override
 	protected void insertOneself(int position) {
-		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, SKILLTYPEID, TARGETWHO, TARGETWHERE) VALUES ('WEAPONEQUIPPEDCHECK', " 
-				+ position + ", " + isItThis.returnTypeId() + ", '" + who.toString() + "', '" + where.toString() + "');";
+		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, TYPE, TARGETWHO, TARGETWHERE) VALUES ('WEAPONEQUIPPEDCHECK', " 
+				+ position + ", '" + isItThis.toString() + "', '" + who.toString() + "', '" + where.toString() + "');";
 		try {
 			SQLInterface.saveAction(sql);
 		} catch (SQLException e) {

@@ -60,10 +60,11 @@ public class PlayerPrompt extends Thread {
 					System.out.println("New character creation failed to save to database via: " + insertStats);
 					destroyConnection();
 				}			
-				String blockQuery ="Select MOBID from MOBSTATS where  MOBNAME='" + enteredName + "';";
-				int mobId = (int) SQLInterface.viewData(blockQuery, "MOBID");
+			//	String blockQuery ="Select MOBID from MOBSTATS where  MOBNAME='" + enteredName + "';";
+			//	int mobId = (int) SQLInterface.viewData(blockQuery, "MOBID");
 				// Only accounts for a single book at the moment.
-				String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values(" + mobId + ", 1, 1);";
+				String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values((SELECT MOBID FROM MOBSTATS"
+						+ " WHERE MOBNAME='" + enteredName + "'), 1, 1);";
 				try {
 					SQLInterface.saveAction(insertBook);
 				} catch (SQLException e) {

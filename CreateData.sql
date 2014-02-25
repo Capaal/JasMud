@@ -25,7 +25,7 @@ insert into SLOT (SLOT) values ('LEFTHAND');
 
 insert into mobstats values ('1','James', '', "He is a farmer named James.",'a farmer','1', 'STDMOB', true);
 insert into mobstats values ('2', 'Horse', '', "It's a horse.",'a horse','1', 'STDMOB', true);
-insert into mobstats values ('3','defaultGod', 'defaultGod', 'Contains God skills.', 'A god skin.','1', 'STDMOB', false);
+/*insert into mobstats values ('3','defaultGod', 'defaultGod', 'Contains God skills.', 'A god skin.','1', 'STDMOB', false);*/
 select * from mobstats;
 
 insert into SKILLBOOK (SKILLBOOKID, SKILLBOOKNAME) values (1, 'Basic Skills');

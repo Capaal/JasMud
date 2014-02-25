@@ -459,7 +459,8 @@ public class SQLInterface {
 					}						
 					skillBuild.setName(rs1.getString("SKILLNAME"));		
 					skillBuild.setFailMsg(rs1.getString("SKILLFAILMSG"));
-					skillBuild.setDescription(rs1.getString("SKILLDES"));	
+					skillBuild.setDescription(rs1.getString("SKILLDES"));
+					skillBuild.setId(i);
 					int skillId = i;
 					sql1 = ("SELECT syntax.* FROM syntaxtable JOIN syntax ON syntaxtable.SYNTAXID = syntax.SYNTAXID"
 							+ " WHERE syntaxtable.SKILLID = '" + skillId + "' ORDER BY SYNTAXPOS ASC");

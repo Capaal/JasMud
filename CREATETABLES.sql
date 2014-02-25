@@ -86,10 +86,10 @@ Create table ITEMSTATS (
 );
 
 Create table SLOTTABLE (
-	SLOTTABLEID integer unsigned not null auto_increment,
+	/*SLOTTABLEID integer unsigned not null auto_increment,*/
 	ITEMID integer unsigned not null,
 	SLOTID integer unsigned not null,
-	PRIMARY KEY (SLOTTABLEID),
+	PRIMARY KEY (ITEMID, SLOTID),
 	index (ITEMID),
 	index (SLOTID),
 	FOREIGN KEY (ITEMID) REFERENCES ITEMSTATS (ITEMID),
@@ -101,14 +101,15 @@ Create table SLOT (
 	SLOT ENUM('HEAD', 'NECK', 'LEFTEAR', 'RIGHTEAR', 'LEFTHAND', 'RIGHTHAND', 'LEFTFINGER', 'RIGHTFINGER', 'CHEST', 'LEGS', 'FEET'),
 	PRIMARY KEY (SLOTID)
 );
-
+/*
 Create table LOCINV (
-	LOCID integer unsigned not null AUTO_INCREMENT,
+	LOCID integer unsigned not null,
 	ITEMID integer unsigned not null,
-	PRIMARY KEY (LOCID),
+	PRIMARY KEY (LOCID, ITEMID),
 	index (ITEMID),
-	FOREIGN KEY (ITEMID) REFERENCES ITEMSTATS (ITEMID)
-);
+	FOREIGN KEY (ITEMID) REFERENCES ITEMSTATS (ITEMID),
+	FOREIGN KEY (LOCID) REFERENCES LOCATIONSTATS (LOCID)
+);*/
 
 Create table MOBSTATS (
 	MOBID integer unsigned not null AUTO_INCREMENT,
@@ -123,21 +124,22 @@ Create table MOBSTATS (
 	index (MOBLOC),
 	FOREIGN KEY (MOBLOC) REFERENCES LOCATIONSTATS (LOCID)
 );
-
+/*
 Create table MOBINV (
-	MOBID integer unsigned not null AUTO_INCREMENT,
+	MOBID integer unsigned not null,
 	ITEMID integer unsigned not null,
-	PRIMARY KEY (MOBID),
+	PRIMARY KEY (MOBID, ITEMID),
 	index (ITEMID),
-	FOREIGN KEY (ITEMID) REFERENCES ITEMSTATS (ITEMID)
-);
+	FOREIGN KEY (ITEMID) REFERENCES ITEMSTATS (ITEMID),
+	FOREIGN KEY (MOBID) REFERENCES MOBSTATS (MOBID)
+);*/
 
 Create table SKILLBOOKTABLE (
-	SKILLBOOKTABLEID integer unsigned not null auto_increment,
+	/*SKILLBOOKTABLEID integer unsigned not null auto_increment,*/
 	MOBID integer unsigned not null,
 	SKILLBOOKID integer unsigned not null,
 	MOBPROGRESS integer unsigned not null,
-	PRIMARY KEY (SKILLBOOKTABLEID),
+	PRIMARY KEY (MOBID, SKILLBOOKID),
 	index (MOBID),
 	index (SKILLBOOKID),
 	FOREIGN KEY (MOBID) REFERENCES MOBSTATS (MOBID),
@@ -152,10 +154,10 @@ Create table SKILLBOOK (
 );
 
 Create table SKILLTABLE (
-	SKILLTABLEID integer unsigned not null AUTO_INCREMENT,
+	/*SKILLTABLEID integer unsigned not null AUTO_INCREMENT,*/
 	SKILLBOOKID integer unsigned not null,
 	SKILLID integer unsigned not null,
-	PRIMARY KEY (SKILLTABLEID),
+	PRIMARY KEY (SKILLBOOKID, SKILLID),
 	index (SKILLBOOKID),
 	index (SKILLID),
 	FOREIGN KEY (SKILLBOOKID) REFERENCES SKILLBOOK (SKILLBOOKID),
@@ -171,10 +173,10 @@ Create table SKILL (
 );
 
 Create table SKILLTYPETABLE (
-	SKILLTYPETABLEID integer unsigned not null auto_increment,
+	/*SKILLTYPETABLEID integer unsigned not null auto_increment,*/
 	SKILLID integer unsigned not null,
 	TYPEID integer unsigned not null,
-	PRIMARY KEY (SKILLTYPETABLEID),
+	PRIMARY KEY (SKILLID, TYPEID),
 	index (SKILLID),
 	index (TYPEID),
 	FOREIGN KEY (SKILLID) REFERENCES SKILL (SKILLID),
@@ -182,10 +184,10 @@ Create table SKILLTYPETABLE (
 );
 
 Create table ITEMTYPETABLE (
-	ITEMTYPETABLEID integer unsigned not null auto_increment,
+	/*ITEMTYPETABLEID integer unsigned not null auto_increment,*/
 	ITEMID integer unsigned not null,
 	TYPEID integer unsigned not null,
-	PRIMARY KEY (ITEMTYPETABLEID),
+	PRIMARY KEY (ITEMID, TYPEID),
 	index (ITEMID),
 	index (TYPEID),
 	FOREIGN KEY (ITEMID) REFERENCES ITEM (ITEMID),
@@ -200,10 +202,10 @@ Create table TYPE (
 );
 
 Create table SYNTAXTABLE (
-	SYNTAXTABLEID integer unsigned not null auto_increment,
+/*	SYNTAXTABLEID integer unsigned not null auto_increment,*/
 	SKILLID integer unsigned not null,
 	SYNTAXID integer unsigned not null,
-	PRIMARY KEY (SYNTAXTABLEID),
+	PRIMARY KEY (SKILLID, SYNTAXID),
 	index (SKILLID),
 	index (SYNTAXID),
 	FOREIGN KEY (SKILLID) REFERENCES SKILL (SKILLID),
@@ -218,10 +220,10 @@ Create table SYNTAX (
 );
 
 Create table BLOCKTABLE (
-	BLOCKTABLEID integer unsigned not null AUTO_INCREMENT,
+	/*BLOCKTABLEID integer unsigned not null AUTO_INCREMENT,*/
 	SKILLID integer unsigned not null,
 	BLOCKID integer unsigned not null,
-	PRIMARY KEY (BLOCKTABLEID),
+	PRIMARY KEY (SKILLID, BLOCKID),
 	index (SKILLID),
 	index (BLOCKID),
 	FOREIGN KEY (SKILLID) REFERENCES SKILL (SKILLID),
@@ -254,10 +256,10 @@ Create table BLOCK (
 );
 
 Create table MSGSTRINGSTABLE (
-	MSGSTRINGSTABLEID integer unsigned auto_increment,
+	/*MSGSTRINGSTABLEID integer unsigned auto_increment,*/
 	BLOCKID integer unsigned not null,
 	MSGSTRINGSID integer unsigned not null,
-	PRIMARY KEY(MSGSTRINGSTABLEID),
+	PRIMARY KEY(BLOCKID, MSGSTRINGSID),
 	index (BLOCKID),
 	index (MSGSTRINGSID),
 	FOREIGN KEY (BLOCKID) REFERENCES BLOCK (BLOCKID),

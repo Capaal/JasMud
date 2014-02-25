@@ -65,8 +65,8 @@ public class BalanceCost extends Action {
 	}
 	@Override
 	protected void insertOneself(int position) {
-		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) VALUES ('BALANCECOST', " 
-				+ position + ", '" + goesTo + ", '" + who.toString() + "', '" + where.toString() + "');";
+		String sql = "INSERT INTO block (BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) VALUES ('BALANCECOST', " 
+				+ position + ", '" + goesTo + "', '" + who.toString() + "', '" + where.toString() + "');";
 		try {
 			SQLInterface.saveAction(sql);
 		} catch (SQLException e) {

@@ -534,8 +534,9 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	
 	private boolean saveSkills() {			
 		for (SkillBook sb : skillBookList.keySet()) {
-		//	if (sb.getToBeSave()) {
-				String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values(" + id + ", " + sb.getId() + ", " + skillBookList.get(sb) +");";
+			if (sb.getToBeSave()) {
+				String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values(" + id + ", " + sb.getId() + ", " + skillBookList.get(sb) +
+						") ON DUPLICATE KEY UPDATE mobprogress=" + skillBookList.get(sb) + ";";
 				try {
 					SQLInterface.saveAction(insertBook);
 				} catch (SQLException e) {
@@ -545,7 +546,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 				if (!sb.save(this)) {
 					return false;
 				}	
-	//		}
+			}
 		}	
 		return true;
 	}
@@ -555,7 +556,6 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		// probably be best somewhere else that get updated right when the change occurs.
 		String updateStats = "UPDATE MOBSTATS SET MOBDESC='" + description + "', MOBSHORTD='" + shortDescription 
 				+ "', MOBLOC=" + mobLocation.getId() + " WHERE MOBID=" + id + ";";
-//		System.out.println(updateStats);
 		try {
 			SQLInterface.saveAction(updateStats);
 			return true;

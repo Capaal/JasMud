@@ -10,12 +10,11 @@ import java.util.*;
 public class Location implements Container {
 		
 	private final int id;
-	private String name;
-	private String description;
+	private final String name;
+	private final String description;
 	public ArrayList<Holdable> inventory = new ArrayList<Holdable>();
-	private GroundType groundType;
-	
-	private TreeMap<String, Location> locationMap;
+	private final GroundType groundType;	
+	private final TreeMap<String, Location> locationMap;
 	
 	// The BUILDER is an internal class meant to be used to instantly build a new location.
 	// It allows the constructor to more clearly indicate what is happening, and allow variable information.
@@ -28,11 +27,10 @@ public class Location implements Container {
 	
 	public static class Builder {
 		
-		private final int id;		
+		private int id;		
 		private String name = "blank";
 		private String description = "blank";
-		private GroundType groundType = GroundType.GROUND;
-			
+		private GroundType groundType = GroundType.GROUND;			
 		private TreeMap<String, Location> locationMap = new TreeMap<String, Location>();
 		private HashMap<Integer, String> locationConnections = new HashMap<Integer, String>();
 		
@@ -61,7 +59,8 @@ public class Location implements Container {
 		
 		private Builder buildDirections(int currentId, String currentDirection,  int futureId, String futureD) {
 			if (currentId == 0 || futureD == null) {
-				return this;
+				System.out.println("Build directions was called uselessly for some reason.");
+				return this;				
 			}
 			String futureDirection = futureD.toLowerCase();
 			if (WorldServer.locationCollection.containsKey(futureId)) {
@@ -75,13 +74,29 @@ public class Location implements Container {
 		}		
 		
 		public Location build() {return new Location(this);}
+
+		public int getId() {
+			return id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public GroundType getGroundType() {
+			return groundType;
+		}
 	}
 	
 	public Location(Builder builder) {
-		this.id = builder.id;
-		setName(builder.name);
-		setDescription(builder.description);
-		setGroundType(builder.groundType);
+		this.id = builder.getId();
+		this.name = builder.getName();
+		this.description = builder.getDescription();
+		this.groundType = builder.getGroundType();
 		this.locationMap = builder.locationMap;
 		WorldServer.locationCollection.put(this.id, this);
 		for (int s : builder.locationConnections.keySet()){
@@ -93,7 +108,7 @@ public class Location implements Container {
 		}
 	}
 	
-	public void setLocation(Location futureLoc, String currentDirection) {
+	private void setLocation(Location futureLoc, String currentDirection) {
 		if (futureLoc != null) {
 			this.locationMap.put(currentDirection, futureLoc);
 		} else {
@@ -195,6 +210,8 @@ public class Location implements Container {
 	public Container getContainer(String dir) {
 		return getLocation(dir);
 	}
+	
+	
 	
 	public enum GroundType {
 		

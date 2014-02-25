@@ -6,6 +6,7 @@ import processes.Skill.Syntax;
 
 public class SkillBuilder {
 	
+	private int id;
 	private String name;	
 	private Queue<Action> actions;
 	private Set<Type> types;
@@ -91,6 +92,14 @@ public class SkillBuilder {
 	
 	public String getDescription() {
 		return description;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public int getId() {
+		return id;
 	}
 	
 	public void setSyntax(ArrayList<Syntax> syntaxList) {

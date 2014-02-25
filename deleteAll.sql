@@ -1,7 +1,7 @@
 set foreign_key_checks=0;
 drop table mobstats;
-drop table mobinv;
-drop table locinv;
+/*drop table mobinv;
+drop table locinv;*/
 drop table itemstats;
 drop table locationstats;
 drop table skilltable;

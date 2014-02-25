@@ -21,6 +21,7 @@ public class Skill {
 		this.types = build.getTypes();
 		this.failMsg = build.getFailMsg();
 		this.syntax = build.getSyntax();
+		this.id = build.getId();
 	}
 	
 	public String getName() {return name;}	
@@ -67,35 +68,43 @@ public class Skill {
 	}
 	
 	public boolean save() {
-		String skillSelect = "SELECT * FROM SKILL WHERE SKILLNAME='" + name + "';";
-		HashMap<String, Object> skillView = SQLInterface.returnBlockView(skillSelect);
-		// Does skillView actually ever equal null, or just an empty map?
-		//TODO
-		if (skillView == null) {
-			String skillInsert = "INSERT INTO SKILL (SKILLNAME, SKILLDES, SKILLFAILMSG) VALUES ('" + name + "', '" + description 
-				+ "', '" + failMsg + "');";
-			try {
-				SQLInterface.saveAction(skillInsert);
-			} catch (SQLException e) {
-				System.out.println("Attempt to overarching skill failed via: " + skillInsert);
-				e.printStackTrace();
-				return false;
-			}			
-			skillView = SQLInterface.returnBlockView(skillSelect);
-			this.id = (int) skillView.get("SKILLID");
-		}
+//		String skillSelect = "SELECT * FROM SKILL WHERE SKILLNAME='" + name + "';";
+	//	HashMap<String, Object> skillView = SQLInterface.returnBlockView(skillSelect);
+//		if (skillView.isEmpty()) {
+		String skillInsert = "UPDATE SKILL SET SKILLDES='" + description + "', SKILLFAILMSG='" + failMsg + "' WHERE SKILLID=" + id + ";";
+		//	String skillInsert = "INSERT INTO SKILL (SKILLNAME, SKILLDES, SKILLFAILMSG) VALUES ('" + name + "', '" + description 
+		//		+ "', '" + failMsg + "');";
+		try {
+			SQLInterface.saveAction(skillInsert);
+		} catch (SQLException e) {
+			System.out.println("Attempt to save overarching skill failed via: " + skillInsert);
+			e.printStackTrace();
+			return false;
+		}			
+//			skillView = SQLInterface.returnBlockView(skillSelect);
+//		}
+//		this.id = (int) skillView.get("SKILLID");
+		System.out.println("I'm not sure if skills know their id: " + name + " " + id);
 		for (Syntax s : syntax) {
-			String syntaxInsert = "INSERT IGNORE INTO SYNTAX (SYNTAXPOS, SYNTAXTYPE) VALUES (" + syntax.indexOf(s) + ", '" + s.toString() + "');";
-			try {
-				SQLInterface.saveAction(syntaxInsert);
-			} catch (SQLException e) {
-				System.out.println("Skill syntax failed to save via: " + syntaxInsert);
-				e.printStackTrace();
-				return false;
-			}			
 			String syntaxIdQuery = "SELECT * FROM SYNTAX WHERE SYNTAXPOS=" + syntax.indexOf(s) + " AND SYNTAXTYPE='" + s.toString() + "';";
-			HashMap<String, Object> syntaxView = SQLInterface.returnBlockView(syntaxIdQuery);
-			String syntaxTableInsert = "INSERT IGNORE INTO SYNTAXTABLE (SKILLID, SYNTAXID) VALUES (" + this.id + ", " + syntaxView.get("SYNTAXID") + ");";
+			Object syntaxId = SQLInterface.viewData(syntaxIdQuery, "SYNTAXID");
+			//This won't be necessary often, I guess I should just check and see if it exists, and if not, then insert.
+			if (syntaxId == null) {
+				String syntaxInsert = "INSERT INTO SYNTAX (SYNTAXPOS, SYNTAXTYPE) VALUES (" + syntax.indexOf(s) + ", '" + s.toString() +
+						"');";
+				try {
+					SQLInterface.saveAction(syntaxInsert);
+				} catch (SQLException e) {
+					System.out.println("Skill syntax failed to save via: " + syntaxInsert);
+					e.printStackTrace();
+					return false;
+				}			
+			}
+		//	String syntaxIdQuery = "SELECT * FROM SYNTAX WHERE SYNTAXPOS=" + syntax.indexOf(s) + " AND SYNTAXTYPE='" + s.toString() + "';";
+		//	HashMap<String, Object> syntaxView = SQLInterface.returnBlockView(syntaxIdQuery);
+			String syntaxTableInsert = "INSERT INTO SYNTAXTABLE (SKILLID, SYNTAXID) VALUES (" + this.id 
+					+ ", (SELECT SYNTAXID FROM SYNTAX WHERE SYNTAXPOS=" + syntax.indexOf(s) + " AND SYNTAXTYPE='" + s.toString() + "'))"
+							+ " ON DUPLICATE KEY UPDATE SKILLID=" + this.id + ";";
 			try {
 				SQLInterface.saveAction(syntaxTableInsert);
 			} catch (SQLException e) {
@@ -109,18 +118,19 @@ public class Skill {
 			if (!a.save(position)) {
 				return false;
 			}
-			String linkSelect = "SELECT * FROM BLOCKTABLE WHERE SKILLID=" + id + " AND BLOCKID =" + a.getId() + ";";
-			HashMap<String, Object> linkView = SQLInterface.returnBlockView(linkSelect);
-			if (linkView == null) {
-				String linkInsert = "INSERT INTO BLOCKTABLE (SKILLID, BLOCKID) values (" + id + ", " + a.getId() + ");";
-				try {
-					SQLInterface.saveAction(linkInsert);
-				} catch (SQLException e) {
-					System.out.println("Skill blocktable failed to save via: " + linkInsert);
-					e.printStackTrace();
-					return false;
-				}				
-			}
+		//	String linkSelect = "SELECT * FROM BLOCKTABLE WHERE SKILLID=" + id + " AND BLOCKID =" + a.getId() + ";";
+		//	HashMap<String, Object> linkView = SQLInterface.returnBlockView(linkSelect);
+		//	if (linkView.isEmpty()) {
+			String linkInsert = "INSERT INTO BLOCKTABLE (SKILLID, BLOCKID) values (" + id + ", " + a.getId() 
+					+ ") ON DUPLICATE KEY UPDATE SKILLID=" + id + ";";
+			try {
+				SQLInterface.saveAction(linkInsert);
+			} catch (SQLException e) {
+				System.out.println("Skill blocktable failed to save via: " + linkInsert);
+				e.printStackTrace();
+				return false;
+			}				
+		//	}
 		}
 		return true;		
 	}

@@ -68,7 +68,7 @@ public class Godcreate extends Action {
 	
 	private boolean processCreateSkill(Mobile player) {
 		String newOrOld = askQuestion("Is the skill \"new\" or \"old\"?", player);
-		String name = askQuestion("What is the skill's name?", player);
+		String name = askQuestion("What is the skill's name?", player); // max 50 char
 		switch(newOrOld) {
 		case "new":
 			SkillBuilder newSkill = new SkillBuilder();
