@@ -3,6 +3,7 @@ package actions;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
 import costs.*;
 import checks.*;
 import effectors.*;
@@ -25,8 +26,8 @@ public class Godcreate extends Action {
 	}
 
 	@Override
-	public boolean activate(Skill s) {
-		Mobile player = s.getCurrentPlayer();
+	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+		Mobile player = currentPlayer;
 		createActionMap();
 		player.tell("Welcome to the creation Menu.");
 		player.tell("Here you can create an enormous variety of skills, items, locations, and mobiles");

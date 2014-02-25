@@ -16,12 +16,12 @@ public class Say extends Action {
 	}
 
 	@Override
-	public boolean activate(Skill s) {
+	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		Who who = Who.ALL;
 		Where where = Where.HERE;	
 		StringBuffer sb = new StringBuffer();
-		sb.append(s.getCurrentPlayer().getName() + " says, \"");
-		sb.append(s.getStringInfo(Syntax.LIST));
+		sb.append(currentPlayer.getName() + " says, \"");
+		sb.append(s.getStringInfo(Syntax.LIST, fullCommand));
 		
 		
 	/*	
@@ -39,7 +39,7 @@ public class Say extends Action {
 		}*/
 		sb.append("\".");
 //		ArrayList<Mobile> targs = who.findTarget(s, where.findLoc(s));
-		for (Mobile m : who.findTarget(s, where.findLoc(s))) {
+		for (Mobile m : who.findTarget(s, fullCommand, currentPlayer, where.findLoc(s, fullCommand, currentPlayer))) {
 			if (m != null && m.isControlled()) {
 				m.tell(sb.toString());
 			}

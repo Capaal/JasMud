@@ -33,12 +33,12 @@ public class Message extends Action {
 	}
 	
 	@Override
-	public boolean activate(Skill s) {
+	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		ArrayList<String> tNames = new ArrayList<String>();
 		for (msgStrings msg : msgList) {
-			tNames.add(msg.getString(s));
+			tNames.add(msg.getString(s, fullCommand, currentPlayer));
 		}
-		ArrayList<Mobile> targs = who.findTarget(s, where.findLoc(s));
+		ArrayList<Mobile> targs = who.findTarget(s, fullCommand, currentPlayer, where.findLoc(s, fullCommand, currentPlayer));
 		if (targs != null) {
 			for (Mobile m : targs) {
 				if (m != null && m.isControlled()) {
@@ -158,43 +158,43 @@ public class Message extends Action {
 		
 		SELF() {
 			@Override
-			public String getString(Skill s) {
-				return s.getCurrentPlayer().getName();
+			public String getString(Skill s, String fullCommand, Mobile currentPlayer) {
+				return currentPlayer.getName();
 			}
 			
 		},
 		
 		TARGET() {
 			@Override
-			public String getString(Skill s) {
-				return s.getStringInfo(Syntax.TARGET);
+			public String getString(Skill s, String fullCommand, Mobile currentPlayer) {
+				return s.getStringInfo(Syntax.TARGET, fullCommand);
 			}
 		},
 		
 		MOVE() {
 			@Override
-			public String getString(Skill s) {
-				return s.getStringInfo(Syntax.DIRECTION);
+			public String getString(Skill s, String fullCommand, Mobile currentPlayer) {
+				return s.getStringInfo(Syntax.DIRECTION, fullCommand);
 			}
 		},
 		
 		OPPMOVE() {
 			@Override
-			public String getString(Skill s) {
-				oppDirections opp = oppDirections.valueOf((s.getStringInfo(Syntax.DIRECTION)).toUpperCase());
+			public String getString(Skill s, String fullCommand, Mobile currentPlayer) {
+				oppDirections opp = oppDirections.valueOf((s.getStringInfo(Syntax.DIRECTION, fullCommand)).toUpperCase());
 				return opp.getOpp();
 			}
 		},
 		
 		ITEM() {
 			@Override
-			public String getString(Skill s) {
-				return s.getStringInfo(Syntax.ITEM);
+			public String getString(Skill s, String fullCommand, Mobile currentPlayer) {
+				return s.getStringInfo(Syntax.ITEM, fullCommand);
 			}
 		};
 		
 		private msgStrings(){}
-		public abstract String getString(Skill s);
+		public abstract String getString(Skill s, String fullCommand, Mobile currentPlayer);
 	}
 	
 	//Maybe this should be in MOVE instead? SO far this is the only place using these as opposites, which is why it is here.

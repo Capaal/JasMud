@@ -26,10 +26,10 @@ public class Or extends Action {
 	}
 
 	@Override
-	public boolean activate(Skill s) {
-		if (actionOne.activate(s)) {
+	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+		if (actionOne.activate(s, fullCommand, currentPlayer)) {
 			return true;
-		} else if (actionTwo.activate(s)) {
+		} else if (actionTwo.activate(s, fullCommand, currentPlayer)) {
 			return true;
 		} else {
 			return false;

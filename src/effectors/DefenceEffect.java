@@ -31,8 +31,8 @@ public class DefenceEffect extends Action {
 	}
 
 	@Override
-	public boolean activate(Skill s) {
-		for (Mobile m : who.findTarget(s,  where.findLoc(s))) {
+	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+		for (Mobile m : who.findTarget(s, fullCommand, currentPlayer,  where.findLoc(s, fullCommand, currentPlayer))) {
 			m.addEffect(new Defence(m, duration, type));
 		}
 		return true;

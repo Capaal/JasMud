@@ -15,7 +15,7 @@ public abstract class Effect {
 	
 	public abstract void doTickEffect();
 	
-	public abstract int doRunEffect(List<Type> incomingTypes, int damage);
+	public abstract int doRunEffect(Set<Type> incomingTypes, int damage);
 	
 	public Mobile getCurrentPlayer() {
 		return currentPlayer;

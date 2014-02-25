@@ -124,7 +124,7 @@ public class UsefulCommands {
 	}
 	
 	// Gets player prompt (Give all player prompts an ID that represents that connection?)
-	public static PlayerPrompt getPlayerPromptFromPlayer(Mobile currentPlayer) {
+	/*public static PlayerPrompt getPlayerPromptFromPlayer(Mobile currentPlayer) {
 		Iterator iter = WorldServer.activeClients.iterator();
 		while (iter.hasNext()) {
 			PlayerPrompt t = (PlayerPrompt) iter.next();
@@ -133,7 +133,7 @@ public class UsefulCommands {
 			}
 		}	
 		return null;
-	}
+	}*/
 	
 	public final class ANSI {
 
@@ -169,13 +169,7 @@ public class UsefulCommands {
 		private ANSI() {} // disable automatic constructor
 	}
 	
-	public static void displayPrompt(Mobile currentPlayer) {
-		String balance = "b";
-		if (!currentPlayer.hasBalance()) {
-			balance = "-";
-		}
-		currentPlayer.tellLine(currentPlayer.getCurrentHp() + "/" + currentPlayer.getMaxHp() + " " + balance + ": ");
-	}
+	
 	
 	//Obsolete?
 	public static int getPosID(int i) {

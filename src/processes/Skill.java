@@ -6,23 +6,17 @@ import java.util.*;
 
 public class Skill {
 	
-	private String name;
-	private int id;
-	private String description;
-	private Mobile currentPlayer;	
-	private String fullCommand;	
-	private Queue<Action> actions;
-	private ArrayList<Type> types;
-	private ArrayList<Syntax> syntax; //Are we sure we'll be maintaining order?
-	private ArrayList<String> fullCommandArray;
-	
-	public String failMsg = "default";
-	
-	public Skill() {
-	}
+	private final String name;
+	private int id; // related only to it's database id, probably don't even need to know what it is.
+	private final String description;
+	private final Queue<Action> actions;
+	private final Set<Type> types;
+	private final List<Syntax> syntax; //Are we sure we'll be maintaining order?	
+	private final String failMsg;
 	
 	public Skill(SkillBuilder build) {
 		this.name = build.getName();
+		this.description = build.getDescription();
 		this.actions = build.getActions();
 		this.types = build.getTypes();
 		this.failMsg = build.getFailMsg();
@@ -32,39 +26,26 @@ public class Skill {
 	public String getName() {return name;}	
 	
 	// Called when attempting to cast the finished spell. May or may not have a target, depending on spell.
-	public void perform(String fullCommand) {
-		this.fullCommand = fullCommand;
-		fullCommandArray = new ArrayList<String>();
+	public void perform(String fullCommand, Mobile currentPlayer) {
+		for (Action a : actions){
+			if (!a.activate(this, fullCommand, currentPlayer)) {
+				System.out.println(a + " returned false.");
+				currentPlayer.tell(failMsg);
+				break;
+			}
+		}
+	}	
+	
+	public Set<Type> getTypes() {
+		return types;
+	}
+	
+	public String getStringInfo(Syntax neededInfo, String fullCommand) {
+		ArrayList<String> fullCommandArray = new ArrayList<String>();
 		StringTokenizer st = new StringTokenizer(fullCommand);
 		while (st.hasMoreTokens()) {
 			fullCommandArray.add(st.nextToken());
 		}
-		for (Action a : actions){
-			if (!a.activate(this)) {
-				System.out.println(a + " returned false.");
-				if (failMsg != null) {
-					currentPlayer.tell(failMsg);
-				}
-				break;
-			}
-		}
-	}
-	
-	public String getFullCommand() {
-		return fullCommand;
-	}
-	
-	public Mobile getCurrentPlayer() {
-		return this.currentPlayer;
-	}	
-	
-	public List<Type> getTypes() {
-		List<Type> t = new ArrayList<Type>();
-		t.addAll(types);
-		return t;
-	}
-	
-	public String getStringInfo(Syntax neededInfo) {
 		int syntaxPos = syntax.indexOf(neededInfo);
 		if (syntaxPos != -1) {
 			if (neededInfo.equals(Syntax.LIST)){
@@ -82,7 +63,7 @@ public class Skill {
 	}
 	
 	public Queue<Action> getActions() {
-		return new LinkedList<Action>(actions);
+		return actions;
 	}
 	
 	public boolean save() {
@@ -147,26 +128,27 @@ public class Skill {
 	public void preview(Mobile player) {
 		player.tell("Name: " + name);
 		player.tell("Description: " + description);
-		// make actions
+		StringBuilder sb = new StringBuilder();
 		player.tell("Actions: " + description);
-		// make types
-		player.tell("Types: " + description);
-		// make syntax
-		player.tell("Syntax: " + description);
+		for (Action a : actions) {
+			a.explainOneself(player);
+		}
+		sb.append("Types:");
+		for (Type t : types) {
+			sb.append(" ");
+			sb.append(t.toString());
+		}
+		player.tell(sb.toString());
+		sb = new StringBuilder();
+		sb.append("Syntax:");
+		for (Syntax s : syntax) {
+			sb.append(" ");
+			sb.append(s.toString());
+		}
+		player.tell(sb.toString());
 		player.tell("Fail Message: " + failMsg);
 	}
-	
-	public Skill copy(Mobile newPlayer) {
-		Skill newSkill = new Skill();
-		newSkill.name = this.name;
-		newSkill.actions = this.actions;
-		newSkill.types = this.types;
-		newSkill.currentPlayer = newPlayer;
-		newSkill.failMsg = this.failMsg;
-		newSkill.syntax = this.syntax;
-		return newSkill;
-	}
-	
+		
 	public enum Syntax {
 		
 		SKILL() {

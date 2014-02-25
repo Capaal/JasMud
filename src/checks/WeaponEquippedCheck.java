@@ -28,9 +28,9 @@ public class WeaponEquippedCheck extends Action {
 	}
 	
 	@Override
-	public boolean activate(Skill s) {
+	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		boolean success = false;
-		for (Mobile m : who.findTarget(s, where.findLoc(s))) {
+		for (Mobile m : who.findTarget(s, fullCommand, currentPlayer, where.findLoc(s, fullCommand, currentPlayer))) {
 			Equipable leftHandItem = m.getEquipmentInSlot(EquipmentEnum.LEFTHAND);
 			Equipable rightHandItem = m.getEquipmentInSlot(EquipmentEnum.RIGHTHAND);
 			if (rightHandItem != null && rightHandItem.containsType(isItThis)) {

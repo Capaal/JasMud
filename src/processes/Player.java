@@ -41,7 +41,7 @@ public class Player extends StdMob {
 		this.mage = 0;
 		this.survival = 0;
 		this.level = 1;		
-		this.password = password;
+//		this.password = password;
 		this.bugList = new ArrayList<String>();
 		this.messages = new ArrayList<String>();
 		this.effectList = new HashMap<String, Effect>();

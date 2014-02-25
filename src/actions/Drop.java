@@ -31,14 +31,14 @@ public class Drop extends Action {
 	
 	//TODO needs to be refactored, both get and drop can probably be made into a single block.
 	@Override
-	public boolean activate(Skill s) {
-		String toDrop = s.getStringInfo(Syntax.ITEM);
+	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+		String toDrop = s.getStringInfo(Syntax.ITEM, fullCommand);
 		Boolean success = false;
-		for (Mobile m : who.findTarget(s, where.findLoc(s))) {
+		for (Mobile m : who.findTarget(s, fullCommand, currentPlayer, where.findLoc(s, fullCommand, currentPlayer))) {
 			Holdable item = m.getHoldableFromString(toDrop);
 			if (item != null) { 
 				m.removeItem(item);
-				Container loc = finalLoc.findLoc(s).get(0);
+				Container loc = finalLoc.findLoc(s, fullCommand, currentPlayer).get(0);
 				item.setContainer(loc);
 				/// currently drops in first location for finalLoc, to ensure one location gets item, but better way is better.
 				loc.acceptItem(item); 

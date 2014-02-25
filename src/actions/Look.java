@@ -23,15 +23,15 @@ public class Look extends Action {
 	}
 
 	@Override
-	public boolean activate(Skill s) {
-		String dir = UsefulCommands.getSecondWord(s.getFullCommand());
+	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+		String dir = UsefulCommands.getSecondWord(fullCommand);
 		if (dir != null) {
-			for (Container c : where.findLoc(s)) {
-				c.look(s.getCurrentPlayer());
+			for (Container c : where.findLoc(s, fullCommand, currentPlayer)) {
+				c.look(currentPlayer);
 			}
 		} else {
-			for (Container c : Where.HERE.findLoc(s)) {
-				c.look(s.getCurrentPlayer());
+			for (Container c : Where.HERE.findLoc(s, fullCommand, currentPlayer)) {
+				c.look(currentPlayer);
 			}
 		}
 		return true;

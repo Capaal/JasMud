@@ -22,7 +22,7 @@ import processes.Location.GroundType;
 public class StdMob implements Mobile, Container, Holdable, Creatable {
 
 	protected final String name;
-	protected String password; //Name + password is required to enter any role.
+	protected final String password; //Name + password is required to enter any role.
 	protected final int id;
 	protected int maxHp;
 	protected int currentHp; 
@@ -48,7 +48,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	protected boolean isControlled = false;
 	protected boolean loadOnStartUp = false;
 	
-	protected Map<Integer, SkillBook> skillBookList = new HashMap<Integer, SkillBook>();
+	protected Map<SkillBook, Integer> skillBookList = new HashMap<SkillBook, Integer>();
 	
 	protected ArrayList<Effect> effectList;
 	
@@ -182,17 +182,9 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public String getDescription() {return description;}	
 	public String getShortDescription() {return shortDescription;}	
 	public int getXpWorth() {return xpWorth;}	
-	// Look into refactoring?
-	public void getNewSkillBooks(Mobile player) {
-		this.skillBookList = player.getSkillBookList();
-	}
-	// Need refactoring?
-	public Map<Integer, SkillBook> getSkillBookList() {
-		return new HashMap<Integer, SkillBook>(skillBookList);
-	}
 	// why the null check?
 	public Skill getCommand(String command) {
-		for (SkillBook sb : skillBookList.values()) {
+		for (SkillBook sb : skillBookList.keySet()) {
 			Skill skill = sb.getSkill(command);
 			if (skill != null) {
 				return skill;
@@ -205,7 +197,12 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	// copy or original?
 	@Override
 	public SkillBook getBook(String bookName) {
-		return skillBookList.get(bookName);
+		for (SkillBook sb : skillBookList.keySet()) {
+			if (sb.getName().equals(bookName)) {
+				return sb;
+			}
+		}
+		return null;
 	}
 	
 	public void acceptItem(Holdable item) {inventory.add(item);}
@@ -223,7 +220,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	// should the runEffects be in the skill?
 	// Take damage should be here, so that an undead knows it takes double damage from holy without the skill needing to know this is undead.
 	@Override
-	public void takeDamage(List<Type> types, int damage) {
+	public void takeDamage(Set<Type> types, int damage) {
 		damage = runEffects(types, damage);
 		this.currentHp = currentHp - damage;
 		checkHp();
@@ -235,23 +232,18 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 			tell("You colapse to the ground, unable to fight on.");
 			isDead = true;
 		}
-	}
+	}	
 	
-	// Is this lazy init of sendBack, or the signs of some odd bug?
 	public void tell(String msg) {
-		if (this.sendBack == null) {
-			sendBack = UsefulCommands.getPlayerPromptFromPlayer(this).getSendBack();
-		}
 		if (this.sendBack != null) {
 			sendBack.printMessage(msg);
-		}
+		} 
 	}
-	// Same as above, lazy init or bug?
+
 	public void tellLine(String msg) {
-		if (this.sendBack == null) {
-			sendBack = UsefulCommands.getPlayerPromptFromPlayer(this).getSendBack();
-		}
-		sendBack.printMessageLine(msg);
+		if (this.sendBack != null) {
+			sendBack.printMessageLine(msg);
+		}	
 	}
 	// Not implemented
 	public void addExperience(int exp) {
@@ -403,7 +395,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	}
 	
 	public void runTickEffects() {
-		Iterator iter = effectList.iterator();
+		Iterator<Effect> iter = effectList.iterator();
 		while (iter.hasNext()) {
 			Effect effect = (Effect) iter.next();
 			effect.doTickEffect();
@@ -414,7 +406,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		}
 	}
 	@Override
-	public int runEffects(List<Type> incomingTypes, int damage) {
+	public int runEffects(Set<Type> incomingTypes, int damage) {
 		Iterator iter = effectList.iterator();
 		while (iter.hasNext()) {
 			Effect effect = (Effect) iter.next();
@@ -509,8 +501,8 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		return GroundType.CONTAINER;
 	}
 	@Override
-	public void addBook(int id, SkillBook skillBook) {
-		skillBookList.put(id, skillBook.copySkillBook(this));
+	public void addBook(SkillBook skillBook, int progress) {
+		skillBookList.put(skillBook, progress);
 		
 	}
 	@Override
@@ -541,10 +533,19 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	}
 	
 	private boolean saveSkills() {			
-		for (SkillBook sb : skillBookList.values()) {			
-			if (!sb.save()) {
-				return false;
-			}			
+		for (SkillBook sb : skillBookList.keySet()) {
+		//	if (sb.getToBeSave()) {
+				String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values(" + id + ", " + sb.getId() + ", " + skillBookList.get(sb) +");";
+				try {
+					SQLInterface.saveAction(insertBook);
+				} catch (SQLException e) {
+					System.out.println("Skillbook " + sb.getName() + " failed to save it's progress table via: " + insertBook);
+					return false;
+				}
+				if (!sb.save(this)) {
+					return false;
+				}	
+	//		}
 		}	
 		return true;
 	}
@@ -621,6 +622,18 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		
 	}
 	
+	public void displayPrompt() {
+		String balance = "b";
+		if (!hasBalance()) {
+			balance = "-";
+		}
+		tellLine(getCurrentHp() + "/" + getMaxHp() + " " + balance + ": ");
+	}
+	@Override
+	public void setSendBack(SendMessage sendBack) {
+		this.sendBack = sendBack;
+		
+	}
 	
 }
 	

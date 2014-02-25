@@ -2,6 +2,7 @@ package costs;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+
 import actions.Godcreate;
 import processes.SQLInterface;
 import processes.Skill;
@@ -25,12 +26,12 @@ public class BalanceCost extends Action {
 	}
 
 	@Override
-	public boolean activate(Skill s) {
+	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		BalanceCheck thisCheck = new BalanceCheck(!goesTo, who, where);
-		if (!thisCheck.activate(s)) {
+		if (!thisCheck.activate(s, fullCommand, currentPlayer)) {
 			return false;
 		}
-		for (Mobile m : who.findTarget(s, where.findLoc(s))) {
+		for (Mobile m : who.findTarget(s, fullCommand, currentPlayer, where.findLoc(s, fullCommand, currentPlayer))) {
 			m.setBalance(goesTo);
 		}
 		return true;

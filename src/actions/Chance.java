@@ -36,13 +36,13 @@ public class Chance extends Action {
 	}
 
 	@Override
-	public boolean activate(Skill s) {
+	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		if (s == null) {
 			throw new IllegalStateException("Skill is null.");
 		}
 		int roll = ran.nextInt(101);
 		if (roll <= chance) {
-			return action.activate(s);
+			return action.activate(s, fullCommand, currentPlayer);
 		}
 		return true;
 	}

@@ -12,7 +12,7 @@ public abstract class Action {
 	
 	protected int id;
 
-	public abstract boolean activate(Skill s);
+	public abstract boolean activate(Skill s, String fullCommand, Mobile currentPlayer);
 	
 	public boolean save(int position) {	
 		HashMap<String, Object> blockView = selectOneself(position);
@@ -116,9 +116,9 @@ public abstract class Action {
 				
 		HERE() {
 			@Override
-			public ArrayList<Container> findLoc(Skill s) {
+			public ArrayList<Container> findLoc(Skill s, String fullCommand, Mobile currentPlayer) {
 				ArrayList<Container> loc = new ArrayList<Container>();
-				loc.add(s.getCurrentPlayer().getContainer());
+				loc.add(currentPlayer.getContainer());
 				return loc;
 			}
 		},
@@ -126,9 +126,9 @@ public abstract class Action {
 		// Below probably doesn't account for miss-spellings or leaving out the id? it needs work.
 		TARGET() {
 			@Override
-			public ArrayList<Container> findLoc(Skill s) {			
+			public ArrayList<Container> findLoc(Skill s, String fullCommand, Mobile currentPlayer) {			
 				ArrayList<Container> loc = new ArrayList<Container>();				
-				Mobile t = WorldServer.mobList.get(s.getStringInfo(Syntax.TARGET));
+				Mobile t = WorldServer.mobList.get(s.getStringInfo(Syntax.TARGET, fullCommand));
 				if (t != null) {
 					loc.add(t.getContainer());
 					return loc;
@@ -140,9 +140,9 @@ public abstract class Action {
 		// This would check personal inventory, rework for Container being anyone's inventory?
 		INVENTORY() {
 			@Override
-			public ArrayList<Container> findLoc(Skill s) {			
+			public ArrayList<Container> findLoc(Skill s, String fullCommand, Mobile currentPlayer) {			
 				ArrayList<Container> loc = new ArrayList<Container>();				
-				loc.add(s.getCurrentPlayer());
+				loc.add(currentPlayer);
 				return loc;
 			}
 		},
@@ -150,11 +150,11 @@ public abstract class Action {
 		// Only works with second word at the moment.
 		ONEAWAY() {
 			@Override
-			public ArrayList<Container> findLoc(Skill s) {
+			public ArrayList<Container> findLoc(Skill s, String fullCommand, Mobile currentPlayer) {
 				ArrayList<Container> loc = new ArrayList<Container>();
-				String dir = s.getStringInfo(Syntax.DIRECTION);
+				String dir = s.getStringInfo(Syntax.DIRECTION, fullCommand);
 				if (dir != null) {
-					loc.add(s.getCurrentPlayer().getContainer().getContainer(dir));
+					loc.add(currentPlayer.getContainer().getContainer(dir));
 				}
 				return loc;
 			}
@@ -163,10 +163,10 @@ public abstract class Action {
 		// Specifically uses the third word in command, seems a bit odd.
 		PROJECTILE() {
 			@Override
-			public ArrayList<Container> findLoc(Skill s) {
+			public ArrayList<Container> findLoc(Skill s, String fullCommand, Mobile currentPlayer) {
 				ArrayList<Container> loc = new ArrayList<Container>();
-				String dir = s.getStringInfo(Syntax.DIRECTION);
-				Container onPath = s.getCurrentPlayer().getContainer();
+				String dir = s.getStringInfo(Syntax.DIRECTION, fullCommand);
+				Container onPath = currentPlayer.getContainer();
 				loc.add(onPath);
 				onPath = onPath.getContainer(dir);
 				while (onPath != null) {
@@ -180,7 +180,7 @@ public abstract class Action {
 		//Constructor
 		private Where() {			
 		}		
-		public abstract ArrayList<Container> findLoc(Skill s);
+		public abstract ArrayList<Container> findLoc(Skill s, String fullCommand, Mobile currentPlayer);
 	}
 	
 	// Covers RULES FOR WHO
@@ -189,16 +189,16 @@ public abstract class Action {
 			
 		SELF() {
 			@Override
-			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers) {
+			public ArrayList<Mobile> findTarget(Skill s, String fullCommand, Mobile currentPlayer, ArrayList<Container> Containers) {
 				ArrayList<Mobile> targ = new ArrayList<Mobile>();
-				targ.add(s.getCurrentPlayer());
+				targ.add(currentPlayer);
 				return targ;
 			}
 		},
 		
 		ALL() {
 			@Override
-			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers) {
+			public ArrayList<Mobile> findTarget(Skill s, String fullCommand, Mobile currentPlayer, ArrayList<Container> Containers) {
 				ArrayList<Mobile> targ = new ArrayList<Mobile>();
 				for (Container l : Containers) {
 					for (Holdable m : l.getInventory()) {
@@ -213,10 +213,10 @@ public abstract class Action {
 		
 		TARGET() {
 			@Override
-			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers) {
+			public ArrayList<Mobile> findTarget(Skill s, String fullCommand, Mobile currentPlayer, ArrayList<Container> Containers) {
 				ArrayList<Mobile> targ = new ArrayList<Mobile>();
 				for (Container l : Containers) {
-					Holdable h = l.getHoldableFromString(s.getStringInfo(Syntax.TARGET));
+					Holdable h = l.getHoldableFromString(s.getStringInfo(Syntax.TARGET, fullCommand));
 					if (h != null) {
 						targ.add((Mobile)h);
 						return targ;
@@ -228,14 +228,14 @@ public abstract class Action {
 		// handles grabbing JUST one target or JUST self poorly.
 		OTHERS() {
 			@Override
-			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers) {
+			public ArrayList<Mobile> findTarget(Skill s, String fullCommand, Mobile currentPlayer, ArrayList<Container> Containers) {
 				ArrayList<Mobile> targs = new ArrayList<Mobile>();
-				ArrayList<Mobile> targets = TARGET.findTarget(s, Containers);
+				ArrayList<Mobile> targets = TARGET.findTarget(s, fullCommand, currentPlayer, Containers);
 				Mobile target = null;
 				if (targets != null) {
 					target = targets.get(0);
 				}
-				Mobile self = (SELF.findTarget(s, Containers)).get(0);
+				Mobile self = (SELF.findTarget(s, fullCommand, currentPlayer, Containers)).get(0);
 				for (Container l : Containers) {
 					for (Holdable h : l.getInventory()) {
 						if (h instanceof Mobile && h != target && h != self) {
@@ -250,7 +250,7 @@ public abstract class Action {
 		
 		ALLIES() {
 			@Override
-			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers) {
+			public ArrayList<Mobile> findTarget(Skill s, String fullCommand, Mobile currentPlayer, ArrayList<Container> Containers) {
 				
 				return null;
 			}
@@ -258,7 +258,7 @@ public abstract class Action {
 		
 		ENEMIES() {
 			@Override
-			public ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers) {
+			public ArrayList<Mobile> findTarget(Skill s, String fullCommand, Mobile currentPlayer, ArrayList<Container> Containers) {
 				
 				return null;
 			}
@@ -267,6 +267,6 @@ public abstract class Action {
 		//Constructor
 		private Who() {			
 		}		
-		public abstract ArrayList<Mobile> findTarget(Skill s, ArrayList<Container> Containers);
+		public abstract ArrayList<Mobile> findTarget(Skill s, String fullCommand, Mobile currentPlayer, ArrayList<Container> Containers);
 	}
 }

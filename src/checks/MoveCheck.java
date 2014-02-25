@@ -30,9 +30,9 @@ public class MoveCheck extends Action {
 	}
 
 	@Override
-	public boolean activate(Skill s) {
-		for (Mobile m : who.findTarget(s,  where.findLoc(s))) {
-			for (Container c : finalLoc.findLoc(s)) {
+	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+		for (Mobile m : who.findTarget(s, fullCommand, currentPlayer,  where.findLoc(s, fullCommand, currentPlayer))) {
+			for (Container c : finalLoc.findLoc(s, fullCommand, currentPlayer)) {
 				if (c == null) { 
 					return false;
 				}

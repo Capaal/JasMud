@@ -8,7 +8,7 @@ public class SkillBuilder {
 	
 	private String name;	
 	private Queue<Action> actions;
-	private ArrayList<Type> types;
+	private Set<Type> types;
 	private String description;
 	private String failMsg;
 	private ArrayList<Syntax> syntax;
@@ -20,7 +20,7 @@ public class SkillBuilder {
 	
 	private void toDefault() {
 		actions = new LinkedList<Action>();
-		types = new ArrayList<Type>();
+		types = EnumSet.noneOf(Type.class);
 		syntax = new ArrayList<Syntax>();
 		attachedBooks = new HashSet<SkillBook>();
 	}
@@ -30,7 +30,7 @@ public class SkillBuilder {
 	}
 	
 	public String getName() {return name;}	
-	public ArrayList<Type> getTypes() {return types;}
+	public Set<Type> getTypes() {return types;}
 	
 	// Just forced to work, needs to be re-made.
 //	public void complete() {
@@ -48,6 +48,7 @@ public class SkillBuilder {
 	public void complete() {
 		for (SkillBook book : attachedBooks) {
 			book.addSkill(new Skill(this));
+			book.setToBeSaved(true);
 		}
 		toDefault();
 	}

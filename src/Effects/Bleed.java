@@ -8,7 +8,7 @@ import interfaces.*;
 
 public class Bleed extends Effect {
 
-	private int intensity;
+	private final int intensity;
 	private final int startTick;
 	private final int endTick;
 	private final Type type = Type.BLEED;
@@ -16,7 +16,7 @@ public class Bleed extends Effect {
 
 	public Bleed(Mobile currentPlayer, int duration) {
 		super(currentPlayer);
-		intensity = currentPlayer.getMaxHp()/10;
+		intensity = currentPlayer.getMaxHp()/5;
 		startTick = currentPlayer.getTick();
 		endTick = startTick + duration;
 	}
@@ -26,13 +26,13 @@ public class Bleed extends Effect {
 		if (currentPlayer.getTick() > endTick) {
 			destroyEffect();		
 		}	else {
-			currentPlayer.takeDamage(Arrays.asList(type), intensity);
-			UsefulCommands.displayPrompt(currentPlayer);
+			currentPlayer.takeDamage(EnumSet.of(type), intensity);
+			currentPlayer.displayPrompt();
 		}
 	}
 	
 	@Override
-	public int doRunEffect(List<Type> incomingTypes, int damage) {
+	public int doRunEffect(Set<Type> incomingTypes, int damage) {
 		return damage;
 	}
 }

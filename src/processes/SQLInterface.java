@@ -282,16 +282,17 @@ public class SQLInterface {
 			sql = ("SELECT SKILLBOOKID, MOBPROGRESS FROM skillbooktable WHERE MOBID='" + mobid + "'");
 			rs = stmt.executeQuery(sql);
 			
-			ArrayList<Integer> mobSkillBooks = new ArrayList<Integer>();
+			Map<Integer, Integer> mobSkillBooks = new HashMap<Integer, Integer>();
 			while (rs.next()) {
-				mobSkillBooks.add(rs.getInt("SKILLBOOKID"));			
+				mobSkillBooks.put(rs.getInt("SKILLBOOKID"), rs.getInt("MOBPROGRESS"));			
 			}			
-			for (int skillBookId : mobSkillBooks) {
+			for (int skillBookId : mobSkillBooks.keySet()) {
 				SkillBook skillBook = null;
-				if (!WorldServer.AllSkillBooks.containsKey(skillBookId)) {					
+				if (!WorldServer.AllSkillBooks.containsKey(skillBookId)) {
+					System.out.println("Error, book not loaded.");
 					throw new IllegalStateException("Critical error, skillbooks do not align.");				
 				}
-				loadedPlayer.addBook(skillBookId, WorldServer.AllSkillBooks.get(skillBookId));
+				loadedPlayer.addBook(WorldServer.AllSkillBooks.get(skillBookId), mobSkillBooks.get(skillBookId));
 			}		
 					
 //		} catch (SQLException e) {

@@ -2,6 +2,8 @@ package interfaces;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import processes.Equipment.EquipmentEnum;
 import processes.SendMessage;
 import processes.Skill;
@@ -22,7 +24,7 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public String getDescription();
 	public String getShortDescription();
 	public int getXpWorth();
-	public void takeDamage(List<Type> types, int d);
+	public void takeDamage(Set<Type> types, int d);
 	public void tell(String msg);
 	public void tellLine(String msg);
 	public void addExperience(int exp);
@@ -41,7 +43,7 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public void addEffect(Effect effect);
 //	public Effect getEffect(String effect); Can't figure out if I need this yet or not. Can't be a String atm though.
 	public void runTickEffects();
-	public int runEffects(List<Type> incomingTypes, int damagey);
+	public int runEffects(Set<Type> incomingTypes, int damagey);
 	public boolean hasEffect(Effect effect);
 	public void removeEffect(Effect effect);
 	public int getBaseDamage();
@@ -53,15 +55,13 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public void setBalance(boolean value);
 //	public boolean hasWeaponType(Type type);
 	public void removeItem(Holdable item);
-	public void addBook(int id, SkillBook skillBook);
+	public void addBook(SkillBook skillBook, int progress);
 	public boolean isControlled();
 	public void controlStatus(boolean statusChange);
 	public boolean save();
 	//public static Mobile newMobile();
 	public void setStartup(boolean b);
 	public SendMessage getSendBack();
-	public Map<Integer, SkillBook> getSkillBookList();
-	public void getNewSkillBooks(Mobile player);
 //	public Equipment getEquipment();
 	public void equip(EquipmentEnum slot, Equipable item);
 	public void unequip(Equipable item);
@@ -69,4 +69,6 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public EquipmentEnum findEquipment(String itemName);
 	public Equipable getEquipmentInSlot(EquipmentEnum slot);
 	public void removeFromWorld();
+	public void displayPrompt();
+	public void setSendBack(SendMessage sendBack);
 }

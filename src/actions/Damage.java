@@ -25,9 +25,9 @@ public class Damage extends Action {
 	}	
 	
 	@Override
-	public boolean activate(Skill s) {
-		ArrayList<Container> loc = where.findLoc(s);
-		ArrayList<Mobile> target = who.findTarget(s, loc);
+	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+		ArrayList<Container> loc = where.findLoc(s, fullCommand, currentPlayer);
+		ArrayList<Mobile> target = who.findTarget(s, fullCommand, currentPlayer, loc);
 		if (loc != null && target != null) {
 			for (Mobile m : target) {
 				m.takeDamage(s.getTypes(), intensity);

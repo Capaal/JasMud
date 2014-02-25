@@ -2,6 +2,7 @@ package actions;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+
 import interfaces.*;
 import processes.SQLInterface;
 import processes.Skill;
@@ -25,13 +26,13 @@ public class Get extends Action {
 	// Forcing 1 locations right now, need a better way to ensure no duplications of item.
 	// TODO right now it isn't versatile enough, needs to move from any container to any other container.
 	@Override
-	public boolean activate(Skill s) {
-		String toGet = s.getStringInfo(Syntax.ITEM);
-		for (Container c : where.findLoc(s)) {
+	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+		String toGet = s.getStringInfo(Syntax.ITEM, fullCommand);
+		for (Container c : where.findLoc(s, fullCommand, currentPlayer)) {
 			Holdable item = c.getHoldableFromString(toGet);
 			if (item != null) { 
 				c.removeItemFromLocation(item);
-				Mobile m = who.findTarget(s, where.findLoc(s)).get(0);
+				Mobile m = who.findTarget(s, fullCommand, currentPlayer, where.findLoc(s, fullCommand, currentPlayer)).get(0);
 				m.acceptItem(item);
 				item.setContainer(m);
 				m.tell("You pick up a " + item.getShortDescription() + ".");

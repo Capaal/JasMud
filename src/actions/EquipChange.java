@@ -86,10 +86,10 @@ public class EquipChange extends Action {
 	
 	
 	@Override
-	public boolean activate(Skill s) {
-		ArrayList<Container> loc = where.findLoc(s);
-		ArrayList<Mobile> target = who.findTarget(s, loc);
-		String slotString = s.getStringInfo(Syntax.SLOT);
+	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+		ArrayList<Container> loc = where.findLoc(s, fullCommand, currentPlayer);
+		ArrayList<Mobile> target = who.findTarget(s, fullCommand, currentPlayer, loc);
+		String slotString = s.getStringInfo(Syntax.SLOT, fullCommand);
 		EquipmentEnum slotEnum;
 		if (slotString.toLowerCase().equals("left")) {
 			slotEnum = EquipmentEnum.LEFTHAND;
@@ -101,7 +101,7 @@ public class EquipChange extends Action {
 		if (loc != null && target != null) {
 			for (Mobile m : target) {
 				if (equip) {
-					Equipable toMove = (Equipable) m.getHoldableFromString(s.getStringInfo(Syntax.ITEM));
+					Equipable toMove = (Equipable) m.getHoldableFromString(s.getStringInfo(Syntax.ITEM, fullCommand));
 					if (!(toMove instanceof Equipable)) {
 						return false;
 					}
@@ -120,7 +120,7 @@ public class EquipChange extends Action {
 					m.equip(slotEnum, toMove);				
 				} else {
 					if (slotEnum == null) {
-						slotEnum = m.findEquipment(s.getStringInfo(Syntax.ITEM));
+						slotEnum = m.findEquipment(s.getStringInfo(Syntax.ITEM, fullCommand));
 					/*	Collection<StdItem> e = m.getEquipment().values();
 						String slot = s.getStringInfo(Syntax.SLOT);
 						boolean success = false;

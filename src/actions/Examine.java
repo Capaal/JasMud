@@ -19,12 +19,12 @@ public class Examine extends Action {
 	}
 	
 	@Override
-	public boolean activate(Skill s) {
-		String toExamine = UsefulCommands.returnTarget(s.getFullCommand());			
-		for (Container c : where.findLoc(s)) {
+	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+		String toExamine = UsefulCommands.returnTarget(fullCommand);			
+		for (Container c : where.findLoc(s, fullCommand, currentPlayer)) {
 			for (Holdable h : c.getInventory()) {
 				if (h.getName().equals(toExamine) || (h.getName() + h.getId()).equals(toExamine)) {
-					s.getCurrentPlayer().tell(h.getDescription());
+					currentPlayer.tell(h.getDescription());
 					return true;
 				}
 			}
