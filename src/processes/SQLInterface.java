@@ -61,23 +61,6 @@ public class SQLInterface {
 		disconnect();
 	}
 	
-	public static void newMobile(int user, String name, String sex, String birthdate) {
-		makeConnection();
-	/*	try {
-			stmt = con.createStatement();
-			int affected = 0;
-			affected = stmt.executeUpdate("INSERT INTO mobile VALUES (NULL, '" + user + "', '" + name + "', CURDATE(), '" + birthdate + "')");
-			if (affected > 0) {
-				System.out.println("Insert successful.");
-			} else {
-				System.out.println("Insert failure.");
-			} 
-		} catch (SQLException e) {
-				System.out.println("Error: " + e.toString());
-		}*/
-		disconnect();
-	}
-	
 	/**
 	 * Accesses database and loops through every single location entry, creates a new location object from database data,
 	 * and registers the location with the global location list.
@@ -238,7 +221,7 @@ public class SQLInterface {
 	 * Must be run after "connect()" and "loadLocations()" and is very closely related to "determineActions()".
 	 * @param name Name of the mobile being loaded, including id for non-heroes.
 	 * @param password Password of the mobile being loaded, however correct password will have been checked previously.
-	 * @return Returns the loaded and completely built and registered Mobile.
+	 * @return Returns the loaded and completely built and registered Mobile or Null.
 	 */
 	public static Mobile loadPlayer(String name, String password) throws SQLException {
 		if (name == null || password == null) {
@@ -281,7 +264,7 @@ public class SQLInterface {
 			
 			sql = ("SELECT SKILLBOOKID, MOBPROGRESS FROM skillbooktable WHERE MOBID='" + mobid + "'");
 			rs = stmt.executeQuery(sql);
-			
+			//Skillbook id --> skillbook progress for this particular mob
 			Map<Integer, Integer> mobSkillBooks = new HashMap<Integer, Integer>();
 			while (rs.next()) {
 				mobSkillBooks.put(rs.getInt("SKILLBOOKID"), rs.getInt("MOBPROGRESS"));			

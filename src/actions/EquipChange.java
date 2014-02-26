@@ -96,45 +96,43 @@ public class EquipChange extends Action {
 			slotEnum = EquipmentEnum.RIGHTHAND;
 		} else {
 			slotEnum = null;
-		}
-		if (loc != null && target != null) {
-			for (Mobile m : target) {
-				if (equip) {
-					Holdable toMove = m.getHoldableFromString(s.getStringInfo(Syntax.ITEM, fullCommand));
-					EnumSet<EquipmentEnum> slots = toMove.getAllowedEquipSlots();
-					if (slots == null) {
+		}		
+		for (Mobile m : target) {
+			if (equip) {
+				Holdable toMove = m.getHoldableFromString(s.getStringInfo(Syntax.ITEM, fullCommand));
+				EnumSet<EquipmentEnum> slots = toMove.getAllowedEquipSlots();
+				if (slots == null) {
+					return false;
+				}
+				if (slotEnum == null) {
+					for (EquipmentEnum st : slots) {
+						if (m.getEquipmentInSlot(st) == null) {
+							slotEnum = st;
+							break;
+						}
+					}
+				}
+				m.equip(slotEnum, toMove);				
+			} else {
+				if (slotEnum == null) {
+					slotEnum = m.findEquipment(s.getStringInfo(Syntax.ITEM, fullCommand));
+				/*	Collection<StdItem> e = m.getEquipment().values();
+					String slot = s.getStringInfo(Syntax.SLOT);
+					boolean success = false;
+					for (StdItem i : e) {
+						String posName = i.getName().toLowerCase();					
+						if (posName.equals(item) || (posName + i.getId()).equals(item)) {
+							m.getEquipment().unequipItem(i);
+							success = true;
+						}
+					}
+					if (!success) {
 						return false;
-					}
-					if (slotEnum == null) {
-						for (EquipmentEnum st : slots) {
-							if (m.getEquipmentInSlot(st) == null) {
-								slotEnum = st;
-								break;
-							}
-						}
-					}
-					m.equip(slotEnum, toMove);				
-				} else {
-					if (slotEnum == null) {
-						slotEnum = m.findEquipment(s.getStringInfo(Syntax.ITEM, fullCommand));
-					/*	Collection<StdItem> e = m.getEquipment().values();
-						String slot = s.getStringInfo(Syntax.SLOT);
-						boolean success = false;
-						for (StdItem i : e) {
-							String posName = i.getName().toLowerCase();					
-							if (posName.equals(item) || (posName + i.getId()).equals(item)) {
-								m.getEquipment().unequipItem(i);
-								success = true;
-							}
-						}
-						if (!success) {
-							return false;
-						}*/
-					}
-					m.unequipFromSlot(slotEnum);					
-				}				
-			}		
-		}
+					}*/
+				}
+				m.unequipFromSlot(slotEnum);					
+			}				
+		}			
 		return true;
 	}
 	

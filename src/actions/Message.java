@@ -40,15 +40,13 @@ public class Message extends Action {
 			tNames.add(msg.getString(s, fullCommand, currentPlayer));
 		}
 		ArrayList<Mobile> targs = who.findTarget(s, fullCommand, currentPlayer, where.findLoc(s, fullCommand, currentPlayer));
-		if (targs != null) {
-			for (Mobile m : targs) {
-				if (m != null && m.isControlled()) {
-					System.out.println(msg);
-					System.out.println(tNames);
-					m.tell(String.format(msg, tNames.toArray()));
-				}
+		for (Mobile m : targs) {
+			if (m != null && m.isControlled()) {
+				System.out.println(msg);
+				System.out.println(tNames);
+				m.tell(String.format(msg, tNames.toArray()));
 			}
-		}
+		}		
 		return true;
 	}
 	

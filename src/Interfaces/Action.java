@@ -131,9 +131,8 @@ public abstract class Action {
 				Mobile t = WorldServer.mobList.get(s.getStringInfo(Syntax.TARGET, fullCommand));
 				if (t != null) {
 					loc.add(t.getContainer());
-					return loc;
 				}				
-				return null;
+				return loc;
 			}
 		},
 		
@@ -221,7 +220,7 @@ public abstract class Action {
 						return targ;
 					}
 				}
-				return null;					
+				return targ;					
 			}
 		},
 		// handles grabbing JUST one target or JUST self poorly.
@@ -230,11 +229,15 @@ public abstract class Action {
 			public ArrayList<Mobile> findTarget(Skill s, String fullCommand, Mobile currentPlayer, ArrayList<Container> Containers) {
 				ArrayList<Mobile> targs = new ArrayList<Mobile>();
 				ArrayList<Mobile> targets = TARGET.findTarget(s, fullCommand, currentPlayer, Containers);
+				Mobile self = null;
+				ArrayList<Mobile> selfs = SELF.findTarget(s, fullCommand, currentPlayer, Containers);
 				Mobile target = null;
-				if (targets != null) {
+				if (!targets.isEmpty() && !selfs.isEmpty()) {
 					target = targets.get(0);
-				}
-				Mobile self = (SELF.findTarget(s, fullCommand, currentPlayer, Containers)).get(0);
+					self = selfs.get(0);
+				} else {
+					return targs;
+				}			
 				for (Container l : Containers) {
 					for (Holdable h : l.getInventory()) {
 						if (h instanceof Mobile && h != target && h != self) {
@@ -243,23 +246,23 @@ public abstract class Action {
 					}
 					return targs;
 				}
-				return null;					
+				return targs;					
 			}
 		},
 		
 		ALLIES() {
 			@Override
 			public ArrayList<Mobile> findTarget(Skill s, String fullCommand, Mobile currentPlayer, ArrayList<Container> Containers) {
-				
-				return null;
+				//TODO
+				return new ArrayList<Mobile>();
 			}
 		},
 		
 		ENEMIES() {
 			@Override
 			public ArrayList<Mobile> findTarget(Skill s, String fullCommand, Mobile currentPlayer, ArrayList<Container> Containers) {
-				
-				return null;
+				//TODO
+				return new ArrayList<Mobile>();
 			}
 		};
 		

@@ -1,6 +1,7 @@
 package actions;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import processes.SQLInterface;
@@ -27,7 +28,11 @@ public class Look extends Action {
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		String dir = s.getStringInfo(Syntax.DIRECTION, fullCommand);		
 		if (!dir.equals("")) {
-			for (Container c : where.findLoc(s, fullCommand, currentPlayer)) {
+			ArrayList<Container> locs = where.findLoc(s, fullCommand, currentPlayer);
+			if (locs.isEmpty()) {
+				return false;
+			}
+			for (Container c : locs) {
 				if (c != null) {
 					c.look(currentPlayer);
 				}

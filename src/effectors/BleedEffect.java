@@ -1,6 +1,7 @@
 package effectors;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import actions.Damage;
@@ -31,7 +32,11 @@ public class BleedEffect extends Action {
 
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
-		for (Mobile m : who.findTarget(s, fullCommand, currentPlayer,  where.findLoc(s, fullCommand, currentPlayer))) {
+		ArrayList<Mobile> mobs = who.findTarget(s, fullCommand, currentPlayer,  where.findLoc(s, fullCommand, currentPlayer));
+		if (mobs.isEmpty()) {
+			return false;
+		}
+		for (Mobile m : mobs) {
 			m.addEffect(new Bleed(m, duration));
 		}
 		return true;

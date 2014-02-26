@@ -21,9 +21,7 @@ public class Say extends Action {
 		Where where = Where.HERE;	
 		StringBuffer sb = new StringBuffer();
 		sb.append(currentPlayer.getName() + " says, \"");
-		sb.append(s.getStringInfo(Syntax.LIST, fullCommand));
-		
-		
+		sb.append(s.getStringInfo(Syntax.LIST, fullCommand));		
 	/*	
 		String fullCommand = s.getFullCommand();
 		StringTokenizer st = UsefulCommands.getST(fullCommand);

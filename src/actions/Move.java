@@ -1,7 +1,9 @@
 package actions;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+
 import processes.SQLInterface;
 import processes.Skill;
 import interfaces.*;
@@ -25,7 +27,11 @@ public class Move extends Action {
 	// Currently gets 1 location poorly, need a better Where ENUM to handle 1 location away. Or something else.
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {	
 		for (Mobile m : who.findTarget(s, fullCommand, currentPlayer, where.findLoc(s, fullCommand, currentPlayer))) {
-			Container c = finalLoc.findLoc(s, fullCommand, currentPlayer).get(0);		
+			ArrayList<Container> locs = finalLoc.findLoc(s, fullCommand, currentPlayer);
+			if (locs.isEmpty()) {
+				return false;
+			}
+			Container c = locs.get(0);		
 			m.getContainer().removeItemFromLocation(m);
 			m.setContainer(c);
 			c.acceptItem(m);

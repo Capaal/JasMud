@@ -28,13 +28,13 @@ public class Damage extends Action {
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		ArrayList<Container> loc = where.findLoc(s, fullCommand, currentPlayer);
 		ArrayList<Mobile> target = who.findTarget(s, fullCommand, currentPlayer, loc);
-		if (loc != null && target != null) {
-			for (Mobile m : target) {
-				m.takeDamage(s.getTypes(), intensity);
-			}
-			return true;			
+		if (target.isEmpty()) {
+			return false;
 		}
-		return false;
+		for (Mobile m : target) {
+			m.takeDamage(s.getTypes(), intensity);
+		}
+		return true;
 	}
 	
 	/*@Override
