@@ -49,7 +49,7 @@ import interfaces.*;
 import processes.*;
 import processes.Equipment.EquipmentEnum;
 // all items are not actually equipable, should be pushed down to subclass
-public class StdItem implements Holdable, Equipable {
+public class StdItem implements Holdable {
 	
 	private final String name;
 	private final int id;	

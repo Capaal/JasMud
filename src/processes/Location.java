@@ -1,8 +1,12 @@
 package processes;
 
-import interfaces.*;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import java.util.*;
+import interfaces.*;
 
 
 // Contains all information relating to each "room" a player may visit.
@@ -12,9 +16,9 @@ public class Location implements Container {
 	private final int id;
 	private final String name;
 	private final String description;
-	public ArrayList<Holdable> inventory = new ArrayList<Holdable>();
+	public Set<Holdable> inventory = new HashSet<Holdable>();
 	private final GroundType groundType;	
-	private final TreeMap<String, Location> locationMap;
+	private final Map<Direction, Location> locationMap;
 	
 	// The BUILDER is an internal class meant to be used to instantly build a new location.
 	// It allows the constructor to more clearly indicate what is happening, and allow variable information.
@@ -31,8 +35,8 @@ public class Location implements Container {
 		private String name = "blank";
 		private String description = "blank";
 		private GroundType groundType = GroundType.GROUND;			
-		private TreeMap<String, Location> locationMap = new TreeMap<String, Location>();
-		private HashMap<Integer, String> locationConnections = new HashMap<Integer, String>();
+		private Map<Direction, Location> locationMap = new EnumMap<Direction, Location>(Direction.class);
+		private Map<Integer, Direction> locationConnections = new HashMap<Integer, Direction>();
 		
 		public Builder(int val) {
 			if (WorldServer.locationCollection.containsKey(val)) {
@@ -44,29 +48,34 @@ public class Location implements Container {
 		public Builder name(String val) {name = val;return this;}		
 		public Builder description(String val) {description = val;return this;}		
 		public Builder groundType(GroundType val) {groundType = val;return this;}		
-		public Builder north(int futureId, String connectionDirection) {buildDirections(id, "north", futureId, connectionDirection);return this;}			
-		public Builder northEast(int futureId, String connectionDirection) {buildDirections(id, "northeast", futureId, connectionDirection);return this;}			
-		public Builder east(int futureId, String connectionDirection) {buildDirections(id, "east", futureId, connectionDirection);return this;}				
-		public Builder southEast(int futureId, String connectionDirection) {buildDirections(id, "southeast", futureId, connectionDirection);return this;}		
-		public Builder south(int futureId, String connectionDirection) {buildDirections(id, "south", futureId, connectionDirection);return this;}			
-		public Builder southWest(int futureId, String connectionDirection) {buildDirections(id, "southwest", futureId, connectionDirection);return this;}			
-		public Builder west(int futureId, String connectionDirection) {buildDirections(id, "west", futureId, connectionDirection);return this;}			
-		public Builder northWest(int futureId, String connectionDirection) {buildDirections(id, "northwest", futureId, connectionDirection);return this;}			
-		public Builder up(int futureId, String connectionDirection) {buildDirections(id, "up", futureId, connectionDirection);return this;}			
-		public Builder down(int futureId, String connectionDirection) {buildDirections(id, "down", futureId, connectionDirection);return this;}		
-		public Builder in(int futureId, String connectionDirection) {buildDirections(id, "in", futureId, connectionDirection);return this;}			
-		public Builder out(int futureId, String connectionDirection) {buildDirections(id, "out", futureId, connectionDirection);return this;}			
+		public Builder north(int futureId, String connectionDirection) {buildDirections(id, Direction.NORTH, futureId, connectionDirection);return this;}			
+		public Builder northEast(int futureId, String connectionDirection) {buildDirections(id, Direction.NORTHEAST, futureId, connectionDirection);return this;}			
+		public Builder east(int futureId, String connectionDirection) {buildDirections(id, Direction.EAST, futureId, connectionDirection);return this;}				
+		public Builder southEast(int futureId, String connectionDirection) {buildDirections(id, Direction.SOUTHEAST, futureId, connectionDirection);return this;}		
+		public Builder south(int futureId, String connectionDirection) {buildDirections(id, Direction.SOUTH, futureId, connectionDirection);return this;}			
+		public Builder southWest(int futureId, String connectionDirection) {buildDirections(id, Direction.SOUTHWEST, futureId, connectionDirection);return this;}			
+		public Builder west(int futureId, String connectionDirection) {buildDirections(id, Direction.WEST, futureId, connectionDirection);return this;}			
+		public Builder northWest(int futureId, String connectionDirection) {buildDirections(id, Direction.NORTHWEST, futureId, connectionDirection);return this;}			
+		public Builder up(int futureId, String connectionDirection) {buildDirections(id, Direction.UP, futureId, connectionDirection);return this;}			
+		public Builder down(int futureId, String connectionDirection) {buildDirections(id, Direction.DOWN, futureId, connectionDirection);return this;}		
+		public Builder in(int futureId, String connectionDirection) {buildDirections(id, Direction.IN, futureId, connectionDirection);return this;}			
+		public Builder out(int futureId, String connectionDirection) {buildDirections(id, Direction.OUT, futureId, connectionDirection);return this;}			
 		
-		private Builder buildDirections(int currentId, String currentDirection,  int futureId, String futureD) {
+		private Builder buildDirections(int currentId, Direction currentDirection,  int futureId, String futureD) {
+			// SQL will call for a direction even if there is no location here, so just returns.
 			if (currentId == 0 || futureD == null) {
-				System.out.println("Build directions was called uselessly for some reason.");
 				return this;				
 			}
-			String futureDirection = futureD.toLowerCase();
+			Direction futureDirection = Direction.NORTH;
+			try {
+				futureDirection = Direction.valueOf(futureD.toUpperCase());
+			} catch (IllegalArgumentException e) {
+				System.out.println(futureD + " is not a valid direction loaded from database. CRITICAL ERROR, Defaulted to north.");				
+			}
 			if (WorldServer.locationCollection.containsKey(futureId)) {
 				Location futureLoc = WorldServer.locationCollection.get(futureId);								
 				locationConnections.put(futureId, futureDirection);				
-				locationMap.put(currentDirection,  futureLoc);		
+				locationMap.put(currentDirection, futureLoc);		
 			} else {
 				System.out.println("I think a location was made that is pointing to an unmade location: " + currentId);
 			}
@@ -102,13 +111,13 @@ public class Location implements Container {
 		for (int s : builder.locationConnections.keySet()){
 			Location futureLoc = WorldServer.locationCollection.get(s);
 			if (futureLoc != null) {
-				String currentDirection = builder.locationConnections.get(s);
+				Direction currentDirection = builder.locationConnections.get(s);
 				futureLoc.setLocation(this, currentDirection);
 			}
 		}
 	}
 	
-	private void setLocation(Location futureLoc, String currentDirection) {
+	private void setLocation(Location futureLoc, Direction currentDirection) {
 		if (futureLoc != null) {
 			this.locationMap.put(currentDirection, futureLoc);
 		} else {
@@ -120,13 +129,13 @@ public class Location implements Container {
 		boolean atLeastOne = false;
 		String toSay = "You can see no exits.";
 		StringBuffer sb = new StringBuffer();
-		for (String k : locationMap.keySet()) {
+		for (Direction k : locationMap.keySet()) {
 			if (!atLeastOne) {
 				sb.append("You can see these exits: ");
-				sb.append(k);
+				sb.append(k.toString());
 				atLeastOne = true;
 			} else {
-				sb.append(", " + k);
+				sb.append(", " + k.toString());
 			}			
 		}
 		if (atLeastOne) {
@@ -153,7 +162,7 @@ public class Location implements Container {
 	//Displays items
 	public void displayAll(Mobile currentPlayer) {
 		boolean anItem = false;
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append("Looking around you see: ");
 		for (Holdable h : inventory) {
 			sb.append(UsefulCommands.ANSI.BLUE + h.getName() + ". " + UsefulCommands.ANSI.SANE);
@@ -164,29 +173,27 @@ public class Location implements Container {
 		}
 	}
 			
-	public int getId() {return id;}		
-	public void setName(String name) {this.name = name;}	
-	public void setDescription(String desc) {this.description = desc;}	
-	public void setGroundType(GroundType type) {this.groundType = type;}
+	public int getId() {return id;}
 	public GroundType getGroundType() {return groundType;}	
 	public void acceptItem(Holdable newItem) {inventory.add(newItem);}	
 		
 	public Location getLocation(String dir) {
 		String trueLocation = UsefulCommands.getDirName(dir);
-		if (trueLocation != null) {
-			return locationMap.get(trueLocation);
-		}
-		return null;
+		Direction locDir = null;
+		try {
+			locDir = Direction.valueOf(trueLocation.toUpperCase());
+		} catch (IllegalArgumentException e) {
+			return null;
+		}	
+		return locationMap.get(locDir);
 	}		
 	
 	public void removeItemFromLocation(Holdable oldItem) {
-		int indexOfItem = inventory.indexOf(oldItem);
-		inventory.remove(indexOfItem);	
-
+		inventory.remove(oldItem);	
 	}
 	
-	public ArrayList<Holdable> getInventory() {
-		return new ArrayList<Holdable>(this.inventory);
+	public Set<Holdable> getInventory() {
+		return new HashSet<Holdable>(this.inventory);
 	}
 	
 	@Override
@@ -211,10 +218,52 @@ public class Location implements Container {
 		return getLocation(dir);
 	}
 	
-	
-	
-	public enum GroundType {
+	public enum Direction {
+		NORTH() {
+			
+		},
+		NORTHEAST() {
+			
+		},
+		EAST() {
+			
+		},
+		SOUTHEAST() {
+			
+		},
+		SOUTH() {
+			
+		},
+		SOUTHWEST() {
+			
+		},
+		WEST() {
+			
+		},
+		NORTHWEST() {
+			
+		},
+		UP() {
+			
+		},
+		DOWN() {
+			
+		},
+		IN() {
+			
+		},
+		OUT() {
+			
+		};
+		private Direction() {}
 		
+		@Override
+		public String toString() {
+			return super.toString().toLowerCase();
+		}
+	}
+	
+	public enum GroundType {		
 		// GROUND might get broken up into many types of ground? rock, sand, dirt and so on?
 		GROUND() {
 			
@@ -235,5 +284,4 @@ public class Location implements Container {
 		private GroundType() {}
 		
 	}
-
 }

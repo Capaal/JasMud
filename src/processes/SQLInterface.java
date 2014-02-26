@@ -466,7 +466,8 @@ public class SQLInterface {
 							+ " WHERE syntaxtable.SKILLID = '" + skillId + "' ORDER BY SYNTAXPOS ASC");
 					rs1 = stmt.executeQuery(sql1);
 					if (!rs1.isBeforeFirst() ) {    
-						 System.out.println("No data for syntax"); 					} 
+						 System.out.println("No data for syntax on skill: " + i); 				
+					} 
 					ArrayList<Syntax> skillSyntax = new ArrayList<Syntax>();
 					while (rs1.next()) {						
 						skillSyntax.add(Syntax.valueOf(rs1.getString("SYNTAXTYPE")));
@@ -475,9 +476,6 @@ public class SQLInterface {
 					sql1 = ("SELECT type.TYPE FROM skilltypetable JOIN type ON skilltypetable.TYPEID = type.TYPEID"
 							+ " WHERE skilltypetable.SKILLID = " + skillId + ";");
 					rs1 = stmt.executeQuery(sql1);
-					if (!rs1.isBeforeFirst() ) {    
-						 System.out.println("No data for skilltable for skill: " + skillId); 
-					} 
 					ArrayList<Type> skillType = new ArrayList<Type>();
 					while (rs1.next()) {						
 						skillType.add(Type.valueOf(rs1.getString("TYPE")));

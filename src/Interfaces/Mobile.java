@@ -63,11 +63,11 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public void setStartup(boolean b);
 	public SendMessage getSendBack();
 //	public Equipment getEquipment();
-	public void equip(EquipmentEnum slot, Equipable item);
-	public void unequip(Equipable item);
+	public void equip(EquipmentEnum slot, Holdable item);
+	public void unequip(Holdable item);
 	public void unequipFromSlot(EquipmentEnum slot);
 	public EquipmentEnum findEquipment(String itemName);
-	public Equipable getEquipmentInSlot(EquipmentEnum slot);
+	public Holdable getEquipmentInSlot(EquipmentEnum slot);
 	public void removeFromWorld();
 	public void displayPrompt();
 	public void setSendBack(SendMessage sendBack);

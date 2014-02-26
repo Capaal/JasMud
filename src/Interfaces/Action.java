@@ -147,13 +147,12 @@ public abstract class Action {
 			}
 		},
 		
-		// Only works with second word at the moment.
 		ONEAWAY() {
 			@Override
 			public ArrayList<Container> findLoc(Skill s, String fullCommand, Mobile currentPlayer) {
 				ArrayList<Container> loc = new ArrayList<Container>();
 				String dir = s.getStringInfo(Syntax.DIRECTION, fullCommand);
-				if (dir != null) {
+				if (!dir.equals("")) {
 					loc.add(currentPlayer.getContainer().getContainer(dir));
 				}
 				return loc;

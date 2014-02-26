@@ -31,7 +31,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	protected int physicalMult; //???
 	protected boolean isDead;
 	protected int speed; // ??? Or should this and physical mult be class constants?
-	protected ArrayList<Holdable> inventory; // Make this be combined with equipment as its own class?
+	protected Set<Holdable> inventory; // Make this be combined with equipment as its own class?
 	protected Equipment equipment;	
 	
 	protected String description;
@@ -102,7 +102,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		private int speed = 3000;
 		private int xpWorth = 1;
 		private int baseDamage = 5;
-		private ArrayList<Holdable> inventory = new ArrayList<Holdable>();
+		private Set<Holdable> inventory = new HashSet<Holdable>();
 		private Equipment equipment = new Equipment();
 		
 		private String password = "";
@@ -301,8 +301,8 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		return null;
 	}
 	@Override
-	public ArrayList<Holdable> getInventory() {
-		return new ArrayList<Holdable>(this.inventory);
+	public Set<Holdable> getInventory() {
+		return new HashSet<Holdable>(this.inventory);
 	}
 	
 	@Override
@@ -313,8 +313,8 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 				return h;
 			}
 		}
-		Collection<Equipable> items =  equipment.values();
-		for (Equipable item : items) {
+		Collection<Holdable> items =  equipment.values();
+		for (Holdable item : items) {
 			if (item != null) {
 				String posName = item.getName().toLowerCase();					
 				if (posName.equals(holdableString) || (posName + item.getId()).equals(holdableString)) {
@@ -346,17 +346,6 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	@Override
 	public void displayAll(Mobile currentPlayer) {
 		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void setName(String name) {
-		// TODO Auto-generated method stub
-		// probably shouldn't even be possible....
-		
-	}
-	@Override
-	public void setDescription(String desc) {
-		description = desc;
 		
 	}
 	@Override
@@ -443,7 +432,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		this.balance = value;
 	}
 	@Override
-	public void equip(EquipmentEnum slot, Equipable item) {
+	public void equip(EquipmentEnum slot, Holdable item) {
 		if (inventory.remove(item)) {
 			equipment.equip(slot, item);
 		} else {
@@ -451,18 +440,18 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		}
 	}
 	@Override
-	public void unequip(Equipable item) {
+	public void unequip(Holdable item) {
 		equipment.unequipItem(item);
 		inventory.add(item);
 	}
 	@Override
-	public Equipable getEquipmentInSlot(EquipmentEnum slot) {
+	public Holdable getEquipmentInSlot(EquipmentEnum slot) {
 		return equipment.getValue(slot);
 	}
 	@Override
 	public EquipmentEnum findEquipment(String itemName) {
-		Collection<Equipable> items =  equipment.values();
-		for (Equipable item : items) {
+		Collection<Holdable> items =  equipment.values();
+		for (Holdable item : items) {
 			if (item != null) {
 				String posName = item.getName().toLowerCase();					
 				if (posName.equals(itemName) || (posName + item.getId()).equals(itemName)) {
@@ -633,6 +622,16 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public void setSendBack(SendMessage sendBack) {
 		this.sendBack = sendBack;
 		
+	}
+	@Override
+	public EnumSet<EquipmentEnum> getAllowedEquipSlots() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public boolean containsType(Type type) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 }

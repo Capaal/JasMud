@@ -22,7 +22,6 @@ public class SkillBook {
 	
 	public void addSkill(Skill newSpell) {
 		skillList.add(newSpell);
-		this.toBeSaved = true;
 	}
 	
 	public boolean getToBeSave() {

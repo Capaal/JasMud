@@ -1,15 +1,10 @@
 package actions;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-
-import actions.Message.msgStrings;
 import processes.SQLInterface;
 import processes.Skill;
 import interfaces.*;
-import interfaces.Action.Where;
-import interfaces.Action.Who;
 
 public class Move extends Action {
 		

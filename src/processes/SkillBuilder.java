@@ -49,7 +49,6 @@ public class SkillBuilder {
 	public void complete() {
 		for (SkillBook book : attachedBooks) {
 			book.addSkill(new Skill(this));
-			book.setToBeSaved(true);
 		}
 		toDefault();
 	}

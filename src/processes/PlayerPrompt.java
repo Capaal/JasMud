@@ -64,7 +64,7 @@ public class PlayerPrompt extends Thread {
 			//	int mobId = (int) SQLInterface.viewData(blockQuery, "MOBID");
 				// Only accounts for a single book at the moment.
 				String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values((SELECT MOBID FROM MOBSTATS"
-						+ " WHERE MOBNAME='" + enteredName + "'), 1, 1);";
+						+ " WHERE MOBNAME='" + enteredName + "'), 1, 1) ON DUPLICATE KEY UPDATE MOBPROGRESS=1;";
 				try {
 					SQLInterface.saveAction(insertBook);
 				} catch (SQLException e) {

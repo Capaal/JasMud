@@ -1,7 +1,6 @@
 package processes;
 
 import interfaces.Container;
-import interfaces.Equipable;
 import interfaces.Holdable;
 import interfaces.Mobile;
 
@@ -16,18 +15,18 @@ import processes.Location.GroundType;
 // Flaw might be, can anything be worn in multiple places?
 public class Equipment implements Container {
 
-	private Map<EquipmentEnum, Equipable> equipmentToItemMap;
-	private Map<Equipable, EquipmentEnum> itemToEquipmentMap;
+	private Map<EquipmentEnum, Holdable> equipmentToItemMap;
+	private Map<Holdable, EquipmentEnum> itemToEquipmentMap;
 	private Mobile currentPlayer;
 		
 	public Equipment() {
-		equipmentToItemMap = new EnumMap<EquipmentEnum, Equipable>(EquipmentEnum.class);
-		itemToEquipmentMap = new HashMap<Equipable, EquipmentEnum>();		
+		equipmentToItemMap = new EnumMap<EquipmentEnum, Holdable>(EquipmentEnum.class);
+		itemToEquipmentMap = new HashMap<Holdable, EquipmentEnum>();		
 	}
 		
-	public Equipment(Map<EquipmentEnum, Equipable> set) {	
-		equipmentToItemMap = new EnumMap<EquipmentEnum, Equipable>(EquipmentEnum.class);
-		itemToEquipmentMap = new HashMap<Equipable, EquipmentEnum>();
+	public Equipment(Map<EquipmentEnum, Holdable> set) {	
+		equipmentToItemMap = new EnumMap<EquipmentEnum, Holdable>(EquipmentEnum.class);
+		itemToEquipmentMap = new HashMap<Holdable, EquipmentEnum>();
 
 		for (EquipmentEnum key : set.keySet()) {
 			equip(key, set.get(key));
@@ -35,13 +34,13 @@ public class Equipment implements Container {
 	}
 		
 	// This allows gear switching, rather than unequiping then equiping.
-	public void equip(EquipmentEnum k, Equipable v) {
+	public void equip(EquipmentEnum k, Holdable v) {
 		if (equipmentToItemMap.containsKey(k)) {
 			forceEquip(k, v);
 		}
 	}
 		
-	public void forceEquip(EquipmentEnum k, Equipable v) {
+	public void forceEquip(EquipmentEnum k, Holdable v) {
 		equipmentToItemMap.put(k, v);
 		itemToEquipmentMap.put(v, k);	
 		if (v != null) {
@@ -53,28 +52,28 @@ public class Equipment implements Container {
 		equip(slot, null);
 	}
 	
-	public void unequipItem(Equipable item) {
+	public void unequipItem(Holdable item) {
 		EquipmentEnum key = itemToEquipmentMap.get(item);
 		equip(key, null);
 	}
 	
-	public Equipable getValue(EquipmentEnum key) {
+	public Holdable getValue(EquipmentEnum key) {
 		return equipmentToItemMap.get(key);
 	}
 	
-	public EquipmentEnum getKey(Equipable val) {
+	public EquipmentEnum getKey(Holdable val) {
 		return itemToEquipmentMap.get(val);
 	}
 	
-	public Collection<Equipable> values() {
-		Collection<Equipable> values = getKeyToValMap().values();
+	public Collection<Holdable> values() {
+		Collection<Holdable> values = getKeyToValMap().values();
 		if (values.isEmpty()) {
-			return new ArrayList<Equipable>();
+			return new ArrayList<Holdable>();
 		}
 		return values;
 	}
 	
-	private Map<EquipmentEnum, Equipable> getKeyToValMap() {
+	private Map<EquipmentEnum, Holdable> getKeyToValMap() {
 		return equipmentToItemMap;
 	}
 	
@@ -110,8 +109,8 @@ public class Equipment implements Container {
 
 
 	@Override
-	public ArrayList<Holdable> getInventory() {
-		return new ArrayList<Holdable>(values());
+	public Set<Holdable> getInventory() {
+		return new HashSet<Holdable>(values());
 	}
 
 	@Override
@@ -147,18 +146,6 @@ public class Equipment implements Container {
 	@Override
 	public int getId() {
 		return currentPlayer.getId();
-	}
-
-	@Override
-	public void setName(String name) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setDescription(String desc) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

@@ -11,7 +11,6 @@ import processes.Skill;
 import processes.Skill.Syntax;
 import interfaces.Action;
 import interfaces.Container;
-import interfaces.Equipable;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import interfaces.Action.Where;
@@ -101,11 +100,8 @@ public class EquipChange extends Action {
 		if (loc != null && target != null) {
 			for (Mobile m : target) {
 				if (equip) {
-					Equipable toMove = (Equipable) m.getHoldableFromString(s.getStringInfo(Syntax.ITEM, fullCommand));
-					if (!(toMove instanceof Equipable)) {
-						return false;
-					}
-					EnumSet<EquipmentEnum> slots = ((Equipable)toMove).getAllowedEquipSlots();
+					Holdable toMove = m.getHoldableFromString(s.getStringInfo(Syntax.ITEM, fullCommand));
+					EnumSet<EquipmentEnum> slots = toMove.getAllowedEquipSlots();
 					if (slots == null) {
 						return false;
 					}

@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import processes.SQLInterface;
 import processes.Skill;
+import processes.Skill.Syntax;
 import processes.UsefulCommands;
 import interfaces.*;
 import interfaces.Action.Where;
@@ -24,10 +25,12 @@ public class Look extends Action {
 
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
-		String dir = UsefulCommands.getSecondWord(fullCommand);
-		if (dir != null) {
+		String dir = s.getStringInfo(Syntax.DIRECTION, fullCommand);		
+		if (!dir.equals("")) {
 			for (Container c : where.findLoc(s, fullCommand, currentPlayer)) {
-				c.look(currentPlayer);
+				if (c != null) {
+					c.look(currentPlayer);
+				}
 			}
 		} else {
 			for (Container c : Where.HERE.findLoc(s, fullCommand, currentPlayer)) {
