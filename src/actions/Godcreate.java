@@ -281,19 +281,21 @@ public class Godcreate extends Action {
 		}
 		return answer.toLowerCase();
 	}
-		
+	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='GODCREATE' AND BLOCKPOS=" + position + ";";
 		return SQLInterface.returnBlockView(blockQuery);
 	}
-	
+	@Override
 	protected void insertOneself(int position) {
-		String sql = "INSERT IGNORE INTO BLOCK (BLOCKTYPE, BLOCKPOS) VALUES ('GODCREATE', " + position + ",);";
-		try {
-			SQLInterface.saveAction(sql);
-		} catch (SQLException e) {
-			System.out.println("Godcreate failed to save via sql : " + sql);
-			e.printStackTrace();
+		if (selectOneself(position).isEmpty()) {
+			String sql = "INSERT IGNORE INTO BLOCK (BLOCKTYPE, BLOCKPOS) VALUES ('GODCREATE', " + position + ",);";
+			try {
+				SQLInterface.saveAction(sql);
+			} catch (SQLException e) {
+				System.out.println("Godcreate failed to save via sql : " + sql);
+				e.printStackTrace();
+			}
 		}
 	}
 

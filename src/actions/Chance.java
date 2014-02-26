@@ -54,22 +54,24 @@ public class Chance extends Action {
 		}
 		return true;
 	}
-	
+	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		HashMap<String, Object> chanceActionView = action.selectOneself(0);
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='CHANCE' AND INTVALUE=" + chance + " AND BLOCKPOS=" + position
 				+ " AND BLOCKPOINTERONE='" + chanceActionView.get("BLOCKID") + "';";
 		return SQLInterface.returnBlockView(blockQuery);
 	}
-	
+	@Override
 	protected void insertOneself(int position) {
-		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, INTVALUE, BLOCKPOINTERONE) VALUES ('CHANCE', " 
-				+ position + ", " +  chance + ", " + action.getId() + ");";
-		try {
-			SQLInterface.saveAction(sql);
-		} catch (SQLException e) {
-			System.out.println("Chance failed to save via sql : " + sql);
-			e.printStackTrace();
+		if (selectOneself(position).isEmpty()) {
+			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, INTVALUE, BLOCKPOINTERONE) VALUES ('CHANCE', " 
+					+ position + ", " +  chance + ", " + action.getId() + ");";
+			try {
+				SQLInterface.saveAction(sql);
+			} catch (SQLException e) {
+				System.out.println("Chance failed to save via sql : " + sql);
+				e.printStackTrace();
+			}
 		}
 	}
 	@Override

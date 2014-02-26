@@ -65,13 +65,15 @@ public class BalanceCost extends Action {
 	}
 	@Override
 	protected void insertOneself(int position) {
-		String sql = "INSERT INTO block (BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) VALUES ('BALANCECOST', " 
-				+ position + ", '" + goesTo + "', '" + who.toString() + "', '" + where.toString() + "');";
-		try {
-			SQLInterface.saveAction(sql);
-		} catch (SQLException e) {
-			System.out.println("BalanceCost failed to save via sql : " + sql);
-			e.printStackTrace();
+		if (selectOneself(position).isEmpty()) {
+			String sql = "INSERT INTO block (BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) VALUES ('BALANCECOST', " 
+					+ position + ", '" + goesTo + "', '" + who.toString() + "', '" + where.toString() + "');";
+			try {
+				SQLInterface.saveAction(sql);
+			} catch (SQLException e) {
+				System.out.println("BalanceCost failed to save via sql : " + sql);
+				e.printStackTrace();
+			}
 		}
 	}
 	@Override

@@ -50,21 +50,23 @@ public class Look extends Action {
 		}
 		return new Look(newWhere);
 	}
-	
+	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='LOOK' AND BLOCKPOS=" + position
 				+ " AND TARGETWHERE='" + where.toString() + "';";
 		return SQLInterface.returnBlockView(blockQuery);
 	}
-	
+	@Override
 	protected void insertOneself(int position) {
-		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, TARGETWHERE) VALUES ('LOOK', " 
-				+ position + ", '" + where.toString() + "');";
-		try {
-			SQLInterface.saveAction(sql);
-		} catch (SQLException e) {
-			System.out.println("Look failed to save via sql : " + sql);
-			e.printStackTrace();
+		if (selectOneself(position).isEmpty()) {
+			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, TARGETWHERE) VALUES ('LOOK', " 
+					+ position + ", '" + where.toString() + "');";
+			try {
+				SQLInterface.saveAction(sql);
+			} catch (SQLException e) {
+				System.out.println("Look failed to save via sql : " + sql);
+				e.printStackTrace();
+			}
 		}
 	}
 	@Override

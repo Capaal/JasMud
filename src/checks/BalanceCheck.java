@@ -68,13 +68,15 @@ public class BalanceCheck extends Action {
 	}
 	@Override
 	protected void insertOneself(int position) {
-		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) VALUES ('BALANCECHECK', " 
-				+ position + ", '" + isItThis + "', '" + who.toString() + "', '" + where.toString() + "');";
-		try {
-			SQLInterface.saveAction(sql);
-		} catch (SQLException e) {
-			System.out.println("BalanceCheck failed to save via sql : " + sql);
-			e.printStackTrace();
+		if (selectOneself(position).isEmpty()) {
+			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) VALUES ('BALANCECHECK', " 
+					+ position + ", '" + isItThis + "', '" + who.toString() + "', '" + where.toString() + "');";
+			try {
+				SQLInterface.saveAction(sql);
+			} catch (SQLException e) {
+				System.out.println("BalanceCheck failed to save via sql : " + sql);
+				e.printStackTrace();
+			}
 		}
 	}
 	@Override

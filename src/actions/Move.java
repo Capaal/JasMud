@@ -48,21 +48,23 @@ public class Move extends Action {
 		}
 		return new Move(newWho, newWhere, newFinal);
 	}
-	
+	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='MOVE' AND BLOCKPOS=" + position
 				+ " AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "' AND ENDWHERE='" + finalLoc.toString() + "';";
 		return SQLInterface.returnBlockView(blockQuery);
 	}
-	
+	@Override
 	protected void insertOneself(int position) {
-		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE, ENDWHERE) VALUES ('MOVE', " 
-				+ position + ", '" + who.toString() + "', '" + where.toString() + "', '" + finalLoc.toString() + "');";
-		try {
-			SQLInterface.saveAction(sql);
-		} catch (SQLException e) {
-			System.out.println("Move failed to save via sql : " + sql);
-			e.printStackTrace();
+		if (selectOneself(position).isEmpty()) {
+			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE, ENDWHERE) VALUES ('MOVE', " 
+					+ position + ", '" + who.toString() + "', '" + where.toString() + "', '" + finalLoc.toString() + "');";
+			try {
+				SQLInterface.saveAction(sql);
+			} catch (SQLException e) {
+				System.out.println("Move failed to save via sql : " + sql);
+				e.printStackTrace();
+			}
 		}
 	}
 	@Override

@@ -71,13 +71,15 @@ public class MoveCheck extends Action {
 	}
 	@Override
 	protected void insertOneself(int position) {
-		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, GROUNDTYPE, TARGETWHO, TARGETWHERE, ENDWHERE) VALUES ('MOVECHECK', " 
-				+ position + ", '" + moveType.toString() + "', '" + who.toString() + "', '" + where.toString() + "', '" + finalLoc.toString() + "');";
-		try {
-			SQLInterface.saveAction(sql);
-		} catch (SQLException e) {
-			System.out.println("Movecheck failed to save via sql : " + sql);
-			e.printStackTrace();
+		if (selectOneself(position).isEmpty()) {
+			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, GROUNDTYPE, TARGETWHO, TARGETWHERE, ENDWHERE) VALUES ('MOVECHECK', " 
+					+ position + ", '" + moveType.toString() + "', '" + who.toString() + "', '" + where.toString() + "', '" + finalLoc.toString() + "');";
+			try {
+				SQLInterface.saveAction(sql);
+			} catch (SQLException e) {
+				System.out.println("Movecheck failed to save via sql : " + sql);
+				e.printStackTrace();
+			}
 		}
 	}
 	@Override

@@ -47,21 +47,23 @@ public class Damage extends Action {
 		this.id = (int) blockView.get("BLOCKID");
 		return true;
 	}*/
-	
+	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='DAMAGE' AND INTVALUE=" + intensity + " AND BLOCKPOS=" + position
 				+ " AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
 		return SQLInterface.returnBlockView(blockQuery);
 	}
-	
+	@Override
 	protected void insertOneself(int position) {
-		String sql = "INSERT IGNORE INTO BLOCK (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) VALUES ('DAMAGE', " 
-				+ position + ", " +  intensity + ", '" + who.toString() + "', '" + where.toString() + "');";
-		try {
-			SQLInterface.saveAction(sql);
-		} catch (SQLException e) {
-			System.out.println("Damage failed to save via sql : " + sql);
-			e.printStackTrace();
+		if (selectOneself(position).isEmpty()) {
+			String sql = "INSERT IGNORE INTO BLOCK (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) VALUES ('DAMAGE', " 
+					+ position + ", " +  intensity + ", '" + who.toString() + "', '" + where.toString() + "');";
+			try {
+				SQLInterface.saveAction(sql);
+			} catch (SQLException e) {
+				System.out.println("Damage failed to save via sql : " + sql);
+				e.printStackTrace();
+			}
 		}
 	}
 	@Override

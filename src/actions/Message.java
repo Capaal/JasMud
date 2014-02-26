@@ -1,15 +1,16 @@
 package actions;
 
+import interfaces.Action;
+import interfaces.Mobile;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import processes.Location.Direction;
 import processes.SQLInterface;
 import processes.Skill;
 import processes.Skill.Syntax;
-import interfaces.*;
-import interfaces.Action.Where;
-import interfaces.Action.Who;
 
 // Does not seem to be safe from developer mistakes when making new skills.
 // At the moment it can only accept directions to subsitute %s with names, not anything else like "north".
@@ -123,13 +124,15 @@ public class Message extends Action {
 	}
 	@Override
 	protected void insertOneself(int position) {
-		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) VALUES ('MESSAGE', " 
-				+ position + ", '" +  msg + "', '" + who.toString() + "', '" + where.toString() + "');";
-		try {
-			SQLInterface.saveAction(sql);
-		} catch (SQLException e) {
-			System.out.println("Message failed to save via sql : " + sql);
-			e.printStackTrace();
+		if (selectOneself(position).isEmpty()) {
+			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) VALUES ('MESSAGE', " 
+					+ position + ", '" +  msg + "', '" + who.toString() + "', '" + where.toString() + "');";
+			try {
+				SQLInterface.saveAction(sql);
+			} catch (SQLException e) {
+				System.out.println("Message failed to save via sql : " + sql);
+				e.printStackTrace();
+			}
 		}
 	}
 	@Override
@@ -181,7 +184,7 @@ public class Message extends Action {
 		OPPMOVE() {
 			@Override
 			public String getString(Skill s, String fullCommand, Mobile currentPlayer) {
-				oppDirections opp = oppDirections.valueOf((s.getStringInfo(Syntax.DIRECTION, fullCommand)).toUpperCase());
+				Direction opp = Direction.valueOf((s.getStringInfo(Syntax.DIRECTION, fullCommand)).toUpperCase());
 				return opp.getOpp();
 			}
 		},
@@ -195,98 +198,5 @@ public class Message extends Action {
 		
 		private msgStrings(){}
 		public abstract String getString(Skill s, String fullCommand, Mobile currentPlayer);
-	}
-	
-	//Maybe this should be in MOVE instead? SO far this is the only place using these as opposites, which is why it is here.
-	private enum oppDirections {
-		
-		NORTH() {
-			@Override
-			protected String getOpp() {
-				return "south";
-			}
-		},
-		
-		NORTHEAST() {
-			@Override
-			protected String getOpp() {
-				return "southwest";
-			}
-		},
-		
-		EAST() {
-			@Override
-			protected String getOpp() {
-				return "west";
-			}
-		},
-		
-		SOUTHEAST() {
-			@Override
-			protected String getOpp() {
-				return "northwest";
-			}
-		},
-		
-		SOUTH() {
-			@Override
-			protected String getOpp() {
-				return "north";
-			}
-		},
-		
-		SOUTHWEST() {
-			@Override
-			protected String getOpp() {
-				return "northeast";
-			}
-		},
-		
-		WEST() {
-			@Override
-			protected String getOpp() {
-				return "east";
-			}
-		},
-		
-		NORTHWEST() {
-			@Override
-			protected String getOpp() {
-				return "southeast";
-			}
-		},
-		
-		UP() {
-			@Override
-			protected String getOpp() {
-				return "down";
-			}
-		},
-		
-		DOWN() {
-			@Override
-			protected String getOpp() {
-				return "up";
-			}
-		},
-		
-		IN() {
-			@Override
-			protected String getOpp() {
-				return "out";
-			}
-		},
-		
-		OUT() {
-			@Override
-			protected String getOpp() {
-				return "in";
-			}
-		};
-		
-		private oppDirections() {}
-		
-		protected abstract String getOpp();
-		
 	}
 }

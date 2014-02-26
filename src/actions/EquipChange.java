@@ -180,12 +180,14 @@ public class EquipChange extends Action {
 	
 	@Override
 	protected void insertOneself(int position) {
-		String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) VALUES ('EQUIPCHANGE', " 
-				+ position + ", '" + equip + "', '" + who.toString() + "', '" + where.toString() + "');";
-		try {
-			SQLInterface.saveAction(sql);
-		} catch (SQLException e) {
-			System.out.println("Equipchange failed to insert itself: " + sql);
+		if (selectOneself(position).isEmpty()) {
+			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) VALUES ('EQUIPCHANGE', " 
+					+ position + ", '" + equip + "', '" + who.toString() + "', '" + where.toString() + "');";
+			try {
+				SQLInterface.saveAction(sql);
+			} catch (SQLException e) {
+				System.out.println("Equipchange failed to insert itself: " + sql);
+			}
 		}
 	}
 	@Override

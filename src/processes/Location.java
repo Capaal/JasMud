@@ -219,48 +219,95 @@ public class Location implements Container {
 	}
 	
 	public enum Direction {
+		
 		NORTH() {
-			
+			@Override
+			public String getOpp() {
+				return "south";
+			}
 		},
+		
 		NORTHEAST() {
-			
+			@Override
+			public String getOpp() {
+				return "southwest";
+			}
 		},
+		
 		EAST() {
-			
+			@Override
+			public String getOpp() {
+				return "west";
+			}
 		},
+		
 		SOUTHEAST() {
-			
+			@Override
+			public String getOpp() {
+				return "northwest";
+			}
 		},
+		
 		SOUTH() {
-			
+			@Override
+			public String getOpp() {
+				return "north";
+			}
 		},
+		
 		SOUTHWEST() {
-			
+			@Override
+			public String getOpp() {
+				return "northeast";
+			}
 		},
+		
 		WEST() {
-			
+			@Override
+			public String getOpp() {
+				return "east";
+			}
 		},
+		
 		NORTHWEST() {
-			
+			@Override
+			public String getOpp() {
+				return "southeast";
+			}
 		},
+		
 		UP() {
-			
+			@Override
+			public String getOpp() {
+				return "down";
+			}
 		},
+		
 		DOWN() {
-			
+			@Override
+			public String getOpp() {
+				return "up";
+			}
 		},
+		
 		IN() {
-			
+			@Override
+			public String getOpp() {
+				return "out";
+			}
 		},
+		
 		OUT() {
-			
+			@Override
+			public String getOpp() {
+				return "in";
+			}
 		};
+		
 		private Direction() {}
 		
-		@Override
-		public String toString() {
-			return super.toString().toLowerCase();
-		}
+		public abstract String getOpp();
+		
 	}
 	
 	public enum GroundType {		
