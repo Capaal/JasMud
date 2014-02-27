@@ -185,8 +185,12 @@ public class Location implements Container {
 		} catch (IllegalArgumentException e) {
 			return null;
 		}	
-		return locationMap.get(locDir);
+		return getLocation(locDir);
 	}		
+	
+	public Location getLocation(Direction dir) {		
+		return locationMap.get(dir);
+	}
 	
 	public void removeItemFromLocation(Holdable oldItem) {
 		inventory.remove(oldItem);	

@@ -183,6 +183,10 @@ public class Skill {
 		
 		SLOT() {
 			
+		},
+		
+		TIMES() {
+			
 		};
 		
 		

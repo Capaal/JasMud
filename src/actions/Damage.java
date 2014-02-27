@@ -7,6 +7,7 @@ import java.util.*;
 
 import processes.*;
 
+//TODO Should damage contain TYPE, so that devs can specify what type that damage is, rather than relying on skill knowing?
 public class Damage extends Action {
 	
 	
