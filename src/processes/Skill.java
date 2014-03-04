@@ -7,7 +7,7 @@ import java.util.*;
 public class Skill {
 	
 	private final String name;
-	private int id; // related only to it's database id, probably don't even need to know what it is.
+	private int id; // related only to it's database id, probably don't even need to know what it is.TODO
 	private final String description;
 	private final Queue<Action> actions;
 	private final Set<Type> types;

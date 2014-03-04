@@ -1,8 +1,5 @@
 package processes;
 
-import interfaces.Mobile;
-
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,7 +53,7 @@ public class SkillBook {
 		return id;
 	}
 	
-	public boolean save(Mobile currentPlayer) {
+	public boolean save() {
 		if (toBeSaved) {			
 			for (Skill s : skillList) {
 				if (!s.save()) {

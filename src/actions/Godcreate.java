@@ -1,12 +1,17 @@
 package actions;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import processes.LocationBuilder;
 import costs.*;
 import checks.*;
 import effectors.*;
+import processes.ItemBuilder;
+import processes.Location;
 import processes.SQLInterface;
 import processes.Skill;
 import processes.SkillBook;
@@ -16,6 +21,7 @@ import processes.Skill.Syntax;
 import processes.WorldServer;
 import interfaces.Action;
 import interfaces.Mobile;
+import items.StdItem;
 
 public class Godcreate extends Action {
 	
@@ -152,7 +158,7 @@ public class Godcreate extends Action {
 		case "5":
 			String clearActions = askQuestion("Do you want to clear the actions list? y/n", player);
 			if (clearActions.equals("y")) {
-				newSkill.clearSyntax();
+				newSkill.clearActions();
 			}
 			StringBuilder currentActions = new StringBuilder();
 			currentActions.append("The current list of actions, in order, is:");
@@ -237,7 +243,7 @@ public class Godcreate extends Action {
 	public static Action selectAction(Mobile player) {
 		String actionName = askQuestion("Which action do you want to add? Order does matter.", player);
 		if (actionMap.containsKey(actionName)) {
-			return actionMap.get(actionName);
+			return actionMap.get(actionName).newBlock(player);
 		} else if (actionName.equals("exit")) {
 			return null;
 		} else {
@@ -251,8 +257,24 @@ public class Godcreate extends Action {
 	 * ITEM CREATION
 	 * 
 	 ****************************************************************************/
+	//TODO Should ItemBuilder handle what type of item to return.
 	private boolean processCreateItem(Mobile player) {
-		return false;
+		player.tell("OK! Lets get started with item creation.");
+		player.tell("The choices of items we can create are:");
+		ArrayList<String> itemTypes = new ArrayList<String>(Arrays.asList("stditem"));
+		for (String itemType : itemTypes) {
+			player.tell(itemType);
+		}
+		String itemTypeToMake = askQuestion("Which type of item would you like to build?", player);
+		switch(itemTypeToMake) {
+		case "stditem":
+			return ItemBuilder.newItem(player);
+		case "exit":
+		case "quit":
+			return false;
+		default:
+			return processCreateItem(player);
+		}	
 	}
 	
 	/***************************************************************************
@@ -261,7 +283,8 @@ public class Godcreate extends Action {
 	 * 
 	 ****************************************************************************/
 	private boolean processCreateLocation(Mobile player) {
-		return false;
+		player.tell("OK! Lets get started with location creation.");
+		return LocationBuilder.newLocation(player, new LocationBuilder());
 	}
 	/***************************************************************************
 	 * 
@@ -271,6 +294,10 @@ public class Godcreate extends Action {
 	private boolean processCreateMobile(Mobile player) {
 		return false;
 	}
+	
+	
+	
+	
 	
 	public static String askQuestion(String question, Mobile player) {
 		player.tell(question);

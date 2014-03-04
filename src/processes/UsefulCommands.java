@@ -91,7 +91,7 @@ public class UsefulCommands {
 		return sb.toString();
 	}
 	
-	public static TreeMap<String, String> fullDir;
+	/*public static TreeMap<String, String> fullDir;
 	
 	public static String getDirName(String dir) {		
 		if (fullDir == null) {
@@ -121,7 +121,7 @@ public class UsefulCommands {
 			}
 		}
 		return null;
-	}
+	}*/
 	
 	// Gets player prompt (Give all player prompts an ID that represents that connection?)
 	/*public static PlayerPrompt getPlayerPromptFromPlayer(Mobile currentPlayer) {

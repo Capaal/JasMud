@@ -71,8 +71,12 @@ public class SQLInterface {
 	public static void loadLocations() {
 		makeConnection();
 		try {
-			stmt = con.createStatement();				
-			String sql = ("SELECT * FROM locationstats ORDER BY locid ASC");
+			stmt = con.createStatement();	
+			String sql = ("insert into sequencetable values(NULL);");
+			for (int i = 0; i < 25; i++) {
+				stmt.execute(sql);
+			}
+			sql = ("SELECT * FROM locationstats ORDER BY locid ASC");
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				int id = rs.getInt("LOCID");
@@ -80,13 +84,23 @@ public class SQLInterface {
 				String description = rs.getString("LOCDES");
 	//			int inventory = rs.getInt("LOCINV");		// Not implemented
 				GroundType g = GroundType.valueOf(rs.getString("LOCTYPE"));		// Not implemented		
-				new Location.Builder(id).name(name).description(description).north(rs.getInt("LOCNORTH"), rs.getString("LOCNORTHDIR"))
-						.northEast(rs.getInt("LOCNE"), rs.getString("LOCNEDIR")).east(rs.getInt("LOCEAST"), rs.getString("LOCEASTDIR"))
-						.southEast(rs.getInt("LOCSE"), rs.getString("LOCSEDIR")).south(rs.getInt("LOCSOUTH"), rs.getString("LOCSOUTHDIR"))
-						.southWest(rs.getInt("LOCSW"), rs.getString("LOCSWDIR")).west(rs.getInt("LOCWEST"), rs.getString("LOCWESTDIR"))
-						.northWest(rs.getInt("LOCNW"), rs.getString("LOCNWDIR")).up(rs.getInt("LOCUP"), rs.getString("LOCUPDIR"))
-						.down(rs.getInt("LOCDOWN"), rs.getString("LOCDOWNDIR")).in(rs.getInt("LOCIN"), rs.getString("LOCINDIR"))
-						.out(rs.getInt("LOCOUT"), rs.getString("LOCOUTDIR")).build();		
+				LocationBuilder newLocation = new LocationBuilder();
+				newLocation.setName(name);
+				newLocation.setId(id);
+				newLocation.setDescription(description);
+				newLocation.north(rs.getInt("LOCNORTH"), rs.getString("LOCNORTHDIR"));
+				newLocation.northEast(rs.getInt("LOCNE"), rs.getString("LOCNEDIR"));
+				newLocation.east(rs.getInt("LOCEAST"), rs.getString("LOCEASTDIR"));
+				newLocation.southEast(rs.getInt("LOCSE"), rs.getString("LOCSEDIR"));
+				newLocation.south(rs.getInt("LOCSOUTH"), rs.getString("LOCSOUTHDIR"));
+				newLocation.southWest(rs.getInt("LOCSW"), rs.getString("LOCSWDIR"));
+				newLocation.west(rs.getInt("LOCWEST"), rs.getString("LOCWESTDIR"));
+				newLocation.northWest(rs.getInt("LOCNW"), rs.getString("LOCNWDIR"));
+				newLocation.up(rs.getInt("LOCUP"), rs.getString("LOCUPDIR"));
+				newLocation.down(rs.getInt("LOCDOWN"), rs.getString("LOCDOWNDIR"));
+				newLocation.in(rs.getInt("LOCIN"), rs.getString("LOCINDIR"));
+				newLocation.out(rs.getInt("LOCOUT"), rs.getString("LOCOUTDIR"));
+				newLocation.complete();		
 			}			
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.toString());
@@ -110,7 +124,7 @@ public class SQLInterface {
 		}
 		disconnect();		
 	}
-	
+	//TODO fix duplicate switch
 	public static void loadItems(String sql, Container container) throws SQLException {
 		if (sql == null) {
 			throw new NullPointerException("Sql string may not be null.");
@@ -136,26 +150,45 @@ public class SQLInterface {
 			while (rs.next()) {
 				if (rs.getInt("ITEMID") != itemId) {
 					if (itemId != -1) {
-						switch(itemLocType) {
+						ItemBuilder newItem = new ItemBuilder();
+						newItem.setName(itemName);
+						newItem.setId(itemId);
+						newItem.setPhysicalMult(itemPhysicalMult);
+						newItem.setBalanceMult(itemBalanceMult);
+						newItem.setDescription(itemDescription);
+						newItem.setShortDescription(itemShortDescription);
+						newItem.setMaxDurability(itemMaxDurability);
+						newItem.setCurrentDurability(itemCurrentDurability);
+						newItem.setTypes(itemTypes);
+						newItem.setItemTags(itemTags);
+						newItem.setAllowedSlots(allowedEquipSlots);
+						switch(itemLocType) {						
 							case "LOCATION":
-								new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
+							/*	new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
 										.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
 										.types(itemTypes).itemTags(itemTags)
 										.allowedSlots(allowedEquipSlots).itemLocation(WorldServer.locationCollection.get(itemLocation)).build();
-								break;
+								*/								
+								newItem.setItemLocation(WorldServer.locationCollection.get(itemLocation));
+								newItem.complete();						
+							break;
 							case "INVENTORY":
-								new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
+							/*	new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
 										.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
 										.types(itemTypes).itemTags(itemTags)
-										.allowedSlots(allowedEquipSlots).itemLocation(container).build();
-								break;
+										.allowedSlots(allowedEquipSlots).itemLocation(container).build();*/
+								newItem.setItemLocation(container);
+								newItem.complete();
+							break;
 							case "EQUIPMENT":
-								StdItem item = new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
+								/*StdItem item = new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
 										.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
 										.types(itemTypes).itemTags(itemTags)
-										.allowedSlots(allowedEquipSlots).itemLocation(container).build();
-								((Mobile)container).equip(equipSlot, item);
-								break;
+										.allowedSlots(allowedEquipSlots).itemLocation(container).build();*/
+								newItem.setItemLocation(container);
+								StdItem createdItem = newItem.complete();
+								((Mobile)container).equip(equipSlot, createdItem);
+							break;
 							default:
 								System.out.println("itemLocType mismatch on item " + itemId + " giving " + itemLocType);
 						}
@@ -184,31 +217,50 @@ public class SQLInterface {
 					}
 				} 
 			}
-			if (itemId != -1) {
-				switch(itemLocType) {
-					case "LOCATION":
-						new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
-								.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
-								.types(itemTypes).itemTags(itemTags)
-								.allowedSlots(allowedEquipSlots).itemLocation(WorldServer.locationCollection.get(itemLocation)).build();
-						break;
-					case "INVENTORY":
-						new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
-								.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
-								.types(itemTypes).itemTags(itemTags)
-								.allowedSlots(allowedEquipSlots).itemLocation(container).build();
-						break;
-					case "EQUIPMENT":
-						StdItem item = new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
-								.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
-								.types(itemTypes).itemTags(itemTags)
-								.allowedSlots(allowedEquipSlots).itemLocation(container).build();
-						((Mobile)container).equip(equipSlot, item);
-						break;
-					default:
-						System.out.println("itemLocType mismatch on item " + itemId + " giving " + itemLocType);
-				}
+		if (itemId != -1) {
+			ItemBuilder newItem = new ItemBuilder();
+			newItem.setName(itemName);
+			newItem.setId(itemId);
+			newItem.setPhysicalMult(itemPhysicalMult);
+			newItem.setBalanceMult(itemBalanceMult);
+			newItem.setDescription(itemDescription);
+			newItem.setShortDescription(itemShortDescription);
+			newItem.setMaxDurability(itemMaxDurability);
+			newItem.setCurrentDurability(itemCurrentDurability);
+			newItem.setTypes(itemTypes);
+			newItem.setItemTags(itemTags);
+			newItem.setAllowedSlots(allowedEquipSlots);
+			switch(itemLocType) {						
+				case "LOCATION":
+				/*	new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
+							.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
+							.types(itemTypes).itemTags(itemTags)
+							.allowedSlots(allowedEquipSlots).itemLocation(WorldServer.locationCollection.get(itemLocation)).build();
+					*/								
+					newItem.setItemLocation(WorldServer.locationCollection.get(itemLocation));
+					newItem.complete();						
+				break;
+				case "INVENTORY":
+				/*	new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
+							.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
+							.types(itemTypes).itemTags(itemTags)
+							.allowedSlots(allowedEquipSlots).itemLocation(container).build();*/
+					newItem.setItemLocation(container);
+					newItem.complete();
+				break;
+				case "EQUIPMENT":
+					/*StdItem item = new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
+							.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
+							.types(itemTypes).itemTags(itemTags)
+							.allowedSlots(allowedEquipSlots).itemLocation(container).build();*/
+					newItem.setItemLocation(container);
+					StdItem createdItem = newItem.complete();
+					((Mobile)container).equip(equipSlot, createdItem);
+				break;
+				default:
+					System.out.println("itemLocType mismatch on item " + itemId + " giving " + itemLocType);
 			}
+		}
 	//	} catch(SQLException e) {
 	//		System.out.println("Error " + e.toString());
 	//	}
@@ -297,6 +349,7 @@ public class SQLInterface {
 	//	disconnect();		
 	}
 	
+		
 	public static Object viewData(String blockQuery, String column) {
 		makeConnection();
 		Object result = null;
@@ -318,7 +371,7 @@ public class SQLInterface {
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.toString());
 		}
-		disconnect();
+	//	disconnect();
 		return result;
 	}
 	
@@ -349,7 +402,7 @@ public class SQLInterface {
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.toString());
 		}
-		disconnect();
+	//	disconnect();
 		return blockView;
 	}
 	
@@ -590,5 +643,19 @@ public class SQLInterface {
 		    System.out.println(ifBoolean + " is being outputed from some skill, fails to become a true boolean and autos to false");
 		    return false;
 		}
-	}	
+	}
+	
+	public static void increaseSequencer() {
+		makeConnection();
+		try {
+			stmt = con.createStatement();			
+			String sql = ("insert into sequencetable values(NULL);");
+			for (int i = 0; i < 25; i++) {
+				stmt.execute(sql);
+			}
+		} catch (SQLException e) {
+			System.out.println("Error: " + e.toString());
+		}
+	//	disconnect();
+	}		
 }

@@ -8,6 +8,8 @@ import java.util.*;
 import processes.*;
 
 //TODO Should damage contain TYPE, so that devs can specify what type that damage is, rather than relying on skill knowing?
+// And what about different weapons changing amount of damage?
+// Especially when we don't know if the damage SHOULD be affected by an item.
 public class Damage extends Action {
 	
 	

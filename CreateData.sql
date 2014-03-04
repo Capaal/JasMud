@@ -138,7 +138,7 @@ insert into syntaxtable (SKILLID, SYNTAXID) values ('10', '4');
 /* LOOK */
 insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values ('8', 'look', 'Viewing your surroundings.', 'WHY CAN"T YOU SEE????');
 insert into SKILLTABLE (SKILLBOOKID, SKILLID) values(1, 8);
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TARGETWHERE) values ('20', 'LOOK', '1', 'ONEAWAY');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TARGETWHERE) values ('20', 'LOOK', '1', 'ONEAWAYPROJECTILE');
 insert into blocktable (SKILLID, BLOCKID) values ('8', '20');
 insert into syntax (SYNTAXPOS, SYNTAXTYPE) values ('2', 'DIRECTION');
 insert into syntaxtable (SKILLID, SYNTAXID) values ('8', '1');
@@ -147,7 +147,7 @@ insert into syntaxtable (SKILLID, SYNTAXID) values ('8', '5');
 /* MOVE */
 insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values ('9', 'move', 'One foot in front of the other.', 'You cannot move! Take the time to enjoy your surroundings.');
 insert into SKILLTABLE (SKILLBOOKID, SKILLID) values(1, 9);
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, GROUNDTYPE, TARGETWHO, TARGETWHERE, ENDWHERE) values ('21', 'MOVECHECK', '2', 'GROUND', 'SELF', 'HERE', 'ONEAWAY');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, GROUNDTYPE, TARGETWHO, TARGETWHERE, ENDWHERE) values ('21', 'MOVECHECK', '2', 'GROUND', 'SELF', 'HERE', 'ONEAWAYPROJECTILE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('22', 'MESSAGE', '3', '%s leaves to the %s.', 'ALL', 'HERE');
 insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('22', '3');
 insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('22', '7');
@@ -156,7 +156,7 @@ insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHE
 insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('23', '3');
 insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('23', '9');
 insert into msgstrings (MSGSTRINGSID, MSGSTRINGSPOS, MSGSTRINGSTYPE) values ('9', '2', 'OPPMOVE');
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE, ENDWHERE) values ('24', 'MOVE', '4', 'SELF', 'HERE', 'ONEAWAY');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE, ENDWHERE) values ('24', 'MOVE', '4', 'SELF', 'HERE', 'ONEAWAYPROJECTILE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) values ('25', 'BALANCECHECK', '1', 'TRUE', 'SELF', 'HERE');
 insert into blocktable (SKILLID, BLOCKID) values ('9', '25');
 insert into blocktable (SKILLID, BLOCKID) values ('9', '21');

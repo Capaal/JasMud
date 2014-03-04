@@ -97,9 +97,9 @@ public class Message extends Action {
 			player.tell("You must indicate a valid number");
 			return this.newBlock(player);
 		}
-		for (int i = 0; i < numMsgStrings; i++) {
+		for (int i = 1; i <= numMsgStrings; i++) {
 			try {
-				newMsgList.add(msgStrings.valueOf(Godcreate.askQuestion("What syntax goes into %s number " + i + "?", player)));
+				newMsgList.add(msgStrings.valueOf(Godcreate.askQuestion("What syntax goes into %s number " + i + "?", player).toUpperCase()));
 			} catch (IllegalArgumentException e) {
 				player.tell("That last one wasn't a valid syntax.");
 				i--;

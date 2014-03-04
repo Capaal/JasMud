@@ -6,6 +6,8 @@ import java.io.*; // Needed for PrintWriter and BufferReader.
 import java.sql.SQLException;
 import java.util.*; // Needed for keySet();
 
+import processes.Location.Direction;
+
 // Represents a users connection to the game. They will connect, then choose what hero to play. It handles interaction with the system.
 public class PlayerPrompt extends Thread {
 
@@ -17,7 +19,7 @@ public class PlayerPrompt extends Thread {
 		this.incoming = incoming;
 		this.sendBack = new SendMessage(incoming);	
 	}
-	
+	//TODO
 	public void run() {	
 		sendBack.printMessage("Hello, and welcome!");
 		sendBack.printMessage("Your name? ");
@@ -111,10 +113,10 @@ public class PlayerPrompt extends Thread {
 					command = command.toLowerCase();
 					Boolean commandFound = false;
 					Skill com;
-					String posDir = UsefulCommands.getDirName(command);
+					Direction posDir = Direction.getDirectionName(command);
 					if (posDir != null) {
 						com = currentPlayer.getCommand("move");
-						str = posDir;
+						str = posDir.toString();
 					} else {
 						com = currentPlayer.getCommand(command);
 					}

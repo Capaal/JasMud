@@ -45,6 +45,7 @@ package items;
 import java.sql.SQLException;
 import java.util.*;
 
+import actions.Godcreate;
 import interfaces.*;
 import processes.*;
 import processes.Equipment.EquipmentEnum;
@@ -70,7 +71,7 @@ public class StdItem implements Holdable {
 	// .types("SHARP", "PIERCE").itemTags("METALCRAFT", "ENCHANTABLE").balanceMult(.8).maxDurability(100)
 	// .itemLocation(WorldServer.locationCollection.get(1)).build(); 
 	
-	public StdItem(Init<?> build) {
+	public StdItem(ItemBuilder build) {
 		this.id = build.id;
 		this.name = build.name;
 		this.physicalMult = build.physicalMult;
@@ -86,7 +87,7 @@ public class StdItem implements Holdable {
 		WorldServer.allItems.put(name + id, this);
 		itemLocation.acceptItem(this);
 	}
-	
+	/*
 	protected static abstract class Init<T extends Init<T>> {
 		
 		private double physicalMult = 1.0;
@@ -131,7 +132,7 @@ public class StdItem implements Holdable {
 		public Builder(String name, int id) {super(name, id);}
 		@Override
 		protected Builder self() {return this;}
-	}
+	}*/
 	
 	// Probably not what I want? as a skill will probably handle what this handles, and it'll just make a new version.
 	// But do I need a method here that handles creating a copy? As all items will probably be copies?
@@ -216,6 +217,60 @@ public class StdItem implements Holdable {
 		save();
 		WorldServer.allItems.remove(this.getName() + this.getId());
 	}
+	/*//TODO
+	public static boolean newItem(Mobile player) {
+		String newItemName = Godcreate.askQuestion("What is the name of this new item?", player);
+		String newItemDescription = Godcreate.askQuestion("What is the long description for this item?", player);
+		String newItemShortDescription = Godcreate.askQuestion("What is the short description for this item?", player);
+		double newItemPhysicalMult = Double.parseDouble(Godcreate.askQuestion("What is the physical multiplier for this item? 1.0 is normal.", player));
+		double newItemBalanceMult = Double.parseDouble(Godcreate.askQuestion("What is the balance multiplier for this item? 1.0 is normal.", player));;
+		String stringItemLocation = Godcreate.askQuestion("Which location should the item be in upon creation?", player);
+		Container newItemLocation;	
+		if ("here".equals(stringItemLocation.toLowerCase())) {
+			newItemLocation = player.getContainer();
+		} else {
+			newItemLocation = WorldServer.locationCollection.get(Integer.parseInt(stringItemLocation));
+		}			
+		int newItemMaxDurability = Integer.parseInt(Godcreate.askQuestion("What is this item's max durablity?", player));
+		int newItemCurrentDurability = Integer.parseInt(Godcreate.askQuestion("What is this item's currentDurability?", player));
+		int howManyItemTypes = Integer.parseInt(Godcreate.askQuestion("How many types will this item be?", player));
+		ArrayList<Type> newItemTypes = new ArrayList<Type>();
+		for (int i = 1; i <= howManyItemTypes; i++) {
+			newItemTypes.add(Type.valueOf((Godcreate.askQuestion("What type will the item have?", player).toUpperCase())));
+		}		
+		ArrayList<ItemType> newItemTags = new ArrayList<ItemType>();
+		int howManyItemTags = Integer.parseInt(Godcreate.askQuestion("How many item tags will this item have?", player));
+		for (int i = 1; i <= howManyItemTags; i++) {
+			newItemTags.add(ItemType.valueOf((Godcreate.askQuestion("What tag will the item have?", player).toUpperCase())));
+		}	
+		EnumSet<EquipmentEnum> newItemAllowedEquipSlots = EnumSet.noneOf(EquipmentEnum.class);
+		int howManyAllowedEquipSlots = Integer.parseInt(Godcreate.askQuestion("How many slots can this item be in?", player));
+		for (int i = 1; i <= howManyAllowedEquipSlots; i++) {
+			newItemAllowedEquipSlots.add(EquipmentEnum.valueOf(Godcreate.askQuestion("What slot may be filled?", player).toUpperCase()));
+		}
+		ItemBuilder newItem = new ItemBuilder();
+		newItem.setName(newItemName);
+		newItem.setPhysicalMult(newItemPhysicalMult);
+		newItem.setDescription(newItemDescription);
+		newItem.setShortDescription(newItemShortDescription);
+		newItem.setTypes(newItemTypes);
+		newItem.setItemTags(newItemTags);
+		newItem.setBalanceMult(newItemBalanceMult);
+		newItem.setMaxDurability(newItemMaxDurability);
+		newItem.setCurrentDurability(newItemCurrentDurability);
+		newItem.setItemLocation(newItemLocation);
+		newItem.setAllowedSlots(newItemAllowedEquipSlots);
+		newItem.complete(); 
+		return true;
+	}
+	/*
+	  //TODO
+	public static int getNewId() {
+		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
+				+ " LEFT JOIN itemstats ON sequencetable.sequenceid = itemstats.itemid"
+				+ " WHERE itemstats.itemid IS NULL";		
+		return (int) SQLInterface.viewData(sqlQuery, "sequenceid");
+	}*/
 	
 	public enum ItemType {
 		

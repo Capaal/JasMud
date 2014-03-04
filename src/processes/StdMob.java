@@ -19,6 +19,7 @@ import processes.Location.GroundType;
  * Undead might also be an extension, as they would have additional methods, or overwritten methods.
  * @author Jason
  */
+//TODO Make a MobileBuilder that handles creation.
 public class StdMob implements Mobile, Container, Holdable, Creatable {
 
 	protected final String name;
@@ -431,6 +432,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public void setBalance(boolean value) {
 		this.balance = value;
 	}
+	//TODO
 	@Override
 	public void equip(EquipmentEnum slot, Holdable item) {
 		if (inventory.remove(item)) {
@@ -532,7 +534,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 					System.out.println("Skillbook " + sb.getName() + " failed to save it's progress table via: " + insertBook);
 					return false;
 				}
-				if (!sb.save(this)) {
+				if (!sb.save()) {
 					return false;
 				}	
 			}
