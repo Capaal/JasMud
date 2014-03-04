@@ -19,3 +19,4 @@ drop table SKILLBOOKTABLE;
 drop table SKILLBOOK;
 drop table SLOTTABLE;
 drop table SLOT;
+drop table sequencetable;

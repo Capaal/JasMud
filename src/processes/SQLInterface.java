@@ -543,7 +543,7 @@ public class SQLInterface {
 		
 		switch (rs.getString("BLOCKTYPE")) {				
 			case "DAMAGE":
-				return new Damage(rs.getInt("INTVALUE"), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")));
+				return new Damage(rs.getInt("INTVALUE"), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")), checkBoolean(rs.getString("BOOLEANONE")));
 		
 			
 			case "BALANCECOST":
@@ -637,7 +637,7 @@ public class SQLInterface {
 	  * @return Returns a boolean primitive translated from the database enum of a boolean.
 	  */
 	private static boolean checkBoolean(String ifBoolean) {
-		if (ifBoolean.equalsIgnoreCase("true") || ifBoolean.equalsIgnoreCase("false")) {
+		if (ifBoolean != null && (ifBoolean.equalsIgnoreCase("true") || ifBoolean.equalsIgnoreCase("false"))) {
 		    return Boolean.valueOf(ifBoolean);
 		} else {
 		    System.out.println(ifBoolean + " is being outputed from some skill, fails to become a true boolean and autos to false");

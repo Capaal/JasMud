@@ -56,15 +56,24 @@ public class ItemBuilder {
 	}
 	public void setTypes(ArrayList<Type> types) {
 		this.types = types;
-	}
+	}	
+	public void setTypes(Type type) {
+		types.add(type);
+	}	
 	public void setItemTags(ArrayList<ItemType> itemTags) {
 		this.itemTags = itemTags;
-	}
+	}	
+	public void setItemTags(ItemType itemTag){
+		itemTags.add(itemTag);
+	}	
 	public void setItemLocation(Container itemLocation) {
 		this.itemLocation = itemLocation;
 	}
 	public void setAllowedSlots(EnumSet<EquipmentEnum> allowedSlots) {
 		this.allowedSlots = allowedSlots;
+	}
+	public void setAllowedSlots(EquipmentEnum allowedSlots) {
+		this.allowedSlots.add(allowedSlots);
 	}
 	/*	
 		public T physicalMult(Double val) {physicalMult = val;return self();}		
@@ -89,9 +98,6 @@ public class ItemBuilder {
 			SQLInterface.increaseSequencer();
 			setId();
 		} else {
-			if (WorldServer.locationCollection.containsKey(availableId)) {
-				throw new IllegalStateException("An item of the id already exists.");
-			}
 			this.id = (int)availableId;
 		}		
 	}
@@ -99,50 +105,140 @@ public class ItemBuilder {
 	public StdItem complete() {
 		return new StdItem(this);		
 	}
-	//TODO Make it recursive and not annoying to use.
-	public static boolean newItem(Mobile player) {
-		String newItemName = Godcreate.askQuestion("What is the name of this new item?", player);
-		String newItemDescription = Godcreate.askQuestion("What is the long description for this item?", player);
-		String newItemShortDescription = Godcreate.askQuestion("What is the short description for this item?", player);
-		double newItemPhysicalMult = Double.parseDouble(Godcreate.askQuestion("What is the physical multiplier for this item? 1.0 is normal.", player));
-		double newItemBalanceMult = Double.parseDouble(Godcreate.askQuestion("What is the balance multiplier for this item? 1.0 is normal.", player));;
-		String stringItemLocation = Godcreate.askQuestion("Which location should the item be in upon creation?", player);
-		Container newItemLocation;	
-		if ("here".equals(stringItemLocation.toLowerCase())) {
-			newItemLocation = player.getContainer();
-		} else {
-			newItemLocation = WorldServer.locationCollection.get(Integer.parseInt(stringItemLocation));
-		}			
-		int newItemMaxDurability = Integer.parseInt(Godcreate.askQuestion("What is this item's max durablity?", player));
-		int newItemCurrentDurability = Integer.parseInt(Godcreate.askQuestion("What is this item's currentDurability?", player));
-		int howManyItemTypes = Integer.parseInt(Godcreate.askQuestion("How many types will this item be?", player));
-		ArrayList<Type> newItemTypes = new ArrayList<Type>();
-		for (int i = 1; i <= howManyItemTypes; i++) {
-			newItemTypes.add(Type.valueOf((Godcreate.askQuestion("What type will the item have?", player).toUpperCase())));
-		}		
-		ArrayList<ItemType> newItemTags = new ArrayList<ItemType>();
-		int howManyItemTags = Integer.parseInt(Godcreate.askQuestion("How many item tags will this item have?", player));
-		for (int i = 1; i <= howManyItemTags; i++) {
-			newItemTags.add(ItemType.valueOf((Godcreate.askQuestion("What tag will the item have?", player).toUpperCase())));
-		}	
-		EnumSet<EquipmentEnum> newItemAllowedEquipSlots = EnumSet.noneOf(EquipmentEnum.class);
-		int howManyAllowedEquipSlots = Integer.parseInt(Godcreate.askQuestion("How many slots can this item be in?", player));
-		for (int i = 1; i <= howManyAllowedEquipSlots; i++) {
-			newItemAllowedEquipSlots.add(EquipmentEnum.valueOf(Godcreate.askQuestion("What slot may be filled?", player).toUpperCase()));
+	
+	public static boolean newItem(Mobile player, ItemBuilder builderItem) {
+		String nextTask = Godcreate.askQuestion("What next? 1:name 2:longdescription 3:shortdescription 4:physicalmult"
+				+ " 5:balancemult 6:location 7:maxdurability 8:currentdurability 9:types 10:tags 11:slots 12:preview"
+				+ " 13:complete 14:quit", player);
+		switch(nextTask) {
+		case "1":
+		case "name":
+			builderItem.setName(Godcreate.askQuestion("What is the name of this new item?", player));
+			return newItem(player, builderItem); 		
+		case "2":
+		case "longdescription":
+			builderItem.setDescription(Godcreate.askQuestion("What is the long description for this item?", player));
+			return newItem(player, builderItem); 
+		case "3":
+		case "shortdescrption":
+			builderItem.setShortDescription(Godcreate.askQuestion("What is the short description for this item?", player));
+			return newItem(player, builderItem);
+		case "4":
+		case "physicalmult":
+			try {
+				builderItem.setPhysicalMult(Double.parseDouble(Godcreate.askQuestion("What is the physical multiplier for this item? 1.0 is normal.", player)));
+			} catch(NumberFormatException e) {
+				player.tell("That was not a valid number, be sure you use only doubles i.e. 1.0");
+			}
+			return newItem(player, builderItem);
+		case "5":
+		case "balancemult":
+			try {
+				builderItem.setBalanceMult(Double.parseDouble(Godcreate.askQuestion("What is the balance multiplier for this item? 1.0 is normal.", player)));
+			} catch(NumberFormatException e) {
+				player.tell("That was not a valid number, be sure you use only doubles i.e. 1.0");
+			}
+			return newItem(player, builderItem);
+		case "6":
+		case "location":
+			String tryLocation = Godcreate.askQuestion("Which location should the item be in upon creation? here or the location id", player);
+			Container newItemLocation;	
+			if ("here".equals(tryLocation.toLowerCase())) {
+				newItemLocation = player.getContainer();
+			} else {
+				try {
+					newItemLocation = WorldServer.locationCollection.get(Integer.parseInt(tryLocation));
+				} catch(NumberFormatException e) {
+					player.tell("That wasn't a valid number, be sure to keep it to just a number i.e. 1");
+					return newItem(player, builderItem);
+				}
+			}			
+			builderItem.setItemLocation(newItemLocation);
+			return newItem(player, builderItem);
+		case "7":
+		case "maxdurability":
+			try {
+				builderItem.setMaxDurability(Integer.parseInt(Godcreate.askQuestion("What is this item's max durablity?", player)));
+			} catch(NumberFormatException e) {
+				player.tell("That was not a valid number, keep it to integers i.e. 100");
+			}
+			return newItem(player, builderItem);
+		case "8":
+		case "currentdurability":
+			try {
+				builderItem.setCurrentDurability(Integer.parseInt(Godcreate.askQuestion("What is this item's current durablity?", player)));
+			} catch(NumberFormatException e) {
+				player.tell("That was not a valid number, keep it to integers i.e. 100");
+			}
+			return newItem(player, builderItem);
+		case "9":
+		case "types":
+			try {
+				builderItem.setTypes(Type.valueOf((Godcreate.askQuestion("What type will the item have?", player).toUpperCase())));
+			} catch(IllegalArgumentException e) {
+				player.tell("That was not a valid type, keep it to Types like SHARP");
+			}
+			return newItem(player, builderItem);
+		case "10":
+		case "tags":
+			try {
+				builderItem.setItemTags(ItemType.valueOf((Godcreate.askQuestion("What tags will the item have?", player).toUpperCase())));
+			} catch(IllegalArgumentException e) {
+				player.tell("That was not a valid tag, keep it to ItemTags like WOODEN");
+			}
+			return newItem(player, builderItem);
+		case "11":
+		case "slots":
+			try {
+				builderItem.setAllowedSlots(EquipmentEnum.valueOf(Godcreate.askQuestion("What slot may be filled?", player).toUpperCase()));
+			} catch (IllegalArgumentException e) {
+				player.tell("that was not a valid enum choice");
+				return newItem(player, builderItem);
+			}
+			return newItem(player, builderItem);
+		case "12":
+		case "preview":
+			player.tell("Name: " + builderItem.name);
+			player.tell("Id: " + builderItem.id);
+			player.tell("Long Description: " + builderItem.description);
+			player.tell("Short description: " + builderItem.shortDescription);
+			player.tell("Physical Multiplier: " + builderItem.physicalMult);
+			player.tell("Balance Multiplier: " + builderItem.balanceMult);
+			player.tell("Max Durability: " + builderItem.maxDurability);
+			player.tell("Current Durability: " + builderItem.currentDurability);
+			StringBuilder sb = new StringBuilder();
+			sb.append("Types:");
+			for (Type t : builderItem.types) {
+				sb.append(" ");
+				sb.append(t.toString());
+			}
+			player.tell(sb.toString());
+			sb = new StringBuilder();
+			sb.append("Item Tags:");
+			for (ItemType it : builderItem.itemTags) {
+				sb.append(" ");
+				sb.append(it.toString());
+			}
+			player.tell(sb.toString());
+			sb = new StringBuilder();
+			sb.append("Allowed Slots:");
+			for (EquipmentEnum ee : builderItem.allowedSlots) {
+				sb.append(" ");
+				sb.append(ee.toString());
+			}
+			player.tell(sb.toString());
+			return newItem(player, builderItem);
+		case "13":
+		case "complete":
+			builderItem.complete();
+			return true;
+		case "14":
+		case "quit":
+		case "exit":
+			return false;
+		default:
+			player.tell("That wasn't a valid option.");
+			return newItem(player, builderItem);
 		}
-		ItemBuilder newItem = new ItemBuilder();
-		newItem.setName(newItemName);
-		newItem.setPhysicalMult(newItemPhysicalMult);
-		newItem.setDescription(newItemDescription);
-		newItem.setShortDescription(newItemShortDescription);
-		newItem.setTypes(newItemTypes);
-		newItem.setItemTags(newItemTags);
-		newItem.setBalanceMult(newItemBalanceMult);
-		newItem.setMaxDurability(newItemMaxDurability);
-		newItem.setCurrentDurability(newItemCurrentDurability);
-		newItem.setItemLocation(newItemLocation);
-		newItem.setAllowedSlots(newItemAllowedEquipSlots);
-		newItem.complete(); 
-		return true;
 	}
 }

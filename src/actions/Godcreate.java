@@ -261,20 +261,7 @@ public class Godcreate extends Action {
 	private boolean processCreateItem(Mobile player) {
 		player.tell("OK! Lets get started with item creation.");
 		player.tell("The choices of items we can create are:");
-		ArrayList<String> itemTypes = new ArrayList<String>(Arrays.asList("stditem"));
-		for (String itemType : itemTypes) {
-			player.tell(itemType);
-		}
-		String itemTypeToMake = askQuestion("Which type of item would you like to build?", player);
-		switch(itemTypeToMake) {
-		case "stditem":
-			return ItemBuilder.newItem(player);
-		case "exit":
-		case "quit":
-			return false;
-		default:
-			return processCreateItem(player);
-		}	
+		return ItemBuilder.newItem(player, new ItemBuilder());	
 	}
 	
 	/***************************************************************************

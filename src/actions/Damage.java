@@ -16,15 +16,17 @@ public class Damage extends Action {
 	private final int intensity;
 	private final Who who;
 	private final Where where;
+	private final boolean weaponMatter;
 
 	public Damage() {
-		this(0, Who.SELF, Where.HERE);
+		this(0, Who.SELF, Where.HERE, true);
 	}
 	
-	public Damage(int intensity, Who who, Where where) {
+	public Damage(int intensity, Who who, Where where, boolean weaponMatter) {
 		this.intensity = intensity;
 		this.who = who;
 		this.where = where;
+		this.weaponMatter = weaponMatter;
 	}	
 	
 	@Override
@@ -53,14 +55,14 @@ public class Damage extends Action {
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='DAMAGE' AND INTVALUE=" + intensity + " AND BLOCKPOS=" + position
-				+ " AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
+				+ " AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "' AND BOOLEANONE='" + weaponMatter + "';";
 		return SQLInterface.returnBlockView(blockQuery);
 	}
 	@Override
 	protected void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
-			String sql = "INSERT IGNORE INTO BLOCK (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) VALUES ('DAMAGE', " 
-					+ position + ", " +  intensity + ", '" + who.toString() + "', '" + where.toString() + "');";
+			String sql = "INSERT IGNORE INTO BLOCK (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE, BOOLEANONE) VALUES ('DAMAGE', " 
+					+ position + ", " +  intensity + ", '" + who.toString() + "', '" + where.toString() + "', '" + weaponMatter + "');";
 			try {
 				SQLInterface.saveAction(sql);
 			} catch (SQLException e) {
@@ -87,7 +89,15 @@ public class Damage extends Action {
 			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE)");
 			return this.newBlock(player);
 		}
-		return new Damage(newIntensity, newWho, newWhere);
+		boolean doesWeaponMatter = true;
+		String answerWeaponMatter = Godcreate.askQuestion("Does this damage get affected by equipped weapon's stats? true/false.", player);
+		if ("true".equals(answerWeaponMatter) || "false".equals(answerWeaponMatter)) {
+			doesWeaponMatter = Boolean.parseBoolean(answerWeaponMatter);
+		} else {
+			player.tell("Error, your answer was not detected as a boolean.");
+			return this.newBlock(player);
+		}
+		return new Damage(newIntensity, newWho, newWhere, doesWeaponMatter);
 	}
 	@Override
 	public void explainOneself(Mobile player) {
