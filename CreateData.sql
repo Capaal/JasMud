@@ -23,8 +23,8 @@ insert into SLOTTABLE (ITEMID, SLOTID) values (1, 2);
 insert into SLOT (SLOT) values ('RIGHTHAND');
 insert into SLOT (SLOT) values ('LEFTHAND');
 
-insert into mobstats values ('1','James', '', "He is a farmer named James.",'a farmer','1', 'STDMOB', true);
-insert into mobstats values ('2', 'Horse', '', "It's a horse.",'a horse','1', 'STDMOB', true);
+insert into mobstats (MOBID, MOBNAME, MOBPASS, MOBDESC, MOBSHORTD, MOBLOC, MOBTYPE, MOBMAXHP, MOBCURRENTHP, MOBDEAD, MOBXPWORTH, MOBCURRENTXP, MOBCURRENTLEVEL, MOBAGE, LOADONSTARTUP)
+	values	(NULL, 'James', 'James', 'He is a farmer named James.','a farmer', 1, 'STDMOB', 50, 50, false, 10, 1, 1, 1, true);
 /*insert into mobstats values ('3','defaultGod', 'defaultGod', 'Contains God skills.', 'A god skin.','1', 'STDMOB', false);*/
 select * from mobstats;
 

@@ -276,45 +276,56 @@ public class SQLInterface {
 	 * @return Returns the loaded and completely built and registered Mobile or Null.
 	 */
 	public static Mobile loadPlayer(String name, String password) throws SQLException {
-		if (name == null || password == null) {
-			throw new NullPointerException("Name or password may not be null.");
+		if (name == null || password == null || !UsefulCommands.checkIfValidCharacters(name) || !UsefulCommands.checkIfValidCharacters(password)) {
+			throw new NullPointerException("Name or password is invalid.");
 		}
 		makeConnection();
-		Mobile loadedPlayer = null;
-		int mobid = -1;
+		Mobile finishedPlayer = null;
+		MobileBuilder loadedPlayer = new MobileBuilder();
 	//	try {
 			stmt = con.createStatement();			
 			String sql = ("SELECT * FROM mobstats WHERE MOBNAME='" + name + "' AND MOBPASS='" + password + "'");			
 			ResultSet rs = stmt.executeQuery(sql);	
 			if (rs.next()) {
-				String type = rs.getString("MOBTYPE");
-				mobid = rs.getInt("MOBID");
-				String mobname = rs.getString("MOBNAME");
+				String type = rs.getString("MOBTYPE"); // NOT IMPLEMENTS TODO
+				loadedPlayer.id = rs.getInt("MOBID");
+				loadedPlayer.name = rs.getString("MOBNAME");
 				switch (type) {
 				case "STDMOB":
-					loadedPlayer = new StdMob.Builder(rs.getInt("MOBID"), mobname).description(rs.getString("MOBDESC")).password(rs.getString("MOBPASS"))
-						.shortDescription(rs.getString("MOBSHORTD")).location(WorldServer.locationCollection.get(rs.getInt("MOBLOC"))).build();
+					loadedPlayer.description(rs.getString("MOBDESC"));
+					loadedPlayer.password(rs.getString("MOBPASS"));
+					loadedPlayer.shortDescription(rs.getString("MOBSHORTD"));
+					loadedPlayer.location(WorldServer.locationCollection.get(rs.getInt("MOBLOC")));
+				//	loadedPlayer.maxHp(rs.getInt("MOBMAXHP"));
+					loadedPlayer.currentHp(rs.getInt("MOBCURRENTHP"));
+					loadedPlayer.isDead(rs.getInt("MOBDEAD"));
+					loadedPlayer.xpWorth(rs.getInt("MOBXPWORTH"));
+					loadedPlayer.experience(rs.getInt("MOBCURRENTXP"));
+					loadedPlayer.level(rs.getInt("MOBCURRENTLEVEL"));
+					loadedPlayer.age(rs.getInt("MOBAGE"));
 					int startUp = rs.getInt("LOADONSTARTUP");
 					if (startUp == 1) {
-						loadedPlayer.setStartup(true);
+						loadedPlayer.loadOnStartUp(true);
 					} else {
-						loadedPlayer.setStartup(false);
+						loadedPlayer.loadOnStartUp(false);
 					}
+					finishedPlayer = loadedPlayer.complete();
 					sql = "SELECT itemstats.*, slot.SLOT, type.TYPE FROM itemstats LEFT JOIN SLOTTABLE ON itemstats.ITEMID = slottable.ITEMID"
 							+ " LEFT JOIN SLOT ON slottable.SLOTID = slot.SLOTID"
 							+ " LEFT JOIN ITEMTYPETABLE ON itemstats.ITEMID = itemtypetable.ITEMID"
 							+ " LEFT JOIN TYPE ON itemtypetable.TYPEID = type.TYPEID"
-							+ " WHERE ITEMLOC=" + loadedPlayer.getId() + " AND (ITEMLOCTYPE='INVENTORY' OR ITEMLOCTYPE ='EQUIPMENT');";
-					loadItems(sql, loadedPlayer);					
-					WorldServer.mobList.put(mobname + mobid, loadedPlayer);
-					loadedPlayer.getContainer().acceptItem(loadedPlayer);
+							+ " WHERE ITEMLOC=" + finishedPlayer.getId() + " AND (ITEMLOCTYPE='INVENTORY' OR ITEMLOCTYPE ='EQUIPMENT');";
+					loadItems(sql, finishedPlayer);					
+					WorldServer.mobList.put(finishedPlayer.getName() + finishedPlayer.getId(), finishedPlayer);
+					finishedPlayer.getContainer().acceptItem(finishedPlayer);
 				break;				
 				}
 			} 	else {
+				// Player of that name and id was not found in the database.
 				return null;
 			}
 			
-			sql = ("SELECT SKILLBOOKID, MOBPROGRESS FROM skillbooktable WHERE MOBID='" + mobid + "'");
+			sql = ("SELECT SKILLBOOKID, MOBPROGRESS FROM skillbooktable WHERE MOBID='" + finishedPlayer.getId() + "'");
 			rs = stmt.executeQuery(sql);
 			//Skillbook id --> skillbook progress for this particular mob
 			Map<Integer, Integer> mobSkillBooks = new HashMap<Integer, Integer>();
@@ -322,19 +333,18 @@ public class SQLInterface {
 				mobSkillBooks.put(rs.getInt("SKILLBOOKID"), rs.getInt("MOBPROGRESS"));			
 			}			
 			for (int skillBookId : mobSkillBooks.keySet()) {
-				SkillBook skillBook = null;
 				if (!WorldServer.AllSkillBooks.containsKey(skillBookId)) {
 					System.out.println("Error, book not loaded.");
 					throw new IllegalStateException("Critical error, skillbooks do not align.");				
 				}
-				loadedPlayer.addBook(WorldServer.AllSkillBooks.get(skillBookId), mobSkillBooks.get(skillBookId));
+				finishedPlayer.addBook(WorldServer.AllSkillBooks.get(skillBookId), mobSkillBooks.get(skillBookId));
 			}		
 					
 //		} catch (SQLException e) {
 //			System.out.println("Error: " + e.toString());
 //		}
 //		disconnect();
-		return loadedPlayer;
+		return finishedPlayer;
 	}
 	
 	public static void saveAction(String sql) throws SQLException {

@@ -57,7 +57,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	 * Constructor for StdMob takes in an internal builder class that represents all the needed data, though does not require everything
 	 * to be not null.
 	 */
-	protected StdMob(Init<?> build) {
+	protected StdMob(MobileBuilder build) {
 		this.name = build.name;
 		this.id = build.id;
 		this.password = build.password;
@@ -65,9 +65,9 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		this.currentHp = maxHp;
 		this.mobLocation = build.location;
 		this.balance = true;
-		this.physicalMult = build.physicalMult;
+	//	this.physicalMult = build.physicalMult;
 		this.isDead = false;
-		this.speed = build.speed;
+	//	this.speed = build.speed;
 		this.description = build.description;
 		this.shortDescription = build.shortDescription;
 		this.inventory = build.inventory;
@@ -77,7 +77,6 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		this.bugList = new ArrayList<String>();
 		this.messages = new ArrayList<String>();
 		this.effectList = build.effectList;
-		this.baseDamage = build.baseDamage;
 		this.tickClient = new TickClient(this);
 		tickClient.start();
 		WorldServer.mobList.put(name + id, this);
@@ -91,7 +90,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	 * @author Jason	 *
 	 * @param <T> Generic way of representing the builder implemented by extended class Mobile
 	 */
-	protected static abstract class Init<T extends Init<T>> {
+/*	protected static abstract class Init<T extends Init<T>> {
 	
 		private final String name;
 		private final int id;		
@@ -116,7 +115,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		 * @param id Mobile id desired.
 		 * @param name Mobile name desired.
 		 */
-		public Init(int id, String name) {
+	/*	public Init(int id, String name) {
 			if (name == null) {
 				throw new IllegalArgumentException("Name may not be null.");
 			}
@@ -169,7 +168,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		protected Builder self() {
 			return this;
 		}
-	}
+	}*/
 	
 	public String getName() {return name;}	
 	//Turn into a compare password? Is that safer?
@@ -223,13 +222,16 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	@Override
 	public void takeDamage(Set<Type> types, int damage) {
 		damage = runEffects(types, damage);
+		if (currentHp < damage) {
+			damage = currentHp;
+		}
 		this.currentHp = currentHp - damage;
 		checkHp();
 	}
 	
 	// Needs to actually involving dying...
 	protected void checkHp() {
-		if (currentHp <= 0) {
+		if (currentHp <= 0 && !isDead) {
 			tell("You colapse to the ground, unable to fight on.");
 			isDead = true;
 		}
@@ -541,12 +543,14 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		}	
 		return true;
 	}
-	
+	//TODO
 	private boolean saveStats() {
 		// Should update everything that we expect to change A LOT, like location and hp. Things like description would
 		// probably be best somewhere else that get updated right when the change occurs.
 		String updateStats = "UPDATE MOBSTATS SET MOBDESC='" + description + "', MOBSHORTD='" + shortDescription 
-				+ "', MOBLOC=" + mobLocation.getId() + " WHERE MOBID=" + id + ";";
+				+ "', MOBLOC=" + mobLocation.getId() + ", MOBCURRENTHP=" + currentHp + ", MOBDEAD='" + (isDead ? 1 : 0) + "', "
+						+ "MOBCURRENTXP=" + experience + ", MOBCURRENTLEVEL=" + level + ", MOBAGE=" + age
+						+ ", LOADONSTARTUP=" + (loadOnStartUp ? 1 : 0) + " WHERE MOBID=" + id + ";";
 		try {
 			SQLInterface.saveAction(updateStats);
 			return true;
@@ -634,6 +638,14 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public boolean containsType(Type type) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	public static void insertNewBlankMob(String newName, String newPassword) throws SQLException {
+		String sql = "insert into mobstats (MOBID, MOBNAME, MOBPASS) values (NULL, '" + newName + "', '" + newPassword + "');";
+		SQLInterface.saveAction(sql);
+		String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values((SELECT MOBID FROM MOBSTATS"
+				+ " WHERE MOBNAME='" + newName + "'), 1, 1) ON DUPLICATE KEY UPDATE MOBPROGRESS=1;";
+		SQLInterface.saveAction(insertBook);
 	}
 	
 }

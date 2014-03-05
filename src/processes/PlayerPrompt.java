@@ -54,25 +54,20 @@ public class PlayerPrompt extends Thread {
 			}
 			if (createPlayer.toLowerCase().equals("y")) {
 				// Need to figure out allowed id numbers.
-				String insertStats = "INSERT INTO MOBSTATS (MOBNAME, MOBPASS, MOBDESC, MOBSHORTD, MOBLOC, MOBTYPE, LOADONSTARTUP) values "
-						+ "('" + enteredName + "', '" + enteredPass + "', 'A boring looking youth.', 'Young and stupid', 1, 'StdMob', 0);";
+				
+				//ASSUMES STDMOB right now.
 				try {
-					SQLInterface.saveAction(insertStats);
-				} catch (SQLException e) {
-					System.out.println("New character creation failed to save to database via: " + insertStats);
+					StdMob.insertNewBlankMob(enteredName, enteredPass);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+					sendBack.printMessage("Critical error building new character, disconnecting.");
+					System.out.println("New character creation failed to save to database via");
 					destroyConnection();
-				}			
+				}		
 			//	String blockQuery ="Select MOBID from MOBSTATS where  MOBNAME='" + enteredName + "';";
 			//	int mobId = (int) SQLInterface.viewData(blockQuery, "MOBID");
 				// Only accounts for a single book at the moment.
-				String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values((SELECT MOBID FROM MOBSTATS"
-						+ " WHERE MOBNAME='" + enteredName + "'), 1, 1) ON DUPLICATE KEY UPDATE MOBPROGRESS=1;";
-				try {
-					SQLInterface.saveAction(insertBook);
-				} catch (SQLException e) {
-					System.out.println("New Book Addition failed to save to database via: " + insertBook);
-					e.printStackTrace();
-				}				
+							
 				try {
 					this.currentPlayer = SQLInterface.loadPlayer(enteredName, enteredPass);
 					currentPlayer.setSendBack(sendBack);
@@ -81,6 +76,7 @@ public class PlayerPrompt extends Thread {
 					destroyConnection();					
 				}
 				currentPlayer.controlStatus(true);
+				currentPlayer.setStartup(false);
 				currentPlayer.save();			
 			} else {				
 				destroyConnection();				

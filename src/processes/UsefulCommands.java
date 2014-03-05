@@ -2,6 +2,8 @@ package processes;
 import interfaces.*;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class UsefulCommands {
@@ -221,6 +223,14 @@ public class UsefulCommands {
 		
 	}
 	
+	public static boolean checkIfValidCharacters(String testString) {
+		Pattern pattern = Pattern.compile("[~#@*+%{}<>\\[\\]|\"\\_^]");
+		Matcher matcher = pattern.matcher(testString);
+		if (testString.matches(".*\\d.*") || matcher.find() || testString.equals("")) {
+			return false;
+		}
+		return true;
+	}
 	
 	/* Obsolete
 	public static void displayToAllLocation(Location location, String message) {

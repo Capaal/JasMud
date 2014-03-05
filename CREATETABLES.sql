@@ -117,9 +117,19 @@ Create table MOBSTATS (
 	MOBPASS varchar(40) not null,
 	MOBDESC text null,
 	MOBSHORTD varchar (50) null,
-	MOBLOC integer unsigned not null,
+	MOBLOC integer unsigned not null default 1,
 	MOBTYPE ENUM('STDMOB') DEFAULT 'STDMOB',
-	LOADONSTARTUP boolean not null DEFAULT true,
+	
+/*	MOBMAXHP integer unsigned not null default 100, Probably dependant on level */
+	MOBCURRENTHP integer unsigned not null default 100,
+	MOBDEAD boolean default 0,
+	MOBXPWORTH integer unsigned not null default 1,
+	MOBCURRENTXP integer unsigned not null default 1,
+	MOBCURRENTLEVEL integer unsigned not null default 1,
+	MOBAGE integer unsigned not null default 0,
+	/* Messages and Bugs need their own tables, and probably current effects as well? */
+
+	LOADONSTARTUP boolean not null DEFAULT 1,
 	PRIMARY KEY (MOBID),
 	index (MOBLOC),
 	FOREIGN KEY (MOBLOC) REFERENCES LOCATIONSTATS (LOCID)
