@@ -557,7 +557,7 @@ public class SQLInterface {
 		
 			
 			case "BALANCECOST":
-				return new BalanceCost(checkBoolean(rs.getString("BOOLEANONE")), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")));
+				return new BalanceCost(rs.getInt("INTVALUE"), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")));
 		
 			case "BLEEDEFFECT":
 				return new BleedEffect(rs.getInt("INTVALUE"), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")));
@@ -622,7 +622,7 @@ public class SQLInterface {
 				return new Move(Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")), Where.valueOf(rs.getString("ENDWHERE")));
 				
 			case "BALANCECHECK":
-				return new BalanceCheck(checkBoolean(rs.getString("BOOLEANONE")), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")));
+				return new BalanceCheck(Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")));
 				
 			case "MOVECHECK":
 				return new MoveCheck(GroundType.valueOf(rs.getString("GROUNDTYPE")), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")), Where.valueOf(rs.getString("ENDWHERE")));

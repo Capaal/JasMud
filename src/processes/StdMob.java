@@ -5,9 +5,11 @@ import items.StdItem;
 
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import effects.Balance;
 import processes.Equipment.EquipmentEnum;
 import processes.Location.GroundType;
 
@@ -28,7 +30,6 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	protected int maxHp;
 	protected int currentHp; 
 	protected Container mobLocation; 
-	protected boolean balance;
 	protected int physicalMult; //???
 	protected boolean isDead;
 	protected int speed; // ??? Or should this and physical mult be class constants?
@@ -64,7 +65,6 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		this.maxHp = build.maxHp;
 		this.currentHp = maxHp;
 		this.mobLocation = build.location;
-		this.balance = true;
 	//	this.physicalMult = build.physicalMult;
 		this.isDead = false;
 	//	this.speed = build.speed;
@@ -77,8 +77,8 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		this.bugList = new ArrayList<String>();
 		this.messages = new ArrayList<String>();
 		this.effectList = build.effectList;
-		this.tickClient = new TickClient(this);
-		tickClient.start();
+//		this.tickClient = new TickClient(this);
+//		tickClient.start();
 		WorldServer.mobList.put(name + id, this);
 	}
 	
@@ -178,7 +178,12 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public int getMaxHp() {return maxHp;}	
 	public boolean isDead() {return isDead;}	
 	public int getSpeed() {return speed;}	
-	public boolean hasBalance() {return balance;}
+	public boolean hasBalance() {
+		if (hasEffect(Balance.class)) {
+			return false;
+		}
+		return true;
+		}
 	public String getDescription() {return description;}	
 	public String getShortDescription() {return shortDescription;}	
 	public int getXpWorth() {return xpWorth;}	
@@ -366,6 +371,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	@Override
 	public void addEffect(Effect effect) {
 		effectList.add(effect);
+		WorldServer.executor.schedule(effect, effect.getDuration(), TimeUnit.MILLISECONDS);
 	}
 	
 	@Override
@@ -382,8 +388,14 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 //		return null;
 //	}
 	
-	public boolean hasEffect(Effect effect) {
-		return effectList.contains(effect);		
+	public boolean hasEffect(Class<? extends Effect> effect) {
+		System.out.println(effect);
+		for (Effect e: effectList) {
+			if (e.getClass().isInstance(effect)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void runTickEffects() {
@@ -418,7 +430,8 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	
 	@Override
 	public int getTick() {
-		return tickClient.getTick();
+//		return tickClient.getTick();
+		return 0;
 	}
 	
 	public boolean hasMana(int mana) {
@@ -431,9 +444,6 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		//meh
 	}
 
-	public void setBalance(boolean value) {
-		this.balance = value;
-	}
 	//TODO
 	@Override
 	public void equip(EquipmentEnum slot, Holdable item) {
@@ -647,6 +657,6 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 				+ " WHERE MOBNAME='" + newName + "'), 1, 1) ON DUPLICATE KEY UPDATE MOBPROGRESS=1;";
 		SQLInterface.saveAction(insertBook);
 	}
-	
 }
+
 	

@@ -35,4 +35,10 @@ public class Bleed extends Effect {
 	public int doRunEffect(Set<Type> incomingTypes, int damage) {
 		return damage;
 	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
 }

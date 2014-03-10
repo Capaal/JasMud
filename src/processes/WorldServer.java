@@ -7,6 +7,10 @@ import items.*;
 
 import java.net.*; // Needed for Socket.
 import java.util.*; // Needed for HashSet.
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.io.*; //Serializable, FileReader/Writer
 
 
@@ -48,7 +52,7 @@ public class WorldServer {
 		"You question your sanity for desiring such an action, but realize that questioning your sanity clearly means you are sane... right?",
 		"You look at yourself expectantly."};
 
-		
+	public static ExecutorService executor;
 	public static void main(String[] args) throws IOException {
 
 		// Loads players, locations, mobs, and skills.		
@@ -81,6 +85,8 @@ public class WorldServer {
 			// That host is only immediate network, probably won't work via internet.
 			ServerSocket s = new ServerSocket(23);			
 			// This creates infinite loop, catches all incoming users.
+			
+			executor = Executors.newCachedThreadPool();
 			while (true) {
 				Socket incoming = s.accept();
 				// Each socket controls incoming prompt info and out messages
@@ -89,7 +95,8 @@ public class WorldServer {
 				PlayerPrompt newClient = new PlayerPrompt(incoming);
 				activeClients.add(newClient);
 				// newClient is effectively a person, programmed poorly.
-				newClient.start();
+				executor.execute(newClient);
+				//	newClient.start();
 			}
 		}
 		catch (Exception e) {
@@ -97,6 +104,22 @@ public class WorldServer {
 		}
 	}
 	
-	
+	 static void shutdownAndAwaitTermination(ExecutorService pool) {
+		   pool.shutdown(); // Disable new tasks from being submitted
+		   try {
+		     // Wait a while for existing tasks to terminate
+		     if (!pool.awaitTermination(60, TimeUnit.SECONDS)) {
+		       pool.shutdownNow(); // Cancel currently executing tasks
+		       // Wait a while for tasks to respond to being cancelled
+		       if (!pool.awaitTermination(60, TimeUnit.SECONDS))
+		           System.err.println("Pool did not terminate");
+		     }
+		   } catch (InterruptedException ie) {
+		     // (Re-)Cancel if current thread also interrupted
+		     pool.shutdownNow();
+		     // Preserve interrupt status
+		     Thread.currentThread().interrupt();
+		   }
+		 }
 }
 

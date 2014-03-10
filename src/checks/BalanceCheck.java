@@ -13,16 +13,14 @@ import interfaces.Action.Who;
 
 public class BalanceCheck extends Action {
 	
-	private final boolean isItThis;
 	private final Who who;
 	private final Where where;
 	
 	public BalanceCheck() {
-		this(true, Who.SELF, Where.HERE);
+		this(Who.SELF, Where.HERE);
 	}
 	
-	public BalanceCheck(Boolean isItThis, Who who, Where where) {
-		this.isItThis = isItThis;
+	public BalanceCheck(Who who, Where where) {
 		this.who = who;
 		this.where = where;
 	}
@@ -31,7 +29,7 @@ public class BalanceCheck extends Action {
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		boolean success = false;
 		for (Mobile m : who.findTarget(s, fullCommand, currentPlayer,  where.findLoc(s, fullCommand, currentPlayer))) {
-			if (m.hasBalance() == isItThis) {
+			if (m.hasBalance()) {
 				success = true;
 			} else {
 				return false;
@@ -41,16 +39,8 @@ public class BalanceCheck extends Action {
 	}
 	@Override
 	public Action newBlock(Mobile player) {
-		boolean newCheck = isItThis;
 		Who newWho = who;
 		Where newWhere = where;
-		String answerBalance = Godcreate.askQuestion("Is this a check of having balance? true/false.", player);
-		if ("true".equals(answerBalance) || "false".equals(answerBalance)) {
-			newCheck = Boolean.parseBoolean(answerBalance);
-		} else {
-			player.tell("Error, your answer was not detected as a boolean.");
-			return this.newBlock(player);
-		}
 		try {
 			newWho = Who.valueOf((Godcreate.askQuestion("Who do you want to check? (this is using Syntax).", player)).toUpperCase());
 			newWhere = Where.valueOf((Godcreate.askQuestion("Where is this target? (this is using Syntax).", player)).toUpperCase());
@@ -58,19 +48,19 @@ public class BalanceCheck extends Action {
 			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE)");
 			return this.newBlock(player);
 		}
-		return new BalanceCheck(newCheck, newWho, newWhere);
+		return new BalanceCheck(newWho, newWhere);
 	}
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
-		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='BALANCECHECK' AND BLOCKPOS=" + position + " AND BOOLEANONE='" + isItThis
-				+ "' AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
+		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='BALANCECHECK' AND BLOCKPOS=" + position 
+				+ " AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
 		return SQLInterface.returnBlockView(blockQuery);
 	}
 	@Override
 	protected void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
-			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) VALUES ('BALANCECHECK', " 
-					+ position + ", '" + isItThis + "', '" + who.toString() + "', '" + where.toString() + "');";
+			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE) VALUES ('BALANCECHECK', " 
+					+ position + ", '" + who.toString() + "', '" + where.toString() + "');";
 			try {
 				SQLInterface.saveAction(sql);
 			} catch (SQLException e) {
@@ -82,6 +72,6 @@ public class BalanceCheck extends Action {
 	@Override
 	public void explainOneself(Mobile player) {
 		player.tell("Does a check to compare player's balance state against the desired state.");
-		player.tell("Desired balance state: " + isItThis + " Who: " + who.toString() + " Where: " + where.toString());
+		player.tell("Who: " + who.toString() + " Where: " + where.toString());
 	}
 }

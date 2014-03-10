@@ -9,7 +9,7 @@ import java.util.*; // Needed for keySet();
 import processes.Location.Direction;
 
 // Represents a users connection to the game. They will connect, then choose what hero to play. It handles interaction with the system.
-public class PlayerPrompt extends Thread {
+public class PlayerPrompt implements Runnable {
 
 	protected Socket incoming;
 	protected SendMessage sendBack;	
@@ -102,6 +102,9 @@ public class PlayerPrompt extends Thread {
 					currentPlayer.removeFromWorld();
 					destroyConnection();
 					break;
+				} else if (str.trim().toLowerCase().equals("shutdown")) {
+					destroyConnection();
+					WorldServer.shutdownAndAwaitTermination(WorldServer.executor);
 				} else {
 					long start = System.nanoTime();
 					StringTokenizer st = new StringTokenizer(str);
@@ -145,7 +148,7 @@ public class PlayerPrompt extends Thread {
 			System.out.println("Failed to close socket connection");
 			e.printStackTrace();
 		}
-		this.interrupt();
+//		Thread.interrupt();
 		WorldServer.activeClients.remove(this);
 	}
 }

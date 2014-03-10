@@ -7,45 +7,47 @@ import actions.Godcreate;
 import processes.SQLInterface;
 import processes.Skill;
 import checks.BalanceCheck;
+import effects.Balance;
 import interfaces.*;
 
 public class BalanceCost extends Action {
 	
 	private final Who who;
 	private final Where where;
-	private final boolean goesTo;
+	private final int duration;
 	
 	public BalanceCost() {
-		this(true, Who.SELF, Where.HERE);
+		this(0, Who.SELF, Where.HERE);
 	}
 	
-	public BalanceCost(Boolean goesTo, Who who, Where where) {
+	public BalanceCost(int duration, Who who, Where where) {
 		this.who = who;
 		this.where = where;
-		this.goesTo = goesTo;
+		this.duration = duration;
 	}
 
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
-		BalanceCheck thisCheck = new BalanceCheck(!goesTo, who, where);
+		BalanceCheck thisCheck = new BalanceCheck(who, where);
 		if (!thisCheck.activate(s, fullCommand, currentPlayer)) {
 			return false;
 		}
 		for (Mobile m : who.findTarget(s, fullCommand, currentPlayer, where.findLoc(s, fullCommand, currentPlayer))) {
-			m.setBalance(goesTo);
+			m.addEffect(new Balance(m));
+		//	m.setBalance(goesTo);
 		}
 		return true;
 	}
 	@Override
 	public Action newBlock(Mobile player) {
-		boolean newBalance = goesTo;
+		int newDuration = duration;
 		Who newWho = who;
 		Where newWhere = where;
-		String answerBoolean = Godcreate.askQuestion("What might their balance go to? true/false.", player);
-		if ("true".equals(answerBoolean) || "false".equals(answerBoolean)) {
-			newBalance = Boolean.parseBoolean(answerBoolean);
-		} else {
-			player.tell("Error, your answer was not detected as a boolean.");
+		String answerBoolean = Godcreate.askQuestion("How long should they be put off balance?", player);
+		try {
+			newDuration = Integer.parseInt(Godcreate.askQuestion("How long should they be put off balance?", player));
+		} catch (NumberFormatException e) {
+			player.tell("That was not in the format of a number, like 1");
 			return this.newBlock(player);
 		}
 		try {
@@ -55,19 +57,19 @@ public class BalanceCost extends Action {
 			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE)");
 			return this.newBlock(player);
 		}
-		return new BalanceCost(newBalance, newWho, newWhere);
+		return new BalanceCost(newDuration, newWho, newWhere);
 	}
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
-		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='BALANCECOST' AND BLOCKPOS=" + position + " AND BOOLEANONE='" + goesTo
+		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='BALANCECOST' AND BLOCKPOS=" + position + " AND INTVALUE='" + duration
 				+ "' AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
 		return SQLInterface.returnBlockView(blockQuery);
 	}
 	@Override
 	protected void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
-			String sql = "INSERT INTO block (BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) VALUES ('BALANCECOST', " 
-					+ position + ", '" + goesTo + "', '" + who.toString() + "', '" + where.toString() + "');";
+			String sql = "INSERT INTO block (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) VALUES ('BALANCECOST', " 
+					+ position + ", '" + duration + "', '" + who.toString() + "', '" + where.toString() + "');";
 			try {
 				SQLInterface.saveAction(sql);
 			} catch (SQLException e) {
@@ -78,8 +80,8 @@ public class BalanceCost extends Action {
 	}
 	@Override
 	public void explainOneself(Mobile player) {
-		player.tell("Sets balance to the new value. DOES run a balancecheck first to ensure the switch will occur.");
-		player.tell("Who: " + who.toString() + " Where: " + where.toString() + " Goes to: " + goesTo);
+		player.tell("Gives the unbalanced effect. DOES run a balancecheck first to ensure the switch will occur.");
+		player.tell("Who: " + who.toString() + " Where: " + where.toString() + " Duration: " + duration);
 	}
 	
 }

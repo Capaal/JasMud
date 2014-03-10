@@ -44,4 +44,10 @@ public class Defence extends Effect {
 		}
 		return damage;
 	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
 }

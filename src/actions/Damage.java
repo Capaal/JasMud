@@ -17,16 +17,18 @@ public class Damage extends Action {
 	private final Who who;
 	private final Where where;
 	private final boolean weaponMatter;
+	private final Type damageType;
 
 	public Damage() {
-		this(0, Who.SELF, Where.HERE, true);
+		this(0, Who.SELF, Where.HERE, true, null);
 	}
 	
-	public Damage(int intensity, Who who, Where where, boolean weaponMatter) {
+	public Damage(int intensity, Who who, Where where, boolean weaponMatter, Type newType) {
 		this.intensity = intensity;
 		this.who = who;
 		this.where = where;
 		this.weaponMatter = weaponMatter;
+		this.damageType = newType;
 	}	
 	
 	@Override

@@ -44,7 +44,7 @@ public interface Mobile extends Container, Holdable, Creatable {
 //	public Effect getEffect(String effect); Can't figure out if I need this yet or not. Can't be a String atm though.
 	public void runTickEffects();
 	public int runEffects(Set<Type> incomingTypes, int damagey);
-	public boolean hasEffect(Effect effect);
+	public boolean hasEffect(Class<? extends Effect> effect);
 	public void removeEffect(Effect effect);
 	public int getBaseDamage();
 	public int getTick();
@@ -52,7 +52,6 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public boolean hasMana(int mana);
 	public SkillBook getBook(String bookName);
 //	public void acceptCommand(String comName, Command command);
-	public void setBalance(boolean value);
 //	public boolean hasWeaponType(Type type);
 	public void removeItem(Holdable item);
 	public void addBook(SkillBook skillBook, int progress);
