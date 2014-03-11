@@ -1,9 +1,8 @@
 package processes;
 
+import interfaces.DamageEffect;
 import interfaces.Effect;
-import interfaces.Mobile;
 import interfaces.TickingEffect;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -70,9 +69,16 @@ public class EffectManager {
 	public int checkEffectsAgainstIncomingDamage(Set<Type> incomingTypes, int damage) {
 		double finalDamage = damage;
 		for (Effect effect : effectList) {
-			finalDamage = effect.checkAgainstIncomingDamage(incomingTypes, finalDamage);
+			if (effect instanceof DamageEffect) {
+				finalDamage = ((DamageEffect) effect).checkAgainstIncomingDamage(incomingTypes, finalDamage);
+			}
 		}
 		return (int)finalDamage;
+	}
+	
+	public void shutDown() {
+		WorldServer.shutdownAndAwaitTermination(effectExecutor);
+		WorldServer.shutdownAndAwaitTermination(wrapperExecutor);
 	}
 	
 	private void registerEffect(Effect newEffect) {
@@ -92,9 +98,7 @@ public class EffectManager {
 	
 	private void unRegisterEffect(Effect oldEffect) {
 		effectList.remove(oldEffect);
-	}
-	
-	
+	}	
 	
 	private class removeTask implements Runnable {
 		

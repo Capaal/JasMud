@@ -1,6 +1,6 @@
 package interfaces;
 
-public interface Item extends Holdable, Creatable {	
+public interface Item extends Holdable{	
 	
 	public int getDamage();
 	public String getDescription();

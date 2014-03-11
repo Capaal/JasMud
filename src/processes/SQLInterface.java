@@ -557,10 +557,10 @@ public class SQLInterface {
 						checkBoolean(rs.getString("BOOLEANONE")), checkType(rs.getString("TYPE")));		
 			
 			case "BALANCECOST":
-				return new BalanceCost(rs.getInt("INTVALUE"), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")));
+				return new BalanceEffect(rs.getInt("INTVALUE"), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")));
 		
 			case "BLEEDEFFECT":
-				return new BleedEffect(rs.getInt("INTVALUE"), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")));
+				return new BleedEffect(rs.getInt("INTVALUE"), rs.getInt("INTVALUETWO"), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")));
 			
 			case "WEAPONEQUIPPEDCHECK":
 				// rs.getString("SKILLTYPE") actually returns an integer that represents a pointer at a real skilltype

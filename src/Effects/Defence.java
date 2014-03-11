@@ -11,7 +11,7 @@ import interfaces.Mobile;
 // What about removal? Is being so generic going to make removal difficult?
 
 // Right now all defences cut any attack of that type's damage in half. It can't be different at the moment.
-
+/*
 public class Defence extends Effect {
 
 	private final int startTick;
@@ -50,4 +50,4 @@ public class Defence extends Effect {
 		// TODO Auto-generated method stub
 		
 	}
-}
+}*/

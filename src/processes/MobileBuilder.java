@@ -60,10 +60,10 @@ public class MobileBuilder {
 	
 	public void id(int val) {id = val;}
 	public void name(String val) {
-		if (UsefulCommands.checkIfValidCharacters(val)) {
+		if (val != null && UsefulCommands.checkIfValidCharacters(val)) {
 			name = val;
 		} else {
-			throw new IllegalArgumentException("Name contains an invalid character, or is blank.");
+			throw new IllegalArgumentException("Name givin is invalid: " + val);
 		}
 	}
 	

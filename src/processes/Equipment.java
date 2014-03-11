@@ -161,12 +161,6 @@ public class Equipment implements Container {
 	}
 
 	@Override
-	public Container getContainer(String dir) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public GroundType getGroundType() {
 		// TODO Auto-generated method stub
 		return null;
@@ -176,6 +170,11 @@ public class Equipment implements Container {
 	public Holdable getHoldableFromString(String holdableString) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Container getContainer() {
+		return currentPlayer;
 	}
 }
 	

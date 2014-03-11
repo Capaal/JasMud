@@ -2,26 +2,16 @@ package tests;
 
 import static org.junit.Assert.*;
 import interfaces.Effect;
-import interfaces.Mobile;
 import interfaces.TickingEffect;
 import static org.mockito.Mockito.*;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.mockito.stubbing.OngoingStubbing;
-
-import effects.Balance;
 import processes.EffectManager;
-import processes.StdMob;
-import processes.Type;
 
 public class EffectManagerTest {
+	
+	private EffectManager manager;
 	
 	public class EffectStub implements TickingEffect {
 
@@ -44,50 +34,42 @@ public class EffectManagerTest {
 				return true;
 			}
 			return false;
-		}
-
-		@Override
-		public double checkAgainstIncomingDamage(Set<Type> incomingTypes, double damage) {
-			// TODO Auto-generated method stub
-			return damage;
-		}		
+		}	
+	}
+	@Before
+	public void initialize() {
+		manager = new EffectManager();
 	}
 	
 	@Test
-	public void testHasEffect() {
-		EffectManager manager = new EffectManager();
+	public void testHasEffect() {		
 		manager.registerEffectDestroyAfterXMilliseconds(new EffectStub(), 200);
 		assertFalse("Effects should compare as false if not the exact same class", manager.hasEffect(new EffectStub()));
 	}
 	
 	@Test
-	public void testHasInstanceOfEffect() {
-		EffectManager manager = new EffectManager();
+	public void testHasInstanceOfEffect() {		
 		manager.registerEffectDestroyAfterXMilliseconds(new EffectStub(), 200);
 		assertTrue("Effects should compare as true if of the same class.", manager.hasInstanceOf(new EffectStub()));
 	}
 
 	@Test (expected = IllegalArgumentException.class) 
-	public void testRegisterEffectDestroyAfterXSecondsNullEffect() {
-		EffectManager manager = new EffectManager();
+	public void testRegisterEffectDestroyAfterXSecondsNullEffect() {		
 		manager.registerEffectDestroyAfterXMilliseconds(null, 1);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
-	public void testRegisterEffectDestroyAfterXSecondsZeroSeconds() {
-		EffectManager manager = new EffectManager();
+	public void testRegisterEffectDestroyAfterXSecondsZeroSeconds() {		
 		manager.registerEffectDestroyAfterXMilliseconds(mock(Effect.class), 0);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
-	public void testRegisterEffectDestroyAfterXSecondsNegativeSeconds() {
-		EffectManager manager = new EffectManager();
+	public void testRegisterEffectDestroyAfterXSecondsNegativeSeconds() {		
 		manager.registerEffectDestroyAfterXMilliseconds(mock(Effect.class), -100);
 	}
 	
 	@Test
-	public void testRegisterEffectDestroyAfterXSecondsDestroysTooEarly() throws InterruptedException {
-		EffectManager manager = new EffectManager();
+	public void testRegisterEffectDestroyAfterXSecondsDestroysTooEarly() throws InterruptedException {		
 		Effect testEffect = new EffectStub();
 		manager.registerEffectDestroyAfterXMilliseconds(testEffect, 250);
 		Thread.sleep(240);
@@ -95,8 +77,7 @@ public class EffectManagerTest {
 	}
 	
 	@Test
-	public void testRegisterEffectDestroyAfterXSecondsDestroysTooLate() throws InterruptedException {
-		EffectManager manager = new EffectManager();
+	public void testRegisterEffectDestroyAfterXSecondsDestroysTooLate() throws InterruptedException {		
 		Effect testEffect = new EffectStub();
 		manager.registerEffectDestroyAfterXMilliseconds(testEffect, 250);
 		Thread.sleep(260);
@@ -104,44 +85,37 @@ public class EffectManagerTest {
 	}
 		
 	@Test (expected = IllegalArgumentException.class) 
-	public void testRegisterEffectRepeatNTimesOverXMillisecondsNullEffect() {
-		EffectManager manager = new EffectManager();
+	public void testRegisterEffectRepeatNTimesOverXMillisecondsNullEffect() {		
 		manager.registerEffectRepeatNTimesOverXMilliseconds(null, 1, 250);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
-	public void testRegisterEffectRepeatNTimesOverXMillisecondsZeroMilliecondsTime() {
-		EffectManager manager = new EffectManager();
+	public void testRegisterEffectRepeatNTimesOverXMillisecondsZeroMilliecondsTime() {		
 		manager.registerEffectRepeatNTimesOverXMilliseconds(mock(TickingEffect.class), 0, 250);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
-	public void testRegisterEffectRepeatNTimesOverXMillisecondsNegativeMillisecondsTime() {
-		EffectManager manager = new EffectManager();
+	public void testRegisterEffectRepeatNTimesOverXMillisecondsNegativeMillisecondsTime() {		
 		manager.registerEffectRepeatNTimesOverXMilliseconds(mock(TickingEffect.class), -1, 250);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
-	public void testRegisterEffectRepeatNTimesOverXMillisecondsZeroMilliesecondsDuration() {
-		EffectManager manager = new EffectManager();
+	public void testRegisterEffectRepeatNTimesOverXMillisecondsZeroMilliesecondsDuration() {		
 		manager.registerEffectRepeatNTimesOverXMilliseconds(mock(TickingEffect.class), 2, 0);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
-	public void testRegisterEffectRepeatNTimesOverXMillisecondsNegativeMillisecondsDuration() {
-		EffectManager manager = new EffectManager();
+	public void testRegisterEffectRepeatNTimesOverXMillisecondsNegativeMillisecondsDuration() {		
 		manager.registerEffectRepeatNTimesOverXMilliseconds(mock(TickingEffect.class), 2, -1);
 	}
 	
 	@Test (expected = IllegalArgumentException.class)
-	public void testRegisterEffectRepeatNTimeOverXMillisecondsRunsTooOften() {
-		EffectManager manager = new EffectManager();
+	public void testRegisterEffectRepeatNTimeOverXMillisecondsRunsTooOften() {		
 		manager.registerEffectRepeatNTimesOverXMilliseconds(mock(TickingEffect.class), 4, 200);
 	}
 	
 	@Test
-	public void testRegisterEffectRepeatNTimesOverXMillisecondsDestroysTooEarly() throws InterruptedException {
-		EffectManager manager = new EffectManager();
+	public void testRegisterEffectRepeatNTimesOverXMillisecondsDestroysTooEarly() throws InterruptedException {		
 		TickingEffect testEffect = new EffectStub();
 		manager.registerEffectRepeatNTimesOverXMilliseconds(testEffect, 1, 250);
 		Thread.sleep(240);
@@ -149,8 +123,7 @@ public class EffectManagerTest {
 	}
 	
 	@Test
-	public void testRegisterEffectRepeatNTimesOverXMillisecondsDestroysTooLate() throws InterruptedException {
-		EffectManager manager = new EffectManager();
+	public void testRegisterEffectRepeatNTimesOverXMillisecondsDestroysTooLate() throws InterruptedException {		
 		TickingEffect testEffect = new EffectStub();
 		manager.registerEffectRepeatNTimesOverXMilliseconds(testEffect, 1, 250);
 		Thread.sleep(260);
@@ -158,8 +131,7 @@ public class EffectManagerTest {
 	}
 	
 	@Test
-	public void testRegisterEffectRepeatNTimesOverXMillisecondsRepeatsAtCorrectTime() throws InterruptedException {
-		EffectManager manager = new EffectManager();
+	public void testRegisterEffectRepeatNTimesOverXMillisecondsRepeatsAtCorrectTime() throws InterruptedException {		
 		EffectStub testEffect = new EffectStub();
 		manager.registerEffectRepeatNTimesOverXMilliseconds(testEffect, 10, 1000);
 		Thread.sleep(1100);
@@ -171,8 +143,7 @@ public class EffectManagerTest {
 	}
 	
 	@Test
-	public void testRegisterRepeatingEffectTriggersCorrectNumberOfTimesAtBeginning() throws InterruptedException {
-		EffectManager manager = new EffectManager();
+	public void testRegisterRepeatingEffectTriggersCorrectNumberOfTimesAtBeginning() throws InterruptedException {		
 		EffectStub testEffect = new EffectStub();
 		manager.registerEffectRepeatNTimesOverXMilliseconds(testEffect, 5, 300);
 		Thread.sleep(20);
@@ -180,8 +151,7 @@ public class EffectManagerTest {
 	}
 	
 	@Test
-	public void testRegisterRepeatingEffectTriggersCorrectNumberOfTimesAtMiddle() throws InterruptedException {
-		EffectManager manager = new EffectManager();
+	public void testRegisterRepeatingEffectTriggersCorrectNumberOfTimesAtMiddle() throws InterruptedException {		
 		EffectStub testEffect = new EffectStub();
 		manager.registerEffectRepeatNTimesOverXMilliseconds(testEffect, 5, 300);
 		Thread.sleep(200);
@@ -189,8 +159,7 @@ public class EffectManagerTest {
 	}
 	
 	@Test
-	public void testRegisterRepeatingEffectTriggersCorrectNumberOfTimesAtEnd() throws InterruptedException {
-		EffectManager manager = new EffectManager();
+	public void testRegisterRepeatingEffectTriggersCorrectNumberOfTimesAtEnd() throws InterruptedException {		
 		EffectStub testEffect = new EffectStub();
 		manager.registerEffectRepeatNTimesOverXMilliseconds(testEffect, 5, 300);
 		Thread.sleep(340);
@@ -198,8 +167,7 @@ public class EffectManagerTest {
 	}
 	
 	@Test
-	public void testRegisterRepeatingEffectTriggersCorrectNumberOfTimesFarFuture() throws InterruptedException {
-		EffectManager manager = new EffectManager();
+	public void testRegisterRepeatingEffectTriggersCorrectNumberOfTimesFarFuture() throws InterruptedException {		
 		EffectStub testEffect = new EffectStub();
 		manager.registerEffectRepeatNTimesOverXMilliseconds(testEffect, 5, 300);
 		Thread.sleep(500);

@@ -245,6 +245,7 @@ Create table BLOCK (
 		'MOVE', 'MOVECHECK', 'BALANCECHECK', 'DROP', 'GODCREATE', 'EQUIPCHANGE') not null,
 	BLOCKPOS integer unsigned not null default '0',
 	INTVALUE integer,
+	INTVALUETWO integer,
 	BOOLEANONE ENUM('TRUE', 'FALSE'),
 	BLOCKPOINTERONE integer unsigned,
 	BLOCKPOINTERTWO integer unsigned,

@@ -15,13 +15,11 @@ public interface Container {
 	public void look(Mobile currentPlayer);
 	public void glance(Mobile currentPlayer);
 	public void displayAll(Mobile currentPlayer);
-	// not all containers have names? maybe ids but not names.
 	public String getName();
 	public int getId();
 	public void acceptItem(Holdable newItem);
 	public void removeItemFromLocation(Holdable oldItem) ;
-	public Container getContainer(String dir);
-	/// no
+	public Container getContainer();
 	public GroundType getGroundType();
 	public Holdable getHoldableFromString(String holdableString);
 }

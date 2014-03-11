@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import interfaces.Container;
+import processes.Location;
 import processes.Location.Direction;
 import processes.Skill;
 import processes.Skill.Syntax;
@@ -201,7 +202,11 @@ public abstract class Action {
 			public ArrayList<Container> findLoc(Skill s, String fullCommand, Mobile currentPlayer) {
 				ArrayList<Container> loc = new ArrayList<Container>();
 				for (Direction d : Direction.values()) {
-					loc.add(currentPlayer.getContainer().getContainer(d.toString()));
+					Container mobLocation = currentPlayer.getContainer();
+					if (mobLocation instanceof Location) {
+						Location futureLocation = ((Location)mobLocation).getContainer(d.toString());
+						loc.add(futureLocation);
+					}
 				}			
 				return loc;
 			}
@@ -214,7 +219,11 @@ public abstract class Action {
 				ArrayList<Container> loc = new ArrayList<Container>();
 				String dir = s.getStringInfo(Syntax.DIRECTION, fullCommand);
 				if (!dir.equals("")) {
-					loc.add(currentPlayer.getContainer().getContainer(dir));
+					Container mobLocation = currentPlayer.getContainer();
+					if (mobLocation instanceof Location) {
+						Location futureLocation = ((Location)mobLocation).getContainer(dir);
+						loc.add(futureLocation);
+					}
 				}
 				return loc;
 			}
@@ -226,17 +235,19 @@ public abstract class Action {
 			public ArrayList<Container> findLoc(Skill s, String fullCommand, Mobile currentPlayer) {
 				ArrayList<Container> loc = new ArrayList<Container>();
 				String dir = s.getStringInfo(Syntax.DIRECTION, fullCommand);
-				Container onPath = currentPlayer.getContainer().getContainer(dir);
-				while (onPath != null) {
-					loc.add(onPath);
-					onPath = onPath.getContainer(dir);
+				
+				Container mobLocation = currentPlayer.getContainer();
+				if (mobLocation instanceof Location) {
+					Location onPath = ((Location)mobLocation).getContainer(dir);
+					while (onPath != null) {
+						loc.add(onPath);
+						onPath = onPath.getContainer(dir);
+					}					
 				}
 				return loc;
 			}
-			
-		
 		};
-		//Constructor
+		
 		private Where() {			
 		}		
 		public abstract ArrayList<Container> findLoc(Skill s, String fullCommand, Mobile currentPlayer);

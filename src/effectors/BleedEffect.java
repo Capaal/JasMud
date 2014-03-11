@@ -3,31 +3,28 @@ package effectors;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import actions.Damage;
 import actions.Godcreate;
 import processes.SQLInterface;
 import processes.Skill;
-import processes.Type;
 import effects.Bleed;
 import interfaces.*;
-import interfaces.Action.Where;
-import interfaces.Action.Who;
 
 public class BleedEffect extends Action {
 	
 	private final int duration;
+	private final int times;
 	private final Who who;
-	private final Where where;
+	private final Where where;	
 	
 	public BleedEffect() {
-		this(0, Who.SELF, Where.HERE);
+		this(100, 0,  Who.SELF, Where.HERE);
 	}
 	
-	public BleedEffect(int duration, Who who, Where where) {
+	public BleedEffect(int duration, int times, Who who, Where where) {
 		this.duration = duration;
 		this.who = who;
 		this.where = where;
+		this.times = times;
 	}
 
 	@Override
@@ -37,17 +34,19 @@ public class BleedEffect extends Action {
 			return false;
 		}
 		for (Mobile m : mobs) {
-			m.addEffect(new Bleed(m, duration));
+			m.addTickingEffect(new Bleed(m), duration, times);
 		}
 		return true;
 	}
 	@Override
 	public Action newBlock(Mobile player) {
 		int newDuration = duration;
+		int newTimes = times;
 		Who newWho = who;
 		Where newWhere = where;
 		try {
 			newDuration = Integer.parseInt(Godcreate.askQuestion("How long should the bleed last?", player));
+			newTimes = Integer.parseInt(Godcreate.askQuestion("How many times should the bleed trigger?", player));
 		} catch (NumberFormatException e) {
 			player.tell("That value of duration is invalid, keep it to integers. (i.e. 10)");
 			return this.newBlock(player);
@@ -59,7 +58,7 @@ public class BleedEffect extends Action {
 			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE)");
 			return this.newBlock(player);
 		}
-		return new BleedEffect(newDuration, newWho, newWhere);
+		return new BleedEffect(newDuration, newTimes, newWho, newWhere);
 	}
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {

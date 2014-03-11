@@ -227,8 +227,7 @@ public class Location implements Container {
 
 	}
 
-	@Override
-	public Container getContainer(String dir) {
+	public Location getContainer(String dir) {
 		return getLocation(dir);
 	}
 	
@@ -458,6 +457,10 @@ public class Location implements Container {
 		
 		private GroundType() {}
 		
+	}
+	@Override
+	public Container getContainer() {
+		return null;
 	}
 
 	

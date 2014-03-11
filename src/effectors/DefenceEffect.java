@@ -8,11 +8,11 @@ import actions.Godcreate;
 import processes.SQLInterface;
 import processes.Skill;
 import processes.Type;
-import effects.Defence;
+//import effects.Defence;
 import interfaces.*;
 import interfaces.Action.Where;
 import interfaces.Action.Who;
-
+/*
 public class DefenceEffect extends Action {
 	
 	private final int duration;
@@ -89,4 +89,4 @@ public class DefenceEffect extends Action {
 		player.tell("Duration: " + duration + " Who: " + who.toString() + " Where: " + where.toString() + " Type: " + type.toString());
 	}
 	
-}
+}*/

@@ -30,22 +30,14 @@ public class SkillBuilder {
 		this.name = name;
 	}
 	
-	public String getName() {return name;}	
-	public Set<Type> getTypes() {return types;}
+	public String getName() {
+		return name;
+	}
 	
-	// Just forced to work, needs to be re-made.
-//	public void complete() {
-//		SkillBook skillList = currentPlayer.getBook("skillbook");		
-//		if (skillList != null && skillList instanceof SkillBook) {
-//			((SkillBook)skillList).addSkill(new Skill(this, currentPlayer));
-//		}
-//		toDefault();
-//	}
+	public Set<Type> getTypes() {
+		return types;
+	}
 	
-//	public void complete(SkillBook skillBook) {
-//		skillBook.addSkill(new Skill(this, currentPlayer));	
-	//	toDefault();
-//	}
 	public void complete() {
 		for (SkillBook book : attachedBooks) {
 			book.addSkill(new Skill(this));

@@ -1,44 +1,27 @@
 package effects;
 
 import java.util.*;
-
 import processes.Type;
-import processes.UsefulCommands;
 import interfaces.*;
 
-public class Bleed extends Effect {
-
-	private final int intensity;
-	private final int startTick;
-	private final int endTick;
-	private final Type type = Type.BLEED;
+public class Bleed implements TickingEffect {
 	
+	private final Mobile currentPlayer;
+	private final Set<Type> type = new HashSet<Type>();	
 
-	public Bleed(Mobile currentPlayer, int duration) {
-		super(currentPlayer);
-		intensity = currentPlayer.getMaxHp()/5;
-		startTick = currentPlayer.getTick();
-		endTick = startTick + duration;
+	public Bleed(Mobile currentPlayer) {
+		this.currentPlayer = currentPlayer;
+		type.add(Type.BLEED);
 	}
-
 	@Override
-	public void doTickEffect() {
-		if (currentPlayer.getTick() > endTick) {
-			destroyEffect();		
-		}	else {
-			currentPlayer.takeDamage(EnumSet.of(type), intensity);
-			currentPlayer.displayPrompt();
+	public boolean isInstanceOf(Effect otherEffect) {
+		if (otherEffect.getClass() == Bleed.class) {
+			return true;
 		}
+		return false;
 	}
-	
-	@Override
-	public int doRunEffect(Set<Type> incomingTypes, int damage) {
-		return damage;
-	}
-
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		
+		currentPlayer.takeDamage(type, currentPlayer.getMaxHp() / 20);		
 	}
 }

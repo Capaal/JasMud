@@ -224,9 +224,9 @@ public class Godcreate extends Action {
 		actionMap.put("say", new Say());
 		actionMap.put("balancecheck", new BalanceCheck());
 		actionMap.put("movecheck", new MoveCheck());
-		actionMap.put("balancecost", new BalanceCost());		
+		actionMap.put("balancecost", new BalanceEffect());		
 		actionMap.put("bleedeffect", new BleedEffect());	
-		actionMap.put("defenceeffect", new DefenceEffect());	
+	//	actionMap.put("defenceeffect", new DefenceEffect());	
 		actionMap.put("weaponequippedcheck", new WeaponEquippedCheck());	
 	}
 	
