@@ -83,7 +83,6 @@ public class WorldServer {
 			// Preserve interrupt status
 			Thread.currentThread().interrupt();
 		}
-		shutdown();
 	}
 	
 	public static void shutdown() {

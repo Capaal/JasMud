@@ -82,10 +82,6 @@ public class PlayerPrompt implements Runnable {
 				destroyConnection();				
 			}
 		}
-				/* NOT IMPLEMENTED
-				if (currentPlayer.getMessagesSize() > 0) {
-					sendBack.printMessage("You have messages. Type RMSG to read your messages.");
-				}*/
 		currentPlayer.getContainer().look(currentPlayer);	
 		// The following is the User's infinite loop they play inside.
 	
