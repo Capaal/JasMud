@@ -58,10 +58,10 @@ public class PlayerPrompt implements Runnable {
 				//ASSUMES STDMOB right now.
 				try {
 					StdMob.insertNewBlankMob(enteredName, enteredPass);
-				} catch (SQLException e1) {
+				} catch (IllegalStateException e1) {
 					e1.printStackTrace();
 					sendBack.printMessage("Critical error building new character, disconnecting.");
-					System.out.println("New character creation failed to save to database via");
+					System.out.println("New character creation failed to save to database.");
 					destroyConnection();
 				}		
 			//	String blockQuery ="Select MOBID from MOBSTATS where  MOBNAME='" + enteredName + "';";

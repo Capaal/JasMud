@@ -28,13 +28,8 @@ public class BalanceCost extends Action {
 
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
-		BalanceCheck thisCheck = new BalanceCheck(who, where);
-		if (!thisCheck.activate(s, fullCommand, currentPlayer)) {
-			return false;
-		}
 		for (Mobile m : who.findTarget(s, fullCommand, currentPlayer, where.findLoc(s, fullCommand, currentPlayer))) {
-			m.addEffect(new Balance(m));
-		//	m.setBalance(goesTo);
+			m.addEffect(new Balance(), duration);
 		}
 		return true;
 	}
@@ -43,11 +38,10 @@ public class BalanceCost extends Action {
 		int newDuration = duration;
 		Who newWho = who;
 		Where newWhere = where;
-		String answerBoolean = Godcreate.askQuestion("How long should they be put off balance?", player);
 		try {
-			newDuration = Integer.parseInt(Godcreate.askQuestion("How long should they be put off balance?", player));
+			newDuration = Integer.parseInt(Godcreate.askQuestion("How long should they be put off balance? In milliseconds", player));
 		} catch (NumberFormatException e) {
-			player.tell("That was not in the format of a number, like 1");
+			player.tell("That was not in the format of a number, like 1000");
 			return this.newBlock(player);
 		}
 		try {

@@ -1,6 +1,8 @@
 package processes;
 
 import interfaces.Effect;
+import interfaces.Mobile;
+import interfaces.TickingEffect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,7 @@ public class EffectManager {
 		effectList = new ArrayList<Effect>();
 	}
 	
-	public void registerEffectRepeatNTimesOverXMilliseconds(Effect newEffect, int times, int duration) {
+	public void registerEffectRepeatNTimesOverXMilliseconds(TickingEffect newEffect, int times, int duration) {
 		if (times == 0 || duration / times <= 50 || newEffect == null || duration <= 0) {
 			throw new IllegalArgumentException("Invalid duration or times: " + duration + " " + times);
 		}
@@ -40,11 +42,44 @@ public class EffectManager {
 		scheduleDestroyAfterXMilliseconds(newEffect, duration);
 	}
 	
+	public boolean hasEffect(Effect checkedEffect) {
+		return effectList.contains(checkedEffect);
+	}
+	
+	public boolean hasInstanceOf(Effect effectType) {
+		for (Effect possibleEffect : effectList) {
+			if (possibleEffect.isInstanceOf(effectType)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void removeInstanceOf(Effect effectType) {
+		Effect effectToBeRemoved = null;
+		for (Effect possibleEffect : effectList) {
+			
+			if (possibleEffect.isInstanceOf(effectType)) {
+				effectToBeRemoved = possibleEffect;
+				break;
+			}
+		}
+		effectList.remove(effectToBeRemoved);
+	}
+	
+	public int checkEffectsAgainstIncomingDamage(Set<Type> incomingTypes, int damage) {
+		double finalDamage = damage;
+		for (Effect effect : effectList) {
+			finalDamage = effect.checkAgainstIncomingDamage(incomingTypes, finalDamage);
+		}
+		return (int)finalDamage;
+	}
+	
 	private void registerEffect(Effect newEffect) {
 		effectList.add(newEffect);
 	}
 	
-	private void scheduleEffectRepeatNTimesOverXMilliseconds(Effect newEffect, int times, int duration) {
+	private void scheduleEffectRepeatNTimesOverXMilliseconds(TickingEffect newEffect, int times, int duration) {
 		int timeGaps = duration / times;
 		EffectWrapper wrapper = new EffectWrapper(newEffect, times);
 		ScheduledFuture<?> future = effectExecutor.scheduleWithFixedDelay(wrapper, timeGaps, timeGaps, TimeUnit.MILLISECONDS);
@@ -52,29 +87,35 @@ public class EffectManager {
 	}
 	
 	private void scheduleDestroyAfterXMilliseconds(Effect newEffect, int milliseconds) {
-		effectExecutor.schedule(new destroyTask(newEffect), milliseconds, TimeUnit.MILLISECONDS);
+		effectExecutor.schedule(new removeTask(newEffect), milliseconds, TimeUnit.MILLISECONDS);
 	}
 	
-	private class destroyTask implements Runnable {
+	private void unRegisterEffect(Effect oldEffect) {
+		effectList.remove(oldEffect);
+	}
+	
+	
+	
+	private class removeTask implements Runnable {
 		
-		private Effect effectToBeDestroyed;
+		private Effect effectToBeRemoved;
 		
-		public destroyTask(Effect effect) {
-			this.effectToBeDestroyed = effect;
+		public removeTask(Effect effect) {
+			this.effectToBeRemoved = effect;
 		}		
 
 		public void run() {
-			effectToBeDestroyed.destroyEffect();
+			unRegisterEffect(effectToBeRemoved);
 		}
 	}
 	
 	private class EffectWrapper implements Runnable {
-		private final Effect wrappedEffect;	
+		private final TickingEffect wrappedEffect;	
 		private int timesToRun;
 		private int totalTimesRan = 0;
 		private Future future;
 		
-		public EffectWrapper(Effect effect, int times) {
+		public EffectWrapper(TickingEffect effect, int times) {
 			this.wrappedEffect = effect;
 			this.timesToRun = times;
 		}
@@ -84,7 +125,6 @@ public class EffectManager {
 				wrapperExecutor.execute(wrappedEffect);
 				totalTimesRan ++;
 			} else {
-				wrappedEffect.destroyEffect();
 				future.cancel(true);
 			}
 		}

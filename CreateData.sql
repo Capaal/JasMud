@@ -23,8 +23,8 @@ insert into SLOTTABLE (ITEMID, SLOTID) values (1, 2);
 insert into SLOT (SLOT) values ('RIGHTHAND');
 insert into SLOT (SLOT) values ('LEFTHAND');
 
-insert into mobstats (MOBID, MOBNAME, MOBPASS, MOBDESC, MOBSHORTD, MOBLOC, MOBTYPE, MOBMAXHP, MOBCURRENTHP, MOBDEAD, MOBXPWORTH, MOBCURRENTXP, MOBCURRENTLEVEL, MOBAGE, LOADONSTARTUP)
-	values	(NULL, 'James', 'James', 'He is a farmer named James.','a farmer', 1, 'STDMOB', 50, 50, false, 10, 1, 1, 1, true);
+insert into mobstats (MOBID, MOBNAME, MOBPASS, MOBDESC, MOBSHORTD, MOBLOC, MOBTYPE, MOBCURRENTHP, MOBDEAD, MOBXPWORTH, MOBCURRENTXP, MOBCURRENTLEVEL, MOBAGE, LOADONSTARTUP)
+	values	(NULL, 'James', 'James', 'He is a farmer named James.','a farmer', 1, 'STDMOB', 50, false, 10, 1, 1, 1, true);
 /*insert into mobstats values ('3','defaultGod', 'defaultGod', 'Contains God skills.', 'A god skin.','1', 'STDMOB', false);*/
 select * from mobstats;
 
@@ -41,12 +41,12 @@ insert into blocktable (SKILLID, BLOCKID) values('1', '2');
 insert into blocktable (SKILLID, BLOCKID) values('2', '2');
 insert into blocktable (SKILLID, BLOCKID) values('2', '3');
 insert into blocktable (SKILLID, BLOCKID) values('2', '4');
-
+/*
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('1', 'DAMAGE', '1', '20', 'TARGET', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('2', 'DAMAGE', '1', '5', 'TARGET', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('3', 'DAMAGE', '2', '5', 'TARGET', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('4', 'DAMAGE', '3', '5', 'TARGET', 'HERE');
-
+*/
 insert into syntaxtable (SKILLID, SYNTAXID) values ('1', '1');
 insert into syntaxtable (SKILLID, SYNTAXID) values ('1', '2');
 insert into syntaxtable (SKILLID, SYNTAXID) values ('2', '1');
@@ -58,10 +58,10 @@ insert into syntax (SYNTAXPOS, SYNTAXTYPE) values ('0', 'SKILL');
 
 
 /* GASH */
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) values('5', 'BALANCECOST', 0, 'FALSE', 'SELF', 'HERE');
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('6', 'DAMAGE', 5, '10', 'TARGET', 'HERE');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE, INTVALUE) values('5', 'BALANCECOST', 0, 'SELF', 'HERE', 4000);
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE, BOOLEANONE, TYPE) values('6', 'DAMAGE', 5, '10', 'TARGET', 'HERE', 'TRUE', 'SHARP');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('7', 'BLEEDEFFECT', '3', '10', 'TARGET', 'HERE');
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) values('8', 'DAMAGE', 2, '-15', 'SELF', 'HERE');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE, BOOLEANONE, TYPE) values('8', 'DAMAGE', 2, '-15', 'SELF', 'HERE', 'FALSE', NULL);
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BLOCKPOINTERONE) values('9', 'CHANCE', '4', '8');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TYPE, TARGETWHO, TARGETWHERE) values('10', 'WEAPONEQUIPPEDCHECK', 1, 'SHARP', 'SELF', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('11', 'MESSAGE', '6', 'You make a sharp slash at %s and then %s turns and fights back.', 'SELF', 'HERE');
@@ -93,12 +93,12 @@ insert into msgstrings (MSGSTRINGSID, MSGSTRINGSPOS, MSGSTRINGSTYPE) values ('3'
 insert into msgstrings (MSGSTRINGSID, MSGSTRINGSPOS, MSGSTRINGSTYPE) values ('4', '2', 'TARGET');
 insert into msgstrings (MSGSTRINGSID, MSGSTRINGSPOS, MSGSTRINGSTYPE) values ('5', '3', 'TARGET');
 
-/* GETBALANCE */
+/* GETBALANCE 
 insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values('4', 'getbalance', 'It gives you back balance instantly.', 'You probably already have balance.');
 insert into SKILLTABLE (SKILLBOOKID, SKILLID) values(1, 4);
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) values('14', 'BALANCECOST', '1', 'TRUE', 'SELF', 'HERE');
 insert into blocktable (SKILLID, BLOCKID) values('4', '14');
-
+*/
 /* SAY */
 insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values('5', 'say', 'Speaking to those nearby.', 'You emit no noise.');
 insert into SKILLTABLE (SKILLBOOKID, SKILLID) values(1, 5);

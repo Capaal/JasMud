@@ -52,7 +52,7 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	
 	protected Map<SkillBook, Integer> skillBookList = new HashMap<SkillBook, Integer>();
 	
-	protected ArrayList<Effect> effectList;
+	protected final EffectManager effectManager;
 	
 	/*
 	 * Constructor for StdMob takes in an internal builder class that represents all the needed data, though does not require everything
@@ -76,9 +76,9 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		
 		this.bugList = new ArrayList<String>();
 		this.messages = new ArrayList<String>();
-		this.effectList = build.effectList;
 //		this.tickClient = new TickClient(this);
 //		tickClient.start();
+		effectManager = new EffectManager();
 		WorldServer.mobList.put(name + id, this);
 	}
 	
@@ -177,13 +177,12 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	public int getCurrentHp() {return currentHp;}	
 	public int getMaxHp() {return maxHp;}	
 	public boolean isDead() {return isDead;}	
-	public int getSpeed() {return speed;}	
+	public int getSpeed() {return speed;}
+	
 	public boolean hasBalance() {
-		if (hasEffect(Balance.class)) {
-			return false;
-		}
-		return true;
-		}
+		return !hasEffect(new Balance());
+	}
+	
 	public String getDescription() {return description;}	
 	public String getShortDescription() {return shortDescription;}	
 	public int getXpWorth() {return xpWorth;}	
@@ -226,12 +225,17 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 	// Take damage should be here, so that an undead knows it takes double damage from holy without the skill needing to know this is undead.
 	@Override
 	public void takeDamage(Set<Type> types, int damage) {
-		damage = runEffects(types, damage);
+		damage = checkEffectsAgainstIncomingDamage(types, damage);
 		if (currentHp < damage) {
 			damage = currentHp;
 		}
 		this.currentHp = currentHp - damage;
 		checkHp();
+	}
+	
+	@Override
+	public int checkEffectsAgainstIncomingDamage(Set<Type> incomingTypes, int damage) {
+		return effectManager.checkEffectsAgainstIncomingDamage(incomingTypes, damage);
 	}
 	
 	// Needs to actually involving dying...
@@ -369,16 +373,18 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		
 	}
 	@Override
-	public void addEffect(Effect effect) {
-		effectList.add(effect);
-		WorldServer.executor.schedule(effect, effect.getDuration(), TimeUnit.MILLISECONDS);
+	public void addEffect(Effect newEffect, int duration) {
+		effectManager.registerEffectDestroyAfterXMilliseconds(newEffect, duration);
+	}
+	
+	@Override
+	public void addEffect(TickingEffect newEffect, int duration, int times) {
+		effectManager.registerEffectRepeatNTimesOverXMilliseconds(newEffect, times, duration);
 	}
 	
 	@Override
 	public void removeEffect(Effect effect) {
-		System.out.println(effectList.toString());
-		effectList.remove(effect);		
-		System.out.println(effectList.toString());
+		effectManager.removeInstanceOf(effect);		
 	}
 	
 //	public Effect getEffect(String effect) {
@@ -388,40 +394,12 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 //		return null;
 //	}
 	
-	public boolean hasEffect(Class<? extends Effect> effect) {
-		System.out.println(effect);
-		for (Effect e: effectList) {
-			if (e.getClass().isInstance(effect)) {
-				return true;
-			}
-		}
-		return false;
+	public boolean hasEffect(Effect effect) {
+		return effectManager.hasInstanceOf(effect);
 	}
 	
-	public void runTickEffects() {
-		Iterator<Effect> iter = effectList.iterator();
-		while (iter.hasNext()) {
-			Effect effect = (Effect) iter.next();
-			effect.doTickEffect();
-			if (effect.wasRemoved()) {
-				iter.remove();
-				removeEffect(effect);
-			}
-		}
-	}
-	@Override
-	public int runEffects(Set<Type> incomingTypes, int damage) {
-		Iterator iter = effectList.iterator();
-		while (iter.hasNext()) {
-			Effect effect = (Effect) iter.next();
-			damage = effect.doRunEffect(incomingTypes, damage);
-			if (effect.wasRemoved()) {
-				iter.remove();
-				removeEffect(effect);
-			}
-		}
-		return damage;
-	}
+	
+	
 	
 	@Override
 	public int getBaseDamage() {
@@ -650,12 +628,24 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		return false;
 	}
 	
-	public static void insertNewBlankMob(String newName, String newPassword) throws SQLException {
+	public static void insertNewBlankMob(String newName, String newPassword) throws IllegalStateException {
 		String sql = "insert into mobstats (MOBID, MOBNAME, MOBPASS) values (NULL, '" + newName + "', '" + newPassword + "');";
-		SQLInterface.saveAction(sql);
+		try {
+			SQLInterface.saveAction(sql);
+		} catch (SQLException e) {
+			System.out.println("Failed to insert blank mobile via: " + sql);
+			System.out.println(e.toString());
+			throw new IllegalStateException("Database out of sync.");
+		}
 		String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values((SELECT MOBID FROM MOBSTATS"
 				+ " WHERE MOBNAME='" + newName + "'), 1, 1) ON DUPLICATE KEY UPDATE MOBPROGRESS=1;";
-		SQLInterface.saveAction(insertBook);
+		try {
+			SQLInterface.saveAction(insertBook);
+		} catch(SQLException e) {
+			System.out.println("Failed to insert blank mobile via: " + insertBook);
+			System.out.println(e.toString());
+			throw new IllegalStateException("Database out of sync.");
+		}
 	}
 }
 

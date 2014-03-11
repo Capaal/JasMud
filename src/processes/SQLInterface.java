@@ -553,8 +553,8 @@ public class SQLInterface {
 		
 		switch (rs.getString("BLOCKTYPE")) {				
 			case "DAMAGE":
-				return new Damage(rs.getInt("INTVALUE"), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")), checkBoolean(rs.getString("BOOLEANONE")));
-		
+				return new Damage(rs.getInt("INTVALUE"), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")),
+						checkBoolean(rs.getString("BOOLEANONE")), checkType(rs.getString("TYPE")));		
 			
 			case "BALANCECOST":
 				return new BalanceCost(rs.getInt("INTVALUE"), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")));
@@ -653,6 +653,16 @@ public class SQLInterface {
 		    System.out.println(ifBoolean + " is being outputed from some skill, fails to become a true boolean and autos to false");
 		    return false;
 		}
+	}
+	
+	private static Type checkType(String possibleType) {
+		Type newType;
+		try {
+			newType = Type.valueOf(possibleType);
+		} catch(Exception e) {
+			newType = null;
+		}
+		return newType;
 	}
 	
 	public static void increaseSequencer() {

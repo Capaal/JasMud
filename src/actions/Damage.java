@@ -16,7 +16,7 @@ public class Damage extends Action {
 	private final int intensity;
 	private final Who who;
 	private final Where where;
-	private final boolean weaponMatter;
+	private final boolean doesWeaponMatter;
 	private final Type damageType;
 
 	public Damage() {
@@ -27,7 +27,7 @@ public class Damage extends Action {
 		this.intensity = intensity;
 		this.who = who;
 		this.where = where;
-		this.weaponMatter = weaponMatter;
+		this.doesWeaponMatter = weaponMatter;
 		this.damageType = newType;
 	}	
 	
@@ -57,14 +57,14 @@ public class Damage extends Action {
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='DAMAGE' AND INTVALUE=" + intensity + " AND BLOCKPOS=" + position
-				+ " AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "' AND BOOLEANONE='" + weaponMatter + "';";
+				+ " AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "' AND BOOLEANONE='" + doesWeaponMatter + "';";
 		return SQLInterface.returnBlockView(blockQuery);
 	}
 	@Override
 	protected void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT IGNORE INTO BLOCK (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE, BOOLEANONE) VALUES ('DAMAGE', " 
-					+ position + ", " +  intensity + ", '" + who.toString() + "', '" + where.toString() + "', '" + weaponMatter + "');";
+					+ position + ", " +  intensity + ", '" + who.toString() + "', '" + where.toString() + "', '" + doesWeaponMatter + "');";
 			try {
 				SQLInterface.saveAction(sql);
 			} catch (SQLException e) {
@@ -78,6 +78,7 @@ public class Damage extends Action {
 		int newIntensity = intensity;
 		Who newWho = who;
 		Where newWhere = where;
+		Type newType = damageType;
 		try {
 			newIntensity = Integer.parseInt(Godcreate.askQuestion("How much damage would you like to cause? Negative is ok.", player));
 		} catch (NumberFormatException e) {
@@ -87,19 +88,20 @@ public class Damage extends Action {
 		try {
 			newWho = Who.valueOf((Godcreate.askQuestion("Who do you want to target (this is using Syntax).", player)).toUpperCase());
 			newWhere = Where.valueOf((Godcreate.askQuestion("Where must this target be? (this is using Syntax).", player)).toUpperCase());
+			newType = Type.valueOf((Godcreate.askQuestion("What type of damage will this deal? (In syntax null is ok i.e SLASH", player)).toUpperCase());
 		} catch (IllegalArgumentException e) {
-			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE)");
+			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE, SLASH)");
 			return this.newBlock(player);
 		}
-		boolean doesWeaponMatter = true;
+		boolean doesNewWeaponMatter = true;
 		String answerWeaponMatter = Godcreate.askQuestion("Does this damage get affected by equipped weapon's stats? true/false.", player);
 		if ("true".equals(answerWeaponMatter) || "false".equals(answerWeaponMatter)) {
-			doesWeaponMatter = Boolean.parseBoolean(answerWeaponMatter);
+			doesNewWeaponMatter = Boolean.parseBoolean(answerWeaponMatter);
 		} else {
 			player.tell("Error, your answer was not detected as a boolean.");
 			return this.newBlock(player);
 		}
-		return new Damage(newIntensity, newWho, newWhere, doesWeaponMatter);
+		return new Damage(newIntensity, newWho, newWhere, doesNewWeaponMatter, newType);
 	}
 	@Override
 	public void explainOneself(Mobile player) {

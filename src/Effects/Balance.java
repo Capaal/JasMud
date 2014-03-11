@@ -1,23 +1,23 @@
 package effects;
 
-import java.util.*;
+import java.util.Set;
 
 import processes.Type;
-import interfaces.*;
+import interfaces.Effect;
 
-public class Balance extends Effect implements Runnable {	
+public class Balance implements Effect {	
 
-	public Balance(Mobile currentPlayer) {
-		super(currentPlayer, 0);
-	}	
-	@Override
-	public void run() {
-		super.run();
-		destroyEffect();
+	public Balance() {
 	}
-	// TODO Silly implementation
-	@Override
-	public int doRunEffect(Set<Type> incomingTypes, int damage) {
+	
+	public boolean isInstanceOf(Effect otherEffect) {
+		if (otherEffect.getClass() == Balance.class) {
+			return true;
+		}
+		return false;
+	}
+	
+	public double checkAgainstIncomingDamage(Set<Type> incomingTypes, double damage) {
 		return damage;
 	}
 }

@@ -27,15 +27,12 @@ public class BalanceCheck extends Action {
 	
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
-		boolean success = false;
 		for (Mobile m : who.findTarget(s, fullCommand, currentPlayer,  where.findLoc(s, fullCommand, currentPlayer))) {
-			if (m.hasBalance()) {
-				success = true;
-			} else {
+			if (!m.hasBalance()) {
 				return false;
 			}
 		}
-		return success;
+		return true;
 	}
 	@Override
 	public Action newBlock(Mobile player) {
