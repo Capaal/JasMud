@@ -2,6 +2,8 @@ package processes;
 import interfaces.*;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class UsefulCommands {
@@ -91,7 +93,7 @@ public class UsefulCommands {
 		return sb.toString();
 	}
 	
-	public static TreeMap<String, String> fullDir;
+	/*public static TreeMap<String, String> fullDir;
 	
 	public static String getDirName(String dir) {		
 		if (fullDir == null) {
@@ -121,10 +123,10 @@ public class UsefulCommands {
 			}
 		}
 		return null;
-	}
+	}*/
 	
 	// Gets player prompt (Give all player prompts an ID that represents that connection?)
-	public static PlayerPrompt getPlayerPromptFromPlayer(Mobile currentPlayer) {
+	/*public static PlayerPrompt getPlayerPromptFromPlayer(Mobile currentPlayer) {
 		Iterator iter = WorldServer.activeClients.iterator();
 		while (iter.hasNext()) {
 			PlayerPrompt t = (PlayerPrompt) iter.next();
@@ -133,7 +135,7 @@ public class UsefulCommands {
 			}
 		}	
 		return null;
-	}
+	}*/
 	
 	public final class ANSI {
 
@@ -169,13 +171,7 @@ public class UsefulCommands {
 		private ANSI() {} // disable automatic constructor
 	}
 	
-	public static void displayPrompt(Mobile currentPlayer) {
-		String balance = "b";
-		if (!currentPlayer.hasBalance()) {
-			balance = "-";
-		}
-		currentPlayer.tellLine(currentPlayer.getCurrentHp() + "/" + currentPlayer.getMaxHp() + " " + balance + ": ");
-	}
+	
 	
 	//Obsolete?
 	public static int getPosID(int i) {
@@ -195,8 +191,8 @@ public class UsefulCommands {
 	}
 	
 	// string, container to holdable
-	public static Holdable stringToHoldable(String item, Container place) {	
-		for (Holdable h : place.getInventory()) {
+/*	public static Holdable stringToHoldable(String item, Collection<Holdable> place) {
+		for (Holdable h : place) {
 			String tempItemName = h.getName().toLowerCase();
 			if (tempItemName.equals(item) || (tempItemName + h.getId()).equals(item)) {
 				return h;
@@ -204,7 +200,7 @@ public class UsefulCommands {
 		}
 		return null;
 			
-	}
+	}*/
 	
 	private static ArrayList<String> effectList;
 	public static boolean isValidEffect(String effect) {
@@ -227,6 +223,14 @@ public class UsefulCommands {
 		
 	}
 	
+	public static boolean checkIfValidCharacters(String testString) {
+		Pattern pattern = Pattern.compile("[;'~#@*+%{}<>\\[\\]|\"\\_^]");
+		Matcher matcher = pattern.matcher(testString);
+		if (testString.matches(".*\\d.*") || matcher.find() || testString.equals("")) {
+			return false;
+		}
+		return true;
+	}
 	
 	/* Obsolete
 	public static void displayToAllLocation(Location location, String message) {

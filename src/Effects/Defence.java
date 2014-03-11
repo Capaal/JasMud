@@ -1,8 +1,6 @@
 package effects;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.Set;
 import processes.Type;
 import interfaces.Effect;
 import interfaces.Mobile;
@@ -13,7 +11,7 @@ import interfaces.Mobile;
 // What about removal? Is being so generic going to make removal difficult?
 
 // Right now all defences cut any attack of that type's damage in half. It can't be different at the moment.
-
+/*
 public class Defence extends Effect {
 
 	private final int startTick;
@@ -29,10 +27,16 @@ public class Defence extends Effect {
 	
 	@Override
 	public void doTickEffect() {		
+		if (currentPlayer.getTick() <= endTick) {
+			this.destroyEffect();
+		}
 	}
 	
 	@Override
-	public int doRunEffect(List<Type> incomingTypes, int damage) {
+	public int doRunEffect(Set<Type> incomingTypes, int damage) {
+		if (currentPlayer.getTick() <= endTick) {
+			this.destroyEffect();
+		}
 		for (Type t : incomingTypes) {
 			if (t == this.type){
 				return (int)(damage*.5);
@@ -40,4 +44,10 @@ public class Defence extends Effect {
 		}
 		return damage;
 	}
-}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
+}*/

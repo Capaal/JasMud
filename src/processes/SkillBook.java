@@ -1,44 +1,68 @@
 package processes;
 
-import java.util.ArrayList;
-
-//import processes.Command;
+import java.util.HashSet;
+import java.util.Set;
 
 // Effectively a spellbook for basic skills.
 public class SkillBook {
 
-	ArrayList<Skill> skillList;
+	private Set<Skill> skillList;
+	private final String name;
+	private final int id;
+	private boolean toBeSaved = false;
 	
-	public SkillBook() {
-		skillList = new ArrayList<Skill>();
-	}
-	
-
-	public void execute(PlayerPrompt playerPrompt, String fullCommand) {
-		Skill toCast = getSkill(UsefulCommands.getFirstWord(fullCommand));
-		if (toCast != null) {
-			toCast.perform(fullCommand);
-		}
+	public SkillBook(String name, int id) {
+		skillList = new HashSet<Skill>();
+		this.name = name;
+		this.id = id;
 	}
 	
 	public void addSkill(Skill newSpell) {
 		skillList.add(newSpell);
 	}
 	
-	public Skill getSkill(String spell) {
-		int spellIndex = findSkill(spell);
-		if (spellIndex != -1) {
-			return skillList.get(spellIndex);
+	public boolean getToBeSave() {
+		return toBeSaved;
+	}
+	
+	public void setToBeSaved(boolean save) {
+		this.toBeSaved = save;
+	}
+	
+	public Skill getSkill(String skill) {
+		if (skill == null || skill.equals("")) {
+			return null;
+		}
+		return findSkill(skill);
+	}
+	
+	private Skill findSkill(String skill) {
+		for (Skill s : skillList) {
+			if (s.getName().equals(skill)) {
+				return s;
+			}
 		}
 		return null;
 	}
 	
-	private int findSkill(String skill) {
-		for (int i = 0; i < skillList.size(); i++) {
-			if (skillList.get(i).getName().equals(skill)) {
-				return i;
-			}
-		}
-		return -1;
+	public String getName() {
+		return name;
 	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public boolean save() {
+		if (toBeSaved) {			
+			for (Skill s : skillList) {
+				if (!s.save()) {
+					return false;
+				}
+			}
+			toBeSaved = false;
+		}		
+		return true;
+	}
+	
 }
