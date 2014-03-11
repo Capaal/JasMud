@@ -1,10 +1,11 @@
-package Interfaces;
+package interfaces;
 
-public interface Effect {
+import java.util.*;
+
+import processes.Type;
+
+public interface Effect  {
 	
-	public Mobile getCurrentPlayer();
-	public void setCurrentPlayer(Mobile currentPlayer);
-
-	public void destroyEffect();
-	public boolean doEffect();
+	public boolean isInstanceOf(Effect otherEffect);
+	
 }

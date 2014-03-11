@@ -6,12 +6,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import processes.Command;
-import processes.StdMob;
-import processes.Player;
 import processes.PlayerPrompt;
 import processes.UsefulCommands;
-
+/*
 public class Bug implements Command {
 	
 	private static ArrayList<String> bugList = new ArrayList<String>();
@@ -69,3 +66,4 @@ public class Bug implements Command {
 	}
 
 }
+*/

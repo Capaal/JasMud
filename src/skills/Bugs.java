@@ -1,5 +1,5 @@
 package skills;
-
+/*
 import processes.Command;
 import processes.PlayerPrompt;
 
@@ -11,4 +11,4 @@ public class Bugs implements Command {
 
 	}
 
-}
+}*/

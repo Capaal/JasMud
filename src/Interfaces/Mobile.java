@@ -1,16 +1,16 @@
-package Interfaces;
+package interfaces;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import processes.Command;
-import processes.Location;
+import processes.Equipment.EquipmentEnum;
 import processes.SendMessage;
-import skills.Arcane.SkillBook;
+import processes.Skill;
+import processes.SkillBook;
+import processes.Type;
 
-public interface Mobile extends Container, Holdable, Creatable {
+public interface Mobile extends Container, Holdable {
 	
 	public String getName();
 	public int getId();
@@ -19,37 +19,34 @@ public interface Mobile extends Container, Holdable, Creatable {
 	public int getCurrentHp();
 	public Container getContainer();
 	public boolean hasBalance();
-	public boolean getIsDead();
-	public int getSpeed();
+	public boolean isDead();
 	public String getDescription();
 	public String getShortDescription();
 	public int getXpWorth();
-	public void takeDamage(double d);
+	public void takeDamage(Set<Type> types, int d);
 	public void tell(String msg);
 	public void tellLine(String msg);
-	public void addExperience(int exp);
-	public void levelMobile();
 	public void setContainer(Container newLoc);
-	public boolean commandAllowed(String command);
-	public Command getCommand(String command);
-	public Set<String> getCommandKeySet();
-	public Collection<Command> getCommandValueSet();
+	public Skill getCommand(String command);
 	public void acceptItem(Holdable item);
-	public int getMessagesSize() ;
-	public void addBug(String bugMsg);
-	public Creatable create();
-	public void acceptCommands(HashMap<String, Command> givenCommands);
-	public void removeCommands(HashMap<String, Command> removedCommands);
-	public void addEffect(String effectName, Effect effect);
-	public Effect getEffect(String effect);
-	public void runEffects();
-	public boolean hasEffect(String effect);
-	public void removeEffect(String effect);
-	public int getBaseDamage();
-	public int getTick();
-	public void affectMana(int mana);
-	public boolean hasMana(int mana);
-	public SkillBook getBook(String bookName);
-	public void acceptCommand(String comName, Command command);
-	
+	public void addEffect(Effect newEffect, int duration);
+	public void addTickingEffect(TickingEffect newEffect, int duration, int times);
+	public int checkEffectsAgainstIncomingDamage(Set<Type> incomingTypes, int damage);
+	public boolean hasEffect(Effect effect);
+	public void removeEffect(Effect effect);
+	public void removeItem(Holdable item);
+	public void addBook(SkillBook skillBook, int progress);
+	public boolean isControlled();
+	public void controlStatus(boolean statusChange);
+	public boolean save();
+	public void setStartup(boolean b);
+	public void equip(EquipmentEnum slot, Holdable item);
+	public void unequip(Holdable item);
+	public void unequipFromSlot(EquipmentEnum slot);
+	public EquipmentEnum findEquipment(String itemName);
+	public Holdable getEquipmentInSlot(EquipmentEnum slot);
+	public void removeFromWorld();
+	public void displayPrompt();
+	public void setSendBack(SendMessage sendBack);
+	public SendMessage getSendBack();
 }

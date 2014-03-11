@@ -1,318 +1,176 @@
 package processes;
 
-import skills.*;
-import skills.Arcane.*;
-import skills.Arcane.SetTargets.Target;
-
-import java.text.MessageFormat;
+import interfaces.*;
+import items.StdItem;
+import java.sql.SQLException;
 import java.util.*;
-import java.io.*;
+import effects.Balance;
+import processes.Equipment.EquipmentEnum;
+import processes.Location.GroundType;
 
-import Effects.Bleed;
-import Effects.PierceDefence;
-import Interfaces.*;
-
-// Represents basic truths about anything that can move on its own. It can be both controlled by a player,
-// or be controlled by AI. Rat yes, hero mage yes, dragon yes, wind no, sun no, bird yes, ant yes, tree? No, make a sentient tree.
-public class StdMob implements Mobile, Container, Holdable, Creatable {
+/**
+ * A basic implentable of the interface Mobile, StdMob contains the basic methods for anything that can move around on it's own, whether
+ * that is by a player or by AI.
+ * <p>
+ * Basic uses of this class should include rats, tigers, birds, bears. Heroes will probably need to be an extension of this class.
+ * Undead might also be an extension, as they would have additional methods, or overwritten methods.
+ * @author Jason
+ */
+public class StdMob implements Mobile, Container, Holdable {
 
 	protected final String name;
-	protected String password; //Name + password is required to enter any role.
+	protected final String password;
 	protected final int id;
 	protected int maxHp;
 	protected int currentHp; 
-	protected Container mobLocation; 
-	protected boolean balance;// Should this be here?
-	protected int physicalMult;
+	protected Container mobLocation;
 	protected boolean isDead;
-	protected int speed;
-	public ArrayList<Holdable> inventory;
+	
+	protected Set<Holdable> inventory; // Make this be combined with equipment as its own class? TODO
+	protected Equipment equipment;	
+	
 	protected String description;
 	protected int xpWorth;
 	protected String shortDescription;
-	protected ArrayList<String> bugList;
-	protected ArrayList<String> messages;
 	protected int experience;
 	protected int level;
 	protected int age; 
 	protected SendMessage sendBack;
-	protected TreeMap<String, Command> allowedCommands;	
-	protected int baseDamage;
-	protected TickClient tickClient;
+	protected boolean isControlled = false;
+	protected boolean loadOnStartUp = false;
 	
-	protected HashMap<String, SkillBook> skillBookList = new HashMap<String, SkillBook>();
+	protected Map<SkillBook, Integer> skillBookList = new HashMap<SkillBook, Integer>();
 	
-	protected HashMap<String, Effect> effectList;
+	protected final EffectManager effectManager;
 	
-	protected StdMob(Init<?> build) {
+	protected StdMob(MobileBuilder build) {
 		this.name = build.name;
 		this.id = build.id;
 		this.password = build.password;
 		this.maxHp = build.maxHp;
 		this.currentHp = maxHp;
 		this.mobLocation = build.location;
-		this.balance = true;
-		this.physicalMult = build.physicalMult;
 		this.isDead = false;
-		this.speed = build.speed;
 		this.description = build.description;
 		this.shortDescription = build.shortDescription;
 		this.inventory = build.inventory;
-		this.bugList = new ArrayList<String>();
-		this.messages = new ArrayList<String>();
-		this.effectList = build.effectList;
-		this.allowedCommands = build.allowedCommands;
-		this.baseDamage = build.baseDamage;
-		this.tickClient = new TickClient(this);
-		tickClient.start();
-		
-	//	effectList.put("piercedefence", new PierceDefence()); // Temporary for testing
-		
-		allowedCommands.put("north", new Move());
-		allowedCommands.put("move", new Move());
-		allowedCommands.put("northeast", new Move());
-		allowedCommands.put("east", new Move());
-		allowedCommands.put("south", new Move());
-		allowedCommands.put("southeast", new Move());		
-		allowedCommands.put("southwest", new Move());
-		allowedCommands.put("west", new Move());
-		allowedCommands.put("northwest", new Move());
-		allowedCommands.put("up", new Move());
-		allowedCommands.put("down", new Move());
-		allowedCommands.put("in", new Move());
-		allowedCommands.put("out", new Move());
-		allowedCommands.put("swim", new Swim());
-
-		allowedCommands.put("look", new Look());
-		allowedCommands.put("examine", new Examine());
-		allowedCommands.put("get", new Get());  //temporary assumption that all mobs can get
-		allowedCommands.put("create", new Create());
-		allowedCommands.put("drop", new Drop());
-		allowedCommands.put("say", new Say());
-		
-		SkillBook skillBook = new SkillBook();
-		SkillBuilder skillBuild = new SkillBuilder();
-		
-		skillBuild.setup(this, "slash");
-		skillBuild.addAction(1, new SetTargets(0, Target.SINGLE));
-		skillBuild.addAction(2, new Damage(10));
-	//	skillBuild.addAction(0, new Bleed(20));
-	//	skillBuild.addAction(0, new ManaCheck(5));
-	//	skillBuild.addAction(2, new ManaCost(5));
-	//	skillBuild.addAction(2, new PersonalDesc("You slash violently at {1}."));
-		skillBuild.complete(skillBook);
-		
-/*		skillBuild.setup(this, "slash");
-		skillBuild.setDamage("15");
-		skillBuild.setMana("5");
-		skillBuild.setEffect("bleed 20");		
-		skillBuild.setPersonalDesc("You slash violently at {1}.");
-		skillBuild.setTargetDesc("{0} slashes violently at you!");
-		skillBuild.setCanSeeDesc("{0} slashes violently at {1}");
-		skillBuild.complete(skillBook);
-		
-		skillBuild.setup(this, "flurry");
-		skillBuild.setDamage("5");
-		skillBuild.setTarget("ALL");
-		skillBuild.setPersonalDesc("You slash violently at {1}.");
-		skillBuild.setTargetDesc("{0} slashes violently at you!");
-		skillBuild.setCanSeeDesc("{0} slashes violently at {1}");
-		skillBuild.complete(skillBook);*/
-		
-		skillBookList.put("skillbook", skillBook);		
-		
-		allowedCommands.put("design", new ArcaneBuilder());
-		allowedCommands.put("adjust", new Adjust());
-		allowedCommands.put("complete", new Complete());
-		
+		this.equipment = build.equipment;
+		equipment.setOwner(this);
+		effectManager = new EffectManager();
 		WorldServer.mobList.put(name + id, this);
 	}
 	
-	protected static abstract class Init<T extends Init<T>> {
-	
-		private final String name;
-		private final int id;		
-		private String description = "Generic.";
-		private String shortDescription = "Short and Generic.";
-		private int maxHp = 100;
-		private Container location = WorldServer.locationCollection.get(1);
-		private int physicalMult = 1;
-		private int speed = 3000;
-		private int xpWorth = 1;
-		private int baseDamage = 5;
-		private ArrayList<Holdable> inventory = new ArrayList<Holdable>();
-		private TreeMap<String, Command> allowedCommands = new TreeMap<String, Command>();
-		private String password = "";
-		private HashMap<String, Effect> effectList = new HashMap<String, Effect>();
-		
-		protected abstract T self();		
-		
-		public Init(int id, String name) {
-			if (WorldServer.mobList.containsKey(name + id)) {
-				throw new IllegalStateException("A mobile already exists with that name and id.");
-			}
-			this.id = id;
-			this.name = name;
-		}		
-		public T password(String val) {password = val;return self();}		
-		public T description(String val) {description = val;return self();}		
-		public T shortDescription(String val) {shortDescription = val;return self();}		
-		public T maxHp(int val) {maxHp = val;return self();}		
-		public T location(Container val) {location = val;return self();}		
-		public T physicalMult(int val) {physicalMult = val;return self();}		
-		public T speed(int val) {speed = val;return self();}		
-		public T inventory(Item val) {inventory.add(val);return self();}		
-		public T commands(String name, Command val) {allowedCommands.put(name, val);return self();}		
-		public T xpWorth(int val) {xpWorth = val;return self();}	
-		public T baseDamage(int val) {baseDamage = val;return self();}
-		public T effect(String string, Effect effect) {effectList.put(string, effect); return self();}
-		public StdMob build() {return new StdMob(this);}}
-	
-	public static class Builder extends Init<Builder> {
-		public Builder(int id, String name) {
-			super(id, name);
-		}
-		@Override
-		protected Builder self() {
-			return this;
-		}
-	}
-	
 	public String getName() {return name;}	
-	//Turn into a compare password? Is that safer?
-	public String getPassword() {return password;}	
-	public int getId() {return id;}	
-	public int getCurrentHp() {return currentHp;}	
-	public int getMaxHp() {return maxHp;}	
-	public Container getMobLocation() {return mobLocation;}	
-	public boolean hasBalance() {return balance;}	
-	public boolean getIsDead() {return isDead;}	
-	public int getSpeed() {return speed;}	
-	public String getDescription() {return description;}	
-	public String getShortDescription() {return shortDescription;}	
-	public int getXpWorth() {return xpWorth;}	
-	public boolean commandAllowed(String command) {return allowedCommands.containsKey(command);}	
-	public Command getCommand(String command) {return allowedCommands.get(command);}
+	public boolean isDead() {return isDead;}	
 	
-	public SortedSet<String> getCommandKeySet() {
-		return new TreeSet<String>(allowedCommands.keySet());
-	//	return allowedCommands.keySet();
-	}	
-	@Override
-	public SkillBook getBook(String bookName) {
-		return skillBookList.get(bookName);
+	public boolean hasBalance() {
+		return !hasEffect(new Balance());
 	}
 	
-	public Collection<Command> getCommandValueSet() {return allowedCommands.values();}	
-	public void acceptItem(Holdable item) {inventory.add(item);}
-	public int getMessagesSize() {return messages.size();}	
-	public void addBug(String bugMsg) {bugList.add(bugMsg);}
-	public void acceptCommands(HashMap<String, Command> givenCommands) {allowedCommands.putAll(givenCommands);}	
-	public void acceptCommand(String comName, Command command) {allowedCommands.put(comName,  command);}
-	// Doesn't do nothin.
-	public void removeCommands(HashMap<String, Command> removedCommands) {	}
-	@Override
-	public void setContainer(Container futureLocation) {mobLocation = futureLocation;}
-	@Override
-	public Container getContainer() {return mobLocation;}
+	public String getDescription() {
+		return description;
+	}
 	
-	public void takeDamage(double damage) {
-//		damage = damageAdjustments(damage);
-		this.currentHp = (int) (currentHp - damage);
+	public String getShortDescription() {
+		return shortDescription;
+	}
+	
+	public int getXpWorth() {
+		return xpWorth;
+	}
+	
+	public Skill getCommand(String command) {
+		for (SkillBook sb : skillBookList.keySet()) {
+			Skill skill = sb.getSkill(command);
+				return skill;		
+		}
+		return null;
+	}
+	
+	@Override
+	public void acceptItem(Holdable item) {
+		inventory.add(item);
+	}
+	
+	@Override
+	public synchronized void setContainer(Container futureLocation) {
+		this.mobLocation = futureLocation;
+	}
+	
+	@Override
+	public synchronized Container getContainer() {
+		return mobLocation;
+	}
+	
+	@Override
+	public void takeDamage(Set<Type> types, int damage) {
+		damage = checkEffectsAgainstIncomingDamage(types, damage);
+		if (currentHp < damage) {
+			damage = currentHp;
+		}
+		this.currentHp = currentHp - damage;
 		checkHp();
 	}
 	
-	// Incoming damage may be negated by armor, enchatments, active skills, whatever.
-/*	protected int damageAdjustments(int damage) {
-		Random rand = new Random();
-		int random = rand.nextInt(100) + 1;
-		System.out.println(random);
-	//	if (random <= missChance) {
-		//	sendBack.printMessage("Hiding has paid off, you dodge the attack.");
-	//		return 0;
-	//	}
-		return damage;
-	}*/
+	@Override
+	public int checkEffectsAgainstIncomingDamage(Set<Type> incomingTypes, int damage) {
+		return effectManager.checkEffectsAgainstIncomingDamage(incomingTypes, damage);
+	}
 	
 	protected void checkHp() {
-		if (currentHp <= 0) {
+		if (currentHp <= 0 && !isDead) {
 			tell("You colapse to the ground, unable to fight on.");
 			isDead = true;
 		}
-	}
+	}	
 	
 	public void tell(String msg) {
-		if (this.sendBack == null) {
-			sendBack = UsefulCommands.getPlayerPromptFromPlayer(this).getSendBack();
-		}
-		sendBack.printMessage(msg);
+		// NPCs will not have a sendBack object.
+		if (this.sendBack != null) {
+			sendBack.printMessage(msg);
+		} 
 	}
-	
+
 	public void tellLine(String msg) {
-		if (this.sendBack == null) {
-			sendBack = UsefulCommands.getPlayerPromptFromPlayer(this).getSendBack();
-		}
-		sendBack.printMessageLine(msg);
-	}
-		
-	public void addExperience(int exp) {
-		this.experience += exp;
-		levelMobile();
+		// NPCs will not have a sendback object.
+		if (this.sendBack != null) {
+			sendBack.printMessageLine(msg);
+		}	
 	}
 	
-	//Check this? Good for mobiles or too specific?
-	public void levelMobile() {
-		if (this.level < WorldServer.Levels.length -1) { // Too specific?
-			while (this.experience >= WorldServer.Levels[this.level]) {
-				this.level += 1;
-				tell("Congratulations, you are now level " + this.level + "!");
-				this.maxHp = (120 + this.level * 100); // Needs to raise current hp as well?
-			}
-			while (this.experience < WorldServer.Levels[this.level - 1] && this.level > 1) {
-				this.level -= 1;
-				tell("Disaster! You are now level " + this.level + "!");
-				this.maxHp = (120 + this.level * 100); 
-				if (currentHp > maxHp) {
-					currentHp = maxHp;
-				}
-			}
-			
-		}
-	}
-	
-	
-	/* Goes into AI?
-	public void checkHp(SendMessage enemySendBack, Player enemyPlayer) {
-		if (this.currentHp <= 0 && !dead) {
-			enemySendBack.printMessage("You have killed " + shortDescription + ".");
-			enemyPlayer.addExperience(xpWorth);
-			if ((this instanceof Mob)) {	
-				DeathLength death = new DeathLength((Mob) this);
-				death.start();
-				Mob isThis = (Mob) this;
-				isThis.hostile = false;
-			}
-		}
-	}*/
-	
-	public boolean removeItem(Holdable item) {
+	public synchronized void removeItem(Holdable item) {
 		if (inventory.contains(item)) {
 			inventory.remove(item);
-			return true;
-		} else {
-			return false;
 		}
+		// TODO
+		// DOES NOT DO ANYTHING IF IT DOESN"T CONTAIN? 
 	}	
 
 	@Override
-	public Creatable create() {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Holdable> getInventory() {
+		return new HashSet<Holdable>(this.inventory);
 	}
+	
 	@Override
-	public ArrayList<Holdable> getInventory() {
-		return new ArrayList<Holdable>(this.inventory);
+	public Holdable getHoldableFromString(String holdableString) {
+		for (Holdable h : inventory) {
+			String tempItemName = h.getName().toLowerCase();
+			if (tempItemName.equals(holdableString) || (tempItemName + h.getId()).equals(holdableString)) {
+				return h;
+			}
+		}
+		Collection<Holdable> items =  equipment.values();
+		for (Holdable item : items) {
+			if (item != null) {
+				String posName = item.getName().toLowerCase();					
+				if (posName.equals(holdableString) || (posName + item.getId()).equals(holdableString)) {
+					return item;
+				}
+			}
+		}
+		return null;		
 	}
+	
 	@Override
 	public String displayExits() {
 		return "You are being held by a person!";
@@ -332,83 +190,258 @@ public class StdMob implements Mobile, Container, Holdable, Creatable {
 		
 	}
 	@Override
-	public void setName(String name) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void setDescription(String desc) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
 	public void removeItemFromLocation(Holdable oldItem) {
-		// TODO Auto-generated method stub
+		if (inventory.contains(oldItem)) {
+			inventory.remove(oldItem);
+		} else if (equipment.values().contains(oldItem)) {
+			equipment.unequipItem((StdItem)oldItem);
+			removeItemFromLocation(oldItem);
+		} else {
+			System.out.println("An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
+		}
 		
 	}
 	@Override
-	public void addEffect(String effectName, Effect effect) {
-		effectList.put(effectName, effect);
+	public void addEffect(Effect newEffect, int duration) {
+		effectManager.registerEffectDestroyAfterXMilliseconds(newEffect, duration);
 	}
 	
 	@Override
-	public void removeEffect(String effect) {
-		System.out.println(effectList.toString());
-		effectList.remove(effect);		
-		System.out.println(effectList.toString());
+	public void addTickingEffect(TickingEffect newEffect, int duration, int times) {
+		effectManager.registerEffectRepeatNTimesOverXMilliseconds(newEffect, times, duration);
 	}
 	
-	public Effect getEffect(String effect) {
-		if (hasEffect(effect)) {
-			return effectList.get(effect);
+	@Override
+	public void removeEffect(Effect effect) {
+		effectManager.removeInstanceOf(effect);		
+	}
+	
+	@Override
+	public boolean hasEffect(Effect effect) {
+		return effectManager.hasInstanceOf(effect);
+	}
+
+	@Override
+	public void equip(EquipmentEnum slot, Holdable item) {
+		if (inventory.remove(item)) {
+			equipment.equip(slot, item);
+		} else {
+			System.out.println("Attempt to equip illegal item " + item.toString() + " into slot " + slot.toString());
+		}
+	}
+	
+	@Override
+	public void unequip(Holdable item) {
+		equipment.unequipItem(item);
+		inventory.add(item);
+	}
+	
+	@Override
+	public Holdable getEquipmentInSlot(EquipmentEnum slot) {
+		return equipment.getValue(slot);
+	}
+	
+	@Override
+	public EquipmentEnum findEquipment(String itemName) {
+		Collection<Holdable> items =  equipment.values();
+		for (Holdable item : items) {
+			if (item != null) {
+				String posName = item.getName().toLowerCase();					
+				if (posName.equals(itemName) || (posName + item.getId()).equals(itemName)) {
+					return equipment.getKey(item);
+				}
+			}
 		}
 		return null;
 	}
 	
-	public boolean hasEffect(String effect) {
-		return effectList.containsKey(effect);		
+	@Override
+	public void unequipFromSlot(EquipmentEnum slot) {
+		Holdable item = equipment.getValue(slot);
+		equipment.unequipSlot(slot);		
+		inventory.add(item);
 	}
 	
-	public void runEffects() {
-		Iterator iter = effectList.values().iterator();
-		while (iter.hasNext()) {
-			Effect effect = (Effect) iter.next();
-			boolean removed = effect.doEffect();
-			if (removed) {
-				iter.remove();
-				effect.destroyEffect();
-			}
-		//	if (removed) {
-		//		iter.
-		//	}
+	@Override
+	public void addBook(SkillBook skillBook, int progress) {
+		skillBookList.put(skillBook, progress);
+		
+	}
+	@Override
+	public boolean isControlled() {
+		return isControlled;
+	}
+	
+	@Override
+	public void controlStatus(boolean statusChange) {
+		isControlled = statusChange;
+	}
+	
+	@Override
+	public boolean save() {
+		if (!saveSkills()) {
+			System.out.println("Failed save of skills for " + this.getName());
+			return false;
 		}
-		
-		
-	//	for (int i = 0; i < effectList.size(); i++) {
-	//		boolean removed = effectList..doEffect();
-	//	}
-		
-	//	for (Effect e : effectList.values()) {
-	//		e.doEffect();
-	//	}
-	}
-	@Override
-	public int getBaseDamage() {
-		return baseDamage;
-	}
-	
-	@Override
-	public int getTick() {
-		return tickClient.getTick();
-	}
-	
-	public boolean hasMana(int mana) {
+		if (!saveStats()) {
+			System.out.println("Failed save of stats for " + this.getName());
+			return false;
+		}
+		if (!saveItems()) {
+			System.out.println("Failed save of items for " + this.getName());
+			return false;
+		}	
 		return true;
 	}
 	
-	public void affectMana(int mana) {
-		//meh
+	private boolean saveSkills() {			
+		for (SkillBook sb : skillBookList.keySet()) {
+			if (sb.getToBeSave()) {
+				String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values(" + id + ", " + sb.getId() + ", " + skillBookList.get(sb) +
+						") ON DUPLICATE KEY UPDATE mobprogress=" + skillBookList.get(sb) + ";";
+				try {
+					SQLInterface.saveAction(insertBook);
+				} catch (SQLException e) {
+					System.out.println("Skillbook " + sb.getName() + " failed to save it's progress table via: " + insertBook);
+					return false;
+				}
+				if (!sb.save()) {
+					return false;
+				}	
+			}
+		}	
+		return true;
+	}
+	//TODO
+	private boolean saveStats() {
+		// Should update everything that we expect to change A LOT, like location and hp. Things like description would
+		// probably be best somewhere else that get updated right when the change occurs.
+		String updateStats = "UPDATE MOBSTATS SET MOBDESC='" + description + "', MOBSHORTD='" + shortDescription 
+				+ "', MOBLOC=" + mobLocation.getId() + ", MOBCURRENTHP=" + currentHp + ", MOBDEAD='" + (isDead ? 1 : 0) + "', "
+						+ "MOBCURRENTXP=" + experience + ", MOBCURRENTLEVEL=" + level + ", MOBAGE=" + age
+						+ ", LOADONSTARTUP=" + (loadOnStartUp ? 1 : 0) + " WHERE MOBID=" + id + ";";
+		try {
+			SQLInterface.saveAction(updateStats);
+			return true;
+		} catch (SQLException e) {
+			System.out.println(this.getName() + " failed to save via sql: " + updateStats);
+			e.printStackTrace();
+			return false;
+		}
+	}	
+	
+	private boolean saveItems() {
+		for (Holdable saveInventoryItem : inventory) {
+			if (!saveInventoryItem.save()) {
+				return false;
+			}
+		}
+		for (Holdable saveEquipmentItem : equipment.values()) {
+			if (saveEquipmentItem != null) {
+				if (!saveEquipmentItem.save()) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	@Override
+	public void setStartup(boolean b) {
+		loadOnStartUp = b;		
+	}	
+
+	public void removeFromWorld() {		
+		for (Holdable inventoryItem : inventory) {
+			inventoryItem.removeFromWorld();
+		}
+		for (Holdable equipmentItem : equipment.values()) {
+			if (equipmentItem != null) {
+				equipmentItem.removeFromWorld();
+			}
+		}
+		save();
+		effectManager.shutDown();
+		mobLocation.removeItemFromLocation(this);
+		WorldServer.mobList.remove(this.getName() + this.getId());
+		
+	}
+	
+	public void displayPrompt() {
+		String balance = "b";
+		if (!hasBalance()) {
+			balance = "-";
+		}
+		tellLine(getCurrentHp() + "/" + getMaxHp() + " " + balance + ": ");
+	}
+	
+	@Override
+	public void setSendBack(SendMessage sendBack) {
+		this.sendBack = sendBack;
+		
+	}
+	
+	@Override
+	public EnumSet<EquipmentEnum> getAllowedEquipSlots() {
+		return EnumSet.noneOf(EquipmentEnum.class);
+	}
+	
+	@Override
+	public boolean containsType(Type type) {
+		return false;
+	}
+	
+	public static void insertNewBlankMob(String newName, String newPassword) throws IllegalStateException {
+		String sql = "insert into mobstats (MOBID, MOBNAME, MOBPASS) values (NULL, '" + newName + "', '" + newPassword + "');";
+		try {
+			SQLInterface.saveAction(sql);
+		} catch (SQLException e) {
+			System.out.println("Failed to insert blank mobile via: " + sql);
+			System.out.println(e.toString());
+			throw new IllegalStateException("Database out of sync.");
+		}
+		String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values((SELECT MOBID FROM MOBSTATS"
+				+ " WHERE MOBNAME='" + newName + "'), 1, 1) ON DUPLICATE KEY UPDATE MOBPROGRESS=1;";
+		try {
+			SQLInterface.saveAction(insertBook);
+		} catch(SQLException e) {
+			System.out.println("Failed to insert blank mobile via: " + insertBook);
+			System.out.println(e.toString());
+			throw new IllegalStateException("Database out of sync.");
+		}
 	}
 
+	@Override
+	public GroundType getGroundType() {
+		// TODO Auto-generated method stub
+		return GroundType.GROUND;
+	}
+
+	@Override
+	public int getId() {
+		return id;
+	}
+
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	@Override
+	public int getMaxHp() {
+		// TODO Auto-generated method stub
+		return maxHp;
+	}
+
+	@Override
+	public int getCurrentHp() {
+		// TODO Auto-generated method stub
+		return currentHp;
+	}
+
+	@Override
+	public SendMessage getSendBack() {
+		return sendBack;
+	}
 }
+
 	

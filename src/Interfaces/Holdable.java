@@ -1,6 +1,9 @@
-package Interfaces;
+package interfaces;
 
-import java.util.ArrayList;
+import java.util.EnumSet;
+
+import processes.Equipment.EquipmentEnum;
+import processes.Type;
 
 public interface Holdable {
 	
@@ -11,4 +14,8 @@ public interface Holdable {
 	public void setContainer(Container con);
 	public Container getContainer();
 	public String getShortDescription();
+	public boolean save();
+	public void removeFromWorld();
+	public EnumSet<EquipmentEnum> getAllowedEquipSlots();
+	public boolean containsType(Type type);
 }

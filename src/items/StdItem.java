@@ -1,53 +1,109 @@
 package items;
 
-import java.util.ArrayList;
-import processes.*;
-import Interfaces.*;
+/**
+ * Ok, current idea for items. Many items will be StdItem, where the only differences will be name id description, short description and other stats.
+ * Other ideas that require special code will extend stditem, such as stackable items, wearable items, consumable items, rideable items.
+ * There will exist in a secret room a single version of each unique type, which is defined by a class. These unique defaults will be used
+ * as copyable versions to be changed and then used.
+ * Consumable items will use actions blocks just like skills in order to define their use and their effects.
+ * 
+ * id
+ * description
+ * shortdescription
+ * current durability
+ * max durability
+ * physical multiplier
+ * balance multiplier
+ * location
+ * location type (location, inventory, pack, pouch)
+ * types list (SHARP, BLUNT, PIERCE, TWOHANDED and so on.)
+ * item type (tags for how they can be used, ie metal crafted for skills to know they can be crafted by metalworkers, materials, plants, tools etc.)
+ * weight
+ * 
+ * special things:
+ * coins/herbs, stackables
+ * horses/turtles, rideables
+ * food/potions/enchanted items with spells, consumables
+ * packs/pouches, containers, though those two examples might need to be seperated?
+ * wearable? it needs to change stats or other things, needs to know where to be worn
+ * 
+ * Need to implement item? Item makes things holdable and creatable, both of which all items are. But what about trees? They are unmovable.
+ * Is there any item that is NOT holdable? Creatable? (Creatable by gods, different from craftable).
+ * 
+ * A REASON to use HOLDABLE and CREATABLE, is because other things might be these things as well as item.
+ * Such as mobiles are holdable and creatable as well? I think thats it though, so interfaces for these seem silly.
+ * So really, just some interface that represents everything all mobiles and items have in common, and have both impletement this seems best.
+ * 
+ * DATABASE INFORMATION:
+ * 		The database will be designed on a super-table principle. ONE table representing ALL items. This means there will be a lot of columns needed
+ * 		for more complicated item types that will be unused by other items, and that the item type will define what is loaded.
+ * 		It shouldn't matter though, as it only defines what info is loaded, and any unused columns aren't even viewed.
+ */
 
-public class StdItem implements Item, Holdable, Creatable {
+
+
+import java.sql.SQLException;
+import java.util.*;
+
+import actions.Godcreate;
+import interfaces.*;
+import processes.*;
+import processes.Equipment.EquipmentEnum;
+// all items are not actually equipable, should be pushed down to subclass
+public class StdItem implements Holdable {
 	
-	private Double physicalMult;
-	private final int id;
 	private final String name;
-	private String description;
-	private String shortDescription;
-	private Double balanceMult;
-	private Container itemLocation;
-	public ArrayList<String> itemCommands;
-	private int maxCondition;
-	private int currentCondition;
+	private final int id;	
+	private final String description;
+	private final String shortDescription;
+	private final double physicalMult;
+	private final double balanceMult;
+	private Container itemLocation;	
+	private final int maxDurability;
+	private int currentDurability;
+	private final ArrayList<Type> types;
+	private final ArrayList<ItemType> itemTags;
+	
+	private final EnumSet<EquipmentEnum> allowedEquipSlots;
 
 	// Example of a Dagger build: 
-	// StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short a sharp.").shortDescription("a dagger").itemCommands("stab").balanceMult(.8).maxCondition(100).itemLocation(WorldServer.locationCollection.get(1)).build(); 
+	// StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short and sharp.").shortDescription("a dagger")
+	// .types("SHARP", "PIERCE").itemTags("METALCRAFT", "ENCHANTABLE").balanceMult(.8).maxDurability(100)
+	// .itemLocation(WorldServer.locationCollection.get(1)).build(); 
 	
-	public StdItem(Init<?> build) {
-		itemCommands = new ArrayList<String>();
-		itemCommands = build.itemCommands;
+	public StdItem(ItemBuilder build) {
 		this.id = build.id;
 		this.name = build.name;
 		this.physicalMult = build.physicalMult;
 		this.description = build.description;
 		this.balanceMult = build.balanceMult;
-		this.itemLocation = build.itemLocation;
-		this.itemCommands = build.itemCommands;		
+		this.itemLocation = build.itemLocation;		
 		this.shortDescription = build.shortDescription;
-		this.maxCondition = build.maxCondition;
-		this.currentCondition = maxCondition;
+		this.maxDurability = build.maxDurability;
+		this.currentDurability = build.currentDurability;
+		this.types = build.types;
+		this.itemTags = build.itemTags;
+		this.allowedEquipSlots = build.allowedSlots;
 		WorldServer.allItems.put(name + id, this);
 		itemLocation.acceptItem(this);
 	}
-	
+	/*
 	protected static abstract class Init<T extends Init<T>> {
 		
-		private Double physicalMult = 1.0;
+		private double physicalMult = 1.0;
 		private final int id;
 		private final String name;
 		private String description = "default";
 		private String shortDescription = "shortDefault";
-		private Double balanceMult = 1.0;
-		private int maxCondition = 1000;
+		private double balanceMult = 1.0;
+		private int maxDurability = 1;
+		private int currentDurability = 1;
+		private ArrayList<Type> types = new ArrayList<Type>();
+		private ArrayList<ItemType> itemTags = new ArrayList<ItemType>();
 		private Container itemLocation = WorldServer.locationCollection.get(1);
-		private ArrayList<String> itemCommands = new ArrayList<String>();
+		
+		private EnumSet<EquipmentEnum> allowedSlots;
+		
 		
 		protected abstract T self();		
 		
@@ -62,10 +118,13 @@ public class StdItem implements Item, Holdable, Creatable {
 		public T physicalMult(Double val) {physicalMult = val;return self();}		
 		public T description(String val) {description = val;return self();}		
 		public T shortDescription(String val) {shortDescription = val;return self();}		
-		public T maxCondition(int val) {maxCondition = val;return self();}		
+		public T maxDurability(int val) {maxDurability = val;return self();}		
 		public T itemLocation(Container val) {itemLocation = val;return self();}		
 		public T balanceMult(Double val) {balanceMult = val;return self();}		
-		public T itemCommands(String name) {itemCommands.add(name);return self();}				
+		public T types(ArrayList<Type> val) {types.addAll(val); return self();}
+		public T itemTags(ArrayList<ItemType> val) {itemTags.addAll(val); return self();}
+		public T currentDurability(int val) {currentDurability = val; return self();}
+		public T allowedSlots(EnumSet<EquipmentEnum> val) {allowedSlots = EnumSet.copyOf(val); return self();}
 		public StdItem build() {return new StdItem(this);}
 	}
 	
@@ -73,38 +132,172 @@ public class StdItem implements Item, Holdable, Creatable {
 		public Builder(String name, int id) {super(name, id);}
 		@Override
 		protected Builder self() {return this;}
-	}
-	@Override
-	public Creatable create() {		
+	}*/
+	
+	// Probably not what I want? as a skill will probably handle what this handles, and it'll just make a new version.
+	// But do I need a method here that handles creating a copy? As all items will probably be copies?
+	// Plus, items are no longer
+	public StdItem create() {		
 		// TODO Auto-generated method stub
 		return null;
 	}
-	@Override
-	public int getDamage() {
-		// TODO Auto-generated method stub
-		return 10;
+	
+	public String getName() {return name;}
+	public int getId() {return id;}
+	public String getDescription() {return description;}	
+	public String getShortDescription() {return shortDescription;}
+	public double getPhysicalMult() {return physicalMult;}
+	public double getBalanceMult() {return balanceMult;}
+	public synchronized void setContainer(Container con) {this.itemLocation = con;}	
+	public synchronized Container getContainer() {return itemLocation;}	
+	public int getMaxDurability() {return maxDurability;}
+	public synchronized int getCurrentDurability() {return currentDurability;}
+	public synchronized void setDurability(int newDurability) {
+		if (newDurability > maxDurability) {
+			newDurability = maxDurability;
+		}
+		this.currentDurability = newDurability;
 	}
 	@Override
-	public String getDescription() {return description;}	
-	@Override
-	public String getShortDescription() {return shortDescription;}
-	@Override
-	public String getName() {return name;}
-	@Override
-	public int getId() {return id;}
-	@Override
-	public void setContainer(Container con) {
-		// TODO Auto-generated method stub		
-	}	
-	public Container getContainer() {return itemLocation;}
+	public EnumSet<EquipmentEnum> getAllowedEquipSlots() {return allowedEquipSlots;}
+	public ArrayList<Type> getTypes() {return types;}
+	public ArrayList<ItemType> getItemTags() {return itemTags;}
 	
-	public boolean hasCommand(String command) {
-		if (itemCommands.contains(command)) {
+	@Override
+	public boolean containsType(Type type) {
+		return types.contains(type);
+	}
+	// not sure how packs will work yet...
+	@Override
+	public boolean save() {		
+		String locationType = null;
+		if (itemLocation instanceof Location) {
+			locationType = "LOCATION";
+			String updateItem = "UPDATE ITEMSTATS SET EQUIPSLOT=null WHERE ITEMID=" + getId() + ";";
+			try {
+				SQLInterface.saveAction(updateItem);
+			} catch (SQLException e) {
+				System.out.println(this.getName() + " failed to save in a location via : " + updateItem);
+				e.printStackTrace();
+			}
+		} else if (itemLocation instanceof StdMob) {
+			locationType = "INVENTORY";
+			String updateItem = "UPDATE ITEMSTATS SET EQUIPSLOT=null WHERE ITEMID=" + getId() + ";";
+			try {
+				SQLInterface.saveAction(updateItem);
+			} catch (SQLException e) {
+				System.out.println(this.getName() + " failed to save in an inventory via : " + updateItem);
+				e.printStackTrace();
+			}
+		} else {
+			locationType = "EQUIPMENT";
+			String updateItem = "UPDATE ITEMSTATS SET EQUIPSLOT='" + ((Equipment)getContainer()).getKey(this) + "' WHERE ITEMID=" + getId() + ";";
+			try {
+				SQLInterface.saveAction(updateItem);
+			} catch (SQLException e) {
+				System.out.println(this.getName() + " failed to save in an equipment via : " + updateItem);
+				e.printStackTrace();
+			}
+		} 
+		String updateItem = "UPDATE ITEMSTATS SET ITEMCURDUR=" + currentDurability + ", ITEMLOC=" + itemLocation.getId() 
+				+ ", ITEMLOCTYPE='" + locationType + "' WHERE ITEMID=" + getId() + ";";
+	//	System.out.println(updateItem);
+		try {
+			SQLInterface.saveAction(updateItem);
 			return true;
+		} catch (SQLException e) {
+			System.out.println(this.getName() + " failed to save overall as an item via : " + updateItem);
+			e.printStackTrace();
 		}
 		return false;
 	}
-	public double getPhysicalMult() {
-		return physicalMult;
+	
+	@Override
+	public void removeFromWorld() {
+		save();
+		WorldServer.allItems.remove(this.getName() + this.getId());
 	}
+	/*//TODO
+	public static boolean newItem(Mobile player) {
+		String newItemName = Godcreate.askQuestion("What is the name of this new item?", player);
+		String newItemDescription = Godcreate.askQuestion("What is the long description for this item?", player);
+		String newItemShortDescription = Godcreate.askQuestion("What is the short description for this item?", player);
+		double newItemPhysicalMult = Double.parseDouble(Godcreate.askQuestion("What is the physical multiplier for this item? 1.0 is normal.", player));
+		double newItemBalanceMult = Double.parseDouble(Godcreate.askQuestion("What is the balance multiplier for this item? 1.0 is normal.", player));;
+		String stringItemLocation = Godcreate.askQuestion("Which location should the item be in upon creation?", player);
+		Container newItemLocation;	
+		if ("here".equals(stringItemLocation.toLowerCase())) {
+			newItemLocation = player.getContainer();
+		} else {
+			newItemLocation = WorldServer.locationCollection.get(Integer.parseInt(stringItemLocation));
+		}			
+		int newItemMaxDurability = Integer.parseInt(Godcreate.askQuestion("What is this item's max durablity?", player));
+		int newItemCurrentDurability = Integer.parseInt(Godcreate.askQuestion("What is this item's currentDurability?", player));
+		int howManyItemTypes = Integer.parseInt(Godcreate.askQuestion("How many types will this item be?", player));
+		ArrayList<Type> newItemTypes = new ArrayList<Type>();
+		for (int i = 1; i <= howManyItemTypes; i++) {
+			newItemTypes.add(Type.valueOf((Godcreate.askQuestion("What type will the item have?", player).toUpperCase())));
+		}		
+		ArrayList<ItemType> newItemTags = new ArrayList<ItemType>();
+		int howManyItemTags = Integer.parseInt(Godcreate.askQuestion("How many item tags will this item have?", player));
+		for (int i = 1; i <= howManyItemTags; i++) {
+			newItemTags.add(ItemType.valueOf((Godcreate.askQuestion("What tag will the item have?", player).toUpperCase())));
+		}	
+		EnumSet<EquipmentEnum> newItemAllowedEquipSlots = EnumSet.noneOf(EquipmentEnum.class);
+		int howManyAllowedEquipSlots = Integer.parseInt(Godcreate.askQuestion("How many slots can this item be in?", player));
+		for (int i = 1; i <= howManyAllowedEquipSlots; i++) {
+			newItemAllowedEquipSlots.add(EquipmentEnum.valueOf(Godcreate.askQuestion("What slot may be filled?", player).toUpperCase()));
+		}
+		ItemBuilder newItem = new ItemBuilder();
+		newItem.setName(newItemName);
+		newItem.setPhysicalMult(newItemPhysicalMult);
+		newItem.setDescription(newItemDescription);
+		newItem.setShortDescription(newItemShortDescription);
+		newItem.setTypes(newItemTypes);
+		newItem.setItemTags(newItemTags);
+		newItem.setBalanceMult(newItemBalanceMult);
+		newItem.setMaxDurability(newItemMaxDurability);
+		newItem.setCurrentDurability(newItemCurrentDurability);
+		newItem.setItemLocation(newItemLocation);
+		newItem.setAllowedSlots(newItemAllowedEquipSlots);
+		newItem.complete(); 
+		return true;
+	}
+	/*
+	  //TODO
+	public static int getNewId() {
+		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
+				+ " LEFT JOIN itemstats ON sequencetable.sequenceid = itemstats.itemid"
+				+ " WHERE itemstats.itemid IS NULL";		
+		return (int) SQLInterface.viewData(sqlQuery, "sequenceid");
+	}*/
+	
+	public enum ItemType {
+		
+		MATERIAL() {
+			
+		},
+		
+		PLANT() {
+			
+		},
+		
+		WOODWORKING() {
+			
+		},
+		
+		ENCHANTABLE() {
+			
+		},
+		
+		METALWORKING() {
+			
+		};
+		
+		private ItemType() {};
+		
+		
+	}
+
+	
 }
