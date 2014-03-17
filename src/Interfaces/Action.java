@@ -2,10 +2,7 @@ package interfaces;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.StringTokenizer;
-
 import interfaces.Container;
 import processes.Location;
 import processes.Location.Direction;
@@ -43,6 +40,8 @@ public abstract class Action {
 	public abstract Action newBlock(Mobile player);
 	
 	public abstract void explainOneself(Mobile player);
+	
+	
 	
 	/* Questions about Targetting:
 	 * A skill will certainly be used.

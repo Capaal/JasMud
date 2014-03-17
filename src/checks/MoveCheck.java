@@ -2,14 +2,10 @@ package checks;
 
 import java.sql.SQLException;
 import java.util.HashMap;
-
-import actions.Damage;
 import actions.Godcreate;
 import processes.*;
 import processes.Location.GroundType;
 import interfaces.*;
-import interfaces.Action.Where;
-import interfaces.Action.Who;
 
 public class MoveCheck extends Action {
 	

@@ -2,15 +2,13 @@ package actions;
 
 import java.sql.SQLException;
 import java.util.HashMap;
-
 import processes.SQLInterface;
 import processes.Skill;
 import interfaces.Action;
 import interfaces.Mobile;
-import interfaces.Action.Where;
-import interfaces.Action.Who;
 
 // Using OR at the moment makes fail messages not work right. You get a fail message but still succeed on a different action.
+// The above comment still the case?
 public class Or extends Action {
 	
 	private final Action actionOne;

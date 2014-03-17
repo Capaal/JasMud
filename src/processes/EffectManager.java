@@ -5,7 +5,6 @@ import interfaces.Effect;
 import interfaces.TickingEffect;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -66,11 +65,11 @@ public class EffectManager {
 		effectList.remove(effectToBeRemoved);
 	}
 	
-	public int checkEffectsAgainstIncomingDamage(Set<Type> incomingTypes, int damage) {
+	public int checkEffectsAgainstIncomingDamage(Type incomingType, int damage) {
 		double finalDamage = damage;
 		for (Effect effect : effectList) {
 			if (effect instanceof DamageEffect) {
-				finalDamage = ((DamageEffect) effect).checkAgainstIncomingDamage(incomingTypes, finalDamage);
+				finalDamage = ((DamageEffect) effect).checkAgainstIncomingDamage(incomingType, finalDamage);
 			}
 		}
 		return (int)finalDamage;
@@ -117,7 +116,7 @@ public class EffectManager {
 		private final TickingEffect wrappedEffect;	
 		private int timesToRun;
 		private int totalTimesRan = 0;
-		private Future future;
+		private Future<?> future;
 		
 		public EffectWrapper(TickingEffect effect, int times) {
 			this.wrappedEffect = effect;
@@ -133,7 +132,7 @@ public class EffectManager {
 			}
 		}
 		
-		public void setOwnFuture(Future future) {
+		public void setOwnFuture(Future<?> future) {
 			this.future = future;
 		}
 	}

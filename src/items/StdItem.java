@@ -44,8 +44,6 @@ package items;
 
 import java.sql.SQLException;
 import java.util.*;
-
-import actions.Godcreate;
 import interfaces.*;
 import processes.*;
 import processes.Equipment.EquipmentEnum;
@@ -167,6 +165,12 @@ public class StdItem implements Holdable {
 	public boolean containsType(Type type) {
 		return types.contains(type);
 	}
+	
+	@Override
+	public double getDamageMult() {
+		return physicalMult;
+	}
+	
 	// not sure how packs will work yet...
 	@Override
 	public boolean save() {		

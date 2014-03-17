@@ -7,10 +7,7 @@ import java.util.HashMap;
 import processes.SQLInterface;
 import processes.Skill;
 import processes.Skill.Syntax;
-import processes.UsefulCommands;
 import interfaces.*;
-import interfaces.Action.Where;
-import interfaces.Action.Who;
 
 public class Look extends Action {
 	

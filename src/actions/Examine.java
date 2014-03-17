@@ -29,7 +29,6 @@ public class Examine extends Action {
 				}
 			}
 		}
-//		s.getCurrentPlayer().tell("You search around for " + toExamine + " but find nothing to examine.");
 		return false;	
 	}	
 	@Override

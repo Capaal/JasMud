@@ -1,17 +1,14 @@
 package actions;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import processes.LocationBuilder;
-import costs.*;
 import checks.*;
 import effectors.*;
 import processes.ItemBuilder;
-import processes.Location;
+import processes.MobileBuilder;
 import processes.SQLInterface;
 import processes.Skill;
 import processes.SkillBook;
@@ -21,7 +18,6 @@ import processes.Skill.Syntax;
 import processes.WorldServer;
 import interfaces.Action;
 import interfaces.Mobile;
-import items.StdItem;
 
 public class Godcreate extends Action {
 	
@@ -195,6 +191,10 @@ public class Godcreate extends Action {
 			newSkill.preview(player);
 			return processCreateNewSkill(player, newSkill);	
 		case "8":
+			newSkill.setId();
+			for (SkillBook finalSkillBooks : newSkill.getAttachedBooks()) {
+				finalSkillBooks.setToBeSaved(true);
+			}
 			newSkill.complete();
 			return true;
 		case "9":
@@ -279,11 +279,9 @@ public class Godcreate extends Action {
 	 * 
 	 ****************************************************************************/
 	private boolean processCreateMobile(Mobile player) {
-		return false;
+		player.tell("Mobile creation it is!");
+		return MobileBuilder.newMobile(player, new MobileBuilder());
 	}
-	
-	
-	
 	
 	
 	public static String askQuestion(String question, Mobile player) {
@@ -294,6 +292,16 @@ public class Godcreate extends Action {
 			answer = askQuestion(question, player);
 		}
 		return answer.toLowerCase();
+	}
+	
+	public static String askQuestionMaintainCase(String question, Mobile player) {
+		player.tell(question);
+		String answer = player.getSendBack().getMessage();
+		if (answer.equals("")) {
+			player.tell("Typing nothing will not create something.");
+			answer = askQuestion(question, player);
+		}
+		return answer;
 	}
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {

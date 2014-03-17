@@ -10,11 +10,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
 import checks.*;
-import costs.*;
 import effectors.*;
 import actions.*;
 import actions.Message.msgStrings;
@@ -83,7 +80,7 @@ public class SQLInterface {
 				String name = rs.getString("LOCNAME");
 				String description = rs.getString("LOCDES");
 	//			int inventory = rs.getInt("LOCINV");		// Not implemented
-				GroundType g = GroundType.valueOf(rs.getString("LOCTYPE"));		// Not implemented		
+	//			GroundType g = GroundType.valueOf(rs.getString("LOCTYPE"));		// Not implemented		
 				LocationBuilder newLocation = new LocationBuilder();
 				newLocation.setName(name);
 				newLocation.setId(id);
@@ -306,10 +303,12 @@ public class SQLInterface {
 					int startUp = rs.getInt("LOADONSTARTUP");
 					if (startUp == 1) {
 						loadedPlayer.loadOnStartUp(true);
+						finishedPlayer = new AggresiveMobileDecorator(loadedPlayer.complete());
 					} else {
 						loadedPlayer.loadOnStartUp(false);
+						finishedPlayer = loadedPlayer.complete();
 					}
-					finishedPlayer = loadedPlayer.complete();
+			//		finishedPlayer = loadedPlayer.complete();
 					sql = "SELECT itemstats.*, slot.SLOT, type.TYPE FROM itemstats LEFT JOIN SLOTTABLE ON itemstats.ITEMID = slottable.ITEMID"
 							+ " LEFT JOIN SLOT ON slottable.SLOTID = slot.SLOTID"
 							+ " LEFT JOIN ITEMTYPETABLE ON itemstats.ITEMID = itemtypetable.ITEMID"

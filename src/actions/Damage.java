@@ -38,28 +38,28 @@ public class Damage extends Action {
 		if (target.isEmpty()) {
 			return false;
 		}
+		int finalIntensity = determineFinalIntensity(currentPlayer);
 		for (Mobile m : target) {
-			m.takeDamage(s.getTypes(), intensity);
+			m.takeDamage(damageType, finalIntensity);
 		}
 		return true;
 	}
 	
-	/*@Override
-	public boolean save(int position) {	
-		HashMap<String, Object> blockView = selectOneself(position);
-		if (blockView == null) {
-			insertOneself(position);
-			blockView = selectOneself(position);
+	private int determineFinalIntensity(Mobile currentPlayer) {
+		if (doesWeaponMatter) {
+			double weaponMultiplier = currentPlayer.getWeaponMultiplier();
+			return (int) (intensity * weaponMultiplier);
 		}
-		this.id = (int) blockView.get("BLOCKID");
-		return true;
-	}*/
+		return intensity;
+	}
+	
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='DAMAGE' AND INTVALUE=" + intensity + " AND BLOCKPOS=" + position
 				+ " AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "' AND BOOLEANONE='" + doesWeaponMatter + "';";
 		return SQLInterface.returnBlockView(blockQuery);
 	}
+	
 	@Override
 	protected void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
@@ -73,6 +73,7 @@ public class Damage extends Action {
 			}
 		}
 	}
+	
 	@Override
 	public Action newBlock(Mobile player) {
 		int newIntensity = intensity;
@@ -88,9 +89,9 @@ public class Damage extends Action {
 		try {
 			newWho = Who.valueOf((Godcreate.askQuestion("Who do you want to target (this is using Syntax).", player)).toUpperCase());
 			newWhere = Where.valueOf((Godcreate.askQuestion("Where must this target be? (this is using Syntax).", player)).toUpperCase());
-			newType = Type.valueOf((Godcreate.askQuestion("What type of damage will this deal? (In syntax null is ok i.e SLASH", player)).toUpperCase());
+			newType = Type.valueOf((Godcreate.askQuestion("What type of damage will this deal? (In syntax null is ok i.e SHARP)", player)).toUpperCase());
 		} catch (IllegalArgumentException e) {
-			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE, SLASH)");
+			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE, SHARP)");
 			return this.newBlock(player);
 		}
 		boolean doesNewWeaponMatter = true;
@@ -103,6 +104,7 @@ public class Damage extends Action {
 		}
 		return new Damage(newIntensity, newWho, newWhere, doesNewWeaponMatter, newType);
 	}
+	
 	@Override
 	public void explainOneself(Mobile player) {
 		player.tell("Affects hp in a positive or negative way.");

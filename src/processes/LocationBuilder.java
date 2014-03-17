@@ -111,17 +111,17 @@ public class LocationBuilder {
 	public void complete() {
 		new Location(this);
 	}
-//TODO case, description and name are losing cap.
+
 	public static boolean newLocation(Mobile player, LocationBuilder builderLocation) {
 		String nextTask = Godcreate.askQuestion("What next? 1:name 2:description 3:groundtype 4:connections 5:preview 6:complete 7:exit", player).toLowerCase();
 		switch(nextTask) {
 			case "1":
 			case "name":
-				builderLocation.setName(Godcreate.askQuestion("What is this location's name?", player));
+				builderLocation.setName(Godcreate.askQuestionMaintainCase("What is this location's name?", player));
 				return newLocation(player, builderLocation);
 			case "2":
 			case "description":
-				builderLocation.setDescription(Godcreate.askQuestion("What is the location's description?", player));
+				builderLocation.setDescription(Godcreate.askQuestionMaintainCase("What is the location's description?", player));
 				return newLocation(player, builderLocation);
 			case "3":
 			case "groundtype":

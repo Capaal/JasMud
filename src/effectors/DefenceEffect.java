@@ -1,5 +1,5 @@
 package effectors;
-
+/*
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import processes.Type;
 //import effects.Defence;
 import interfaces.*;
 import interfaces.Action.Where;
-import interfaces.Action.Who;
+import interfaces.Action.Who;*/
 /*
 public class DefenceEffect extends Action {
 	

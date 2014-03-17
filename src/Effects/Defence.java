@@ -1,9 +1,9 @@
 package effects;
-
+/*
 import java.util.Set;
 import processes.Type;
 import interfaces.Effect;
-import interfaces.Mobile;
+import interfaces.Mobile;*/
 
 //**** Possibly set up for a lot of choices, like how much damage is blocked? Percentage, set?
 // How often can it block damage?

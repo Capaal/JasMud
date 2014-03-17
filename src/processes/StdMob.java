@@ -2,8 +2,10 @@ package processes;
 
 import interfaces.*;
 import items.StdItem;
+
 import java.sql.SQLException;
 import java.util.*;
+
 import effects.Balance;
 import processes.Equipment.EquipmentEnum;
 import processes.Location.GroundType;
@@ -42,8 +44,9 @@ public class StdMob implements Mobile, Container, Holdable {
 	protected Map<SkillBook, Integer> skillBookList = new HashMap<SkillBook, Integer>();
 	
 	protected final EffectManager effectManager;
+	private Mobile lastAggressor;
 	
-	protected StdMob(MobileBuilder build) {
+	public StdMob(MobileBuilder build) {
 		this.name = build.name;
 		this.id = build.id;
 		this.password = build.password;
@@ -103,8 +106,8 @@ public class StdMob implements Mobile, Container, Holdable {
 	}
 	
 	@Override
-	public void takeDamage(Set<Type> types, int damage) {
-		damage = checkEffectsAgainstIncomingDamage(types, damage);
+	public void takeDamage(Type type, int damage) {
+		damage = checkEffectsAgainstIncomingDamage(type, damage);
 		if (currentHp < damage) {
 			damage = currentHp;
 		}
@@ -113,11 +116,31 @@ public class StdMob implements Mobile, Container, Holdable {
 	}
 	
 	@Override
-	public int checkEffectsAgainstIncomingDamage(Set<Type> incomingTypes, int damage) {
-		return effectManager.checkEffectsAgainstIncomingDamage(incomingTypes, damage);
+	public int checkEffectsAgainstIncomingDamage(Type incomingType, int damage) {
+		return effectManager.checkEffectsAgainstIncomingDamage(incomingType, damage);
 	}
 	
-	protected void checkHp() {
+	@Override
+	public double getWeaponMultiplier() {
+		Holdable weapon = getEquipmentInSlot(EquipmentEnum.RIGHTHAND);
+		if (weapon != null) {
+			return weapon.getDamageMult();
+		} else {
+			weapon = getEquipmentInSlot(EquipmentEnum.LEFTHAND);
+			if (weapon != null) {
+				return weapon.getDamageMult();
+			}
+		}
+		return 1.0;
+	}
+	
+	@Override
+	public double getDamageMult() {
+		return 1.0;
+	}
+	
+	@Override
+	public void checkHp() {
 		if (currentHp <= 0 && !isDead) {
 			tell("You colapse to the ground, unable to fight on.");
 			isDead = true;
@@ -286,6 +309,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		if (!saveStats()) {
 			System.out.println("Failed save of stats for " + this.getName());
 			return false;
+			
 		}
 		if (!saveItems()) {
 			System.out.println("Failed save of items for " + this.getName());
@@ -441,6 +465,12 @@ public class StdMob implements Mobile, Container, Holdable {
 	@Override
 	public SendMessage getSendBack() {
 		return sendBack;
+	}
+
+	@Override
+	public void informLastAggressor(Mobile aggressor) {
+		this.lastAggressor = aggressor;
+		
 	}
 }
 

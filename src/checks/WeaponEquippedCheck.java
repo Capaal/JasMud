@@ -2,14 +2,10 @@ package checks;
 
 import java.sql.SQLException;
 import java.util.*;
-
-import actions.Damage;
 import actions.Godcreate;
 import processes.*;
 import processes.Equipment.EquipmentEnum;
 import interfaces.*;
-import interfaces.Action.Where;
-import interfaces.Action.Who;
 
 public class WeaponEquippedCheck extends Action {
 	

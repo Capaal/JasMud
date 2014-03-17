@@ -93,7 +93,8 @@ public class Equipment implements Container {
 		RIGHTFINGER(EquipmentType.WEAR),
 		LEGS(EquipmentType.WEAR),
 		FEET(EquipmentType.WEAR);
-	
+
+		@SuppressWarnings("unused")
 		private EquipmentType equipmentType;
 		
 		private EquipmentEnum(EquipmentType eType) {

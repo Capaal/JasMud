@@ -1,8 +1,5 @@
 package effects;
 
-import java.util.Set;
-
-import processes.Type;
 import interfaces.Effect;
 
 public class Balance implements Effect {	

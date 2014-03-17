@@ -1,8 +1,8 @@
 package actions;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
-
 import interfaces.*;
 import processes.SQLInterface;
 import processes.Skill;
@@ -22,25 +22,27 @@ public class Get extends Action {
 		this.where = where;
 	}	
 	
-	// need to write a transfer ownership method, so that I don't keep forgetting steps.
-	// Forcing 1 locations right now, need a better way to ensure no duplications of item.
-	// TODO right now it isn't versatile enough, needs to move from any container to any other container.
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		String toGet = s.getStringInfo(Syntax.ITEM, fullCommand);
-		for (Container c : where.findLoc(s, fullCommand, currentPlayer)) {
+		ArrayList<Container> possibleContainers = where.findLoc(s, fullCommand, currentPlayer);
+		for (Container c : possibleContainers) {
 			Holdable item = c.getHoldableFromString(toGet);
-			if (item != null) { 
-				c.removeItemFromLocation(item);
-				Mobile m = who.findTarget(s, fullCommand, currentPlayer, where.findLoc(s, fullCommand, currentPlayer)).get(0);
-				m.acceptItem(item);
-				item.setContainer(m);
-				m.tell("You pick up a " + item.getShortDescription() + ".");
+			if (item != null) {
+				moveItem(item, item.getContainer(), currentPlayer);
+				currentPlayer.tell("You pick up " + item.getShortDescription() + ".");
 				return true;
 			} 
 		}
 		return false;
 	}
+	
+	private void moveItem(Holdable movingItem, Container startingLocation, Container finalLocation) {
+		startingLocation.removeItemFromLocation(movingItem);
+		finalLocation.acceptItem(movingItem);
+		movingItem.setContainer(finalLocation);
+	}
+	
 	@Override
 	public Action newBlock(Mobile player) {
 		Who newWho = who;

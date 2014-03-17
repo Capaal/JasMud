@@ -1,12 +1,8 @@
 package actions;
 
 import interfaces.*;
-import interfaces.Action.Where;
-import interfaces.Action.Who;
-
 import java.sql.SQLException;
 import java.util.*;
-
 import processes.*;
 import processes.Skill.Syntax;
 

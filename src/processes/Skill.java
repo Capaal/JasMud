@@ -1,8 +1,13 @@
 package processes;
 
 import interfaces.*;
+import interfaces.Action.Where;
+import interfaces.Action.Who;
+
 import java.sql.SQLException;
 import java.util.*;
+
+import actions.Damage;
 
 public class Skill {
 	
@@ -10,7 +15,6 @@ public class Skill {
 	private int id; // related only to it's database id, probably don't even need to know what it is.TODO
 	private final String description;
 	private final Queue<Action> actions;
-	private final Set<Type> types;
 	private final List<Syntax> syntax; //Are we sure we'll be maintaining order?	
 	private final String failMsg;
 	
@@ -18,7 +22,6 @@ public class Skill {
 		this.name = build.getName();
 		this.description = build.getDescription();
 		this.actions = build.getActions();
-		this.types = build.getTypes();
 		this.failMsg = build.getFailMsg();
 		this.syntax = build.getSyntax();
 		this.id = build.getId();
@@ -28,19 +31,27 @@ public class Skill {
 	
 	// Called when attempting to cast the finished spell. May or may not have a target, depending on spell.
 	public void perform(String fullCommand, Mobile currentPlayer) {
+		boolean shouldInformTarget = false;
 		for (Action a : actions){
+			if (a instanceof Damage) {
+				shouldInformTarget = true;
+			}
 			if (!a.activate(this, fullCommand, currentPlayer)) {
 				System.out.println(a + " returned false.");
 				currentPlayer.tell(failMsg);
+				shouldInformTarget = false; // Is this correct? Should a skill that fails to complete not inform the target of an aggressor?
 				break;
+			}
+			if (shouldInformTarget) {
+				ArrayList<Container> loc = Where.HERE.findLoc(this, fullCommand, currentPlayer);
+				ArrayList<Mobile> target = Who.TARGET.findTarget(this, fullCommand, currentPlayer, loc);
+				if (!target.isEmpty()) {
+					target.get(0).informLastAggressor(currentPlayer);
+				}
 			}
 		}
 	}	
-	
-	public Set<Type> getTypes() {
-		return types;
-	}
-	
+	 // should be inside syntax enum?
 	public String getStringInfo(Syntax neededInfo, String fullCommand) {
 		ArrayList<String> fullCommandArray = new ArrayList<String>();
 		StringTokenizer st = new StringTokenizer(fullCommand);
@@ -68,12 +79,15 @@ public class Skill {
 	}
 	
 	public boolean save() {
-//		String skillSelect = "SELECT * FROM SKILL WHERE SKILLNAME='" + name + "';";
-	//	HashMap<String, Object> skillView = SQLInterface.returnBlockView(skillSelect);
-//		if (skillView.isEmpty()) {
-		String skillInsert = "UPDATE SKILL SET SKILLDES='" + description + "', SKILLFAILMSG='" + failMsg + "' WHERE SKILLID=" + id + ";";
-		//	String skillInsert = "INSERT INTO SKILL (SKILLNAME, SKILLDES, SKILLFAILMSG) VALUES ('" + name + "', '" + description 
-		//		+ "', '" + failMsg + "');";
+		String skillSelect = "SELECT * FROM SKILL WHERE SKILLNAME='" + name + "';";
+		HashMap<String, Object> skillView = SQLInterface.returnBlockView(skillSelect);
+		String skillInsert;
+		if (skillView.get("SKILLID") == null) {
+			skillInsert = "INSERT INTO SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) VALUES (" + this.id + ", '" + name + "', '" + description 
+						+ "', '" + failMsg + "');";
+		} else {
+			skillInsert = "UPDATE SKILL SET SKILLDES='" + description + "', SKILLFAILMSG='" + failMsg + "' WHERE SKILLID=" + id + ";";
+		}
 		try {
 			SQLInterface.saveAction(skillInsert);
 		} catch (SQLException e) {
@@ -143,12 +157,6 @@ public class Skill {
 		for (Action a : actions) {
 			a.explainOneself(player);
 		}
-		sb.append("Types:");
-		for (Type t : types) {
-			sb.append(" ");
-			sb.append(t.toString());
-		}
-		player.tell(sb.toString());
 		sb = new StringBuilder();
 		sb.append("Syntax:");
 		for (Syntax s : syntax) {
@@ -191,6 +199,10 @@ public class Skill {
 		
 		
 		private Syntax() {}
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	

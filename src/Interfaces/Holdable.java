@@ -18,4 +18,5 @@ public interface Holdable {
 	public void removeFromWorld();
 	public EnumSet<EquipmentEnum> getAllowedEquipSlots();
 	public boolean containsType(Type type);
+	public double getDamageMult();
 }

@@ -1,12 +1,10 @@
 package processes;
 
-import java.util.HashMap;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-
-import actions.Godcreate;
 import interfaces.*;
 
 
@@ -412,21 +410,6 @@ public class Location implements Container {
 			return null;
 		}
 		
-	}
-	//TODO
-	public static boolean newLocation(Mobile player) {
-		String newLocationName = Godcreate.askQuestion("What is the name of this new location?", player);
-		String newLocationDescription = Godcreate.askQuestion("What is the description of this new location?", player);
-		GroundType newLocationGroundType = GroundType.valueOf(Godcreate.askQuestion("What groundtype is this location?", player).toUpperCase());	
-		int numberOfExistingLocationsConnecting = Integer.parseInt(Godcreate.askQuestion("How many locations exist that this location will connect to?", player));
-		Map<String, Integer> newLocationDirectionMap = new HashMap<String, Integer>();
-		for (int i = 1; i <= numberOfExistingLocationsConnecting; i++) {
-			String thatLocationsDirection = Godcreate.askQuestion("Which direction is a location?", player);
-			int thatLocationsId = Integer.parseInt(Godcreate.askQuestion("What id is that location?", player));
-			newLocationDirectionMap.put(thatLocationsDirection, thatLocationsId);
-		}
-	//	new LocationBuilder(getNewId()).description(newLocationDescription).name(newLocationName).build();
-		return true;
 	}
 	
 	//TODO

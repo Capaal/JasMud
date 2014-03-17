@@ -1,17 +1,16 @@
 package effects;
 
-import java.util.*;
 import processes.Type;
 import interfaces.*;
 
 public class Bleed implements TickingEffect {
 	
 	private final Mobile currentPlayer;
-	private final Set<Type> type = new HashSet<Type>();	
+	private final Type type;
 
 	public Bleed(Mobile currentPlayer) {
 		this.currentPlayer = currentPlayer;
-		type.add(Type.BLEED);
+		type = Type.BLEED;
 	}
 	@Override
 	public boolean isInstanceOf(Effect otherEffect) {

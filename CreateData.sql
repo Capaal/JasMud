@@ -31,7 +31,7 @@ select * from mobstats;
 insert into SKILLBOOK (SKILLBOOKID, SKILLBOOKNAME) values (1, 'Basic Skills');
 
 /* Will need to add skillbook progress for leveling skills */
-insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values(3, 1, 1);
+insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values(1, 1, 1);
 
 insert into SKILL (SKILLID, SKILLDES, SKILLNAME, SKILLFAILMSG) values('1', '1', 'damage', 'FAIL');
 insert into SKILL (SKILLID, SKILLDES, SKILLNAME, SKILLFAILMSG) values('2', 'blah', 'slash', 'FAIL');

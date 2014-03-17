@@ -98,11 +98,15 @@ public class PlayerPrompt implements Runnable {
 					currentPlayer.removeFromWorld();
 					destroyConnection();
 					break;
-				} else if (str.trim().toLowerCase().equals("shutdown")) {
+				} else if (str.trim().toLowerCase().equals("shutdown")) {					
+					for (PlayerPrompt player : WorldServer.activeClients) {
+						player.currentPlayer.removeFromWorld();
+					}
 					destroyConnection();
 					WorldServer.shutdownAndAwaitTermination(WorldServer.executor);
 				} else {
 					long start = System.nanoTime();
+					
 					StringTokenizer st = new StringTokenizer(str);
 					String command = st.nextToken();
 					command = command.toLowerCase();

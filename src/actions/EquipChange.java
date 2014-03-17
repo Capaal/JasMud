@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
-
 import processes.Equipment.EquipmentEnum;
 import processes.SQLInterface;
 import processes.Skill;
@@ -13,9 +12,6 @@ import interfaces.Action;
 import interfaces.Container;
 import interfaces.Holdable;
 import interfaces.Mobile;
-import interfaces.Action.Where;
-import interfaces.Action.Who;
-import items.StdItem;
 
 public class EquipChange extends Action {
 
@@ -116,19 +112,6 @@ public class EquipChange extends Action {
 			} else {
 				if (slotEnum == null) {
 					slotEnum = m.findEquipment(s.getStringInfo(Syntax.ITEM, fullCommand));
-				/*	Collection<StdItem> e = m.getEquipment().values();
-					String slot = s.getStringInfo(Syntax.SLOT);
-					boolean success = false;
-					for (StdItem i : e) {
-						String posName = i.getName().toLowerCase();					
-						if (posName.equals(item) || (posName + i.getId()).equals(item)) {
-							m.getEquipment().unequipItem(i);
-							success = true;
-						}
-					}
-					if (!success) {
-						return false;
-					}*/
 				}
 				m.unequipFromSlot(slotEnum);					
 			}				
@@ -136,18 +119,6 @@ public class EquipChange extends Action {
 		return true;
 	}
 	
-	/*private EquipmentEnum determineSlot() {
-		EquipmentEnum slot;
-		if (slot.equals(null)) {
-			for (EquipmentEnum st : slots) {
-				if (m.getEquipmentInSlot(st) == null) {
-					slot = st;
-					break;
-				}
-			}
-		}
-		return slot;
-	}*/
 	@Override
 	public Action newBlock(Mobile player) {
 		Who newWho = who;

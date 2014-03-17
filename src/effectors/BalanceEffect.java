@@ -2,11 +2,9 @@ package effectors;
 
 import java.sql.SQLException;
 import java.util.HashMap;
-
 import actions.Godcreate;
 import processes.SQLInterface;
 import processes.Skill;
-import checks.BalanceCheck;
 import effects.Balance;
 import interfaces.*;
 

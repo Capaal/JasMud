@@ -1,7 +1,9 @@
 package processes;
 
 import interfaces.*;
+
 import java.util.*;
+
 import processes.Skill.Syntax;
 
 public class SkillBuilder {
@@ -85,10 +87,6 @@ public class SkillBuilder {
 		return description;
 	}
 	
-	public void setId(int id) {
-		this.id = id;
-	}
-	
 	public int getId() {
 		return id;
 	}
@@ -117,6 +115,23 @@ public class SkillBuilder {
 
 	public void setType(ArrayList<Type> skillTypes) {
 		this.types.addAll(skillTypes);		
+	}
+	
+	public void setId(int newId) {
+		this.id = newId;
+	}
+	
+	public void setId() {
+		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
+				+ " LEFT JOIN skill ON sequencetable.sequenceid = skill.skillid"
+				+ " WHERE skill.skillid IS NULL";		
+		Object availableId = (int) SQLInterface.viewData(sqlQuery, "sequenceid");
+		if (availableId == null || !(availableId instanceof Integer)) {
+			SQLInterface.increaseSequencer();
+			setId();
+		} else {
+			setId((int)availableId);
+		}		
 	}
 	
 	public void preview(Mobile player) {

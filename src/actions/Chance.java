@@ -3,13 +3,10 @@ package actions;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Random;
-
 import processes.SQLInterface;
 import processes.Skill;
 import interfaces.Action;
 import interfaces.Mobile;
-import interfaces.Action.Where;
-import interfaces.Action.Who;
 
 public class Chance extends Action {
 	

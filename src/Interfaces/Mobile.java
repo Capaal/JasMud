@@ -1,9 +1,5 @@
 package interfaces;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import processes.Equipment.EquipmentEnum;
 import processes.SendMessage;
 import processes.Skill;
@@ -23,7 +19,7 @@ public interface Mobile extends Container, Holdable {
 	public String getDescription();
 	public String getShortDescription();
 	public int getXpWorth();
-	public void takeDamage(Set<Type> types, int d);
+	public void takeDamage(Type types, int d);
 	public void tell(String msg);
 	public void tellLine(String msg);
 	public void setContainer(Container newLoc);
@@ -31,7 +27,8 @@ public interface Mobile extends Container, Holdable {
 	public void acceptItem(Holdable item);
 	public void addEffect(Effect newEffect, int duration);
 	public void addTickingEffect(TickingEffect newEffect, int duration, int times);
-	public int checkEffectsAgainstIncomingDamage(Set<Type> incomingTypes, int damage);
+	public int checkEffectsAgainstIncomingDamage(Type incomingType, int damage);
+	public double getWeaponMultiplier();
 	public boolean hasEffect(Effect effect);
 	public void removeEffect(Effect effect);
 	public void removeItem(Holdable item);
@@ -39,6 +36,7 @@ public interface Mobile extends Container, Holdable {
 	public boolean isControlled();
 	public void controlStatus(boolean statusChange);
 	public boolean save();
+	public void checkHp();
 	public void setStartup(boolean b);
 	public void equip(EquipmentEnum slot, Holdable item);
 	public void unequip(Holdable item);
@@ -49,4 +47,5 @@ public interface Mobile extends Container, Holdable {
 	public void displayPrompt();
 	public void setSendBack(SendMessage sendBack);
 	public SendMessage getSendBack();
+	public void informLastAggressor(Mobile currentPlayer);
 }

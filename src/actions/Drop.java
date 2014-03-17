@@ -1,17 +1,12 @@
 package actions;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import interfaces.*;
-import interfaces.Action.Where;
-import interfaces.Action.Who;
-import processes.Location;
 import processes.SQLInterface;
 import processes.Skill;
 import processes.Skill.Syntax;
-import processes.UsefulCommands;
 
 public class Drop extends Action {
 	
@@ -29,27 +24,25 @@ public class Drop extends Action {
 		this.finalLoc = finalLoc;
 	}	
 	
-	//TODO needs to be refactored, both get and drop can probably be made into a single block.
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		String toDrop = s.getStringInfo(Syntax.ITEM, fullCommand);
-		Boolean success = false;
 		for (Mobile m : who.findTarget(s, fullCommand, currentPlayer, where.findLoc(s, fullCommand, currentPlayer))) {
 			Holdable item = m.getHoldableFromString(toDrop);
-			if (item != null) { 
-				m.removeItem(item);
-				Container loc = finalLoc.findLoc(s, fullCommand, currentPlayer).get(0);
-				item.setContainer(loc);
-				/// currently drops in first location for finalLoc, to ensure one location gets item, but better way is better.
-				loc.acceptItem(item); 
-				success = true;
-			} else {
-				// At the moment you can run this for all, but if 2nd out of 3 can't drop item, 3rd won't try to drop it.
-				return false;
+			if (item != null) {				
+				moveItem(item, item.getContainer(), m.getContainer());
+				m.tell("You drop " + item.getShortDescription());
 			}
 		}
-		return success;
+		return true;
 	}
+	
+	private void moveItem(Holdable movingItem, Container startingLocation, Container finalLocation) {
+		startingLocation.removeItemFromLocation(movingItem);
+		finalLocation.acceptItem(movingItem);
+		movingItem.setContainer(finalLocation);
+	}
+	
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='DROP' AND ENDWHERE='" + finalLoc.toString() + "' AND BLOCKPOS=" + position
