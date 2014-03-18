@@ -2,6 +2,8 @@ package checks;
 
 import java.sql.SQLException;
 import java.util.*;
+
+import TargettingStrategies.*;
 import actions.Godcreate;
 import processes.*;
 import processes.Equipment.EquipmentEnum;
@@ -10,14 +12,14 @@ import interfaces.*;
 public class WeaponEquippedCheck extends Action {
 	
 	private final Type isItThis;
-	private final Who who;
-	private final Where where;
+	private final WhatTargettingStrategy who;
+	private final WhereTargettingStrategy where;
 	
 	public WeaponEquippedCheck() {
-		this(Type.BLUNT, Who.SELF, Where.HERE);
+		this(Type.BLUNT, new TargetSelfWhatStrategy(), new TargetHereWhereStrategy());
 	}
 	
-	public WeaponEquippedCheck(Type isItThis, Who who, Where where) {
+	public WeaponEquippedCheck(Type isItThis, WhatTargettingStrategy who, WhereTargettingStrategy where) {
 		this.isItThis = isItThis;
 		this.who = who;
 		this.where = where;
@@ -26,27 +28,31 @@ public class WeaponEquippedCheck extends Action {
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		boolean success = false;
-		for (Mobile m : who.findTarget(s, fullCommand, currentPlayer, where.findLoc(s, fullCommand, currentPlayer))) {
-			Holdable leftHandItem = m.getEquipmentInSlot(EquipmentEnum.LEFTHAND);
-			Holdable rightHandItem = m.getEquipmentInSlot(EquipmentEnum.RIGHTHAND);
-			if (rightHandItem != null && rightHandItem.containsType(isItThis)) {
-				success = true;				 
-			} else if (leftHandItem != null && leftHandItem.containsType(isItThis)) {
-				success = true;				 
-			} else {
-				return false;
+		for (Holdable m : who.findWhat(s, fullCommand, currentPlayer, where.findWhere(s, fullCommand, currentPlayer))) {
+			if (m instanceof Mobile) {
+				Holdable leftHandItem = ((Mobile) m).getEquipmentInSlot(EquipmentEnum.LEFTHAND);
+				Holdable rightHandItem = ((Mobile) m).getEquipmentInSlot(EquipmentEnum.RIGHTHAND);
+				if (rightHandItem != null && rightHandItem.containsType(isItThis)) {
+					success = true;				 
+				} else if (leftHandItem != null && leftHandItem.containsType(isItThis)) {
+					success = true;				 
+				} else {
+					return false;
+				}
 			}
 		}
 		return success;
 	}
 	@Override
 	public Action newBlock(Mobile player) {
+		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
+		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
 		Type newType = isItThis;
-		Who newWho = who;
-		Where newWhere = where;
+		WhatTargettingStrategy newWho = who;
+		WhereTargettingStrategy newWhere = where;
 		try {
-			newWho = Who.valueOf((Godcreate.askQuestion("Who do you want to check? (this is using Syntax).", player)).toUpperCase());
-			newWhere = Where.valueOf((Godcreate.askQuestion("Where is this person? (this is using Syntax).", player)).toUpperCase());
+			newWho = whatFactory.parse((Godcreate.askQuestion("Who do you want to check? (this is using Syntax).", player)).toUpperCase());
+			newWhere = whereFactory.parse((Godcreate.askQuestion("Where is this person? (this is using Syntax).", player)).toUpperCase());
 			newType = Type.valueOf(Godcreate.askQuestion("What type of weapon must they have equipped?", player).toUpperCase());
 		} catch (IllegalArgumentException e) {
 			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE)");

@@ -6,8 +6,10 @@ import java.util.List;
 
 import processes.Skill;
 
-public interface TargettingStrategyWhere {
+public interface WhereTargettingStrategy {
 	
 	public List<Container> findWhere(Skill s, String fullCommand, Mobile currentPlayer);
+	
+	public String toString();
 
 }

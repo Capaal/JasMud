@@ -415,7 +415,8 @@ public class StdMob implements Mobile, Container, Holdable {
 	}
 	
 	public static void insertNewBlankMob(String newName, String newPassword) throws IllegalStateException {
-		String sql = "insert into mobstats (MOBID, MOBNAME, MOBPASS) values (NULL, '" + newName + "', '" + newPassword + "');";
+		int newId = findNewId();
+		String sql = "insert into mobstats (MOBID, MOBNAME, MOBPASS) values (" + newId + ", '" + newName + "', '" + newPassword + "');";
 		try {
 			SQLInterface.saveAction(sql);
 		} catch (SQLException e) {
@@ -471,6 +472,22 @@ public class StdMob implements Mobile, Container, Holdable {
 	public void informLastAggressor(Mobile aggressor) {
 		this.lastAggressor = aggressor;
 		
+	}
+	private static int findNewId() {
+		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
+				+ " LEFT JOIN MOBSTATS ON sequencetable.sequenceid = mobstats.mobid"
+				+ " WHERE mobstats.mobid IS NULL";		
+		Object availableId = (int) SQLInterface.viewData(sqlQuery, "sequenceid");
+		if (availableId == null || !(availableId instanceof Integer)) {
+			SQLInterface.increaseSequencer();
+			findNewId();
+		} else {
+			if (WorldServer.locationCollection.containsKey(availableId)) {
+				throw new IllegalStateException("A mob of the id already exists.");
+			}
+			return (int)availableId;
+		}
+		return 0;
 	}
 }
 

@@ -4,6 +4,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
+
+import TargettingStrategies.*;
+import processes.Equipment;
 import processes.Equipment.EquipmentEnum;
 import processes.SQLInterface;
 import processes.Skill;
@@ -15,16 +19,16 @@ import interfaces.Mobile;
 
 public class EquipChange extends Action {
 
-	private final Who who;
-	private final Where where;
+	private final WhatTargettingStrategy what;
+	private final WhereTargettingStrategy where;
 	private final boolean equip;
 	
 	public EquipChange() {
-		this(Who.SELF, Where.HERE, true);
+		this(new TargetSelfWhatStrategy(), new TargetHereWhereStrategy(), true);
 	}
 
-	public EquipChange(Who who, Where where, boolean equip) {
-		this.who = who;
+	public EquipChange(WhatTargettingStrategy what, WhereTargettingStrategy where, boolean equip) {
+		this.what = what;
 		this.where = where;
 		this.equip = equip;
 	}
@@ -82,8 +86,8 @@ public class EquipChange extends Action {
 	
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
-		ArrayList<Container> loc = where.findLoc(s, fullCommand, currentPlayer);
-		ArrayList<Mobile> target = who.findTarget(s, fullCommand, currentPlayer, loc);
+		List<Container> loc = where.findWhere(s, fullCommand, currentPlayer);
+		List<Holdable> target = what.findWhat(s, fullCommand, currentPlayer, loc);
 		String slotString = s.getStringInfo(Syntax.SLOT, fullCommand);
 		EquipmentEnum slotEnum;
 		if (slotString.toLowerCase().equals("left")) {
@@ -93,36 +97,40 @@ public class EquipChange extends Action {
 		} else {
 			slotEnum = null;
 		}		
-		for (Mobile m : target) {
-			if (equip) {
-				Holdable toMove = m.getHoldableFromString(s.getStringInfo(Syntax.ITEM, fullCommand));
-				EnumSet<EquipmentEnum> slots = toMove.getAllowedEquipSlots();
-				if (slots == null) {
-					return false;
-				}
-				if (slotEnum == null) {
-					for (EquipmentEnum st : slots) {
-						if (m.getEquipmentInSlot(st) == null) {
-							slotEnum = st;
-							break;
+		for (Holdable m : target) {
+			if (m instanceof Mobile) {
+				if (equip) {
+					Holdable toMove = ((Mobile) m).getHoldableFromString(s.getStringInfo(Syntax.ITEM, fullCommand));
+					EnumSet<EquipmentEnum> slots = toMove.getAllowedEquipSlots();
+					if (slots == null) {
+						return false;
+					}
+					if (slotEnum == null) {
+						for (EquipmentEnum st : slots) {
+							if (((Mobile) m).getEquipmentInSlot(st) == null) {
+								slotEnum = st;
+								break;
+							}
 						}
 					}
-				}
-				m.equip(slotEnum, toMove);				
-			} else {
-				if (slotEnum == null) {
-					slotEnum = m.findEquipment(s.getStringInfo(Syntax.ITEM, fullCommand));
-				}
-				m.unequipFromSlot(slotEnum);					
-			}				
+					((Mobile) m).equip(slotEnum, toMove);				
+				} else {
+					if (slotEnum == null) {
+						slotEnum = ((Mobile) m).findEquipment(s.getStringInfo(Syntax.ITEM, fullCommand));
+					}
+					((Mobile) m).unequipFromSlot(slotEnum);					
+				}	
+			}
 		}			
 		return true;
 	}
 	
 	@Override
 	public Action newBlock(Mobile player) {
-		Who newWho = who;
-		Where newWhere = where;
+		WhatTargettingStrategy newWhatTargettingStrategy = what;
+		WhereTargettingStrategy newWhereTargettingStrategy = where;
+		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
+		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
 		boolean newEquip = equip;
 		String answerEquip = Godcreate.askQuestion("Is this equiping the item? true/false.", player);
 		if ("true".equals(answerEquip) || "false".equals(answerEquip)) {
@@ -132,18 +140,18 @@ public class EquipChange extends Action {
 			return this.newBlock(player);
 		}
 		try {
-			newWho = Who.valueOf((Godcreate.askQuestion("Who do you want to equip the item? (this is using Syntax).", player)).toUpperCase());
-			newWhere = Where.valueOf((Godcreate.askQuestion("Where must this target be? (this is using Syntax).", player)).toUpperCase());
+			newWhatTargettingStrategy = whatFactory.parse((Godcreate.askQuestion("WhatTargettingStrategy do you want to equip the item? (this is using Syntax).", player)).toUpperCase());
+			newWhereTargettingStrategy = whereFactory.parse((Godcreate.askQuestion("WhereTargettingStrategy must this target be? (this is using Syntax).", player)).toUpperCase());
 		} catch (IllegalArgumentException e) {
 			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE)");
 			return this.newBlock(player);
 		}
-		return new EquipChange(newWho, newWhere, newEquip);
+		return new EquipChange(newWhatTargettingStrategy, newWhereTargettingStrategy, newEquip);
 	}
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='EQUIPCHANGE' AND BLOCKPOS=" + position + " AND BOOLEANONE='" 
-				+ equip + "' AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
+				+ equip + "' AND TARGETWHO='" + what.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
 		return SQLInterface.returnBlockView(blockQuery);
 	}
 	
@@ -151,7 +159,7 @@ public class EquipChange extends Action {
 	protected void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) VALUES ('EQUIPCHANGE', " 
-					+ position + ", '" + equip + "', '" + who.toString() + "', '" + where.toString() + "');";
+					+ position + ", '" + equip + "', '" + what.toString() + "', '" + where.toString() + "');";
 			try {
 				SQLInterface.saveAction(sql);
 			} catch (SQLException e) {
@@ -162,6 +170,6 @@ public class EquipChange extends Action {
 	@Override
 	public void explainOneself(Mobile player) {
 		player.tell("Used to equip and unequip a Mobile.");
-		player.tell("True means equip: " + equip + " Who: " + who.toString() + "Where: " + where.toString());
+		player.tell("True means equip: " + equip + " WhatTargettingStrategy: " + what.toString() + "WhereTargettingStrategy: " + where.toString());
 	}
 }

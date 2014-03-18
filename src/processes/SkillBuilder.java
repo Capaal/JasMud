@@ -8,12 +8,12 @@ import processes.Skill.Syntax;
 
 public class SkillBuilder {
 	
-	private int id;
-	private String name;	
+	private int id = 0;
+	private String name = "default";	
 	private Queue<Action> actions;
 	private Set<Type> types;
-	private String description;
-	private String failMsg;
+	private String description = "";
+	private String failMsg = "";
 	private ArrayList<Syntax> syntax;
 	private Set<SkillBook> attachedBooks;
 	
@@ -91,9 +91,9 @@ public class SkillBuilder {
 		return id;
 	}
 	
-	public void setSyntax(ArrayList<Syntax> syntaxList) {
+	public void setSyntax(List<Syntax> list) {
 		syntax.clear();
-		syntax.addAll(syntaxList);
+		syntax.addAll(list);
 	}
 	
 	public ArrayList<Syntax> getSyntax() {

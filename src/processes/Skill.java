@@ -1,12 +1,11 @@
 package processes;
 
 import interfaces.*;
-import interfaces.Action.Where;
-import interfaces.Action.Who;
 
 import java.sql.SQLException;
 import java.util.*;
 
+import TargettingStrategies.*;
 import actions.Damage;
 
 public class Skill {
@@ -43,10 +42,10 @@ public class Skill {
 				break;
 			}
 			if (shouldInformTarget) {
-				ArrayList<Container> loc = Where.HERE.findLoc(this, fullCommand, currentPlayer);
-				ArrayList<Mobile> target = Who.TARGET.findTarget(this, fullCommand, currentPlayer, loc);
-				if (!target.isEmpty()) {
-					target.get(0).informLastAggressor(currentPlayer);
+				List<Container> loc = new TargetHereWhereStrategy().findWhere(this, fullCommand, currentPlayer);
+				List<Holdable> target = new TargetTargetWhatStrategy().findWhat(this, fullCommand, currentPlayer, loc);
+				if (!target.isEmpty() && target.get(0) instanceof Mobile) {
+					((Mobile)target.get(0)).informLastAggressor(currentPlayer);
 				}
 			}
 		}
@@ -82,7 +81,7 @@ public class Skill {
 		String skillSelect = "SELECT * FROM SKILL WHERE SKILLNAME='" + name + "';";
 		HashMap<String, Object> skillView = SQLInterface.returnBlockView(skillSelect);
 		String skillInsert;
-		if (skillView.get("SKILLID") == null) {
+		if (skillView.isEmpty()) {
 			skillInsert = "INSERT INTO SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) VALUES (" + this.id + ", '" + name + "', '" + description 
 						+ "', '" + failMsg + "');";
 		} else {

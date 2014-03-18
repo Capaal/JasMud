@@ -1,12 +1,15 @@
 package actions;
 
 import interfaces.Action;
+import interfaces.Holdable;
 import interfaces.Mobile;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import TargettingStrategies.*;
 import processes.Location.Direction;
 import processes.SQLInterface;
 import processes.Skill;
@@ -17,18 +20,18 @@ import processes.Skill.Syntax;
 public class Message extends Action {
 	
 	private final String msg;
-	private final Who who;
-	private final Where where;
+	private final WhatTargettingStrategy what;
+	private final WhereTargettingStrategy where;
 //	private final ArrayList<Who> targetNames;
 	private final ArrayList<msgStrings> msgList;
 	
 	public Message() {
-		this("", Who.SELF, Where.HERE, new ArrayList<msgStrings>());
+		this("", new TargetSelfWhatStrategy(), new TargetHereWhereStrategy(), new ArrayList<msgStrings>());
 	}
 
-	public Message(String m, Who who, Where where, ArrayList<msgStrings> msgstringslist) {
+	public Message(String m, WhatTargettingStrategy what, WhereTargettingStrategy where, ArrayList<msgStrings> msgstringslist) {
 		this.msg = m;
-		this.who = who;
+		this.what = what;
 		this.where = where;
 		this.msgList = msgstringslist;
 	}
@@ -39,12 +42,12 @@ public class Message extends Action {
 		for (msgStrings msg : msgList) {
 			tNames.add(msg.getString(s, fullCommand, currentPlayer));
 		}
-		ArrayList<Mobile> targs = who.findTarget(s, fullCommand, currentPlayer, where.findLoc(s, fullCommand, currentPlayer));
-		for (Mobile m : targs) {
-			if (m != null && m.isControlled()) {
+		List<Holdable> targs = what.findWhat(s, fullCommand, currentPlayer, where.findWhere(s, fullCommand, currentPlayer));
+		for (Holdable m : targs) {
+			if (m != null && m instanceof Mobile && ((Mobile)m).isControlled()) {
 				System.out.println(msg);
 				System.out.println(tNames);
-				m.tell(String.format(msg, tNames.toArray()));
+				((Mobile) m).tell(String.format(msg, tNames.toArray()));
 			}
 		}		
 		return true;
@@ -86,8 +89,10 @@ public class Message extends Action {
 	}
 	@Override
 	public Action newBlock(Mobile player) {
-		Who newWho = who;
-		Where newWhere = where;
+		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
+		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
+		WhatTargettingStrategy newWhat = what;
+		WhereTargettingStrategy newWhere = where;
 		ArrayList<msgStrings> newMsgList = msgList;
 		String newMsg = Godcreate.askQuestion("What message will be displayed? Remember to use %s to replace strings you don't know yet.", player);
 		int numMsgStrings = 0;
@@ -106,25 +111,25 @@ public class Message extends Action {
 			}
 		}
 		try {
-			newWho = Who.valueOf((Godcreate.askQuestion("Who do you want to see this message? (this is using Syntax).", player)).toUpperCase());
-			newWhere = Where.valueOf((Godcreate.askQuestion("Where will these people be? (this is using Syntax).", player)).toUpperCase());
+			newWhat = whatFactory.parse((Godcreate.askQuestion("Who do you want to see this message? (this is using Syntax).", player)).toUpperCase());
+			newWhere = whereFactory.parse((Godcreate.askQuestion("Where will these people be? (this is using Syntax).", player)).toUpperCase());
 		} catch (IllegalArgumentException e) {
 			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE)");
 			return this.newBlock(player);
 		}
-		return new Message(newMsg, newWho, newWhere, newMsgList);
+		return new Message(newMsg, newWhat, newWhere, newMsgList);
 	}
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='MESSAGE' AND BLOCKPOS=" + position + " AND STRINGONE='" + msg
-				+ "' AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "';"; 
+				+ "' AND TARGETWHO='" + what.toString() + "' AND TARGETWHERE='" + where.toString() + "';"; 
 		return SQLInterface.returnBlockView(blockQuery);
 	}
 	@Override
 	protected void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) VALUES ('MESSAGE', " 
-					+ position + ", '" +  msg + "', '" + who.toString() + "', '" + where.toString() + "');";
+					+ position + ", '" +  msg + "', '" + what.toString() + "', '" + where.toString() + "');";
 			try {
 				SQLInterface.saveAction(sql);
 			} catch (SQLException e) {
@@ -152,7 +157,7 @@ public class Message extends Action {
 			sb.append(msgS.toString());
 		}
 		player.tell(sb.toString());
-		player.tell("Who: " + who.toString() + " Where: " + where.toString());		
+		player.tell("What: " + what.toString() + " Where: " + where.toString());		
 	}
 	
 	public enum msgStrings {

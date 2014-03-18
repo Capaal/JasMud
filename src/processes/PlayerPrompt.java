@@ -53,8 +53,6 @@ public class PlayerPrompt implements Runnable {
 				createPlayer = create;
 			}
 			if (createPlayer.toLowerCase().equals("y")) {
-				// Need to figure out allowed id numbers.
-				
 				//ASSUMES STDMOB right now.
 				try {
 					StdMob.insertNewBlankMob(enteredName, enteredPass);
@@ -63,11 +61,7 @@ public class PlayerPrompt implements Runnable {
 					sendBack.printMessage("Critical error building new character, disconnecting.");
 					System.out.println("New character creation failed to save to database.");
 					destroyConnection();
-				}		
-			//	String blockQuery ="Select MOBID from MOBSTATS where  MOBNAME='" + enteredName + "';";
-			//	int mobId = (int) SQLInterface.viewData(blockQuery, "MOBID");
-				// Only accounts for a single book at the moment.
-							
+				}			
 				try {
 					this.currentPlayer = SQLInterface.loadPlayer(enteredName, enteredPass);
 					currentPlayer.setSendBack(sendBack);
@@ -82,23 +76,25 @@ public class PlayerPrompt implements Runnable {
 				destroyConnection();				
 			}
 		}
-		currentPlayer.getContainer().look(currentPlayer);	
-		// The following is the User's infinite loop they play inside.
-	
-		while (true) {
-			// Obtains commands typed by user.
-			currentPlayer.displayPrompt(); // should probably be inside StdMob instead.
+		currentPlayer.getContainer().look(currentPlayer);
+		
+		// The following is the User's infinite loop they play inside.	
+		boolean stayInsideLoop = true;
+		while (stayInsideLoop) {
+			currentPlayer.displayPrompt();
 			String str = sendBack.getMessage();
 			if (str == null) {
 				break;
 			} else {
 				// This is what breaks the infinite loop and kills connection.
 				if (str.trim().toLowerCase().equals("quit")) {
+					stayInsideLoop = false;
 					currentPlayer.tell("Leaving the World...");
 					currentPlayer.removeFromWorld();
 					destroyConnection();
 					break;
-				} else if (str.trim().toLowerCase().equals("shutdown")) {					
+				} else if (str.trim().toLowerCase().equals("shutdown")) {
+					stayInsideLoop = false;
 					for (PlayerPrompt player : WorldServer.activeClients) {
 						player.currentPlayer.removeFromWorld();
 					}
@@ -148,7 +144,6 @@ public class PlayerPrompt implements Runnable {
 			System.out.println("Failed to close socket connection");
 			e.printStackTrace();
 		}
-//		Thread.interrupt();
 		WorldServer.activeClients.remove(this);
 	}
 }

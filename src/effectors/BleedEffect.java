@@ -3,6 +3,9 @@ package effectors;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import TargettingStrategies.*;
 import actions.Godcreate;
 import processes.SQLInterface;
 import processes.Skill;
@@ -13,37 +16,41 @@ public class BleedEffect extends Action {
 	
 	private final int duration;
 	private final int times;
-	private final Who who;
-	private final Where where;	
+	private final WhatTargettingStrategy what;
+	private final WhereTargettingStrategy where;	
 	
 	public BleedEffect() {
-		this(100, 0,  Who.SELF, Where.HERE);
+		this(100, 0,  new TargetSelfWhatStrategy(),  new TargetHereWhereStrategy());
 	}
 	
-	public BleedEffect(int duration, int times, Who who, Where where) {
+	public BleedEffect(int duration, int times, WhatTargettingStrategy what, WhereTargettingStrategy where) {
 		this.duration = duration;
-		this.who = who;
+		this.what = what;
 		this.where = where;
 		this.times = times;
 	}
 
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
-		ArrayList<Mobile> mobs = who.findTarget(s, fullCommand, currentPlayer,  where.findLoc(s, fullCommand, currentPlayer));
+		List<Holdable> mobs = what.findWhat(s, fullCommand, currentPlayer,  where.findWhere(s, fullCommand, currentPlayer));
 		if (mobs.isEmpty()) {
 			return false;
 		}
-		for (Mobile m : mobs) {
-			m.addTickingEffect(new Bleed(m), duration, times);
+		for (Holdable m : mobs) {
+			if (m instanceof Mobile) {
+				((Mobile)m).addTickingEffect(new Bleed((Mobile) m), duration, times);
+			}
 		}
 		return true;
 	}
 	@Override
 	public Action newBlock(Mobile player) {
+		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
+		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
 		int newDuration = duration;
 		int newTimes = times;
-		Who newWho = who;
-		Where newWhere = where;
+		WhatTargettingStrategy newWho = what;
+		WhereTargettingStrategy newWhere = where;
 		try {
 			newDuration = Integer.parseInt(Godcreate.askQuestion("How long should the bleed last?", player));
 			newTimes = Integer.parseInt(Godcreate.askQuestion("How many times should the bleed trigger?", player));
@@ -52,8 +59,8 @@ public class BleedEffect extends Action {
 			return this.newBlock(player);
 		}
 		try {
-			newWho = Who.valueOf((Godcreate.askQuestion("Who do you want to target (this is using Syntax).", player)).toUpperCase());
-			newWhere = Where.valueOf((Godcreate.askQuestion("Where must this target be? (this is using Syntax).", player)).toUpperCase());
+			newWho = whatFactory.parse((Godcreate.askQuestion("Who do you want to target (this is using Syntax).", player)).toUpperCase());
+			newWhere = whereFactory.parse((Godcreate.askQuestion("Where must this target be? (this is using Syntax).", player)).toUpperCase());
 		} catch (IllegalArgumentException e) {
 			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE)");
 			return this.newBlock(player);
@@ -63,14 +70,14 @@ public class BleedEffect extends Action {
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='BLEEDEFFECT' AND BLOCKPOS=" + position + " AND INTVALUE=" + duration
-				+ " AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
+				+ " AND TARGETWHO='" + what.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
 		return SQLInterface.returnBlockView(blockQuery);
 	}
 	@Override
 	protected void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) VALUES ('BLEEDEFFECT', " 
-					 + position + ", " + duration + ", '" + who.toString() + "', '" + where.toString() + "');";
+					 + position + ", " + duration + ", '" + what.toString() + "', '" + where.toString() + "');";
 			try {
 				SQLInterface.saveAction(sql);
 			} catch (SQLException e) {
@@ -82,6 +89,6 @@ public class BleedEffect extends Action {
 	@Override
 	public void explainOneself(Mobile player) {
 		player.tell("Applies a bleed effect on target of a particular duration.");
-		player.tell("Duration: " + duration + " Who: " + who.toString() + " Where: " + where.toString());
+		player.tell("Duration: " + duration + " Who: " + what.toString() + " Where: " + where.toString());
 	}
 }

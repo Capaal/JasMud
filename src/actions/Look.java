@@ -3,7 +3,9 @@ package actions;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import TargettingStrategies.*;
 import processes.SQLInterface;
 import processes.Skill;
 import processes.Skill.Syntax;
@@ -11,13 +13,13 @@ import interfaces.*;
 
 public class Look extends Action {
 	
-	private Where where;
+	private WhereTargettingStrategy where;
 	
 	public Look() {
-		this(Where.HERE);
+		this(new TargetHereWhereStrategy());
 	}
 	
-	public Look(Where where) {
+	public Look(WhereTargettingStrategy where) {
 		this.where = where;
 	}
 
@@ -25,7 +27,7 @@ public class Look extends Action {
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		String dir = s.getStringInfo(Syntax.DIRECTION, fullCommand);		
 		if (!dir.equals("")) {
-			ArrayList<Container> locs = where.findLoc(s, fullCommand, currentPlayer);
+			List<Container> locs = where.findWhere(s, fullCommand, currentPlayer);
 			if (locs.isEmpty()) {
 				return false;
 			}
@@ -35,7 +37,7 @@ public class Look extends Action {
 				}
 			}
 		} else {
-			for (Container c : Where.HERE.findLoc(s, fullCommand, currentPlayer)) {
+			for (Container c : new TargetHereWhereStrategy().findWhere(s, fullCommand, currentPlayer)) {
 				c.look(currentPlayer);
 			}
 		}
@@ -43,9 +45,10 @@ public class Look extends Action {
 	}
 	@Override
 	public Action newBlock(Mobile player) {
-		Where newWhere = where;
+		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
+		WhereTargettingStrategy newWhere = where;
 		try {
-			newWhere = Where.valueOf((Godcreate.askQuestion("Which locations will be looked at? (this is using Syntax).", player)).toUpperCase());
+			newWhere = whereFactory.parse((Godcreate.askQuestion("Which locations will be looked at? (this is using Syntax).", player)).toUpperCase());
 		} catch (IllegalArgumentException e) {
 			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE)");
 			return this.newBlock(player);

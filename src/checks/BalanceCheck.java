@@ -2,6 +2,8 @@ package checks;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+
+import TargettingStrategies.*;
 import actions.Godcreate;
 import processes.SQLInterface;
 import processes.Skill;
@@ -9,22 +11,22 @@ import interfaces.*;
 
 public class BalanceCheck extends Action {
 	
-	private final Who who;
-	private final Where where;
+	private final WhatTargettingStrategy what;
+	private final WhereTargettingStrategy where;
 	
 	public BalanceCheck() {
-		this(Who.SELF, Where.HERE);
+		this(new TargetSelfWhatStrategy(), new TargetHereWhereStrategy());
 	}
 	
-	public BalanceCheck(Who who, Where where) {
-		this.who = who;
+	public BalanceCheck(WhatTargettingStrategy what, WhereTargettingStrategy where) {
+		this.what = what;
 		this.where = where;
 	}
 	
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
-		for (Mobile m : who.findTarget(s, fullCommand, currentPlayer,  where.findLoc(s, fullCommand, currentPlayer))) {
-			if (!m.hasBalance()) {
+		for (Holdable m : what.findWhat(s, fullCommand, currentPlayer,  where.findWhere(s, fullCommand, currentPlayer))) {
+			if (m instanceof Mobile && !((Mobile)m).hasBalance()) {
 				return false;
 			}
 		}
@@ -32,11 +34,13 @@ public class BalanceCheck extends Action {
 	}
 	@Override
 	public Action newBlock(Mobile player) {
-		Who newWho = who;
-		Where newWhere = where;
+		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
+		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
+		WhatTargettingStrategy newWho = what;
+		WhereTargettingStrategy newWhere = where;
 		try {
-			newWho = Who.valueOf((Godcreate.askQuestion("Who do you want to check? (this is using Syntax).", player)).toUpperCase());
-			newWhere = Where.valueOf((Godcreate.askQuestion("Where is this target? (this is using Syntax).", player)).toUpperCase());
+			newWho = whatFactory.parse((Godcreate.askQuestion("Who do you want to check? (this is using Syntax).", player)).toUpperCase());
+			newWhere = whereFactory.parse((Godcreate.askQuestion("Where is this target? (this is using Syntax).", player)).toUpperCase());
 		} catch (IllegalArgumentException e) {
 			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE)");
 			return this.newBlock(player);
@@ -46,14 +50,14 @@ public class BalanceCheck extends Action {
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='BALANCECHECK' AND BLOCKPOS=" + position 
-				+ " AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
+				+ " AND TARGETWHO='" + what.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
 		return SQLInterface.returnBlockView(blockQuery);
 	}
 	@Override
 	protected void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE) VALUES ('BALANCECHECK', " 
-					+ position + ", '" + who.toString() + "', '" + where.toString() + "');";
+					+ position + ", '" + what.toString() + "', '" + where.toString() + "');";
 			try {
 				SQLInterface.saveAction(sql);
 			} catch (SQLException e) {
@@ -65,6 +69,6 @@ public class BalanceCheck extends Action {
 	@Override
 	public void explainOneself(Mobile player) {
 		player.tell("Does a check to compare player's balance state against the desired state.");
-		player.tell("Who: " + who.toString() + " Where: " + where.toString());
+		player.tell("Who: " + what.toString() + " Where: " + where.toString());
 	}
 }

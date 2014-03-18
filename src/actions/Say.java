@@ -1,8 +1,11 @@
 package actions;
 
 import interfaces.*;
+
 import java.sql.SQLException;
 import java.util.*;
+
+import TargettingStrategies.*;
 import processes.*;
 import processes.Skill.Syntax;
 
@@ -13,8 +16,8 @@ public class Say extends Action {
 
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
-		Who who = Who.ALL;
-		Where where = Where.HERE;	
+		WhatTargettingStrategy what = new TargetAllWhatStrategy();
+		WhereTargettingStrategy where = new TargetHereWhereStrategy();	
 		StringBuffer sb = new StringBuffer();
 		sb.append(currentPlayer.getName() + " says, \"");
 		sb.append(s.getStringInfo(Syntax.LIST, fullCommand));		
@@ -33,9 +36,9 @@ public class Say extends Action {
 		}*/
 		sb.append("\".");
 //		ArrayList<Mobile> targs = who.findTarget(s, where.findLoc(s));
-		for (Mobile m : who.findTarget(s, fullCommand, currentPlayer, where.findLoc(s, fullCommand, currentPlayer))) {
-			if (m != null && m.isControlled()) {
-				m.tell(sb.toString());
+		for (Holdable m : what.findWhat(s, fullCommand, currentPlayer, where.findWhere(s, fullCommand, currentPlayer))) {
+			if (m != null && m instanceof Mobile && ((Mobile) m).isControlled()) {
+				((Mobile)m).tell(sb.toString());
 			}
 		}	
 		return true;

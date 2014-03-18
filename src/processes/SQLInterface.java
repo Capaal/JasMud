@@ -1,8 +1,6 @@
 package processes;
 
 import interfaces.*;
-import interfaces.Action.Where;
-import interfaces.Action.Who;
 import items.StdItem;
 import items.StdItem.ItemType;
 
@@ -11,8 +9,11 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+
 import checks.*;
 import effectors.*;
+import TargettingStrategies.WhatTargettingFactory;
+import TargettingStrategies.WhereTargettingFactory;
 import actions.*;
 import actions.Message.msgStrings;
 import processes.Equipment.EquipmentEnum;
@@ -549,22 +550,23 @@ public class SQLInterface {
 	 * @throws SQLException
 	 */
 	private static Action determineAction(ResultSet rs) throws SQLException {
-		
+		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
+		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
 		switch (rs.getString("BLOCKTYPE")) {				
 			case "DAMAGE":
-				return new Damage(rs.getInt("INTVALUE"), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")),
+				return new Damage(rs.getInt("INTVALUE"), whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")),
 						checkBoolean(rs.getString("BOOLEANONE")), checkType(rs.getString("TYPE")));		
 			
 			case "BALANCECOST":
-				return new BalanceEffect(rs.getInt("INTVALUE"), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")));
+				return new BalanceEffect(rs.getInt("INTVALUE"), whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")));
 		
 			case "BLEEDEFFECT":
-				return new BleedEffect(rs.getInt("INTVALUE"), rs.getInt("INTVALUETWO"), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")));
+				return new BleedEffect(rs.getInt("INTVALUE"), rs.getInt("INTVALUETWO"), whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")));
 			
 			case "WEAPONEQUIPPEDCHECK":
 				// rs.getString("SKILLTYPE") actually returns an integer that represents a pointer at a real skilltype
 				// So probably need to do another query for the answer. Or add it to the resultset above
-				return new WeaponEquippedCheck(Type.valueOf(rs.getString("TYPE")), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")));
+				return new WeaponEquippedCheck(Type.valueOf(rs.getString("TYPE")), whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")));
 			
 			
 			case "MESSAGE":
@@ -575,7 +577,7 @@ public class SQLInterface {
 				while (rs3.next()) {
 					msgstringslist.add(msgStrings.valueOf(rs3.getString("MSGSTRINGSTYPE")));
 				}
-				return new Message(rs.getString("STRINGONE"), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")), msgstringslist);
+				return new Message(rs.getString("STRINGONE"), whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")), msgstringslist);
 						
 			case "CHANCE":
 				int internalActionNum = rs.getInt("BLOCKPOINTERONE");
@@ -593,7 +595,7 @@ public class SQLInterface {
 				return new Say();
 				
 			case "EXAMINE":
-				return new Examine(Where.valueOf(rs.getString("TARGETWHERE")));
+				return new Examine(whereFactory.parse(rs.getString("TARGETWHERE")));
 				
 			case "OR":
 				int internalActionNumOrOne = rs.getInt("BLOCKPOINTERONE");
@@ -612,25 +614,25 @@ public class SQLInterface {
 				return new Or(innerOrActionOne, innerOrActionTwo);
 				
 			case "GET":
-				return new Get(Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")));
-				
+	//			return new Get(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")));
+				return null;
 			case "LOOK":
-				return new Look(Where.valueOf(rs.getString("TARGETWHERE")));
+				return new Look(whereFactory.parse(rs.getString("TARGETWHERE")));
 				
 			case "MOVE":
-				return new Move(Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")), Where.valueOf(rs.getString("ENDWHERE")));
+				return new Move(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")), whereFactory.parse(rs.getString("ENDWHERE")));
 				
 			case "BALANCECHECK":
-				return new BalanceCheck(Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")));
+				return new BalanceCheck(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")));
 				
 			case "MOVECHECK":
-				return new MoveCheck(GroundType.valueOf(rs.getString("GROUNDTYPE")), Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")), Where.valueOf(rs.getString("ENDWHERE")));
+				return new MoveCheck(GroundType.valueOf(rs.getString("GROUNDTYPE")), whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")), whereFactory.parse(rs.getString("ENDWHERE")));
 				
 			case "DROP":
-				return new Drop(Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")), Where.valueOf(rs.getString("ENDWHERE")));
+				return new Drop(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")), whereFactory.parse(rs.getString("ENDWHERE")));
 				
 			case "EQUIPCHANGE":
-				return new EquipChange(Who.valueOf(rs.getString("TARGETWHO")), Where.valueOf(rs.getString("TARGETWHERE")), checkBoolean(rs.getString("BOOLEANONE")));
+				return new EquipChange(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")), checkBoolean(rs.getString("BOOLEANONE")));
 			
 			case "GODCREATE":
 				return new Godcreate();

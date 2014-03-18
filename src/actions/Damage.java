@@ -5,6 +5,7 @@ import interfaces.*;
 import java.sql.SQLException;
 import java.util.*;
 
+import TargettingStrategies.*;
 import processes.*;
 
 //TODO Should damage contain TYPE, so that devs can specify what type that damage is, rather than relying on skill knowing?
@@ -14,18 +15,18 @@ public class Damage extends Action {
 	
 	
 	private final int intensity;
-	private final Who who;
-	private final Where where;
+	private final WhatTargettingStrategy what;
+	private final WhereTargettingStrategy where;
 	private final boolean doesWeaponMatter;
 	private final Type damageType;
 
 	public Damage() {
-		this(0, Who.SELF, Where.HERE, true, null);
+		this(0, new TargetSelfWhatStrategy(), new TargetHereWhereStrategy(), true, null);
 	}
 	
-	public Damage(int intensity, Who who, Where where, boolean weaponMatter, Type newType) {
+	public Damage(int intensity, WhatTargettingStrategy what, WhereTargettingStrategy where, boolean weaponMatter, Type newType) {
 		this.intensity = intensity;
-		this.who = who;
+		this.what = what;
 		this.where = where;
 		this.doesWeaponMatter = weaponMatter;
 		this.damageType = newType;
@@ -33,14 +34,16 @@ public class Damage extends Action {
 	
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
-		ArrayList<Container> loc = where.findLoc(s, fullCommand, currentPlayer);
-		ArrayList<Mobile> target = who.findTarget(s, fullCommand, currentPlayer, loc);
+		List<Container> loc = where.findWhere(s, fullCommand, currentPlayer);
+		List<Holdable> target = what.findWhat(s, fullCommand, currentPlayer, loc);
 		if (target.isEmpty()) {
 			return false;
 		}
 		int finalIntensity = determineFinalIntensity(currentPlayer);
-		for (Mobile m : target) {
-			m.takeDamage(damageType, finalIntensity);
+		for (Holdable m : target) {
+			if (m instanceof Mobile) {
+				((Mobile)m).takeDamage(damageType, finalIntensity);
+			}	
 		}
 		return true;
 	}
@@ -56,7 +59,7 @@ public class Damage extends Action {
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='DAMAGE' AND INTVALUE=" + intensity + " AND BLOCKPOS=" + position
-				+ " AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "' AND BOOLEANONE='" + doesWeaponMatter + "';";
+				+ " AND TARGETWHO='" + what.toString() + "' AND TARGETWHERE='" + where.toString() + "' AND BOOLEANONE='" + doesWeaponMatter + "';";
 		return SQLInterface.returnBlockView(blockQuery);
 	}
 	
@@ -64,7 +67,7 @@ public class Damage extends Action {
 	protected void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT IGNORE INTO BLOCK (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE, BOOLEANONE) VALUES ('DAMAGE', " 
-					+ position + ", " +  intensity + ", '" + who.toString() + "', '" + where.toString() + "', '" + doesWeaponMatter + "');";
+					+ position + ", " +  intensity + ", '" + what.toString() + "', '" + where.toString() + "', '" + doesWeaponMatter + "');";
 			try {
 				SQLInterface.saveAction(sql);
 			} catch (SQLException e) {
@@ -77,8 +80,10 @@ public class Damage extends Action {
 	@Override
 	public Action newBlock(Mobile player) {
 		int newIntensity = intensity;
-		Who newWho = who;
-		Where newWhere = where;
+		WhatTargettingStrategy newWho = what;
+		WhereTargettingStrategy newWhere = where;
+		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
+		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
 		Type newType = damageType;
 		try {
 			newIntensity = Integer.parseInt(Godcreate.askQuestion("How much damage would you like to cause? Negative is ok.", player));
@@ -87,8 +92,8 @@ public class Damage extends Action {
 			return this.newBlock(player);
 		}
 		try {
-			newWho = Who.valueOf((Godcreate.askQuestion("Who do you want to target (this is using Syntax).", player)).toUpperCase());
-			newWhere = Where.valueOf((Godcreate.askQuestion("Where must this target be? (this is using Syntax).", player)).toUpperCase());
+			newWho = whatFactory.parse((Godcreate.askQuestion("Who do you want to target (this is using Syntax).", player)).toUpperCase());
+			newWhere = whereFactory.parse((Godcreate.askQuestion("Where must this target be? (this is using Syntax).", player)).toUpperCase());
 			newType = Type.valueOf((Godcreate.askQuestion("What type of damage will this deal? (In syntax null is ok i.e SHARP)", player)).toUpperCase());
 		} catch (IllegalArgumentException e) {
 			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE, SHARP)");
@@ -108,7 +113,7 @@ public class Damage extends Action {
 	@Override
 	public void explainOneself(Mobile player) {
 		player.tell("Affects hp in a positive or negative way.");
-		player.tell("Intensity: " + intensity + " Who: " + who.toString() + " Where: " + where.toString());
+		player.tell("Intensity: " + intensity + " Who: " + what.toString() + " Where: " + where.toString());
 	}
 
 }
