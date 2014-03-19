@@ -94,7 +94,6 @@ public class MobileBuilder {
 	}
 
 	public static boolean newMobile(Mobile player, MobileBuilder mobileBuilder) {
-		mobileBuilder.setId();
 		String nextTask = Godcreate.askQuestion("What next? 1:name 2:password 3:longdescrption 4:shortdescription"
 				+ " 5:level 6:currentHp 7:isdead 8:location 9:inventory 10:equipment 11:xpworth 12:loadonstartup"
 				+ " 13:preview 14:complete 15:quit", player);
@@ -196,16 +195,4 @@ public class MobileBuilder {
 		}
 	}
 	
-	public void setId() {
-		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
-				+ " LEFT JOIN mobstats ON sequencetable.sequenceid = mobstats.mobid"
-				+ " WHERE mobstats.mobid IS NULL";		
-		Object availableId = (int) SQLInterface.viewData(sqlQuery, "sequenceid");
-		if (availableId == null || !(availableId instanceof Integer)) {
-			SQLInterface.increaseSequencer();
-			setId();
-		} else {
-			this.id = (int)availableId;
-		}		
-	}
 }

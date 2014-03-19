@@ -8,7 +8,7 @@ import processes.Skill.Syntax;
 
 public class SkillBuilder {
 	
-	private int id = 0;
+	private int id = -1;
 	private String name = "default";	
 	private Queue<Action> actions;
 	private Set<Type> types;
@@ -121,18 +121,7 @@ public class SkillBuilder {
 		this.id = newId;
 	}
 	
-	public void setId() {
-		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
-				+ " LEFT JOIN skill ON sequencetable.sequenceid = skill.skillid"
-				+ " WHERE skill.skillid IS NULL";		
-		Object availableId = (int) SQLInterface.viewData(sqlQuery, "sequenceid");
-		if (availableId == null || !(availableId instanceof Integer)) {
-			SQLInterface.increaseSequencer();
-			setId();
-		} else {
-			setId((int)availableId);
-		}		
-	}
+	
 	
 	public void preview(Mobile player) {
 		player.tell("Name: " + name);

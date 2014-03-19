@@ -18,7 +18,7 @@ public class LocationBuilder {
 	public Map<Integer, Direction> locationConnections;
 	
 	public LocationBuilder() {
-		setId();
+		id = 1;
 		this.name = "Default name";
 		this.description = "default description.";
 		this.groundType = GroundType.GROUND;
@@ -92,21 +92,7 @@ public class LocationBuilder {
 		this.id = id;
 	}
 	
-	public void setId() {
-		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
-				+ " LEFT JOIN locationstats ON sequencetable.sequenceid = locationstats.locid"
-				+ " WHERE locationstats.locid IS NULL";		
-		Object availableId = (int) SQLInterface.viewData(sqlQuery, "sequenceid");
-		if (availableId == null || !(availableId instanceof Integer)) {
-			SQLInterface.increaseSequencer();
-			setId();
-		} else {
-			if (WorldServer.locationCollection.containsKey(availableId)) {
-				throw new IllegalStateException("A location of the id already exists.");
-			}
-			this.id = (int)availableId;
-		}		
-	}
+	
 	
 	public void complete() {
 		new Location(this);
@@ -170,7 +156,10 @@ public class LocationBuilder {
 			Direction newConnectionReverseDirection = null;
 			try {
 				newConnectionDirection = Direction.valueOf(Godcreate.askQuestion("Which direction is the connected location?", player).toUpperCase());
-				newConnectionReverseDirection = Direction.valueOf(Godcreate.askQuestion("Which direction is the connected location connecting to this location?", player).toUpperCase());
+				String newStringConnectionReverseDirection = Godcreate.askQuestion("Which direction is the connected location connecting to this location?", player).toUpperCase();
+				if (!newStringConnectionReverseDirection.equalsIgnoreCase("null")) {
+					newConnectionReverseDirection = Direction.valueOf(newStringConnectionReverseDirection);
+				}
 			} catch(IllegalArgumentException e) {
 				player.tell("That direction wasn't valid.");
 				return newConnection(player, builderLocation);

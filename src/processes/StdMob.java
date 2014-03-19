@@ -47,8 +47,12 @@ public class StdMob implements Mobile, Container, Holdable {
 	private Mobile lastAggressor;
 	
 	public StdMob(MobileBuilder build) {
-		this.name = build.name;
-		this.id = build.id;
+		if (WorldServer.mobList.containsKey(build.name + build.id)) {
+			this.id = setId();
+		} else {
+			this.id = build.id;
+		}
+		this.name = build.name;		
 		this.password = build.password;
 		this.maxHp = build.maxHp;
 		this.currentHp = maxHp;
@@ -329,9 +333,7 @@ public class StdMob implements Mobile, Container, Holdable {
 					System.out.println("Skillbook " + sb.getName() + " failed to save it's progress table via: " + insertBook);
 					return false;
 				}
-				if (!sb.save()) {
-					return false;
-				}	
+				sb.save();
 			}
 		}	
 		return true;
@@ -415,7 +417,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	}
 	
 	public static void insertNewBlankMob(String newName, String newPassword) throws IllegalStateException {
-		int newId = findNewId();
+		int newId = findNewId(newName);
 		String sql = "insert into mobstats (MOBID, MOBNAME, MOBPASS) values (" + newId + ", '" + newName + "', '" + newPassword + "');";
 		try {
 			SQLInterface.saveAction(sql);
@@ -473,21 +475,35 @@ public class StdMob implements Mobile, Container, Holdable {
 		this.lastAggressor = aggressor;
 		
 	}
-	private static int findNewId() {
+	private static int findNewId(String name) {
 		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
 				+ " LEFT JOIN MOBSTATS ON sequencetable.sequenceid = mobstats.mobid"
 				+ " WHERE mobstats.mobid IS NULL";		
 		Object availableId = (int) SQLInterface.viewData(sqlQuery, "sequenceid");
 		if (availableId == null || !(availableId instanceof Integer)) {
 			SQLInterface.increaseSequencer();
-			findNewId();
+			findNewId(name);
 		} else {
-			if (WorldServer.locationCollection.containsKey(availableId)) {
+			if (WorldServer.mobList.containsKey(name + availableId)) {
 				throw new IllegalStateException("A mob of the id already exists.");
 			}
 			return (int)availableId;
 		}
 		return 0;
+	}
+	
+
+	private int setId() {
+		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
+				+ " LEFT JOIN mobstats ON sequencetable.sequenceid = mobstats.mobid"
+				+ " WHERE mobstats.mobid IS NULL";		
+		Object availableId = (int) SQLInterface.viewData(sqlQuery, "sequenceid");
+		if (availableId == null || !(availableId instanceof Integer)) {
+			SQLInterface.increaseSequencer();
+			return setId();
+		} else {
+			return (int)availableId;
+		}		
 	}
 }
 

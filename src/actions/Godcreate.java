@@ -191,7 +191,6 @@ public class Godcreate extends Action {
 			newSkill.preview(player);
 			return processCreateNewSkill(player, newSkill);	
 		case "8":
-			newSkill.setId();
 			for (SkillBook finalSkillBooks : newSkill.getAttachedBooks()) {
 				finalSkillBooks.setToBeSaved(true);
 			}

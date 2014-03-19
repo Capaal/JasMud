@@ -1,10 +1,13 @@
 package processes;
 
 
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+
 import interfaces.*;
 
 
@@ -19,91 +22,12 @@ public class Location implements Container {
 	private Map<Direction, Location> locationMap;
 	private Set<Holdable> inventory = new HashSet<Holdable>();
 
-	
-	
-	// The BUILDER is an internal class meant to be used to instantly build a new location.
-	// It allows the constructor to more clearly indicate what is happening, and allow variable information.
-	
-	// Location loc = new Location.Builder(2).name("Mud Shack").description("This is north of the beach on the bridge.").groundType("land").south(1, "north").build();
-	// Builder(2) indicates it is location number 21, there can be no duplicates.
-	// .name("Mud Shack") is the name of the location, and descrption is description, easy to read.
-	// .south(1, "north") means if I go south from that location, I go to location with the id 1, and
-	// if I go north from there, it will take me back to the location I just made.
-	
-/*	public static class Builder {
-		
-		private int id;		
-		private String name = "blank";
-		private String description = "blank";
-		private GroundType groundType = GroundType.GROUND;			
-		private Map<Direction, Location> locationMap = new EnumMap<Direction, Location>(Direction.class);
-		private Map<Integer, Direction> locationConnections = new HashMap<Integer, Direction>();
-		
-		public Builder(int val) {
-			if (WorldServer.locationCollection.containsKey(val)) {
-				throw new IllegalStateException("A location of the id already exists.");
-			}
-			id = val;
-		}
-		
-		public Builder name(String val) {name = val;return this;}		
-		public Builder description(String val) {description = val;return this;}		
-		public Builder groundType(GroundType val) {groundType = val;return this;}		
-		public Builder north(int futureId, String connectionDirection) {buildDirections(id, Direction.NORTH, futureId, connectionDirection);return this;}			
-		public Builder northEast(int futureId, String connectionDirection) {buildDirections(id, Direction.NORTHEAST, futureId, connectionDirection);return this;}			
-		public Builder east(int futureId, String connectionDirection) {buildDirections(id, Direction.EAST, futureId, connectionDirection);return this;}				
-		public Builder southEast(int futureId, String connectionDirection) {buildDirections(id, Direction.SOUTHEAST, futureId, connectionDirection);return this;}		
-		public Builder south(int futureId, String connectionDirection) {buildDirections(id, Direction.SOUTH, futureId, connectionDirection);return this;}			
-		public Builder southWest(int futureId, String connectionDirection) {buildDirections(id, Direction.SOUTHWEST, futureId, connectionDirection);return this;}			
-		public Builder west(int futureId, String connectionDirection) {buildDirections(id, Direction.WEST, futureId, connectionDirection);return this;}			
-		public Builder northWest(int futureId, String connectionDirection) {buildDirections(id, Direction.NORTHWEST, futureId, connectionDirection);return this;}			
-		public Builder up(int futureId, String connectionDirection) {buildDirections(id, Direction.UP, futureId, connectionDirection);return this;}			
-		public Builder down(int futureId, String connectionDirection) {buildDirections(id, Direction.DOWN, futureId, connectionDirection);return this;}		
-		public Builder in(int futureId, String connectionDirection) {buildDirections(id, Direction.IN, futureId, connectionDirection);return this;}			
-		public Builder out(int futureId, String connectionDirection) {buildDirections(id, Direction.OUT, futureId, connectionDirection);return this;}			
-		
-		private Builder buildDirections(int currentId, Direction currentDirection,  int futureId, String futureD) {
-			// SQL will call for a direction even if there is no location here, so just returns.
-			if (currentId == 0 || futureD == null) {
-				return this;				
-			}
-			Direction futureDirection = Direction.NORTH;
-			try {
-				futureDirection = Direction.valueOf(futureD.toUpperCase());
-			} catch (IllegalArgumentException e) {
-				System.out.println(futureD + " is not a valid direction loaded from database. CRITICAL ERROR, Defaulted to north.");				
-			}
-			if (WorldServer.locationCollection.containsKey(futureId)) {
-				Location futureLoc = WorldServer.locationCollection.get(futureId);								
-				locationConnections.put(futureId, futureDirection);				
-				locationMap.put(currentDirection, futureLoc);		
-			} else {
-				System.out.println("I think a location was made that is pointing to an unmade location: " + currentId);
-			}
-			return this;
-		}		
-		
-		public Location build() {return new Location(this);}
-
-		public int getId() {
-			return id;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public String getDescription() {
-			return description;
-		}
-
-		public GroundType getGroundType() {
-			return groundType;
-		}
-	}*/
-	
 	public Location(LocationBuilder builder) {
-		this.id = builder.getId();
+		if (WorldServer.locationCollection.containsKey(builder.getId())) {
+			this.id = setId();
+		} else {
+			this.id = builder.getId();
+		}
 		this.name = builder.getName();
 		this.description = builder.getDescription();
 		this.groundType = builder.getGroundType();
@@ -117,6 +41,7 @@ public class Location implements Container {
 				futureLoc.setLocation(this, currentDirection);
 			}
 		}
+		save();
 	}
 	
 	private void setLocation(Location futureLoc, Direction currentDirection) {
@@ -229,6 +154,63 @@ public class Location implements Container {
 		return getLocation(dir);
 	}
 	
+	public void save() {
+		String directionKeyInformation = makeKeyInformation();
+		String directionValueInformation = makeValueInformation();
+		String insertNewLocation = "insert into locationstats (LOCID, LOCNAME, LOCDES, LOCTYPE"
+				+ directionKeyInformation
+				+ ") values (" + id + ", '" + name + "', '" + description + "', '" + groundType.toString() + "'"
+				+ directionValueInformation + ") ON DUPLICATE KEY UPDATE LOCID=" + id + ";";
+		try {
+			SQLInterface.saveAction(insertNewLocation);
+		} catch (SQLException e) {
+			System.out.println("Location failed to save via: " + insertNewLocation);
+			e.printStackTrace();
+		}
+	}
+	
+	public Direction getHowOtherLocationConnectsToThis(Location askingLocation) {
+		for (Entry<Direction, Location> entry : locationMap.entrySet()) {
+			if (entry.getValue() == askingLocation) {
+				return entry.getKey();
+			}
+		}
+		return null;
+	}
+	
+	private String makeKeyInformation() {
+		StringBuilder sb = new StringBuilder();
+		if (locationMap.isEmpty()) {
+			return "";
+		}
+		for (Direction dir : locationMap.keySet()) {
+			sb.append(", LOC");
+			sb.append(dir.toString());
+			sb.append(", LOC");
+			sb.append(dir.toString());
+			sb.append("DIR");			
+		}
+		System.out.println(sb.toString());
+		return sb.toString();
+	}
+	
+	private String makeValueInformation() {
+		StringBuilder sb = new StringBuilder();
+		if (locationMap.isEmpty()) {
+			return "";
+		}		
+		for (Location loc : locationMap.values()) {
+			sb.append(", ");
+			sb.append(loc.getId());
+			sb.append(", '");
+			Direction howOtherLocationConnectsHere = loc.getHowOtherLocationConnectsToThis(this);
+			sb.append(howOtherLocationConnectsHere.toString());
+			sb.append("'");
+		}
+		System.out.println(sb.toString());
+		return sb.toString();
+	}
+	
 	public static TreeMap<String, String> fullDir;
 	
 	public static String getDirName(String dir) {		
@@ -259,6 +241,19 @@ public class Location implements Container {
 			}
 		}
 		return null;
+	}
+	
+	private int setId() {
+		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
+				+ " LEFT JOIN locationstats ON sequencetable.sequenceid = locationstats.locid"
+				+ " WHERE locationstats.locid IS NULL";		
+		Object availableId = (int) SQLInterface.viewData(sqlQuery, "sequenceid");
+		if (availableId == null || !(availableId instanceof Integer)) {
+			SQLInterface.increaseSequencer();
+			return setId();
+		} else {
+			return (int)availableId;
+		}		
 	}
 	
 	public enum Direction {

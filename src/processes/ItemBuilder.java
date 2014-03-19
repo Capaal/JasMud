@@ -14,8 +14,8 @@ import processes.Equipment.EquipmentEnum;
 public class ItemBuilder {
 	
 	public double physicalMult = 1.0;
-	public int id;
-	public String name;
+	public int id = 1;
+	public String name = "";
 	public String description = "default";
 	public String shortDescription = "shortDefault";
 	public double balanceMult = 1.0;
@@ -26,9 +26,6 @@ public class ItemBuilder {
 	public Container itemLocation = WorldServer.locationCollection.get(1);		
 	public EnumSet<EquipmentEnum> allowedSlots = EnumSet.noneOf(EquipmentEnum.class);
 	
-	public ItemBuilder() {
-		setId();
-	}
 	public void setPhysicalMult(double physicalMult) {
 		this.physicalMult = physicalMult;
 	}
@@ -89,18 +86,7 @@ public class ItemBuilder {
 		public StdItem build() {return new StdItem(this);}
 
 	*/
-	public void setId() {
-		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
-				+ " LEFT JOIN itemstats ON sequencetable.sequenceid = itemstats.itemid"
-				+ " WHERE itemstats.itemid IS NULL";		
-		Object availableId = (int) SQLInterface.viewData(sqlQuery, "sequenceid");
-		if (availableId == null || !(availableId instanceof Integer)) {
-			SQLInterface.increaseSequencer();
-			setId();
-		} else {
-			this.id = (int)availableId;
-		}		
-	}
+	
 	
 	public StdItem complete() {
 		return new StdItem(this);		

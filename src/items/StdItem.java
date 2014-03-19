@@ -44,6 +44,7 @@ package items;
 
 import java.sql.SQLException;
 import java.util.*;
+
 import interfaces.*;
 import processes.*;
 import processes.Equipment.EquipmentEnum;
@@ -70,7 +71,11 @@ public class StdItem implements Holdable {
 	// .itemLocation(WorldServer.locationCollection.get(1)).build(); 
 	
 	public StdItem(ItemBuilder build) {
-		this.id = build.id;
+		if (WorldServer.allItems.containsKey(build.id)){ 
+			this.id = setId();
+		} else {
+			this.id = build.id;
+		}
 		this.name = build.name;
 		this.physicalMult = build.physicalMult;
 		this.description = build.description;
@@ -131,15 +136,7 @@ public class StdItem implements Holdable {
 		@Override
 		protected Builder self() {return this;}
 	}*/
-	
-	// Probably not what I want? as a skill will probably handle what this handles, and it'll just make a new version.
-	// But do I need a method here that handles creating a copy? As all items will probably be copies?
-	// Plus, items are no longer
-	public StdItem create() {		
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
+		
 	public String getName() {return name;}
 	public int getId() {return id;}
 	public String getDescription() {return description;}	
@@ -220,6 +217,19 @@ public class StdItem implements Holdable {
 	public void removeFromWorld() {
 		save();
 		WorldServer.allItems.remove(this.getName() + this.getId());
+	}
+	
+	private int setId() {
+		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
+				+ " LEFT JOIN itemstats ON sequencetable.sequenceid = itemstats.itemid"
+				+ " WHERE itemstats.itemid IS NULL";		
+		Object availableId = (int) SQLInterface.viewData(sqlQuery, "sequenceid");
+		if (availableId == null || !(availableId instanceof Integer)) {
+			SQLInterface.increaseSequencer();
+			return setId();
+		} else {
+			return (int)availableId;
+		}		
 	}
 	/*//TODO
 	public static boolean newItem(Mobile player) {

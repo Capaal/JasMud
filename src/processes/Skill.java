@@ -11,24 +11,30 @@ import actions.Damage;
 public class Skill {
 	
 	private final String name;
-	private int id; // related only to it's database id, probably don't even need to know what it is.TODO
+	private int id; 
 	private final String description;
 	private final Queue<Action> actions;
 	private final List<Syntax> syntax; //Are we sure we'll be maintaining order?	
 	private final String failMsg;
 	
 	public Skill(SkillBuilder build) {
+		int possibleId;
+		if (build.getId() == -1) {
+			possibleId = setId();
+		} else {
+			possibleId = build.getId();
+		}		
 		this.name = build.getName();
 		this.description = build.getDescription();
 		this.actions = build.getActions();
 		this.failMsg = build.getFailMsg();
 		this.syntax = build.getSyntax();
-		this.id = build.getId();
+		this.id = possibleId;
+		save();
 	}
 	
 	public String getName() {return name;}	
 	
-	// Called when attempting to cast the finished spell. May or may not have a target, depending on spell.
 	public void perform(String fullCommand, Mobile currentPlayer) {
 		boolean shouldInformTarget = false;
 		for (Action a : actions){
@@ -131,6 +137,7 @@ public class Skill {
 			if (!a.save(position)) {
 				return false;
 			}
+			position ++;
 		//	String linkSelect = "SELECT * FROM BLOCKTABLE WHERE SKILLID=" + id + " AND BLOCKID =" + a.getId() + ";";
 		//	HashMap<String, Object> linkView = SQLInterface.returnBlockView(linkSelect);
 		//	if (linkView.isEmpty()) {
@@ -146,6 +153,19 @@ public class Skill {
 		//	}
 		}
 		return true;		
+	}
+	
+	public int setId() {
+		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
+				+ " LEFT JOIN skill ON sequencetable.sequenceid = skill.skillid"
+				+ " WHERE skill.skillid IS NULL";		
+		Object availableId = (int) SQLInterface.viewData(sqlQuery, "sequenceid");
+		if (availableId == null || !(availableId instanceof Integer)) {
+			SQLInterface.increaseSequencer();
+			return setId();
+		} else {
+			return (int)availableId;
+		}		
 	}
 	
 	public void preview(Mobile player) {

@@ -87,13 +87,13 @@ public class SQLInterface {
 				newLocation.setId(id);
 				newLocation.setDescription(description);
 				newLocation.north(rs.getInt("LOCNORTH"), rs.getString("LOCNORTHDIR"));
-				newLocation.northEast(rs.getInt("LOCNE"), rs.getString("LOCNEDIR"));
+				newLocation.northEast(rs.getInt("LOCNORTHEAST"), rs.getString("LOCNORTHEASTDIR"));
 				newLocation.east(rs.getInt("LOCEAST"), rs.getString("LOCEASTDIR"));
-				newLocation.southEast(rs.getInt("LOCSE"), rs.getString("LOCSEDIR"));
+				newLocation.southEast(rs.getInt("LOCSOUTHEAST"), rs.getString("LOCSOUTHEASTDIR"));
 				newLocation.south(rs.getInt("LOCSOUTH"), rs.getString("LOCSOUTHDIR"));
-				newLocation.southWest(rs.getInt("LOCSW"), rs.getString("LOCSWDIR"));
+				newLocation.southWest(rs.getInt("LOCSOUTHWEST"), rs.getString("LOCSOUTHWESTDIR"));
 				newLocation.west(rs.getInt("LOCWEST"), rs.getString("LOCWESTDIR"));
-				newLocation.northWest(rs.getInt("LOCNW"), rs.getString("LOCNWDIR"));
+				newLocation.northWest(rs.getInt("LOCNORTHWEST"), rs.getString("LOCNORTHWESTDIR"));
 				newLocation.up(rs.getInt("LOCUP"), rs.getString("LOCUPDIR"));
 				newLocation.down(rs.getInt("LOCDOWN"), rs.getString("LOCDOWNDIR"));
 				newLocation.in(rs.getInt("LOCIN"), rs.getString("LOCINDIR"));
@@ -614,8 +614,7 @@ public class SQLInterface {
 				return new Or(innerOrActionOne, innerOrActionTwo);
 				
 			case "GET":
-	//			return new Get(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")));
-				return null;
+				return new Get(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")));
 			case "LOOK":
 				return new Look(whereFactory.parse(rs.getString("TARGETWHERE")));
 				

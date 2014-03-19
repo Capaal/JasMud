@@ -49,7 +49,7 @@ public class Drop extends Action {
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='DROP' AND ENDWHERE='" + finalLoc.toString() + "' AND BLOCKPOS=" + position
-				+ " AND TARGETwhat='" + what.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
+				+ " AND TARGETWHO='" + what.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
 		return SQLInterface.returnBlockView(blockQuery);
 	}
 	@Override

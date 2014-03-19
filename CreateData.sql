@@ -5,7 +5,7 @@ insert into locationstats (LOCID, LOCNAME, LOCDES, LOCTYPE) values ('4','East of
 insert into locationstats (LOCID, LOCNAME, LOCDES, LOCTYPE) values ('5','Tidepool','This is south of start.','WATER');
 
 update locationstats set locsouth='1',locsouthdir='NORTH' where locid='2';
-update locationstats set locse='1',locsedir='NORTHWEST' where locid='3';
+update locationstats set locsoutheast='1',locsoutheastdir='NORTHWEST' where locid='3';
 update locationstats set locwest='2',locwestdir='EAST' where locid='4';
 update locationstats set locnorth='1',locnorthdir='SOUTH' where locid='5';
 select * from locationstats;

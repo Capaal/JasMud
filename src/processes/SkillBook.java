@@ -31,6 +31,7 @@ public class SkillBook {
 		this.toBeSaved = save;
 	}
 	
+	
 	public Skill getSkill(String skill) {
 		if (skill == null || skill.equals("")) {
 			return null;
@@ -55,17 +56,13 @@ public class SkillBook {
 		return id;
 	}
 	
-	public boolean save() {
+	public void save() {
 		if (toBeSaved) {			
-			for (Skill s : skillList) {				
-				if (!s.save()) {
-					return false;
-				}
+			for (Skill s : skillList) {					
 				saveSkillBookLink(s);
 			}
 			toBeSaved = false;
-		}		
-		return true;
+		}
 	}
 	
 	private void saveSkillBookLink(Skill s) {

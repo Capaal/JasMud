@@ -4,7 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import processes.Location;
 import processes.Location.Direction;
+import processes.LocationBuilder;
 
 public class LocationTest {
 
@@ -42,6 +44,7 @@ public class LocationTest {
 		testDirection = Direction.getDirectionName("sou");
 		assertTrue("sou should ALWAYS return SOUTH", testDirection.equals(Direction.SOUTH));
 	}
+	
 	
 
 }
