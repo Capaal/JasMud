@@ -8,6 +8,7 @@ import interfaces.*;
 import processes.SQLInterface;
 import processes.Skill;
 import processes.Skill.Syntax;
+import processes.WorldServer;
 
 public class Drop extends Action {
 	
@@ -50,19 +51,14 @@ public class Drop extends Action {
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='DROP' AND ENDWHERE='" + finalLoc.toString() + "' AND BLOCKPOS=" + position
 				+ " AND TARGETWHO='" + what.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
-		return SQLInterface.returnBlockView(blockQuery);
+		return WorldServer.databaseInterface.returnBlockView(blockQuery);
 	}
 	@Override
 	protected void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, ENDWHERE, TARGETWHO, TARGETWHERE) VALUES ('DROP', " 
 					+ position + ", '" +  finalLoc.toString() + "', '" + what.toString() + "', '" + where.toString() + "');";
-			try {
-				SQLInterface.saveAction(sql);
-			} catch (SQLException e) {
-				System.out.println("Drop failed to save via sql : " + sql);
-				e.printStackTrace();
-			}
+			WorldServer.databaseInterface.saveAction(sql);
 		}
 	}
 	@Override

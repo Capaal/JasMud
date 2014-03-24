@@ -9,6 +9,7 @@ import TargettingStrategies.*;
 import processes.SQLInterface;
 import processes.Skill;
 import processes.Skill.Syntax;
+import processes.WorldServer;
 import interfaces.*;
 
 public class Look extends Action {
@@ -59,19 +60,14 @@ public class Look extends Action {
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='LOOK' AND BLOCKPOS=" + position
 				+ " AND TARGETWHERE='" + where.toString() + "';";
-		return SQLInterface.returnBlockView(blockQuery);
+		return WorldServer.databaseInterface.returnBlockView(blockQuery);
 	}
 	@Override
 	protected void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, TARGETWHERE) VALUES ('LOOK', " 
 					+ position + ", '" + where.toString() + "');";
-			try {
-				SQLInterface.saveAction(sql);
-			} catch (SQLException e) {
-				System.out.println("Look failed to save via sql : " + sql);
-				e.printStackTrace();
-			}
+			WorldServer.databaseInterface.saveAction(sql);
 		}
 	}
 	@Override

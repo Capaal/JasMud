@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 import processes.Skill;
 import processes.SkillBuilder;
 import processes.StdMob;
+import processes.WorldServer;
 
 import org.junit.Test;
 import org.junit.Before;
@@ -27,7 +28,7 @@ public class DamageTest {
 	
 	@Before
 	public void initialize() {
-		
+		WorldServer.setInterface(new StubDatabaseInterface());
 	}
 	
 
@@ -46,6 +47,7 @@ public class DamageTest {
 	public void testActivateWeaponMatters() {
 		SkillBuilder testBuilder = new SkillBuilder();
 		testBuilder.addAction(new Damage(10, new TargetSelfWhatStrategy(), new TargetHereWhereStrategy(), true, null));
+		testBuilder.setId(1);
 		testSkill = new SkillStub(testBuilder);
 		Mobile testMob = mock(StdMob.class);
 		when(testMob.getContainer()).thenReturn(mock(Container.class));

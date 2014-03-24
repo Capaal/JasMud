@@ -46,7 +46,7 @@ public class DefenceEffect extends Action {
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='DEFENCEEFFECT' AND BLOCKPOS=" + position + " AND INTVALUE=" + duration
 				+ " AND TARGETWHO='" + who.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
-		return SQLInterface.returnBlockView(blockQuery);
+		return WorldServer.databaseInterface.returnBlockView(blockQuery);
 	}
 	@Override
 	protected void insertOneself(int position) {
@@ -54,7 +54,7 @@ public class DefenceEffect extends Action {
 			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) VALUES ('DEFENCEEFFECT', "
 					+ position + ", " + duration + ", '" + who.toString() + "', '" + where.toString() + "');";
 			try {
-				SQLInterface.saveAction(sql);
+				WorldServer.databaseInterface.saveAction(sql);
 			} catch (SQLException e) {
 				System.out.println("DefenceEffect failed to save via sql : " + sql);
 				e.printStackTrace();

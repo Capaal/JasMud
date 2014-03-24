@@ -5,13 +5,17 @@ import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import java.util.List;
+
 import interfaces.*;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import actions.Get;
 import TargettingStrategies.WhatTargettingStrategy;
 import TargettingStrategies.WhereTargettingStrategy;
 import processes.Skill;
+import processes.WorldServer;
 import processes.Skill.Syntax;
 import processes.SkillBuilder;
 
@@ -31,10 +35,12 @@ public class GetTest {
 	}
 	@Test
 	public void test() {
+		WorldServer.setInterface(new StubDatabaseInterface());
 		Action testGet = new Get(new stubWhat(), new stubWhere());
 		when(mockStartContainer.getHoldableFromString("testItem")).thenReturn(mockItem);
 		when(mockItem.getContainer()).thenReturn(mockStartContainer);
 		SkillBuilder skillBuild = new SkillBuilder();
+		skillBuild.setId(1);
 		skillBuild.setSyntax(Arrays.asList(Syntax.SKILL, Syntax.ITEM));
 		Skill testSkill = new Skill(skillBuild);
 		Mobile mockMob = mock(Mobile.class);

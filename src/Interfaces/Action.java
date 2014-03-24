@@ -16,7 +16,11 @@ public abstract class Action {
 			insertOneself(position);
 			blockView = selectOneself(position);
 		}
-		this.id = (int) blockView.get("BLOCKID");
+		if (blockView.isEmpty()) {
+			return false;			
+		} else {
+			this.id = (int) blockView.get("BLOCKID");
+		}
 		return true;
 	}
 	

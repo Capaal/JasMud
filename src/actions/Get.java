@@ -9,6 +9,7 @@ import interfaces.*;
 import processes.SQLInterface;
 import processes.Skill;
 import processes.Skill.Syntax;
+import processes.WorldServer;
 
 public class Get extends Action {
 	
@@ -64,19 +65,14 @@ public class Get extends Action {
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='GET' AND BLOCKPOS=" + position
 				+ " AND TARGETWHO='" + what.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
-		return SQLInterface.returnBlockView(blockQuery);
+		return WorldServer.databaseInterface.returnBlockView(blockQuery);
 	}
 	@Override
 	protected void insertOneself(int position) {
 		if (selectOneself(position).get("BLOCKID") == null) {
 			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE) VALUES ('DAMAGE', " 
 					+ position + ", '" + what.toString() + "', '" + where.toString() + "');";
-			try {
-				SQLInterface.saveAction(sql);
-			} catch (SQLException e) {
-				System.out.println("Get failed to save via sql : " + sql);
-				e.printStackTrace();
-			}
+			WorldServer.databaseInterface.saveAction(sql);
 		}
 	}
 	@Override

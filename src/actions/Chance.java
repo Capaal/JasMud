@@ -3,8 +3,10 @@ package actions;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Random;
+
 import processes.SQLInterface;
 import processes.Skill;
+import processes.WorldServer;
 import interfaces.Action;
 import interfaces.Mobile;
 
@@ -56,19 +58,14 @@ public class Chance extends Action {
 		HashMap<String, Object> chanceActionView = action.selectOneself(0);
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='CHANCE' AND INTVALUE=" + chance + " AND BLOCKPOS=" + position
 				+ " AND BLOCKPOINTERONE='" + chanceActionView.get("BLOCKID") + "';";
-		return SQLInterface.returnBlockView(blockQuery);
+		return WorldServer.databaseInterface.returnBlockView(blockQuery);
 	}
 	@Override
 	protected void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, INTVALUE, BLOCKPOINTERONE) VALUES ('CHANCE', " 
 					+ position + ", " +  chance + ", " + action.getId() + ");";
-			try {
-				SQLInterface.saveAction(sql);
-			} catch (SQLException e) {
-				System.out.println("Chance failed to save via sql : " + sql);
-				e.printStackTrace();
-			}
+			WorldServer.databaseInterface.saveAction(sql);
 		}
 	}
 	@Override

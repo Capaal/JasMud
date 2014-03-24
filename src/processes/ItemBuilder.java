@@ -23,7 +23,7 @@ public class ItemBuilder {
 	public int currentDurability = 1;
 	public ArrayList<Type> types = new ArrayList<Type>();
 	public ArrayList<ItemType> itemTags = new ArrayList<ItemType>();
-	public Container itemLocation = WorldServer.locationCollection.get(1);		
+	public Container itemLocation = WorldServer.gameState.locationCollection.get(1);		
 	public EnumSet<EquipmentEnum> allowedSlots = EnumSet.noneOf(EquipmentEnum.class);
 	
 	public void setPhysicalMult(double physicalMult) {
@@ -133,7 +133,7 @@ public class ItemBuilder {
 				newItemLocation = player.getContainer();
 			} else {
 				try {
-					newItemLocation = WorldServer.locationCollection.get(Integer.parseInt(tryLocation));
+					newItemLocation = WorldServer.gameState.locationCollection.get(Integer.parseInt(tryLocation));
 				} catch(NumberFormatException e) {
 					player.tell("That wasn't a valid number, be sure to keep it to just a number i.e. 1");
 					return newItem(player, builderItem);

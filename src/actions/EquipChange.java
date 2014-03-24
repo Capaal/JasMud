@@ -12,6 +12,7 @@ import processes.Equipment.EquipmentEnum;
 import processes.SQLInterface;
 import processes.Skill;
 import processes.Skill.Syntax;
+import processes.WorldServer;
 import interfaces.Action;
 import interfaces.Container;
 import interfaces.Holdable;
@@ -152,7 +153,7 @@ public class EquipChange extends Action {
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='EQUIPCHANGE' AND BLOCKPOS=" + position + " AND BOOLEANONE='" 
 				+ equip + "' AND TARGETWHO='" + what.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
-		return SQLInterface.returnBlockView(blockQuery);
+		return WorldServer.databaseInterface.returnBlockView(blockQuery);
 	}
 	
 	@Override
@@ -160,11 +161,7 @@ public class EquipChange extends Action {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) VALUES ('EQUIPCHANGE', " 
 					+ position + ", '" + equip + "', '" + what.toString() + "', '" + where.toString() + "');";
-			try {
-				SQLInterface.saveAction(sql);
-			} catch (SQLException e) {
-				System.out.println("Equipchange failed to insert itself: " + sql);
-			}
+			WorldServer.databaseInterface.saveAction(sql);
 		}
 	}
 	@Override

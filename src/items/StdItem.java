@@ -65,13 +65,8 @@ public class StdItem implements Holdable {
 	
 	private final EnumSet<EquipmentEnum> allowedEquipSlots;
 
-	// Example of a Dagger build: 
-	// StdItem dagger = new StdItem.Builder("Dagger", 1).physicalMult(1.1).description("Short and sharp.").shortDescription("a dagger")
-	// .types("SHARP", "PIERCE").itemTags("METALCRAFT", "ENCHANTABLE").balanceMult(.8).maxDurability(100)
-	// .itemLocation(WorldServer.locationCollection.get(1)).build(); 
-	
 	public StdItem(ItemBuilder build) {
-		if (WorldServer.allItems.containsKey(build.id)){ 
+		if (WorldServer.gameState.allItems.containsKey(build.id)){ 
 			this.id = setId();
 		} else {
 			this.id = build.id;
@@ -87,56 +82,10 @@ public class StdItem implements Holdable {
 		this.types = build.types;
 		this.itemTags = build.itemTags;
 		this.allowedEquipSlots = build.allowedSlots;
-		WorldServer.allItems.put(name + id, this);
+		WorldServer.gameState.allItems.put(name + id, this);
 		itemLocation.acceptItem(this);
 	}
-	/*
-	protected static abstract class Init<T extends Init<T>> {
-		
-		private double physicalMult = 1.0;
-		private final int id;
-		private final String name;
-		private String description = "default";
-		private String shortDescription = "shortDefault";
-		private double balanceMult = 1.0;
-		private int maxDurability = 1;
-		private int currentDurability = 1;
-		private ArrayList<Type> types = new ArrayList<Type>();
-		private ArrayList<ItemType> itemTags = new ArrayList<ItemType>();
-		private Container itemLocation = WorldServer.locationCollection.get(1);
-		
-		private EnumSet<EquipmentEnum> allowedSlots;
-		
-		
-		protected abstract T self();		
-		
-		public Init(String name, int id) {
-			if (WorldServer.allItems.containsKey(name + id)) {
-				throw new IllegalStateException("A item already exists with that name and id.");
-			}
-			this.id = id;
-			this.name = name;
-		}
-		
-		public T physicalMult(Double val) {physicalMult = val;return self();}		
-		public T description(String val) {description = val;return self();}		
-		public T shortDescription(String val) {shortDescription = val;return self();}		
-		public T maxDurability(int val) {maxDurability = val;return self();}		
-		public T itemLocation(Container val) {itemLocation = val;return self();}		
-		public T balanceMult(Double val) {balanceMult = val;return self();}		
-		public T types(ArrayList<Type> val) {types.addAll(val); return self();}
-		public T itemTags(ArrayList<ItemType> val) {itemTags.addAll(val); return self();}
-		public T currentDurability(int val) {currentDurability = val; return self();}
-		public T allowedSlots(EnumSet<EquipmentEnum> val) {allowedSlots = EnumSet.copyOf(val); return self();}
-		public StdItem build() {return new StdItem(this);}
-	}
 	
-	public static class Builder extends Init<Builder> {
-		public Builder(String name, int id) {super(name, id);}
-		@Override
-		protected Builder self() {return this;}
-	}*/
-		
 	public String getName() {return name;}
 	public int getId() {return id;}
 	public String getDescription() {return description;}	
@@ -175,116 +124,40 @@ public class StdItem implements Holdable {
 		if (itemLocation instanceof Location) {
 			locationType = "LOCATION";
 			String updateItem = "UPDATE ITEMSTATS SET EQUIPSLOT=null WHERE ITEMID=" + getId() + ";";
-			try {
-				SQLInterface.saveAction(updateItem);
-			} catch (SQLException e) {
-				System.out.println(this.getName() + " failed to save in a location via : " + updateItem);
-				e.printStackTrace();
-			}
+			WorldServer.databaseInterface.saveAction(updateItem);
 		} else if (itemLocation instanceof StdMob) {
 			locationType = "INVENTORY";
 			String updateItem = "UPDATE ITEMSTATS SET EQUIPSLOT=null WHERE ITEMID=" + getId() + ";";
-			try {
-				SQLInterface.saveAction(updateItem);
-			} catch (SQLException e) {
-				System.out.println(this.getName() + " failed to save in an inventory via : " + updateItem);
-				e.printStackTrace();
-			}
+			WorldServer.databaseInterface.saveAction(updateItem);
 		} else {
 			locationType = "EQUIPMENT";
 			String updateItem = "UPDATE ITEMSTATS SET EQUIPSLOT='" + ((Equipment)getContainer()).getKey(this) + "' WHERE ITEMID=" + getId() + ";";
-			try {
-				SQLInterface.saveAction(updateItem);
-			} catch (SQLException e) {
-				System.out.println(this.getName() + " failed to save in an equipment via : " + updateItem);
-				e.printStackTrace();
-			}
+			WorldServer.databaseInterface.saveAction(updateItem);
 		} 
 		String updateItem = "UPDATE ITEMSTATS SET ITEMCURDUR=" + currentDurability + ", ITEMLOC=" + itemLocation.getId() 
 				+ ", ITEMLOCTYPE='" + locationType + "' WHERE ITEMID=" + getId() + ";";
-	//	System.out.println(updateItem);
-		try {
-			SQLInterface.saveAction(updateItem);
-			return true;
-		} catch (SQLException e) {
-			System.out.println(this.getName() + " failed to save overall as an item via : " + updateItem);
-			e.printStackTrace();
-		}
-		return false;
+		WorldServer.databaseInterface.saveAction(updateItem);
+		return true;
 	}
 	
 	@Override
 	public void removeFromWorld() {
 		save();
-		WorldServer.allItems.remove(this.getName() + this.getId());
+		WorldServer.gameState.allItems.remove(this.getName() + this.getId());
 	}
 	
 	private int setId() {
 		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
 				+ " LEFT JOIN itemstats ON sequencetable.sequenceid = itemstats.itemid"
 				+ " WHERE itemstats.itemid IS NULL";		
-		Object availableId = (int) SQLInterface.viewData(sqlQuery, "sequenceid");
+		Object availableId = (int) WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
 		if (availableId == null || !(availableId instanceof Integer)) {
-			SQLInterface.increaseSequencer();
+			WorldServer.databaseInterface.increaseSequencer();
 			return setId();
 		} else {
 			return (int)availableId;
 		}		
-	}
-	/*//TODO
-	public static boolean newItem(Mobile player) {
-		String newItemName = Godcreate.askQuestion("What is the name of this new item?", player);
-		String newItemDescription = Godcreate.askQuestion("What is the long description for this item?", player);
-		String newItemShortDescription = Godcreate.askQuestion("What is the short description for this item?", player);
-		double newItemPhysicalMult = Double.parseDouble(Godcreate.askQuestion("What is the physical multiplier for this item? 1.0 is normal.", player));
-		double newItemBalanceMult = Double.parseDouble(Godcreate.askQuestion("What is the balance multiplier for this item? 1.0 is normal.", player));;
-		String stringItemLocation = Godcreate.askQuestion("Which location should the item be in upon creation?", player);
-		Container newItemLocation;	
-		if ("here".equals(stringItemLocation.toLowerCase())) {
-			newItemLocation = player.getContainer();
-		} else {
-			newItemLocation = WorldServer.locationCollection.get(Integer.parseInt(stringItemLocation));
-		}			
-		int newItemMaxDurability = Integer.parseInt(Godcreate.askQuestion("What is this item's max durablity?", player));
-		int newItemCurrentDurability = Integer.parseInt(Godcreate.askQuestion("What is this item's currentDurability?", player));
-		int howManyItemTypes = Integer.parseInt(Godcreate.askQuestion("How many types will this item be?", player));
-		ArrayList<Type> newItemTypes = new ArrayList<Type>();
-		for (int i = 1; i <= howManyItemTypes; i++) {
-			newItemTypes.add(Type.valueOf((Godcreate.askQuestion("What type will the item have?", player).toUpperCase())));
-		}		
-		ArrayList<ItemType> newItemTags = new ArrayList<ItemType>();
-		int howManyItemTags = Integer.parseInt(Godcreate.askQuestion("How many item tags will this item have?", player));
-		for (int i = 1; i <= howManyItemTags; i++) {
-			newItemTags.add(ItemType.valueOf((Godcreate.askQuestion("What tag will the item have?", player).toUpperCase())));
-		}	
-		EnumSet<EquipmentEnum> newItemAllowedEquipSlots = EnumSet.noneOf(EquipmentEnum.class);
-		int howManyAllowedEquipSlots = Integer.parseInt(Godcreate.askQuestion("How many slots can this item be in?", player));
-		for (int i = 1; i <= howManyAllowedEquipSlots; i++) {
-			newItemAllowedEquipSlots.add(EquipmentEnum.valueOf(Godcreate.askQuestion("What slot may be filled?", player).toUpperCase()));
-		}
-		ItemBuilder newItem = new ItemBuilder();
-		newItem.setName(newItemName);
-		newItem.setPhysicalMult(newItemPhysicalMult);
-		newItem.setDescription(newItemDescription);
-		newItem.setShortDescription(newItemShortDescription);
-		newItem.setTypes(newItemTypes);
-		newItem.setItemTags(newItemTags);
-		newItem.setBalanceMult(newItemBalanceMult);
-		newItem.setMaxDurability(newItemMaxDurability);
-		newItem.setCurrentDurability(newItemCurrentDurability);
-		newItem.setItemLocation(newItemLocation);
-		newItem.setAllowedSlots(newItemAllowedEquipSlots);
-		newItem.complete(); 
-		return true;
-	}
-	/*
-	  //TODO
-	public static int getNewId() {
-		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
-				+ " LEFT JOIN itemstats ON sequencetable.sequenceid = itemstats.itemid"
-				+ " WHERE itemstats.itemid IS NULL";		
-		return (int) SQLInterface.viewData(sqlQuery, "sequenceid");
-	}*/
+	}	
 	
 	public enum ItemType {
 		

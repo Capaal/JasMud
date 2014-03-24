@@ -30,13 +30,7 @@ public class PlayerPrompt implements Runnable {
 		boolean oldPlayer = false;
 		if (enteredName != null) {
 			Mobile possiblePlayer = null;
-			try {
-				possiblePlayer = SQLInterface.loadPlayer(enteredName, enteredPass);
-			} catch (SQLException e) {
-				System.out.println("Critical error, loadPlayer: " + enteredName + ", dropping connection.");
-				e.printStackTrace();
-				destroyConnection();
-			}	
+			possiblePlayer = WorldServer.databaseInterface.loadPlayer(enteredName, enteredPass);	
 			if (possiblePlayer != null) {
 				currentPlayer = possiblePlayer;
 				currentPlayer.setSendBack(sendBack);
@@ -62,13 +56,8 @@ public class PlayerPrompt implements Runnable {
 					System.out.println("New character creation failed to save to database.");
 					destroyConnection();
 				}			
-				try {
-					this.currentPlayer = SQLInterface.loadPlayer(enteredName, enteredPass);
-					currentPlayer.setSendBack(sendBack);
-				} catch (SQLException e) {
-					System.out.println("Critical error loading player: " + enteredName + ", closing connection.");
-					destroyConnection();					
-				}
+				this.currentPlayer = WorldServer.databaseInterface.loadPlayer(enteredName, enteredPass);
+				currentPlayer.setSendBack(sendBack);
 				currentPlayer.controlStatus(true);
 				currentPlayer.setStartup(false);
 				currentPlayer.save();			
@@ -95,7 +84,7 @@ public class PlayerPrompt implements Runnable {
 					break;
 				} else if (str.trim().toLowerCase().equals("shutdown")) {
 					stayInsideLoop = false;
-					for (PlayerPrompt player : WorldServer.activeClients) {
+					for (PlayerPrompt player : WorldServer.gameState.activeClients) {
 						player.currentPlayer.removeFromWorld();
 					}
 					destroyConnection();
@@ -144,7 +133,7 @@ public class PlayerPrompt implements Runnable {
 			System.out.println("Failed to close socket connection");
 			e.printStackTrace();
 		}
-		WorldServer.activeClients.remove(this);
+		WorldServer.gameState.activeClients.remove(this);
 	}
 }
 

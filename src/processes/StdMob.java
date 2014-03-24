@@ -47,7 +47,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	private Mobile lastAggressor;
 	
 	public StdMob(MobileBuilder build) {
-		if (WorldServer.mobList.containsKey(build.name + build.id)) {
+		if (WorldServer.gameState.mobList.containsKey(build.name + build.id)) {
 			this.id = setId();
 		} else {
 			this.id = build.id;
@@ -64,7 +64,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		this.equipment = build.equipment;
 		equipment.setOwner(this);
 		effectManager = new EffectManager();
-		WorldServer.mobList.put(name + id, this);
+		WorldServer.gameState.mobList.put(name + id, this);
 	}
 	
 	public String getName() {return name;}	
@@ -327,12 +327,7 @@ public class StdMob implements Mobile, Container, Holdable {
 			if (sb.getToBeSave()) {
 				String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values(" + id + ", " + sb.getId() + ", " + skillBookList.get(sb) +
 						") ON DUPLICATE KEY UPDATE mobprogress=" + skillBookList.get(sb) + ";";
-				try {
-					SQLInterface.saveAction(insertBook);
-				} catch (SQLException e) {
-					System.out.println("Skillbook " + sb.getName() + " failed to save it's progress table via: " + insertBook);
-					return false;
-				}
+				WorldServer.databaseInterface.saveAction(insertBook);
 				sb.save();
 			}
 		}	
@@ -346,14 +341,8 @@ public class StdMob implements Mobile, Container, Holdable {
 				+ "', MOBLOC=" + mobLocation.getId() + ", MOBCURRENTHP=" + currentHp + ", MOBDEAD='" + (isDead ? 1 : 0) + "', "
 						+ "MOBCURRENTXP=" + experience + ", MOBCURRENTLEVEL=" + level + ", MOBAGE=" + age
 						+ ", LOADONSTARTUP=" + (loadOnStartUp ? 1 : 0) + " WHERE MOBID=" + id + ";";
-		try {
-			SQLInterface.saveAction(updateStats);
-			return true;
-		} catch (SQLException e) {
-			System.out.println(this.getName() + " failed to save via sql: " + updateStats);
-			e.printStackTrace();
-			return false;
-		}
+		WorldServer.databaseInterface.saveAction(updateStats);
+		return true;
 	}	
 	
 	private boolean saveItems() {
@@ -388,7 +377,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		save();
 		effectManager.shutDown();
 		mobLocation.removeItemFromLocation(this);
-		WorldServer.mobList.remove(this.getName() + this.getId());
+		WorldServer.gameState.mobList.remove(this.getName() + this.getId());
 		
 	}
 	
@@ -419,22 +408,10 @@ public class StdMob implements Mobile, Container, Holdable {
 	public static void insertNewBlankMob(String newName, String newPassword) throws IllegalStateException {
 		int newId = findNewId(newName);
 		String sql = "insert into mobstats (MOBID, MOBNAME, MOBPASS) values (" + newId + ", '" + newName + "', '" + newPassword + "');";
-		try {
-			SQLInterface.saveAction(sql);
-		} catch (SQLException e) {
-			System.out.println("Failed to insert blank mobile via: " + sql);
-			System.out.println(e.toString());
-			throw new IllegalStateException("Database out of sync.");
-		}
+		WorldServer.databaseInterface.saveAction(sql);
 		String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values((SELECT MOBID FROM MOBSTATS"
 				+ " WHERE MOBNAME='" + newName + "'), 1, 1) ON DUPLICATE KEY UPDATE MOBPROGRESS=1;";
-		try {
-			SQLInterface.saveAction(insertBook);
-		} catch(SQLException e) {
-			System.out.println("Failed to insert blank mobile via: " + insertBook);
-			System.out.println(e.toString());
-			throw new IllegalStateException("Database out of sync.");
-		}
+		WorldServer.databaseInterface.saveAction(insertBook);
 	}
 
 	@Override
@@ -479,12 +456,12 @@ public class StdMob implements Mobile, Container, Holdable {
 		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
 				+ " LEFT JOIN MOBSTATS ON sequencetable.sequenceid = mobstats.mobid"
 				+ " WHERE mobstats.mobid IS NULL";		
-		Object availableId = (int) SQLInterface.viewData(sqlQuery, "sequenceid");
+		Object availableId = (int) WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
 		if (availableId == null || !(availableId instanceof Integer)) {
-			SQLInterface.increaseSequencer();
+			WorldServer.databaseInterface.increaseSequencer();
 			findNewId(name);
 		} else {
-			if (WorldServer.mobList.containsKey(name + availableId)) {
+			if (WorldServer.gameState.mobList.containsKey(name + availableId)) {
 				throw new IllegalStateException("A mob of the id already exists.");
 			}
 			return (int)availableId;
@@ -497,9 +474,9 @@ public class StdMob implements Mobile, Container, Holdable {
 		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
 				+ " LEFT JOIN mobstats ON sequencetable.sequenceid = mobstats.mobid"
 				+ " WHERE mobstats.mobid IS NULL";		
-		Object availableId = (int) SQLInterface.viewData(sqlQuery, "sequenceid");
+		Object availableId = (int) WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
 		if (availableId == null || !(availableId instanceof Integer)) {
-			SQLInterface.increaseSequencer();
+			WorldServer.databaseInterface.increaseSequencer();
 			return setId();
 		} else {
 			return (int)availableId;

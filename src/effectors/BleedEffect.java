@@ -9,6 +9,7 @@ import TargettingStrategies.*;
 import actions.Godcreate;
 import processes.SQLInterface;
 import processes.Skill;
+import processes.WorldServer;
 import effects.Bleed;
 import interfaces.*;
 
@@ -71,19 +72,14 @@ public class BleedEffect extends Action {
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='BLEEDEFFECT' AND BLOCKPOS=" + position + " AND INTVALUE=" + duration
 				+ " AND TARGETWHO='" + what.toString() + "' AND TARGETWHERE='" + where.toString() + "';";
-		return SQLInterface.returnBlockView(blockQuery);
+		return WorldServer.databaseInterface.returnBlockView(blockQuery);
 	}
 	@Override
 	protected void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) VALUES ('BLEEDEFFECT', " 
 					 + position + ", " + duration + ", '" + what.toString() + "', '" + where.toString() + "');";
-			try {
-				SQLInterface.saveAction(sql);
-			} catch (SQLException e) {
-				System.out.println("BleedEffect failed to save via sql : " + sql);
-				e.printStackTrace();
-			}
+			WorldServer.databaseInterface.saveAction(sql);
 		}
 	}
 	@Override

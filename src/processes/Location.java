@@ -21,9 +21,9 @@ public class Location implements Container {
 	private GroundType groundType;
 	private Map<Direction, Location> locationMap;
 	private Set<Holdable> inventory = new HashSet<Holdable>();
-
+	
 	public Location(LocationBuilder builder) {
-		if (WorldServer.locationCollection.containsKey(builder.getId())) {
+		if (builder.getId() == -1) {
 			this.id = setId();
 		} else {
 			this.id = builder.getId();
@@ -32,10 +32,9 @@ public class Location implements Container {
 		this.description = builder.getDescription();
 		this.groundType = builder.getGroundType();
 		this.locationMap = builder.locationMap;
-		WorldServer.locationCollection.put(this.id, this);
-		
+		WorldServer.gameState.locationCollection.put(this.id, this);		
 		for (int s : builder.locationConnections.keySet()){
-			Location futureLoc = WorldServer.locationCollection.get(s);
+			Location futureLoc = WorldServer.gameState.locationCollection.get(s);
 			if (futureLoc != null) {
 				Direction currentDirection = builder.locationConnections.get(s);
 				futureLoc.setLocation(this, currentDirection);
@@ -99,6 +98,10 @@ public class Location implements Container {
 			currentPlayer.tell(sb.toString());
 		}
 	}
+	
+	public String getDescription() {
+		return description;
+	}
 			
 	public int getId() {return id;}
 	public GroundType getGroundType() {return groundType;}	
@@ -160,13 +163,9 @@ public class Location implements Container {
 		String insertNewLocation = "insert into locationstats (LOCID, LOCNAME, LOCDES, LOCTYPE"
 				+ directionKeyInformation
 				+ ") values (" + id + ", '" + name + "', '" + description + "', '" + groundType.toString() + "'"
-				+ directionValueInformation + ") ON DUPLICATE KEY UPDATE LOCID=" + id + ";";
-		try {
-			SQLInterface.saveAction(insertNewLocation);
-		} catch (SQLException e) {
-			System.out.println("Location failed to save via: " + insertNewLocation);
-			e.printStackTrace();
-		}
+				+ directionValueInformation + ") ON DUPLICATE KEY UPDATE LOCID=" + id + ";";	
+		System.out.println(insertNewLocation);
+		WorldServer.databaseInterface.saveAction(insertNewLocation);		
 	}
 	
 	public Direction getHowOtherLocationConnectsToThis(Location askingLocation) {
@@ -202,10 +201,14 @@ public class Location implements Container {
 		for (Location loc : locationMap.values()) {
 			sb.append(", ");
 			sb.append(loc.getId());
-			sb.append(", '");
 			Direction howOtherLocationConnectsHere = loc.getHowOtherLocationConnectsToThis(this);
-			sb.append(howOtherLocationConnectsHere.toString());
-			sb.append("'");
+			if (howOtherLocationConnectsHere == null) {
+				sb.append(", null");
+			} else {
+				sb.append(", '");				
+				sb.append(howOtherLocationConnectsHere.toString());
+				sb.append("'");
+			}
 		}
 		System.out.println(sb.toString());
 		return sb.toString();
@@ -247,9 +250,9 @@ public class Location implements Container {
 		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
 				+ " LEFT JOIN locationstats ON sequencetable.sequenceid = locationstats.locid"
 				+ " WHERE locationstats.locid IS NULL";		
-		Object availableId = (int) SQLInterface.viewData(sqlQuery, "sequenceid");
+		Object availableId = (int) WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
 		if (availableId == null || !(availableId instanceof Integer)) {
-			SQLInterface.increaseSequencer();
+			WorldServer.databaseInterface.increaseSequencer();
 			return setId();
 		} else {
 			return (int)availableId;
@@ -412,7 +415,7 @@ public class Location implements Container {
 		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
 				+ " LEFT JOIN locationstats ON sequencetable.sequenceid = locationstats.locid"
 				+ " WHERE locationstats.locid IS NULL";		
-		return (int) SQLInterface.viewData(sqlQuery, "sequenceid");
+		return (int) WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
 	}
 	
 	public enum GroundType {		

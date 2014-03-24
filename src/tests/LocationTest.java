@@ -4,12 +4,11 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import processes.Location;
+import processes.*;
 import processes.Location.Direction;
-import processes.LocationBuilder;
 
 public class LocationTest {
-
+	
 	@Test
 	public void testGetDirectionNameNorth() {
 		Direction testDirection = Direction.getDirectionName("north");
@@ -45,6 +44,48 @@ public class LocationTest {
 		assertTrue("sou should ALWAYS return SOUTH", testDirection.equals(Direction.SOUTH));
 	}
 	
+	@Test
+	public void testTwoLocationsMutualDirections() {
+		WorldServer.setGameState(new GameState());
+		WorldServer.setInterface(new StubDatabaseInterface());
+		LocationBuilder buildSouth = new LocationBuilder();
+		buildSouth.setId(1);
+		Location south = new Location(buildSouth);
+		LocationBuilder buildNorth = new LocationBuilder();
+		buildNorth.setId(2);
+		buildNorth.south(1, "north");				
+		Location north = new Location(buildNorth);
+		assertTrue("South location's north should point at location north" , south.getLocation(Direction.NORTH) == north);
+		assertTrue("North location's south should point at location south", north.getLocation(Direction.SOUTH) == south);
+	}
 	
-
+	@Test
+	public void testTwoLocationsConnectInDifferentWays() {
+		WorldServer.setGameState(new GameState());
+		WorldServer.setInterface(new StubDatabaseInterface());
+		LocationBuilder buildSouth = new LocationBuilder();
+		buildSouth.setId(1);
+		Location south = new Location(buildSouth);
+		LocationBuilder buildNorth = new LocationBuilder();
+		buildNorth.setId(2);
+		buildNorth.south(1, "northwest");
+		Location north = new Location(buildNorth);
+		assertTrue("South location's northwest should point at location north" , south.getLocation(Direction.NORTHWEST) == north);
+		assertTrue("North location's south should point at location south", north.getLocation(Direction.SOUTH) == south);
+	}
+	
+	@Test
+	public void testTwoLocationsOnlyOneConnects() {
+		WorldServer.setGameState(new GameState());
+		WorldServer.setInterface(new StubDatabaseInterface());
+		LocationBuilder buildSouth = new LocationBuilder();
+		buildSouth.setId(1);
+		Location south = new Location(buildSouth);
+		LocationBuilder buildNorth = new LocationBuilder();
+		buildNorth.setId(2);
+		buildNorth.south(1, null);
+		Location north = new Location(buildNorth);
+		assertFalse("South should not have any location pointing at north" , south.getLocation(Direction.NORTH) == north);
+		assertTrue("North location's south should point at location south", north.getLocation(Direction.SOUTH) == south);
+	}
 }

@@ -18,7 +18,7 @@ public class LocationBuilder {
 	public Map<Integer, Direction> locationConnections;
 	
 	public LocationBuilder() {
-		id = 1;
+		id = -1;
 		this.name = "Default name";
 		this.description = "default description.";
 		this.groundType = GroundType.GROUND;
@@ -71,16 +71,18 @@ public class LocationBuilder {
 	
 	private void buildDirections(int newLocationId, Direction directionConnectingLocationWillBe, int idOfConnectingLocation, String directionConnectingLocationWillConnectToNewLocation) {
 		// SQL will call for a direction even if there is no location here, so just ends.
-		if (newLocationId != 0 && directionConnectingLocationWillConnectToNewLocation != null) {	
-			Direction futureDirection = Direction.NORTH;
-			try {
-				futureDirection = Direction.valueOf(directionConnectingLocationWillConnectToNewLocation.toUpperCase());
-			} catch (IllegalArgumentException e) {
-				System.out.println(directionConnectingLocationWillConnectToNewLocation + " is not a valid direction loaded from database. CRITICAL ERROR, Defaulted to north.");				
-			}
-			if (WorldServer.locationCollection.containsKey(idOfConnectingLocation)) {
-				Location futureLoc = WorldServer.locationCollection.get(idOfConnectingLocation);								
-				locationConnections.put(idOfConnectingLocation, futureDirection);				
+		if (newLocationId != 0) {	
+			Direction futureDirection = Direction.NORTH;			
+			if (WorldServer.gameState.locationCollection.containsKey(idOfConnectingLocation)) {
+				Location futureLoc = WorldServer.gameState.locationCollection.get(idOfConnectingLocation);	
+				if (directionConnectingLocationWillConnectToNewLocation != null) {
+					try {
+						futureDirection = Direction.valueOf(directionConnectingLocationWillConnectToNewLocation.toUpperCase());
+					} catch (IllegalArgumentException e) {
+						System.out.println(directionConnectingLocationWillConnectToNewLocation + " is not a valid direction loaded from database. CRITICAL ERROR, Defaulted to north.");				
+					}
+					locationConnections.put(idOfConnectingLocation, futureDirection);		
+				}
 				locationMap.put(directionConnectingLocationWillBe, futureLoc);		
 			} else {
 				System.out.println("I think a location was made that is pointing to an unmade location: " + newLocationId);
@@ -171,7 +173,7 @@ public class LocationBuilder {
 				player.tell("That isn't a valid number.");
 				return newConnection(player, builderLocation);
 			}
-			Location connectedLocation = WorldServer.locationCollection.get(newConnectionId);
+			Location connectedLocation = WorldServer.gameState.locationCollection.get(newConnectionId);
 			if (newConnectionDirection == null || newConnectionId == 0 || connectedLocation == null) {
 				player.tell("Invalid state");
 				return newConnection(player, builderLocation);

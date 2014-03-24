@@ -85,7 +85,7 @@ public class Skill {
 	
 	public boolean save() {
 		String skillSelect = "SELECT * FROM SKILL WHERE SKILLNAME='" + name + "';";
-		HashMap<String, Object> skillView = SQLInterface.returnBlockView(skillSelect);
+		HashMap<String, Object> skillView = WorldServer.databaseInterface.returnBlockView(skillSelect);
 		String skillInsert;
 		if (skillView.isEmpty()) {
 			skillInsert = "INSERT INTO SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) VALUES (" + this.id + ", '" + name + "', '" + description 
@@ -93,44 +93,26 @@ public class Skill {
 		} else {
 			skillInsert = "UPDATE SKILL SET SKILLDES='" + description + "', SKILLFAILMSG='" + failMsg + "' WHERE SKILLID=" + id + ";";
 		}
-		try {
-			SQLInterface.saveAction(skillInsert);
-		} catch (SQLException e) {
-			System.out.println("Attempt to save overarching skill failed via: " + skillInsert);
-			e.printStackTrace();
-			return false;
-		}			
-//			skillView = SQLInterface.returnBlockView(skillSelect);
+		WorldServer.databaseInterface.saveAction(skillInsert);			
+//			skillView = WorldServer.databaseInterface.returnBlockView(skillSelect);
 //		}
 //		this.id = (int) skillView.get("SKILLID");
 		System.out.println("I'm not sure if skills know their id: " + name + " " + id);
 		for (Syntax s : syntax) {
 			String syntaxIdQuery = "SELECT * FROM SYNTAX WHERE SYNTAXPOS=" + syntax.indexOf(s) + " AND SYNTAXTYPE='" + s.toString() + "';";
-			Object syntaxId = SQLInterface.viewData(syntaxIdQuery, "SYNTAXID");
+			Object syntaxId = WorldServer.databaseInterface.viewData(syntaxIdQuery, "SYNTAXID");
 			//This won't be necessary often, I guess I should just check and see if it exists, and if not, then insert.
 			if (syntaxId == null) {
 				String syntaxInsert = "INSERT INTO SYNTAX (SYNTAXPOS, SYNTAXTYPE) VALUES (" + syntax.indexOf(s) + ", '" + s.toString() +
 						"');";
-				try {
-					SQLInterface.saveAction(syntaxInsert);
-				} catch (SQLException e) {
-					System.out.println("Skill syntax failed to save via: " + syntaxInsert);
-					e.printStackTrace();
-					return false;
-				}			
+				WorldServer.databaseInterface.saveAction(syntaxInsert);			
 			}
 		//	String syntaxIdQuery = "SELECT * FROM SYNTAX WHERE SYNTAXPOS=" + syntax.indexOf(s) + " AND SYNTAXTYPE='" + s.toString() + "';";
-		//	HashMap<String, Object> syntaxView = SQLInterface.returnBlockView(syntaxIdQuery);
+		//	HashMap<String, Object> syntaxView = WorldServer.databaseInterface.returnBlockView(syntaxIdQuery);
 			String syntaxTableInsert = "INSERT INTO SYNTAXTABLE (SKILLID, SYNTAXID) VALUES (" + this.id 
 					+ ", (SELECT SYNTAXID FROM SYNTAX WHERE SYNTAXPOS=" + syntax.indexOf(s) + " AND SYNTAXTYPE='" + s.toString() + "'))"
 							+ " ON DUPLICATE KEY UPDATE SKILLID=" + this.id + ";";
-			try {
-				SQLInterface.saveAction(syntaxTableInsert);
-			} catch (SQLException e) {
-				System.out.println("Skill syntax table failed to save via: " + syntaxTableInsert);
-				e.printStackTrace();
-				return false;
-			}			
+			WorldServer.databaseInterface.saveAction(syntaxTableInsert);			
 		}	
 		int position =  1;
 		for (Action a : actions) {
@@ -139,18 +121,11 @@ public class Skill {
 			}
 			position ++;
 		//	String linkSelect = "SELECT * FROM BLOCKTABLE WHERE SKILLID=" + id + " AND BLOCKID =" + a.getId() + ";";
-		//	HashMap<String, Object> linkView = SQLInterface.returnBlockView(linkSelect);
+		//	HashMap<String, Object> linkView = WorldServer.databaseInterface.returnBlockView(linkSelect);
 		//	if (linkView.isEmpty()) {
 			String linkInsert = "INSERT INTO BLOCKTABLE (SKILLID, BLOCKID) values (" + id + ", " + a.getId() 
 					+ ") ON DUPLICATE KEY UPDATE SKILLID=" + id + ";";
-			try {
-				SQLInterface.saveAction(linkInsert);
-			} catch (SQLException e) {
-				System.out.println("Skill blocktable failed to save via: " + linkInsert);
-				e.printStackTrace();
-				return false;
-			}				
-		//	}
+			WorldServer.databaseInterface.saveAction(linkInsert);
 		}
 		return true;		
 	}
@@ -159,10 +134,17 @@ public class Skill {
 		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
 				+ " LEFT JOIN skill ON sequencetable.sequenceid = skill.skillid"
 				+ " WHERE skill.skillid IS NULL";		
-		Object availableId = (int) SQLInterface.viewData(sqlQuery, "sequenceid");
+		Object availableId = WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
 		if (availableId == null || !(availableId instanceof Integer)) {
-			SQLInterface.increaseSequencer();
-			return setId();
+			WorldServer.databaseInterface.increaseSequencer();
+			availableId = WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
+			if (availableId == null || !(availableId instanceof Integer)) {
+				System.out.println("Critical Error, unable to set skill ids, database misbehaving. Skills will not save properly.");
+				return 1;
+				
+			} else {
+				return setId();
+			}
 		} else {
 			return (int)availableId;
 		}		

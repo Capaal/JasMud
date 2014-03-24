@@ -177,8 +177,8 @@ public class UsefulCommands {
 	public static int getPosID(int i) {
 		boolean fail = false;
 		int posID = (i);
-		for (int j = 0; j < WorldServer.allItems.size(); j++) {
-			if (WorldServer.allItems.get(j).getId() == posID) {
+		for (int j = 0; j < WorldServer.gameState.allItems.size(); j++) {
+			if (WorldServer.gameState.allItems.get(j).getId() == posID) {
 				posID = getPosID(posID+1);
 				fail = true;
 				break;

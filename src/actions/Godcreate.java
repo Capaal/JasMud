@@ -3,6 +3,8 @@ package actions;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import processes.LocationBuilder;
 import checks.*;
@@ -23,10 +25,6 @@ public class Godcreate extends Action {
 	
 	public static Map<String, Action> actionMap;
 	
-	public Godcreate() {
-		
-	}
-
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		Mobile player = currentPlayer;
@@ -175,7 +173,7 @@ public class Godcreate extends Action {
 			}
 			StringBuilder possibleBooks = new StringBuilder();
 			possibleBooks.append("Which skillbook do you want this skill attached to?: ");
-			for (SkillBook skillBook : WorldServer.AllSkillBooks.values()) {
+			for (SkillBook skillBook : WorldServer.gameState.AllSkillBooks.values()) {
 				possibleBooks.append(skillBook.getId());
 				possibleBooks.append(":");
 				possibleBooks.append(skillBook.getName());
@@ -183,8 +181,8 @@ public class Godcreate extends Action {
 			}
 			player.tell(currentBooks.toString());
 			Integer skillBookId = Integer.parseInt(askQuestion(possibleBooks.toString(), player));
-			if (WorldServer.AllSkillBooks.containsKey(skillBookId)) {
-				newSkill.addBook(WorldServer.AllSkillBooks.get(skillBookId));
+			if (WorldServer.gameState.AllSkillBooks.containsKey(skillBookId)) {
+				newSkill.addBook(WorldServer.gameState.AllSkillBooks.get(skillBookId));
 			}
 			return processCreateNewSkill(player, newSkill);	
 		case "7":
@@ -284,39 +282,39 @@ public class Godcreate extends Action {
 	
 	
 	public static String askQuestion(String question, Mobile player) {
-		player.tell(question);
-		String answer = player.getSendBack().getMessage();
-		if (answer.equals("")) {
-			player.tell("Typing nothing will not create something.");
-			answer = askQuestion(question, player);
-		}
-		return answer.toLowerCase();
+		return askQuestionActual(question, player).toLowerCase();
 	}
 	
 	public static String askQuestionMaintainCase(String question, Mobile player) {
+		return askQuestionActual(question, player);
+	}
+	
+	private static String askQuestionActual(String question, Mobile player) {
 		player.tell(question);
 		String answer = player.getSendBack().getMessage();
 		if (answer.equals("")) {
 			player.tell("Typing nothing will not create something.");
 			answer = askQuestion(question, player);
 		}
-		return answer;
+		String finalAnswer = correctAnswerForDatabase(answer);
+		return finalAnswer;
 	}
+	
+	private static String correctAnswerForDatabase(String answer) {
+		String finalAnswer = answer.replace("'", "\\'");
+		return finalAnswer;
+	}
+	
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='GODCREATE' AND BLOCKPOS=" + position + ";";
-		return SQLInterface.returnBlockView(blockQuery);
+		return WorldServer.databaseInterface.returnBlockView(blockQuery);
 	}
 	@Override
 	protected void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT IGNORE INTO BLOCK (BLOCKTYPE, BLOCKPOS) VALUES ('GODCREATE', " + position + ",);";
-			try {
-				SQLInterface.saveAction(sql);
-			} catch (SQLException e) {
-				System.out.println("Godcreate failed to save via sql : " + sql);
-				e.printStackTrace();
-			}
+			WorldServer.databaseInterface.saveAction(sql);
 		}
 	}
 

@@ -67,16 +67,11 @@ public class SkillBook {
 	
 	private void saveSkillBookLink(Skill s) {
 		String skillSelect = "SELECT * FROM skilltable WHERE SKILLID='" + s.getId() + "';";
-		HashMap<String, Object> skillView = SQLInterface.returnBlockView(skillSelect);
+		HashMap<String, Object> skillView = WorldServer.databaseInterface.returnBlockView(skillSelect);
 		String skillInsert;
 		if (skillView.get("SKILLID") == null) {
 			skillInsert = "INSERT INTO skilltable (SKILLBOOKID, SKILLID) VALUES (" + this.id + ", " + s.getId() + ");";		
-			try {
-				SQLInterface.saveAction(skillInsert);
-			} catch (SQLException e) {
-				System.out.println("Attempt to save skillLink to book: " + skillInsert);
-				e.printStackTrace();
-			}
+			WorldServer.databaseInterface.saveAction(skillInsert);
 		}
 	}
 }

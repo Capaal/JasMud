@@ -14,6 +14,7 @@ import processes.Location.Direction;
 import processes.SQLInterface;
 import processes.Skill;
 import processes.Skill.Syntax;
+import processes.WorldServer;
 
 // Does not seem to be safe from developer mistakes when making new skills.
 // At the moment it can only accept directions to subsitute %s with names, not anything else like "north".
@@ -61,22 +62,10 @@ public class Message extends Action {
 		int msgStringsCount = 1;
 		for (msgStrings ms : msgList) {
 			String msgStringsInsert = "INSERT IGNORE INTO MSGSTRINGS (MSGSTRINGSPOS, MSGSTRINGSTYPE) values (" + msgStringsCount + ", '" + ms.toString() + "');"; 
-			try {
-				SQLInterface.saveAction(msgStringsInsert);				
-			} catch (SQLException e) {
-				System.out.println("Msgstrings failed to save via sql : " + msgStringsInsert);
-				e.printStackTrace();
-				return false;				
-			}
+			WorldServer.databaseInterface.saveAction(msgStringsInsert);
 			String msgStringsTableInsert = "INSERT IGNORE INTO msgstringstable (BLOCKID, MSGSTRINGSID) values (" + id + ", "
 					+ selectMsgStringsId(msgStringsCount, ms.toString()) + ");";
-			try {
-				SQLInterface.saveAction(msgStringsTableInsert);
-			} catch (SQLException e) {
-				System.out.println("Msgstringstable failed to save via sql : " + msgStringsTableInsert);
-				e.printStackTrace();
-				return false;
-			}		
+			WorldServer.databaseInterface.saveAction(msgStringsTableInsert);		
 			msgStringsCount ++;
 		}				
 		return true;			
@@ -84,7 +73,7 @@ public class Message extends Action {
 	
 	private int selectMsgStringsId(int pos, String type) {
 		String blockQuery = "SELECT * FROM MSGSTRINGS WHERE MSGSTRINGSPOS=" + pos + " AND MSGSTRINGSTYPE='" + type.toString() + "';"; 
-		HashMap<String, Object> blockView = SQLInterface.returnBlockView(blockQuery);
+		HashMap<String, Object> blockView = WorldServer.databaseInterface.returnBlockView(blockQuery);
 		return (int) blockView.get("MSGSTRINGSID");
 	}
 	@Override
@@ -123,19 +112,14 @@ public class Message extends Action {
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='MESSAGE' AND BLOCKPOS=" + position + " AND STRINGONE='" + msg
 				+ "' AND TARGETWHO='" + what.toString() + "' AND TARGETWHERE='" + where.toString() + "';"; 
-		return SQLInterface.returnBlockView(blockQuery);
+		return WorldServer.databaseInterface.returnBlockView(blockQuery);
 	}
 	@Override
 	protected void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) VALUES ('MESSAGE', " 
 					+ position + ", '" +  msg + "', '" + what.toString() + "', '" + where.toString() + "');";
-			try {
-				SQLInterface.saveAction(sql);
-			} catch (SQLException e) {
-				System.out.println("Message failed to save via sql : " + sql);
-				e.printStackTrace();
-			}
+			WorldServer.databaseInterface.saveAction(sql);
 		}
 	}
 	@Override
