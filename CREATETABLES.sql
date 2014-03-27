@@ -74,7 +74,6 @@ Create table ITEMSTATS (
 	ITEMPHYS decimal(5,2) unsigned not null DEFAULT 1.0,
 	ITEMBAL decimal(5,2) unsigned not null DEFAULT 1.0,
 	ITEMDESC text not null,
-	ITEMSHORTD varchar (50) not null DEFAULT 'a default',
 	ITEMMAXDUR integer unsigned not null DEFAULT 1,
 	ITEMCURDUR integer unsigned not null DEFAULT 1,
 	ITEMLOC integer unsigned not null DEFAULT 1,
@@ -180,9 +179,9 @@ Create table SKILL (
 	SKILLFAILMSG text,
 	PRIMARY KEY (SKILLID)
 );
-
+/*
 Create table SKILLTYPETABLE (
-	/*SKILLTYPETABLEID integer unsigned not null auto_increment,*/
+	SKILLTYPETABLEID integer unsigned not null auto_increment,
 	SKILLID integer unsigned not null,
 	TYPEID integer unsigned not null,
 	PRIMARY KEY (SKILLID, TYPEID),
@@ -190,25 +189,24 @@ Create table SKILLTYPETABLE (
 	index (TYPEID),
 	FOREIGN KEY (SKILLID) REFERENCES SKILL (SKILLID),
 	FOREIGN KEY (TYPEID) REFERENCES TYPE (TYPEID) 
-);
+);*/
 
 Create table ITEMTYPETABLE (
 	/*ITEMTYPETABLEID integer unsigned not null auto_increment,*/
 	ITEMID integer unsigned not null,
-	TYPEID integer unsigned not null,
-	PRIMARY KEY (ITEMID, TYPEID),
+	TYPE ENUM('SHARP', 'PIERCE', 'BLUND', 'POISON', 'FIRE', 'COLD', 'BLEED', 'NULL', 'HEAL') not null,
+	PRIMARY KEY (ITEMID, TYPE),
 	index (ITEMID),
-	index (TYPEID),
-	FOREIGN KEY (ITEMID) REFERENCES ITEM (ITEMID),
-	FOREIGN KEY (TYPEID) REFERENCES TYPE (TYPEID) 
+	index (TYPE),
+	FOREIGN KEY (ITEMID) REFERENCES ITEM (ITEMID)
 );
 
-
+/*
 Create table TYPE (
 	TYPEID integer unsigned not null auto_increment,
-	TYPE ENUM('SHARP', 'FIRE', 'PIERCE'),
+	TYPE ENUM('SHARP', 'FIRE', 'PIERCE', 'BLUNT', 'POISON', 'COLD', 'BLEED', 'NULL'),
 	PRIMARY KEY(TYPEID)
-);
+);*/
 
 Create table SYNTAXTABLE (
 /*	SYNTAXTABLEID integer unsigned not null auto_increment,*/
@@ -250,7 +248,7 @@ Create table BLOCK (
 	BLOCKPOINTERONE integer unsigned,
 	BLOCKPOINTERTWO integer unsigned,
 	ITEMPOINTERONE integer unsigned,
-	TYPE ENUM('SHARP', 'PIERCE') null,
+	TYPE ENUM('SHARP', 'PIERCE', 'BLUND', 'POISON', 'FIRE', 'COLD', 'BLEED', 'NULL', 'HEAL') not null,
 	GROUNDTYPE ENUM('GROUND'),
 	STRINGONE tinytext,
 	TARGETWHO ENUM('SELF', 'ALL', 'TARGET', 'OTHERS', 'ALLIES', 'ENEMIES', 'LIST') not null,

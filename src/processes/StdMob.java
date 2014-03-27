@@ -306,10 +306,6 @@ public class StdMob implements Mobile, Container, Holdable {
 	
 	@Override
 	public boolean save() {
-		if (!saveSkills()) {
-			System.out.println("Failed save of skills for " + this.getName());
-			return false;
-		}
 		if (!saveStats()) {
 			System.out.println("Failed save of stats for " + this.getName());
 			return false;
@@ -322,17 +318,6 @@ public class StdMob implements Mobile, Container, Holdable {
 		return true;
 	}
 	
-	private boolean saveSkills() {			
-		for (SkillBook sb : skillBookList.keySet()) {
-			if (sb.getToBeSave()) {
-				String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values(" + id + ", " + sb.getId() + ", " + skillBookList.get(sb) +
-						") ON DUPLICATE KEY UPDATE mobprogress=" + skillBookList.get(sb) + ";";
-				WorldServer.databaseInterface.saveAction(insertBook);
-				sb.save();
-			}
-		}	
-		return true;
-	}
 	//TODO
 	private boolean saveStats() {
 		// Should update everything that we expect to change A LOT, like location and hp. Things like description would
@@ -365,20 +350,21 @@ public class StdMob implements Mobile, Container, Holdable {
 		loadOnStartUp = b;		
 	}	
 
-	public void removeFromWorld() {		
-		for (Holdable inventoryItem : inventory) {
-			inventoryItem.removeFromWorld();
-		}
-		for (Holdable equipmentItem : equipment.values()) {
-			if (equipmentItem != null) {
-				equipmentItem.removeFromWorld();
+	public void removeFromWorld() {	
+		if (!loadOnStartUp) {
+			for (Holdable inventoryItem : inventory) {
+				inventoryItem.removeFromWorld();
 			}
+			for (Holdable equipmentItem : equipment.values()) {
+				if (equipmentItem != null) {
+					equipmentItem.removeFromWorld();
+				}
+			}
+			save();
+			effectManager.shutDown();
+			mobLocation.removeItemFromLocation(this);
+			WorldServer.gameState.mobList.remove(this.getName() + this.getId());
 		}
-		save();
-		effectManager.shutDown();
-		mobLocation.removeItemFromLocation(this);
-		WorldServer.gameState.mobList.remove(this.getName() + this.getId());
-		
 	}
 	
 	public void displayPrompt() {
@@ -432,8 +418,8 @@ public class StdMob implements Mobile, Container, Holdable {
 
 	@Override
 	public int getMaxHp() {
-		// TODO Auto-generated method stub
 		return maxHp;
+		// TODO Auto-generated method stub
 	}
 
 	@Override

@@ -34,7 +34,7 @@ public class Drop extends Action {
 				Holdable item = ((Mobile) m).getHoldableFromString(toDrop);
 				if (item != null) {				
 					moveItem(item, item.getContainer(), m.getContainer());
-					((Mobile) m).tell("You drop " + item.getShortDescription());
+					((Mobile) m).tell("You drop " + item.getName());
 				}
 			}
 		}

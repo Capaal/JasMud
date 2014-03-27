@@ -17,6 +17,8 @@ public class LocationBuilder {
 	public Map<Direction, Location> locationMap;
 	public Map<Integer, Direction> locationConnections;
 	
+	private Location finishedLocation;
+	
 	public LocationBuilder() {
 		id = -1;
 		this.name = "Default name";
@@ -94,10 +96,8 @@ public class LocationBuilder {
 		this.id = id;
 	}
 	
-	
-	
 	public void complete() {
-		new Location(this);
+		finishedLocation = new Location(this);
 	}
 
 	public static boolean newLocation(Mobile player, LocationBuilder builderLocation) {
@@ -138,6 +138,7 @@ public class LocationBuilder {
 			case "6":
 			case "complete":
 				builderLocation.complete();
+				builderLocation.finishedLocation.save();
 				return true;
 			case "7":
 			case "exit":

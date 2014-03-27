@@ -109,10 +109,9 @@ public class SQLInterface implements DatabaseInterface{
 	 */
 	@Override
 	public  void loadLocationItems() {
-		String sql = "SELECT itemstats.*, slot.SLOT, type.TYPE FROM itemstats"
+		String sql = "SELECT itemstats.*, slot.SLOT, itemtypetable.TYPE FROM itemstats"
 				+ " LEFT JOIN SLOTTABLE ON itemstats.ITEMID = slottable.ITEMID"
 				+ " LEFT JOIN ITEMTYPETABLE ON itemstats.ITEMID = itemtypetable.ITEMID"
-				+ " LEFT JOIN TYPE ON itemtypetable.TYPEID = type.TYPEID"
 				+ " LEFT JOIN SLOT ON slottable.SLOTID = slot.SLOTID WHERE ITEMLOCTYPE='LOCATION';";
 		
 		loadItems(sql, null);		
@@ -161,28 +160,15 @@ public class SQLInterface implements DatabaseInterface{
 						newItem.setItemTags(itemTags);
 						newItem.setAllowedSlots(allowedEquipSlots);
 						switch(itemLocType) {						
-							case "LOCATION":
-							/*	new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
-										.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
-										.types(itemTypes).itemTags(itemTags)
-										.allowedSlots(allowedEquipSlots).itemLocation(WorldServer.locationCollection.get(itemLocation)).build();
-								*/								
+							case "LOCATION":						
 								newItem.setItemLocation(WorldServer.gameState.locationCollection.get(itemLocation));
 								newItem.complete();						
 							break;
 							case "INVENTORY":
-							/*	new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
-										.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
-										.types(itemTypes).itemTags(itemTags)
-										.allowedSlots(allowedEquipSlots).itemLocation(container).build();*/
 								newItem.setItemLocation(container);
 								newItem.complete();
 							break;
 							case "EQUIPMENT":
-								/*StdItem item = new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
-										.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
-										.types(itemTypes).itemTags(itemTags)
-										.allowedSlots(allowedEquipSlots).itemLocation(container).build();*/
 								newItem.setItemLocation(container);
 								StdItem createdItem = newItem.complete();
 								((Mobile)container).equip(equipSlot, createdItem);
@@ -215,60 +201,43 @@ public class SQLInterface implements DatabaseInterface{
 					}
 				} 
 			}
-		if (itemId != -1) {
-			ItemBuilder newItem = new ItemBuilder();
-			newItem.setName(itemName);
-			newItem.setId(itemId);
-			newItem.setPhysicalMult(itemPhysicalMult);
-			newItem.setBalanceMult(itemBalanceMult);
-			newItem.setDescription(itemDescription);
-			newItem.setShortDescription(itemShortDescription);
-			newItem.setMaxDurability(itemMaxDurability);
-			newItem.setCurrentDurability(itemCurrentDurability);
-			newItem.setTypes(itemTypes);
-			newItem.setItemTags(itemTags);
-			newItem.setAllowedSlots(allowedEquipSlots);
-			switch(itemLocType) {						
-				case "LOCATION":
-				/*	new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
-							.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
-							.types(itemTypes).itemTags(itemTags)
-							.allowedSlots(allowedEquipSlots).itemLocation(WorldServer.locationCollection.get(itemLocation)).build();
-					*/								
-					newItem.setItemLocation(WorldServer.gameState.locationCollection.get(itemLocation));
-					newItem.complete();						
-				break;
-				case "INVENTORY":
-				/*	new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
-							.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
-							.types(itemTypes).itemTags(itemTags)
-							.allowedSlots(allowedEquipSlots).itemLocation(container).build();*/
-					newItem.setItemLocation(container);
-					newItem.complete();
-				break;
-				case "EQUIPMENT":
-					/*StdItem item = new StdItem.Builder(itemName, itemId).physicalMult(itemPhysicalMult).balanceMult(itemBalanceMult).description(itemDescription)
-							.shortDescription(itemShortDescription).maxDurability(itemMaxDurability).currentDurability(itemCurrentDurability)
-							.types(itemTypes).itemTags(itemTags)
-							.allowedSlots(allowedEquipSlots).itemLocation(container).build();*/
-					newItem.setItemLocation(container);
-					StdItem createdItem = newItem.complete();
-					((Mobile)container).equip(equipSlot, createdItem);
-				break;
-				default:
-					System.out.println("itemLocType mismatch on item " + itemId + " giving " + itemLocType);
+			if (itemId != -1) {
+				ItemBuilder newItem = new ItemBuilder();
+				newItem.setName(itemName);
+				newItem.setId(itemId);
+				newItem.setPhysicalMult(itemPhysicalMult);
+				newItem.setBalanceMult(itemBalanceMult);
+				newItem.setDescription(itemDescription);
+				newItem.setShortDescription(itemShortDescription);
+				newItem.setMaxDurability(itemMaxDurability);
+				newItem.setCurrentDurability(itemCurrentDurability);
+				newItem.setTypes(itemTypes);
+				newItem.setItemTags(itemTags);
+				newItem.setAllowedSlots(allowedEquipSlots);
+				switch(itemLocType) {						
+					case "LOCATION":						
+						newItem.setItemLocation(WorldServer.gameState.locationCollection.get(itemLocation));
+						newItem.complete();						
+					break;
+					case "INVENTORY":
+						newItem.setItemLocation(container);
+						newItem.complete();
+					break;
+					case "EQUIPMENT":
+						newItem.setItemLocation(container);
+						StdItem createdItem = newItem.complete();
+						((Mobile)container).equip(equipSlot, createdItem);
+					break;
+					default:
+						System.out.println("itemLocType mismatch on item " + itemId + " giving " + itemLocType);
+				}
 			}
-		}
 		} catch(SQLException e) {
 			System.out.println("Load items failed via: " + sql);
 			System.out.println("Error " + e.toString());
 		}
-	//	disconnect();
 	}
-	// Needs to be refactored to use a single query.
-	/* (non-Javadoc)
-	 * @see processes.DatabaseInterface#loadPlayer(java.lang.String, java.lang.String)
-	 */
+	
 	@Override
 	public  Mobile loadPlayer(String name, String password) {
 		if (name == null || password == null || !UsefulCommands.checkIfValidCharacters(name) || !UsefulCommands.checkIfValidCharacters(password)) {
@@ -307,10 +276,9 @@ public class SQLInterface implements DatabaseInterface{
 						finishedPlayer = loadedPlayer.complete();
 					}
 			//		finishedPlayer = loadedPlayer.complete();
-					sql = "SELECT itemstats.*, slot.SLOT, type.TYPE FROM itemstats LEFT JOIN SLOTTABLE ON itemstats.ITEMID = slottable.ITEMID"
+					sql = "SELECT itemstats.*, slot.SLOT, itemtypetable.TYPE FROM itemstats LEFT JOIN SLOTTABLE ON itemstats.ITEMID = slottable.ITEMID"
 							+ " LEFT JOIN SLOT ON slottable.SLOTID = slot.SLOTID"
 							+ " LEFT JOIN ITEMTYPETABLE ON itemstats.ITEMID = itemtypetable.ITEMID"
-							+ " LEFT JOIN TYPE ON itemtypetable.TYPEID = type.TYPEID"
 							+ " WHERE ITEMLOC=" + finishedPlayer.getId() + " AND (ITEMLOCTYPE='INVENTORY' OR ITEMLOCTYPE ='EQUIPMENT');";
 					loadItems(sql, finishedPlayer);					
 					WorldServer.gameState.mobList.put(finishedPlayer.getName() + finishedPlayer.getId(), finishedPlayer);
@@ -349,12 +317,14 @@ public class SQLInterface implements DatabaseInterface{
 	 */
 	@Override
 	public  void saveAction(String sql)  {
+		System.out.println(sql);
 		makeConnection();
 		try {
 			stmt = con.createStatement();		
 			stmt.executeUpdate(sql);
 		} catch (SQLException e) {
-			System.out.println("Error: " + e.toString());
+			e.printStackTrace();
+			System.out.println(sql);
 	//		return false;
 		}
 	//	disconnect();		
@@ -482,13 +452,10 @@ public class SQLInterface implements DatabaseInterface{
 		disconnect();
 	}
 	
-	/* (non-Javadoc)
-	 * @see processes.DatabaseInterface#loadSkillBooks()
-	 */
 	@Override
 	public  void loadSkillBooks() {
 		try {
-			String sql = ("SELECT DISTINCT SKILLBOOKID FROM skillbooktable");
+			String sql = ("SELECT DISTINCT SKILLBOOKID FROM skillbook");
 			ResultSet rs = stmt.executeQuery(sql);		
 			ArrayList<Integer> skillBooks = new ArrayList<Integer>();
 			while (rs.next()) {
@@ -497,7 +464,7 @@ public class SQLInterface implements DatabaseInterface{
 			for (int skillBookId : skillBooks) {
 				SkillBook skillBook = null;
 				if (!WorldServer.gameState.AllSkillBooks.containsKey(skillBookId)) {	
-					SkillBuilder skillBuild = new SkillBuilder();				
+									
 					sql = ("SELECT skillbook.SKILLBOOKNAME, skill.SKILLID FROM skilltable JOIN skillbook ON skilltable.SKILLBOOKID = skillbook.SKILLBOOKID "
 							+ " JOIN skill ON skill.SKILLID = skilltable.SKILLID WHERE skilltable.SKILLBOOKID='" + skillBookId + "'");
 					rs = stmt.executeQuery(sql);
@@ -511,6 +478,7 @@ public class SQLInterface implements DatabaseInterface{
 						}
 					}				
 					for (int i : mobSkills) {
+						SkillBuilder skillBuild = new SkillBuilder();
 						if (skillBook == null)	{
 							skillBook = new SkillBook(skillBookName, skillBookId);
 						}
@@ -534,22 +502,14 @@ public class SQLInterface implements DatabaseInterface{
 						while (rs1.next()) {						
 							skillSyntax.add(Syntax.valueOf(rs1.getString("SYNTAXTYPE")));
 						}
-						skillBuild.setSyntax(skillSyntax);					
-						sql1 = ("SELECT type.TYPE FROM skilltypetable JOIN type ON skilltypetable.TYPEID = type.TYPEID"
-								+ " WHERE skilltypetable.SKILLID = " + skillId + ";");
-						rs1 = stmt.executeQuery(sql1);
-						ArrayList<Type> skillType = new ArrayList<Type>();
-						while (rs1.next()) {						
-							skillType.add(Type.valueOf(rs1.getString("TYPE")));
-						}
-						skillBuild.setType(skillType);
+						skillBuild.setSyntax(skillSyntax);						
 						sql1 = ("SELECT block.* FROM blocktable JOIN block ON blocktable.BLOCKID = block.BLOCKID"
 								+ " WHERE blocktable.SKILLID = '" + skillId + "' ORDER BY BLOCKPOS ASC");
 						rs1 = stmt.executeQuery(sql1);						
 						while (rs1.next()) {						
 							skillBuild.addAction(determineAction(rs1));					
 						}
-						skillBuild.addBook(skillBook);
+						skillBuild.addBook(skillBook);  
 						skillBuild.complete();	
 					}
 				}		
@@ -687,7 +647,8 @@ public class SQLInterface implements DatabaseInterface{
 		try {
 			newType = Type.valueOf(possibleType);
 		} catch(Exception e) {
-			newType = null;
+			e.printStackTrace();
+			newType = Type.NULL;
 		}
 		return newType;
 	}

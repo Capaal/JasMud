@@ -58,15 +58,15 @@ insert into syntax (SYNTAXPOS, SYNTAXTYPE) values ('0', 'SKILL');
 
 
 /* GASH */
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE, INTVALUE) values('5', 'BALANCECOST', 0, 'SELF', 'HERE', 4000);
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE, BOOLEANONE, TYPE) values('6', 'DAMAGE', 5, '10', 'TARGET', 'HERE', 'TRUE', 'SHARP');
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, INTVALUETWO, TARGETWHO, TARGETWHERE) values('7', 'BLEEDEFFECT', '3', 5000, 5, 'TARGET', 'HERE');
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE, BOOLEANONE, TYPE) values('8', 'DAMAGE', 2, '-15', 'SELF', 'HERE', 'FALSE', NULL);
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BLOCKPOINTERONE) values('9', 'CHANCE', '4', '8');
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TYPE, TARGETWHO, TARGETWHERE) values('10', 'WEAPONEQUIPPEDCHECK', 1, 'SHARP', 'SELF', 'HERE');
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('11', 'MESSAGE', '6', 'You make a sharp slash at %s and then %s turns and fights back.', 'SELF', 'HERE');
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('12', 'MESSAGE', '7', 'You watch as %s slashes horribly at %s and %s turns to fight back.', 'OTHERS', 'HERE');
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('13', 'MESSAGE', '8',  '%s slashes you painfully.', 'TARGET', 'HERE');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE, INTVALUE) values('5', 'BALANCECOST', 1, 'SELF', 'HERE', 4000);
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE, BOOLEANONE, TYPE) values('6', 'DAMAGE', 6, '10', 'TARGET', 'HERE', 'TRUE', 'SHARP');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, INTVALUETWO, TARGETWHO, TARGETWHERE) values('7', 'BLEEDEFFECT', 4, 5000, 5, 'TARGET', 'HERE');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE, BOOLEANONE, TYPE) values('8', 'DAMAGE', 3, '-15', 'SELF', 'HERE', 'FALSE', NULL);
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BLOCKPOINTERONE) values('9', 'CHANCE', 5, '8');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TYPE, TARGETWHO, TARGETWHERE) values('10', 'WEAPONEQUIPPEDCHECK', 2, 'SHARP', 'SELF', 'HERE');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('11', 'MESSAGE', 7, 'You make a sharp slash at %s and then %s turns and fights back.', 'SELF', 'HERE');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('12', 'MESSAGE', 8, 'You watch as %s slashes horribly at %s and %s turns to fight back.', 'OTHERS', 'HERE');
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('13', 'MESSAGE', 9,  '%s slashes you painfully.', 'TARGET', 'HERE');
 insert into blocktable (SKILLID, BLOCKID) values('3', '5');
 insert into blocktable (SKILLID, BLOCKID) values('3', '6');
 insert into blocktable (SKILLID, BLOCKID) values('3', '7');

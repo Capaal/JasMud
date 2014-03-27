@@ -33,7 +33,7 @@ public class Get extends Action {
 			Holdable item = c.getHoldableFromString(toGet);
 			if (item != null) {
 				moveItem(item, item.getContainer(), currentPlayer);
-				currentPlayer.tell("You pick up " + item.getShortDescription() + ".");
+				currentPlayer.tell("You pick up " + item.getName() + ".");
 				return true;
 			} 
 		}

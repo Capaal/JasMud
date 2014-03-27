@@ -59,15 +59,17 @@ public class Damage extends Action {
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
 		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='DAMAGE' AND INTVALUE=" + intensity + " AND BLOCKPOS=" + position
-				+ " AND TARGETWHO='" + what.toString() + "' AND TARGETWHERE='" + where.toString() + "' AND BOOLEANONE='" + doesWeaponMatter + "';";
+				+ " AND TARGETWHO='" + what.toString() + "' AND TARGETWHERE='" + where.toString() + "' AND BOOLEANONE='" + doesWeaponMatter + "'"
+				+ " AND TYPE='" + damageType.toString() + "';";
 		return WorldServer.databaseInterface.returnBlockView(blockQuery);
 	}
 	
 	@Override
 	protected void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
-			String sql = "INSERT IGNORE INTO BLOCK (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE, BOOLEANONE) VALUES ('DAMAGE', " 
-					+ position + ", " +  intensity + ", '" + what.toString() + "', '" + where.toString() + "', '" + doesWeaponMatter + "');";
+			String sql = "INSERT IGNORE INTO BLOCK (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE, BOOLEANONE, TYPE) VALUES ('DAMAGE', " 
+					+ position + ", " +  intensity + ", '" + what.toString() + "', '" + where.toString() + "', '" + doesWeaponMatter + "'"
+					+ ", '" + damageType.toString() + "');";
 			WorldServer.databaseInterface.saveAction(sql);
 		}
 	}
@@ -109,6 +111,7 @@ public class Damage extends Action {
 	public void explainOneself(Mobile player) {
 		player.tell("Affects hp in a positive or negative way.");
 		player.tell("Intensity: " + intensity + " Who: " + what.toString() + " Where: " + where.toString());
+		player.tell("Uses weapon: " + doesWeaponMatter + " Damage type: " + damageType.toString());
 	}
 
 }

@@ -1,17 +1,14 @@
 package processes;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-// Effectively a spellbook for basic skills.
 public class SkillBook {
 
 	private Set<Skill> skillList;
 	private final String name;
 	private final int id;
-	private boolean toBeSaved = false;
 	
 	public SkillBook(String name, int id) {
 		skillList = new HashSet<Skill>();
@@ -20,17 +17,10 @@ public class SkillBook {
 	}
 	
 	public void addSkill(Skill newSpell) {
-		skillList.add(newSpell);
-	}
-	
-	public boolean getToBeSave() {
-		return toBeSaved;
-	}
-	
-	public void setToBeSaved(boolean save) {
-		this.toBeSaved = save;
-	}
-	
+		synchronized (skillList) {
+			skillList.add(newSpell);
+		}
+	}	
 	
 	public Skill getSkill(String skill) {
 		if (skill == null || skill.equals("")) {
@@ -40,9 +30,11 @@ public class SkillBook {
 	}
 	
 	private Skill findSkill(String skill) {
-		for (Skill s : skillList) {
-			if (s.getName().equals(skill)) {
-				return s;
+		synchronized (skillList) {
+			for (Skill s : skillList) {
+				if (s.getName().equals(skill)) {
+					return s;
+				}
 			}
 		}
 		return null;
@@ -57,11 +49,10 @@ public class SkillBook {
 	}
 	
 	public void save() {
-		if (toBeSaved) {			
-			for (Skill s : skillList) {					
+		synchronized (skillList) {
+			for (Skill s : skillList) {	
 				saveSkillBookLink(s);
 			}
-			toBeSaved = false;
 		}
 	}
 	

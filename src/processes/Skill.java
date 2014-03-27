@@ -2,7 +2,6 @@ package processes;
 
 import interfaces.*;
 
-import java.sql.SQLException;
 import java.util.*;
 
 import TargettingStrategies.*;
@@ -11,26 +10,22 @@ import actions.Damage;
 public class Skill {
 	
 	private final String name;
-	private int id; 
+	private final int id; 
 	private final String description;
 	private final Queue<Action> actions;
-	private final List<Syntax> syntax; //Are we sure we'll be maintaining order?	
+	private final List<Syntax> syntax;	
 	private final String failMsg;
 	
 	public Skill(SkillBuilder build) {
-		int possibleId;
-		if (build.getId() == -1) {
-			possibleId = setId();
-		} else {
-			possibleId = build.getId();
-		}		
+		if (!build.isCompleted()) {
+			throw new IllegalArgumentException("SkillBuilder was not completed properly.");
+		}
+		this.id = build.getId();		
 		this.name = build.getName();
 		this.description = build.getDescription();
 		this.actions = build.getActions();
 		this.failMsg = build.getFailMsg();
 		this.syntax = build.getSyntax();
-		this.id = possibleId;
-		save();
 	}
 	
 	public String getName() {return name;}	
@@ -83,73 +78,6 @@ public class Skill {
 		return actions;
 	}
 	
-	public boolean save() {
-		String skillSelect = "SELECT * FROM SKILL WHERE SKILLNAME='" + name + "';";
-		HashMap<String, Object> skillView = WorldServer.databaseInterface.returnBlockView(skillSelect);
-		String skillInsert;
-		if (skillView.isEmpty()) {
-			skillInsert = "INSERT INTO SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) VALUES (" + this.id + ", '" + name + "', '" + description 
-						+ "', '" + failMsg + "');";
-		} else {
-			skillInsert = "UPDATE SKILL SET SKILLDES='" + description + "', SKILLFAILMSG='" + failMsg + "' WHERE SKILLID=" + id + ";";
-		}
-		WorldServer.databaseInterface.saveAction(skillInsert);			
-//			skillView = WorldServer.databaseInterface.returnBlockView(skillSelect);
-//		}
-//		this.id = (int) skillView.get("SKILLID");
-		System.out.println("I'm not sure if skills know their id: " + name + " " + id);
-		for (Syntax s : syntax) {
-			String syntaxIdQuery = "SELECT * FROM SYNTAX WHERE SYNTAXPOS=" + syntax.indexOf(s) + " AND SYNTAXTYPE='" + s.toString() + "';";
-			Object syntaxId = WorldServer.databaseInterface.viewData(syntaxIdQuery, "SYNTAXID");
-			//This won't be necessary often, I guess I should just check and see if it exists, and if not, then insert.
-			if (syntaxId == null) {
-				String syntaxInsert = "INSERT INTO SYNTAX (SYNTAXPOS, SYNTAXTYPE) VALUES (" + syntax.indexOf(s) + ", '" + s.toString() +
-						"');";
-				WorldServer.databaseInterface.saveAction(syntaxInsert);			
-			}
-		//	String syntaxIdQuery = "SELECT * FROM SYNTAX WHERE SYNTAXPOS=" + syntax.indexOf(s) + " AND SYNTAXTYPE='" + s.toString() + "';";
-		//	HashMap<String, Object> syntaxView = WorldServer.databaseInterface.returnBlockView(syntaxIdQuery);
-			String syntaxTableInsert = "INSERT INTO SYNTAXTABLE (SKILLID, SYNTAXID) VALUES (" + this.id 
-					+ ", (SELECT SYNTAXID FROM SYNTAX WHERE SYNTAXPOS=" + syntax.indexOf(s) + " AND SYNTAXTYPE='" + s.toString() + "'))"
-							+ " ON DUPLICATE KEY UPDATE SKILLID=" + this.id + ";";
-			WorldServer.databaseInterface.saveAction(syntaxTableInsert);			
-		}	
-		int position =  1;
-		for (Action a : actions) {
-			if (!a.save(position)) {
-				return false;
-			}
-			position ++;
-		//	String linkSelect = "SELECT * FROM BLOCKTABLE WHERE SKILLID=" + id + " AND BLOCKID =" + a.getId() + ";";
-		//	HashMap<String, Object> linkView = WorldServer.databaseInterface.returnBlockView(linkSelect);
-		//	if (linkView.isEmpty()) {
-			String linkInsert = "INSERT INTO BLOCKTABLE (SKILLID, BLOCKID) values (" + id + ", " + a.getId() 
-					+ ") ON DUPLICATE KEY UPDATE SKILLID=" + id + ";";
-			WorldServer.databaseInterface.saveAction(linkInsert);
-		}
-		return true;		
-	}
-	
-	public int setId() {
-		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
-				+ " LEFT JOIN skill ON sequencetable.sequenceid = skill.skillid"
-				+ " WHERE skill.skillid IS NULL";		
-		Object availableId = WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
-		if (availableId == null || !(availableId instanceof Integer)) {
-			WorldServer.databaseInterface.increaseSequencer();
-			availableId = WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
-			if (availableId == null || !(availableId instanceof Integer)) {
-				System.out.println("Critical Error, unable to set skill ids, database misbehaving. Skills will not save properly.");
-				return 1;
-				
-			} else {
-				return setId();
-			}
-		} else {
-			return (int)availableId;
-		}		
-	}
-	
 	public void preview(Mobile player) {
 		player.tell("Name: " + name);
 		player.tell("Description: " + description);
@@ -167,6 +95,81 @@ public class Skill {
 		player.tell(sb.toString());
 		player.tell("Fail Message: " + failMsg);
 	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public boolean save() {
+		if (skillExists()) {
+			updateSkill();
+		} else {
+			insertSkill();
+		}
+		return true;
+	}
+	
+	private boolean skillExists() {
+		String skillSelect = "SELECT * FROM SKILL WHERE SKILLNAME='" + name + "';";
+		HashMap<String, Object> skillView = WorldServer.databaseInterface.returnBlockView(skillSelect);
+		return skillView.isEmpty();
+	}
+	
+	private void updateSkill() {
+		updateSkillInformation();
+		deleteOldSyntaxTable();
+		insertSyntax();
+		saveActions(); //TODO needs testing
+	}
+	
+	private void insertSkill() {
+		insertSkillInformation();
+		insertSyntax();
+		saveActions();
+	}
+	
+	private void updateSkillInformation() {
+		String skillUpdate = "UPDATE SKILL SET SKILLDES='" + description + "', SKILLFAILMSG='" + failMsg + "' WHERE SKILLID=" + id + ";";
+		WorldServer.databaseInterface.saveAction(skillUpdate);	
+	}
+	
+	private void insertSyntax() {
+		for (Syntax s : syntax) {
+			String syntaxInsert = "INSERT INTO SYNTAX (SYNTAXPOS, SYNTAXTYPE) VALUES (" + syntax.indexOf(s) + ", '" + s.toString() +
+					"');";
+			WorldServer.databaseInterface.saveAction(syntaxInsert);		
+			insertSyntaxTable(s);
+		}	
+	}
+	
+	private void deleteOldSyntaxTable() {
+		String deletePossiblyOldSyntaxTable = "DELETE FROM SYNTAXTABLE WHERE SKILLID=" + this.id + ";";
+		WorldServer.databaseInterface.saveAction(deletePossiblyOldSyntaxTable);
+	}
+	
+	private void insertSyntaxTable(Syntax s) {
+		String syntaxTableInsert = "INSERT INTO SYNTAXTABLE (SKILLID, SYNTAXID) VALUES (" + this.id 
+				+ ", (SELECT SYNTAXID FROM SYNTAX WHERE SYNTAXPOS=" + syntax.indexOf(s) + " AND SYNTAXTYPE='" + s.toString() + "'));";
+		WorldServer.databaseInterface.saveAction(syntaxTableInsert);
+	}
+	
+	private void saveActions() {
+		int position =  1;
+		for (Action a : actions) {
+			a.save(position);
+			position ++;
+			String deleteOldSkillToActionLinks = "DELETE FROM BLOCKTABLE WHERE SKILLID=" + this.id + ";";
+			WorldServer.databaseInterface.saveAction(deleteOldSkillToActionLinks);
+			String linkInsert = "INSERT INTO BLOCKTABLE (SKILLID, BLOCKID) values (" + id + ", " + a.getId() + ");";
+			WorldServer.databaseInterface.saveAction(linkInsert);
+		}
+	}
+	
+	private void insertSkillInformation() {
+		String skillInsert = "INSERT INTO SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) VALUES (" + this.id + ", '"
+				+ name + "', '" + description + "', '" + failMsg + "');";
+		WorldServer.databaseInterface.saveAction(skillInsert);
+	}	
 		
 	public enum Syntax {
 		
@@ -201,12 +204,4 @@ public class Skill {
 		
 		private Syntax() {}
 	}
-
-	public int getId() {
-		return id;
-	}
-
-	
-
-	
 }

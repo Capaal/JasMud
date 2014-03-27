@@ -11,40 +11,72 @@ public class SkillBuilder {
 	private int id = -1;
 	private String name = "default";	
 	private Queue<Action> actions;
-	private Set<Type> types;
 	private String description = "";
 	private String failMsg = "";
 	private ArrayList<Syntax> syntax;
 	private Set<SkillBook> attachedBooks;
+	private Skill finishedSkill = null;
+	
+	private boolean buildCompleted = false;
 	
 	public SkillBuilder() {
-		toDefault();		
-	}
-	
-	private void toDefault() {
 		actions = new LinkedList<Action>();
-		types = EnumSet.noneOf(Type.class);
 		syntax = new ArrayList<Syntax>();
-		attachedBooks = new HashSet<SkillBook>();
+		attachedBooks = new HashSet<SkillBook>();		
 	}
 	
 	public void setName(String name) {
 		this.name = name;
 	}
 	
+	public boolean isCompleted() {
+		return buildCompleted;
+	}
+	
 	public String getName() {
 		return name;
-	}
+	}	
 	
-	public Set<Type> getTypes() {
-		return types;
-	}
-	
-	public void complete() {
-		for (SkillBook book : attachedBooks) {
-			book.addSkill(new Skill(this));
+	public boolean complete() {
+		if (id == -1) {
+			try {
+				setId();
+			} catch (IllegalStateException e) {
+				System.out.println("New skill failed to obtain unique id, it was not created.");
+				return false;
+			} 	
 		}
-		toDefault();
+		buildCompleted = true;
+		finishedSkill = new Skill(this);
+		for (SkillBook book : attachedBooks) {
+			book.addSkill(finishedSkill);
+		}		
+		return true;		
+	}
+	
+	public void save() {
+		finishedSkill.save();
+		for (SkillBook finalSkillBooks : getAttachedBooks()) {		
+			finalSkillBooks.save();					
+		}	
+	}
+	
+	private void setId() throws IllegalStateException {
+		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
+				+ " LEFT JOIN skill ON sequencetable.sequenceid = skill.skillid"
+				+ " WHERE skill.skillid IS NULL";		
+		Object availableId = WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
+		if (availableId == null || !(availableId instanceof Integer)) {
+			WorldServer.databaseInterface.increaseSequencer();
+			availableId = WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
+			if (availableId == null || !(availableId instanceof Integer)) {
+				throw new IllegalStateException("The skill could not determine a valid id, it is invalid.");				
+			} else {
+				id = (int)availableId;
+			}
+		} else {
+			id = (int)availableId;
+		}		
 	}
 	
 	public void addBook(SkillBook skillBook) {
@@ -53,15 +85,7 @@ public class SkillBuilder {
 	
 	public Set<SkillBook> getAttachedBooks() {
 		return attachedBooks;
-	}
-	
-	public void addType(Type type) {
-		this.types.add(type);
 	}	
-	
-	public void clearTypes() {
-		this.types.clear();
-	}
 		
 	public void addAction(Action a) {
 		actions.add(a);
@@ -83,8 +107,16 @@ public class SkillBuilder {
 		return failMsg;
 	}
 	
+	public void setDescription(String desc) {
+		this.description = desc;		
+	}
+	
 	public String getDescription() {
 		return description;
+	}
+	
+	public void setId(int newId) {
+		this.id = newId;
 	}
 	
 	public int getId() {
@@ -106,22 +138,7 @@ public class SkillBuilder {
 	
 	public void clearSyntax() {
 		syntax.clear();
-	}
-
-	public void setDescription(String desc) {
-		this.description = desc;
-		
-	}
-
-	public void setType(ArrayList<Type> skillTypes) {
-		this.types.addAll(skillTypes);		
-	}
-	
-	public void setId(int newId) {
-		this.id = newId;
-	}
-	
-	
+	}		
 	
 	public void preview(Mobile player) {
 		player.tell("Name: " + name);
@@ -131,14 +148,7 @@ public class SkillBuilder {
 			player.tell(" " + a.getClass().getName());
 			a.explainOneself(player);
 		}
-		StringBuilder sb = new StringBuilder();
-		sb.append("Types:");
-		for (Type type : types) {
-			sb.append(" ");
-			sb.append(type.toString());
-		}	
-		player.tell(sb.toString());
-		sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();	
 		sb.append("Syntax: ");
 		for (Syntax s : syntax) {
 			sb.append(" ");

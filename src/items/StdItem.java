@@ -54,7 +54,6 @@ public class StdItem implements Holdable {
 	private final String name;
 	private final int id;	
 	private final String description;
-	private final String shortDescription;
 	private final double physicalMult;
 	private final double balanceMult;
 	private Container itemLocation;	
@@ -76,7 +75,6 @@ public class StdItem implements Holdable {
 		this.description = build.description;
 		this.balanceMult = build.balanceMult;
 		this.itemLocation = build.itemLocation;		
-		this.shortDescription = build.shortDescription;
 		this.maxDurability = build.maxDurability;
 		this.currentDurability = build.currentDurability;
 		this.types = build.types;
@@ -89,7 +87,6 @@ public class StdItem implements Holdable {
 	public String getName() {return name;}
 	public int getId() {return id;}
 	public String getDescription() {return description;}	
-	public String getShortDescription() {return shortDescription;}
 	public double getPhysicalMult() {return physicalMult;}
 	public double getBalanceMult() {return balanceMult;}
 	public synchronized void setContainer(Container con) {this.itemLocation = con;}	

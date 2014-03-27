@@ -5,64 +5,36 @@ package processes;
 
 public enum Type {
 	
-	SHARP() {
-		public int returnTypeId() {
-			return 1;
-		}
-		
+	SHARP() {				
 	},
 	
-	PIERCE() {
-		public int returnTypeId() {
-			return 2;
-		}		
+	PIERCE() {		
 	},
 	
 	BLUNT() {
-		public int returnTypeId() {
-			return 3;
-		}
 	},
 	
 	POISON() {
-		public int returnTypeId() {
-			return 4;
-		}
 	},
 	
 	FIRE() {
-		public int returnTypeId() {
-			return 5;
-		}
 	},
 	
 	COLD() {
-		public int returnTypeId() {
-			return 6;
-		}
 	},
 	
 	BLEED() {
-		public int returnTypeId() {
-			return 7;
-		}
 	},
 	
 	NULL() {
-		public int returnTypeId() {
-			return 8;
-		}
 	},
 	
 	HEAL() {
-		public int returnTypeId() {
-			return 9;
-		}
 	};
 	
 	private Type() {};
 	
-	public abstract int returnTypeId();
+//	public abstract int returnTypeId();
 	
 	
 }

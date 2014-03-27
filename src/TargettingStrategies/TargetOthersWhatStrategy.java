@@ -27,7 +27,7 @@ public class TargetOthersWhatStrategy implements WhatTargettingStrategy {
 		for (Container l : containersToSearch) {
 			for (Holdable h : l.getInventory()) {
 				if (h != target && h != self) {
-					targs.add((Mobile)h);
+					targs.add(h);
 				}
 			}
 			return targs;

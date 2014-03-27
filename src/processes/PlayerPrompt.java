@@ -1,9 +1,10 @@
 package processes;
+
 import interfaces.Mobile;
+import items.StdItem;
 
 import java.net.*; // Needed for Socket.
 import java.io.*; // Needed for PrintWriter and BufferReader.
-import java.sql.SQLException;
 import java.util.*; // Needed for keySet();
 
 import processes.Location.Direction;
@@ -86,6 +87,9 @@ public class PlayerPrompt implements Runnable {
 					stayInsideLoop = false;
 					for (PlayerPrompt player : WorldServer.gameState.activeClients) {
 						player.currentPlayer.removeFromWorld();
+					}
+					for (StdItem item : WorldServer.gameState.allItems.values()) {
+						item.removeFromWorld();
 					}
 					destroyConnection();
 					WorldServer.shutdownAndAwaitTermination(WorldServer.executor);

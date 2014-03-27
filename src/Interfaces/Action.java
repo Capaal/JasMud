@@ -12,7 +12,7 @@ public abstract class Action {
 	
 	public boolean save(int position) {	
 		HashMap<String, Object> blockView = selectOneself(position);
-		if (blockView.size() == 0) {
+		if (blockView.isEmpty()) {
 			insertOneself(position);
 			blockView = selectOneself(position);
 		}

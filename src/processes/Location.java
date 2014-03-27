@@ -1,7 +1,5 @@
 package processes;
 
-
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,7 +38,6 @@ public class Location implements Container {
 				futureLoc.setLocation(this, currentDirection);
 			}
 		}
-		save();
 	}
 	
 	private void setLocation(Location futureLoc, Direction currentDirection) {
@@ -259,6 +256,11 @@ public class Location implements Container {
 		}		
 	}
 	
+	@Override
+	public Container getContainer() {
+		return null;
+	}
+	
 	public enum Direction {
 		
 		NORTH() {
@@ -410,13 +412,7 @@ public class Location implements Container {
 		
 	}
 	
-	//TODO
-	public static int getNewId() {
-		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
-				+ " LEFT JOIN locationstats ON sequencetable.sequenceid = locationstats.locid"
-				+ " WHERE locationstats.locid IS NULL";		
-		return (int) WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
-	}
+	
 	
 	public enum GroundType {		
 		// GROUND might get broken up into many types of ground? rock, sand, dirt and so on?
@@ -438,11 +434,5 @@ public class Location implements Container {
 		
 		private GroundType() {}
 		
-	}
-	@Override
-	public Container getContainer() {
-		return null;
-	}
-
-	
+	}	
 }

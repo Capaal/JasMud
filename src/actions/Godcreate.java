@@ -86,40 +86,14 @@ public class Godcreate extends Action {
 	}
 	
 	private boolean processCreateNewSkill(Mobile player, SkillBuilder newSkill) {	
-		String adjust = askQuestion("What would you like to do? 1:Description 2:types 3:syntax 4:fail message"
-				+ " 5:actions 6:skillbook 7:preview 8:complete 9:quit", player);
+		String adjust = askQuestion("What would you like to do? 1:Description 2:syntax 3:fail message"
+				+ " 4:actions 5:skillbook 6:preview 7:complete 8:quit", player);
 		switch(adjust) {
 		case "1":
 			player.tell("The current skill description is: " + newSkill.getDescription());
 			newSkill.setDescription(askQuestion("What is the skill's description?", player));
-			return processCreateNewSkill(player, newSkill);	
+			return processCreateNewSkill(player, newSkill);			
 		case "2":
-			String clearTypes = askQuestion("Do you want to clear the types list? y/n", player);
-			if (clearTypes.equals("y")) {
-				newSkill.clearTypes();
-			}
-			StringBuilder sb = new StringBuilder();
-			sb.append("The current list of types are:");
-			for (Type t : newSkill.getTypes()) {
-				sb.append(" ");
-				sb.append(t.toString());
-			}
-			player.tell(sb.toString());
-			sb = new StringBuilder();
-			sb.append("The possible list of types are:");
-			for (Type types : Type.values()) {
-				sb.append(" ");
-				sb.append(types.toString());
-			}
-			player.tell(sb.toString());
-			try {
-				newSkill.addType(Type.valueOf(askQuestion("Which type do you want to add?", player).toUpperCase()));
-			} catch (IllegalArgumentException e) {
-				player.tell("You must be exact when indicating a type.");
-				return processCreateNewSkill(player, newSkill);	
-			}
-			return processCreateNewSkill(player, newSkill);	
-		case "3":
 			String clearSyntax = askQuestion("Do you want to clear the types list? y/n", player);
 			if (clearSyntax.equals("y")) {
 				newSkill.clearSyntax();
@@ -145,11 +119,11 @@ public class Godcreate extends Action {
 				return processCreateNewSkill(player, newSkill);	
 			}
 			return processCreateNewSkill(player, newSkill);	
-		case "4":
+		case "3":
 			player.tell("The current fail message is: " + newSkill.getFailMsg());
 			newSkill.setFailMsg(askQuestion("What do you want the fail message to be?", player));
 			return processCreateNewSkill(player, newSkill);	
-		case "5":
+		case "4":
 			String clearActions = askQuestion("Do you want to clear the actions list? y/n", player);
 			if (clearActions.equals("y")) {
 				newSkill.clearActions();
@@ -164,7 +138,7 @@ public class Godcreate extends Action {
 			displayActions(player);
 			newSkill.addAction(selectAction(player));
 			return processCreateNewSkill(player, newSkill);			
-		case "6":
+		case "5":
 			StringBuilder currentBooks = new StringBuilder();
 			currentBooks.append("Current skillbooks attached are: ");
 			for (SkillBook skillBook : newSkill.getAttachedBooks()) {				
@@ -185,16 +159,18 @@ public class Godcreate extends Action {
 				newSkill.addBook(WorldServer.gameState.AllSkillBooks.get(skillBookId));
 			}
 			return processCreateNewSkill(player, newSkill);	
-		case "7":
+		case "6":
 			newSkill.preview(player);
 			return processCreateNewSkill(player, newSkill);	
-		case "8":
-			for (SkillBook finalSkillBooks : newSkill.getAttachedBooks()) {
-				finalSkillBooks.setToBeSaved(true);
+		case "7":
+			if (newSkill.complete()) {
+				newSkill.save();		
+				return true;
+			} else {
+				player.tell("Skill failed to create, most likely a critical error determining unique ID.");
+				return false;
 			}
-			newSkill.complete();
-			return true;
-		case "9":
+		case "8":
 			return false;
 		default:
 			player.tell("That is not a valid option.");
@@ -313,7 +289,7 @@ public class Godcreate extends Action {
 	@Override
 	protected void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
-			String sql = "INSERT IGNORE INTO BLOCK (BLOCKTYPE, BLOCKPOS) VALUES ('GODCREATE', " + position + ",);";
+			String sql = "INSERT IGNORE INTO BLOCK (BLOCKTYPE, BLOCKPOS) VALUES ('GODCREATE', " + position + ");";
 			WorldServer.databaseInterface.saveAction(sql);
 		}
 	}
