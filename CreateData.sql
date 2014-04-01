@@ -11,18 +11,6 @@ update locationstats set locnorth='1',locnorthdir='SOUTH' where locid='5';
 select * from locationstats;
 
 
-insert into itemstats (ITEMNAME, ITEMPHYS, ITEMBAL, ITEMDESC, ITEMSHORTD, ITEMMAXDUR, ITEMCURDUR, ITEMLOC, ITEMLOCTYPE)
-		values ('Dagger', 1.10, 1.5, 'Short and sharp.','a dagger',100, 100, 1, 'LOCATION');
-
-insert into itemtypetable (ITEMID, TYPEID) values (1, 2);
-insert into type (TYPE) values ('PIERCE');
-insert into itemtypetable (ITEMID, TYPEID) values (1, 1);
-
-insert into SLOTTABLE (ITEMID, SLOTID) values (1, 1);
-insert into SLOTTABLE (ITEMID, SLOTID) values (1, 2);
-insert into SLOT (SLOT) values ('RIGHTHAND');
-insert into SLOT (SLOT) values ('LEFTHAND');
-
 insert into mobstats (MOBID, MOBNAME, MOBPASS, MOBDESC, MOBSHORTD, MOBLOC, MOBTYPE, MOBCURRENTHP, MOBDEAD, MOBXPWORTH, MOBCURRENTXP, MOBCURRENTLEVEL, MOBAGE, LOADONSTARTUP)
 	values	(NULL, 'James', 'James', 'He is a farmer named James.','a farmer', 1, 'STDMOB', 50, false, 10, 1, 1, 1, true);
 /*insert into mobstats values ('3','defaultGod', 'defaultGod', 'Contains God skills.', 'A god skin.','1', 'STDMOB', false);*/
@@ -61,7 +49,7 @@ insert into syntax (SYNTAXPOS, SYNTAXTYPE) values ('0', 'SKILL');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE, INTVALUE) values('5', 'BALANCECOST', 1, 'SELF', 'HERE', 4000);
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE, BOOLEANONE, TYPE) values('6', 'DAMAGE', 6, '10', 'TARGET', 'HERE', 'TRUE', 'SHARP');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, INTVALUETWO, TARGETWHO, TARGETWHERE) values('7', 'BLEEDEFFECT', 4, 5000, 5, 'TARGET', 'HERE');
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE, BOOLEANONE, TYPE) values('8', 'DAMAGE', 3, '-15', 'SELF', 'HERE', 'FALSE', NULL);
+insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE, BOOLEANONE, TYPE) values('8', 'DAMAGE', 3, '-15', 'SELF', 'HERE', 'FALSE', 'NULL');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BLOCKPOINTERONE) values('9', 'CHANCE', 5, '8');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TYPE, TARGETWHO, TARGETWHERE) values('10', 'WEAPONEQUIPPEDCHECK', 2, 'SHARP', 'SELF', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('11', 'MESSAGE', 7, 'You make a sharp slash at %s and then %s turns and fights back.', 'SELF', 'HERE');
@@ -79,8 +67,6 @@ insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values(3, 'gash',
 insert into SKILLTABLE (SKILLBOOKID, SKILLID) values(1, 3);
 insert into syntaxtable (SKILLID, SYNTAXID) values ('3', '1');
 insert into syntaxtable (SKILLID, SYNTAXID) values ('3', '2');
-insert into skilltypetable (SKILLID, TYPEID) values ('3', '1');
-insert into type (TYPE) values ('SHARP');
 insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('11', '1');
 insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('11', '2');
 insert into msgstringstable (BLOCKID, MSGSTRINGSID) values ('12', '3');

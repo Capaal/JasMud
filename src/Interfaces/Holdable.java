@@ -1,6 +1,7 @@
 package interfaces;
 
 import java.util.EnumSet;
+import java.util.Set;
 
 import processes.Equipment.EquipmentEnum;
 import processes.Type;
@@ -15,7 +16,7 @@ public interface Holdable {
 	public Container getContainer();
 	public boolean save();
 	public void removeFromWorld();
-	public EnumSet<EquipmentEnum> getAllowedEquipSlots();
+	public Set<EquipmentEnum> getAllowedEquipSlots();
 	public boolean containsType(Type type);
 	public double getDamageMult();
 }

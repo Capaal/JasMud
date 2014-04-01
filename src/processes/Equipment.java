@@ -32,6 +32,11 @@ public class Equipment implements Container {
 			equip(key, set.get(key));
 		}
 	}
+	
+	public Equipment(Equipment toCopy) {
+		this.equipmentToItemMap = new EnumMap<EquipmentEnum, Holdable>(toCopy.equipmentToItemMap);
+		this.itemToEquipmentMap = new HashMap<Holdable, EquipmentEnum>(toCopy.itemToEquipmentMap);
+	}
 		
 	// This allows gear switching, rather than unequiping then equiping.
 	public void equip(EquipmentEnum k, Holdable v) {

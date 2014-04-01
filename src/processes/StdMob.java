@@ -44,24 +44,21 @@ public class StdMob implements Mobile, Container, Holdable {
 	protected Map<SkillBook, Integer> skillBookList = new HashMap<SkillBook, Integer>();
 	
 	protected final EffectManager effectManager;
-	private Mobile lastAggressor;
+	protected Mobile lastAggressor;
 	
 	public StdMob(MobileBuilder build) {
-		if (WorldServer.gameState.mobList.containsKey(build.name + build.id)) {
-			this.id = setId();
-		} else {
-			this.id = build.id;
-		}
-		this.name = build.name;		
-		this.password = build.password;
-		this.maxHp = build.maxHp;
-		this.currentHp = maxHp;
-		this.mobLocation = build.location;
-		this.isDead = false;
-		this.description = build.description;
-		this.shortDescription = build.shortDescription;
-		this.inventory = build.inventory;
-		this.equipment = build.equipment;
+		this.id = build.getId();
+		this.name = build.getName();		
+		this.password = build.getPassword();
+		this.maxHp = build.getMaxHp();
+		this.currentHp = getMaxHp();
+		this.mobLocation = build.getLocation();
+		this.isDead = build.isDead();
+		this.description = build.getDescription();
+		this.shortDescription = build.getShortDescription();
+		this.inventory = build.getInventory();
+		this.equipment = build.getEquipment();
+		this.experience = build.getExperience();
 		equipment.setOwner(this);
 		effectManager = new EffectManager();
 		WorldServer.gameState.mobList.put(name + id, this);
@@ -456,18 +453,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	}
 	
 
-	private int setId() {
-		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
-				+ " LEFT JOIN mobstats ON sequencetable.sequenceid = mobstats.mobid"
-				+ " WHERE mobstats.mobid IS NULL";		
-		Object availableId = (int) WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
-		if (availableId == null || !(availableId instanceof Integer)) {
-			WorldServer.databaseInterface.increaseSequencer();
-			return setId();
-		} else {
-			return (int)availableId;
-		}		
-	}
+	
 }
 
 	

@@ -64,7 +64,7 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public EnumSet<EquipmentEnum> getAllowedEquipSlots() {
+	public Set<EquipmentEnum> getAllowedEquipSlots() {
 		return decoratedMobile.getAllowedEquipSlots();
 	}
 

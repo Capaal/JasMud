@@ -19,6 +19,8 @@ public class LocationBuilder {
 	
 	private Location finishedLocation;
 	
+	private boolean buildComplete = false;
+	
 	public LocationBuilder() {
 		id = -1;
 		this.name = "Default name";
@@ -28,8 +30,44 @@ public class LocationBuilder {
 		locationConnections = new HashMap<Integer, Direction>();
 	}
 	
+	public boolean complete() {
+		if (getId() == -1) {
+			try {
+				setId();
+			} catch (IllegalStateException e) {
+				System.out.println(e);
+				return false;
+			}
+		}
+		buildComplete = true;
+		finishedLocation = new Location(this);
+		return true;
+	}
+	
 	public int getId() {
 		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	private void setId() throws IllegalStateException {
+		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
+				+ " LEFT JOIN locationstats ON sequencetable.sequenceid = locationstats.locid"
+				+ " WHERE locationstats.locid IS NULL";		
+		Object availableId = WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
+		if (availableId == null || !(availableId instanceof Integer)) {
+			WorldServer.databaseInterface.increaseSequencer();
+			availableId = WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
+			if (availableId == null || !(availableId instanceof Integer)) {
+				throw new IllegalStateException("The location could not determine a valid id, it is invalid.");				
+			} else {
+				id = (int)availableId;
+			}
+		} else {
+			id = (int)availableId;
+		}		
 	}
 	
 	public String getName() {
@@ -92,13 +130,10 @@ public class LocationBuilder {
 		}
 	}	
 	
-	public void setId(int id) {
-		this.id = id;
+	public boolean isCompleted() {
+		return buildComplete;
 	}
 	
-	public void complete() {
-		finishedLocation = new Location(this);
-	}
 
 	public static boolean newLocation(Mobile player, LocationBuilder builderLocation) {
 		String nextTask = Godcreate.askQuestion("What next? 1:name 2:description 3:groundtype 4:connections 5:preview 6:complete 7:exit", player).toLowerCase();
@@ -137,9 +172,13 @@ public class LocationBuilder {
 				return newLocation(player, builderLocation);
 			case "6":
 			case "complete":
-				builderLocation.complete();
-				builderLocation.finishedLocation.save();
-				return true;
+				if (builderLocation.complete()) {
+					builderLocation.finishedLocation.save();		
+					return true;
+				} else {
+					player.tell("Location failed to create, most likely a critical error determining unique ID.");
+					return false;
+				}
 			case "7":
 			case "exit":
 			case "quit":
@@ -192,4 +231,6 @@ public class LocationBuilder {
 			return newConnection(player, builderLocation);
 		}
 	}
+
+	
 }

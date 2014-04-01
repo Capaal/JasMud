@@ -36,6 +36,8 @@ public class DamageTest {
 	public void testActivateWeaponDoesNotMatter() {
 		SkillBuilder testBuilder = new SkillBuilder();
 		testBuilder.addAction(new Damage(10, new TargetSelfWhatStrategy(), new TargetHereWhereStrategy(), false, null));
+		testBuilder.setId(10);;
+		testBuilder.complete();
 		testSkill = new SkillStub(testBuilder);
 		Mobile testMob = mock(StdMob.class);
 		when(testMob.getContainer()).thenReturn(mock(Container.class));
@@ -48,6 +50,7 @@ public class DamageTest {
 		SkillBuilder testBuilder = new SkillBuilder();
 		testBuilder.addAction(new Damage(10, new TargetSelfWhatStrategy(), new TargetHereWhereStrategy(), true, null));
 		testBuilder.setId(1);
+		testBuilder.complete();
 		testSkill = new SkillStub(testBuilder);
 		Mobile testMob = mock(StdMob.class);
 		when(testMob.getContainer()).thenReturn(mock(Container.class));

@@ -42,6 +42,7 @@ public class GetTest {
 		SkillBuilder skillBuild = new SkillBuilder();
 		skillBuild.setId(1);
 		skillBuild.setSyntax(Arrays.asList(Syntax.SKILL, Syntax.ITEM));
+		skillBuild.complete();
 		Skill testSkill = new Skill(skillBuild);
 		Mobile mockMob = mock(Mobile.class);
 		testGet.activate(testSkill, "get testItem", mockMob);

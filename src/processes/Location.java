@@ -1,16 +1,12 @@
 package processes;
 
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
 
 import interfaces.*;
 
 
 // Contains all information relating to each "room" a player may visit.
-// Consider pulling builder out externally?
 public class Location implements Container {
 		
 	private int id;
@@ -21,11 +17,10 @@ public class Location implements Container {
 	private Set<Holdable> inventory = new HashSet<Holdable>();
 	
 	public Location(LocationBuilder builder) {
-		if (builder.getId() == -1) {
-			this.id = setId();
-		} else {
-			this.id = builder.getId();
+		if (!builder.isCompleted()) {
+			throw new IllegalArgumentException("Builder is not in a valid state, Location not built.");
 		}
+		this.id = builder.getId();
 		this.name = builder.getName();
 		this.description = builder.getDescription();
 		this.groundType = builder.getGroundType();
@@ -47,7 +42,7 @@ public class Location implements Container {
 			System.out.println("setLocation just tried to set a null, normal?");
 		}		
 	}		
-	//Displays exits
+	// This most likely does not belong here.
 	public String displayExits() {
 		boolean atLeastOne = false;
 		String toSay = "You can see no exits.";
@@ -67,7 +62,7 @@ public class Location implements Container {
 		} 
 		return toSay;
 	}
-	//Looks
+	// Should probably be a skill that access fields like description and name TODO
 	public void look(Mobile currentPlayer) {
 		currentPlayer.tell(UsefulCommands.ANSI.MAGENTA + name + UsefulCommands.ANSI.SANE);
 		currentPlayer.tell(UsefulCommands.ANSI.GREEN + description + UsefulCommands.ANSI.SANE);
@@ -75,14 +70,14 @@ public class Location implements Container {
 		currentPlayer.tell(UsefulCommands.ANSI.CYAN + displayExits() + UsefulCommands.ANSI.SANE);
 		currentPlayer.tell("(God sight) Location number: " + id + ". Ground type: " + groundType.name() + ".");
 	}
-	//Glance
+	// Should probably not be here, but just a skill that accesses name and such.
 	public void glance(Mobile currentPlayer) {
 		currentPlayer.tell(UsefulCommands.ANSI.MAGENTA + name + UsefulCommands.ANSI.SANE);
 		displayAll(currentPlayer);
 		currentPlayer.tell(UsefulCommands.ANSI.CYAN + displayExits() + UsefulCommands.ANSI.SANE);
 		currentPlayer.tell("(God sight) Location number: " + id + ". Ground type: " + groundType.name() + ".");
 	}	
-	//Displays items
+	//Should probably not be here
 	public void displayAll(Mobile currentPlayer) {
 		boolean anItem = false;
 		StringBuilder sb = new StringBuilder();
@@ -104,6 +99,8 @@ public class Location implements Container {
 	public GroundType getGroundType() {return groundType;}	
 	public void acceptItem(Holdable newItem) {inventory.add(newItem);}	
 
+	
+	//TODO implement a null location object?
 	public Location getLocation(String dir) {
 		Direction trueDirection = Direction.getDirectionName(dir);
 		if (trueDirection == null) {
@@ -111,14 +108,6 @@ public class Location implements Container {
 		} else {
 			return getLocation(trueDirection);
 		}
-	/*	String trueLocation = UsefulCommands.getDirName(dir);
-		Direction locDir = null;
-		try {
-			locDir = Direction.valueOf(trueLocation.toUpperCase());
-		} catch (IllegalArgumentException e) {
-			return null;
-		}	
-		return getLocation(locDir);*/
 	}		
 	
 	public Location getLocation(Direction dir) {		
@@ -243,18 +232,7 @@ public class Location implements Container {
 		return null;
 	}
 	
-	private int setId() {
-		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
-				+ " LEFT JOIN locationstats ON sequencetable.sequenceid = locationstats.locid"
-				+ " WHERE locationstats.locid IS NULL";		
-		Object availableId = (int) WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
-		if (availableId == null || !(availableId instanceof Integer)) {
-			WorldServer.databaseInterface.increaseSequencer();
-			return setId();
-		} else {
-			return (int)availableId;
-		}		
-	}
+	
 	
 	@Override
 	public Container getContainer() {

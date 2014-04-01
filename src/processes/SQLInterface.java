@@ -37,9 +37,6 @@ public class SQLInterface implements DatabaseInterface{
 	private  char[] password = null;
 	private  Statement stmt = null;
 
-	/* (non-Javadoc)
-	 * @see processes.DatabaseInterface#connect(java.lang.String, char[])
-	 */
 	@Override
 	public  void connect(String username1, char[] password1) {
 		
@@ -153,7 +150,6 @@ public class SQLInterface implements DatabaseInterface{
 						newItem.setPhysicalMult(itemPhysicalMult);
 						newItem.setBalanceMult(itemBalanceMult);
 						newItem.setDescription(itemDescription);
-						newItem.setShortDescription(itemShortDescription);
 						newItem.setMaxDurability(itemMaxDurability);
 						newItem.setCurrentDurability(itemCurrentDurability);
 						newItem.setTypes(itemTypes);
@@ -161,17 +157,18 @@ public class SQLInterface implements DatabaseInterface{
 						newItem.setAllowedSlots(allowedEquipSlots);
 						switch(itemLocType) {						
 							case "LOCATION":						
-								newItem.setItemLocation(WorldServer.gameState.locationCollection.get(itemLocation));
+								newItem.setItemContainer(WorldServer.gameState.locationCollection.get(itemLocation));
 								newItem.complete();						
 							break;
 							case "INVENTORY":
-								newItem.setItemLocation(container);
+								newItem.setItemContainer(container);
 								newItem.complete();
 							break;
 							case "EQUIPMENT":
-								newItem.setItemLocation(container);
-								StdItem createdItem = newItem.complete();
-								((Mobile)container).equip(equipSlot, createdItem);
+								newItem.setItemContainer(container);
+								if (newItem.complete()) {
+									((Mobile)container).equip(equipSlot, newItem.getFinishedItem());
+								}
 							break;
 							default:
 								System.out.println("itemLocType mismatch on item " + itemId + " giving " + itemLocType);
@@ -208,7 +205,6 @@ public class SQLInterface implements DatabaseInterface{
 				newItem.setPhysicalMult(itemPhysicalMult);
 				newItem.setBalanceMult(itemBalanceMult);
 				newItem.setDescription(itemDescription);
-				newItem.setShortDescription(itemShortDescription);
 				newItem.setMaxDurability(itemMaxDurability);
 				newItem.setCurrentDurability(itemCurrentDurability);
 				newItem.setTypes(itemTypes);
@@ -216,17 +212,18 @@ public class SQLInterface implements DatabaseInterface{
 				newItem.setAllowedSlots(allowedEquipSlots);
 				switch(itemLocType) {						
 					case "LOCATION":						
-						newItem.setItemLocation(WorldServer.gameState.locationCollection.get(itemLocation));
+						newItem.setItemContainer(WorldServer.gameState.locationCollection.get(itemLocation));
 						newItem.complete();						
 					break;
 					case "INVENTORY":
-						newItem.setItemLocation(container);
+						newItem.setItemContainer(container);
 						newItem.complete();
 					break;
 					case "EQUIPMENT":
-						newItem.setItemLocation(container);
-						StdItem createdItem = newItem.complete();
-						((Mobile)container).equip(equipSlot, createdItem);
+						newItem.setItemContainer(container);
+						if (newItem.complete()) {
+							((Mobile)container).equip(equipSlot, newItem.getFinishedItem());
+						}
 					break;
 					default:
 						System.out.println("itemLocType mismatch on item " + itemId + " giving " + itemLocType);
@@ -252,30 +249,31 @@ public class SQLInterface implements DatabaseInterface{
 			ResultSet rs = stmt.executeQuery(sql);	
 			if (rs.next()) {
 				String type = rs.getString("MOBTYPE"); // NOT IMPLEMENTS TODO
-				loadedPlayer.id = rs.getInt("MOBID");
-				loadedPlayer.name = rs.getString("MOBNAME");
+				loadedPlayer.setId(rs.getInt("MOBID"));
+				loadedPlayer.setName(rs.getString("MOBNAME"));
 				switch (type) {
 				case "STDMOB":
-					loadedPlayer.description(rs.getString("MOBDESC"));
-					loadedPlayer.password(rs.getString("MOBPASS"));
-					loadedPlayer.shortDescription(rs.getString("MOBSHORTD"));
-					loadedPlayer.location(WorldServer.gameState.locationCollection.get(rs.getInt("MOBLOC")));
+					loadedPlayer.setDescription(rs.getString("MOBDESC"));
+					loadedPlayer.setPassword(rs.getString("MOBPASS"));
+					loadedPlayer.setShortDescription(rs.getString("MOBSHORTD"));
+					loadedPlayer.setLocation(WorldServer.gameState.locationCollection.get(rs.getInt("MOBLOC")));
 				//	loadedPlayer.maxHp(rs.getInt("MOBMAXHP"));
-					loadedPlayer.currentHp(rs.getInt("MOBCURRENTHP"));
-					loadedPlayer.isDead(rs.getInt("MOBDEAD"));
-					loadedPlayer.xpWorth(rs.getInt("MOBXPWORTH"));
-					loadedPlayer.experience(rs.getInt("MOBCURRENTXP"));
-					loadedPlayer.level(rs.getInt("MOBCURRENTLEVEL"));
-					loadedPlayer.age(rs.getInt("MOBAGE"));
-					int startUp = rs.getInt("LOADONSTARTUP");
+					loadedPlayer.setCurrentHp(rs.getInt("MOBCURRENTHP"));
+					loadedPlayer.setIsDead(rs.getInt("MOBDEAD"));
+					loadedPlayer.setXpWorth(rs.getInt("MOBXPWORTH"));
+					loadedPlayer.setExperience(rs.getInt("MOBCURRENTXP"));
+					loadedPlayer.setLevel(rs.getInt("MOBCURRENTLEVEL"));
+					loadedPlayer.setAge(rs.getInt("MOBAGE"));
+					int startUp = rs.getInt("LOADONSTARTUP");					
 					if (startUp == 1) {
-						loadedPlayer.loadOnStartUp(true);
-						finishedPlayer = new AggresiveMobileDecorator(loadedPlayer.complete());
+						loadedPlayer.setLoadOnStartUp(true);
+						loadedPlayer.complete();
+						finishedPlayer = new AggresiveMobileDecorator(loadedPlayer.getFinishedMob());
 					} else {
-						loadedPlayer.loadOnStartUp(false);
-						finishedPlayer = loadedPlayer.complete();
+						loadedPlayer.setLoadOnStartUp(false);
+						loadedPlayer.complete();
+						finishedPlayer = loadedPlayer.getFinishedMob();
 					}
-			//		finishedPlayer = loadedPlayer.complete();
 					sql = "SELECT itemstats.*, slot.SLOT, itemtypetable.TYPE FROM itemstats LEFT JOIN SLOTTABLE ON itemstats.ITEMID = slottable.ITEMID"
 							+ " LEFT JOIN SLOT ON slottable.SLOTID = slot.SLOTID"
 							+ " LEFT JOIN ITEMTYPETABLE ON itemstats.ITEMID = itemtypetable.ITEMID"
@@ -286,6 +284,7 @@ public class SQLInterface implements DatabaseInterface{
 				break;				
 				}
 			} 	else {
+				System.out.println("Player not found?");
 				// Player of that name and id was not found in the database.
 				return null;
 			}
@@ -312,9 +311,7 @@ public class SQLInterface implements DatabaseInterface{
 		return finishedPlayer;
 	}
 	
-	/* (non-Javadoc)
-	 * @see processes.DatabaseInterface#saveAction(java.lang.String)
-	 */
+	
 	@Override
 	public  void saveAction(String sql)  {
 		System.out.println(sql);

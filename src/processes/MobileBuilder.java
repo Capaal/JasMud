@@ -8,6 +8,7 @@ import items.StdItem;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import actions.Godcreate;
@@ -15,72 +16,192 @@ import processes.Equipment.EquipmentEnum;
 
 public class MobileBuilder {	
 
-	public String name;
-	public int id;	
-	public String password = "";
-	public String description = "Generic.";
-	public String shortDescription = "Short and Generic.";
-	public int maxHp = 100;
-	public int currentHp = 100;
-	public Container location = WorldServer.gameState.locationCollection.get(1);
-	public boolean isDead = false;
-	public int xpWorth = 1;
-	public int experience = 1;
-	public int level = 1;
-	public int age = 1;
-	public boolean loadOnStartUp = false;
-	public Set<Holdable> inventory = new HashSet<Holdable>();
-	public Equipment equipment = new Equipment();	
-	public ArrayList<Effect> effectList = new ArrayList<Effect>();		
+	private String name;
+	private int id = -1;	
+	private String password = "";
+	private String description = "Generic.";
+	private String shortDescription = "Short and Generic.";
+	private int maxHp = 100;
+	private int currentHp = 100;
+	private Container location = WorldServer.gameState.locationCollection.get(1);
+	private boolean isDead = false;
+	private int xpWorth = 1;
+	private int experience = 1;
+	private int level = 1;
+	private int age = 1;
+	private boolean loadOnStartUp = false;
+	private Set<Holdable> inventory = new HashSet<Holdable>();
+	private Equipment equipment = new Equipment();	
+	private ArrayList<Effect> effectList = new ArrayList<Effect>();		
+	
+	private boolean buildComplete = false;
+	private StdMob finishedMob;
 	
 	public MobileBuilder() {
 		// might change based on implementation.
-		equipment(EquipmentEnum.HEAD,  null);
-		equipment(EquipmentEnum.NECK,  null);
-		equipment(EquipmentEnum.LEFTEAR,  null);
-		equipment(EquipmentEnum.RIGHTEAR,  null);
-		equipment(EquipmentEnum.LEFTHAND,  null);
-		equipment(EquipmentEnum.RIGHTHAND,  null);
-		equipment(EquipmentEnum.CHEST,  null);
-		equipment(EquipmentEnum.LEGS,  null);
-		equipment(EquipmentEnum.FEET,  null);
-		equipment(EquipmentEnum.LEFTFINGER,  null);
-		equipment(EquipmentEnum.RIGHTFINGER,  null);
-	}		
+		setEquipment(EquipmentEnum.HEAD,  null);
+		setEquipment(EquipmentEnum.NECK,  null);
+		setEquipment(EquipmentEnum.LEFTEAR,  null);
+		setEquipment(EquipmentEnum.RIGHTEAR,  null);
+		setEquipment(EquipmentEnum.LEFTHAND,  null);
+		setEquipment(EquipmentEnum.RIGHTHAND,  null);
+		setEquipment(EquipmentEnum.CHEST,  null);
+		setEquipment(EquipmentEnum.LEGS,  null);
+		setEquipment(EquipmentEnum.FEET,  null);
+		setEquipment(EquipmentEnum.LEFTFINGER,  null);
+		setEquipment(EquipmentEnum.RIGHTFINGER,  null);
+	}	
 	
-	public void id(int val) {id = val;}
-	public void name(String val) {
+	public boolean buildCompleted() {
+		return buildComplete;
+	}
+	
+	public void setId(int val) {id = val;}
+	
+	public void setName(String val) throws IllegalArgumentException {
 		if (val != null && UsefulCommands.checkIfValidCharacters(val)) {
 			name = val;
 		} else {
-			throw new IllegalArgumentException("Name givin is invalid: " + val);
+			throw new IllegalArgumentException("Name given is invalid: " + val);
 		}
 	}
 	
+	public Equipment getEquipment() {
+		return new Equipment(equipment);
+	}
 	
-	// The below are effectively the Builder's constructor methods. As they will be gathering data for the finalized StdMob.
-	public void password(String val) {password = val;}		
-	public void description(String val) {description = val;}		
-	public void shortDescription(String val) {shortDescription = val;}		
-	public void currentHp(int val) {currentHp = val;}
-	public void isDead(boolean val) {isDead = val;}
-	public void isDead(int val) {
+	public void setEquipment(EquipmentEnum slot, StdItem item) {
+		equipment.forceEquip(slot, item);
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getShortDescription() {
+		return shortDescription;
+	}
+
+	public void setShortDescription(String shortDescription) {
+		this.shortDescription = shortDescription;
+	}
+
+	public int getMaxHp() {
+		return maxHp;
+	}
+
+	public void setMaxHp(int maxHp) {
+		this.maxHp = maxHp;
+	}
+
+	public int getCurrentHp() {
+		return currentHp;
+	}
+
+	public void setCurrentHp(int currentHp) {
+		this.currentHp = currentHp;
+	}
+
+	public Container getLocation() {
+		return location;
+	}
+
+	public void setLocation(Container location) {
+		this.location = location;
+	}
+
+	public boolean isDead() {
+		return isDead;
+	}
+
+	public void setIsDead(boolean isDead) {
+		this.isDead = isDead;
+	}
+	
+	public void setIsDead(int val) {
 		if (val == 1) {
 			isDead = true;
 		} else {
 			isDead = false;
 		}
 	}
-	public void location(Container val) {location = val;}			
-	public void inventory(Holdable val) {inventory.add(val);}
-	public void equipment(EquipmentEnum slot, StdItem val) {equipment.forceEquip(slot, val); }
-	public void xpWorth(int val) {xpWorth = val;}	
-	public void effect(Effect effect) {effectList.add(effect); }
-	public void experience(int val) {experience = val;}
-	public void level(int val) {level = val;}
-	public void age(int val) {age = val;}
-	public void loadOnStartUp(boolean val) {loadOnStartUp = val;}
-	
+
+	public int getXpWorth() {
+		return xpWorth;
+	}
+
+	public void setXpWorth(int xpWorth) {
+		this.xpWorth = xpWorth;
+	}
+
+	public int getExperience() {
+		return experience;
+	}
+
+	public void setExperience(int experience) {
+		this.experience = experience;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public boolean isLoadOnStartUp() {
+		return loadOnStartUp;
+	}
+
+	public void setLoadOnStartUp(boolean loadOnStartUp) {
+		this.loadOnStartUp = loadOnStartUp;
+	}
+
+	public Set<Holdable> getInventory() {
+		return new HashSet<Holdable>(inventory);
+	}
+
+	public void setInventory(Set<Holdable> inventory) {
+		this.inventory = inventory;
+	}
+
+	public List<Effect> getEffectList() {
+		return new ArrayList<Effect>(effectList);
+	}
+
+	public void setEffectList(ArrayList<Effect> effectList) {
+		this.effectList = effectList;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public int getId() {
+		return id;
+	}
+
 	public void setMaxHp() {
 		maxHp = 100 + level * 5;
 		if (currentHp > maxHp) {
@@ -88,9 +209,41 @@ public class MobileBuilder {
 		}
 	}
 	
-	public StdMob complete() {
+	public boolean complete() {
 		setMaxHp();
-		return new StdMob(this);
+		if (id == -1) {
+			try {
+				setId();
+			} catch (IllegalStateException e) {
+				System.out.println("New mobile failed to obtain unique id, it was not created.");
+				return false;
+			} 	
+		}
+		buildComplete = true;
+		finishedMob = new StdMob(this);		
+		return true;
+	}
+	
+	public StdMob getFinishedMob() {
+		return finishedMob;
+	}
+	
+	private void setId() {
+		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
+				+ " LEFT JOIN mobstats ON sequencetable.sequenceid = mobstats.mobid"
+				+ " WHERE mobstats.mobid IS NULL";			
+		Object availableId = WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
+		if (availableId == null || !(availableId instanceof Integer)) {
+			WorldServer.databaseInterface.increaseSequencer();
+			availableId = WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
+			if (availableId == null || !(availableId instanceof Integer)) {
+				throw new IllegalStateException("The mobile could not determine a valid id, it is invalid.");				
+			} else {
+				id = (int)availableId;
+			}
+		} else {
+			id = (int)availableId;
+		}	
 	}
 
 	public static boolean newMobile(Mobile player, MobileBuilder mobileBuilder) {
@@ -100,24 +253,24 @@ public class MobileBuilder {
 		switch(nextTask) {
 		case "1":
 		case "name":
-			mobileBuilder.name(Godcreate.askQuestion("What is the mobile's name?", player));
+			mobileBuilder.setName(Godcreate.askQuestion("What is the mobile's name?", player));
 			return newMobile(player, mobileBuilder);
 		case "2":
 		case "password":
-			mobileBuilder.password(Godcreate.askQuestion("What is the mobile's password?", player));
+			mobileBuilder.setPassword(Godcreate.askQuestion("What is the mobile's password?", player));
 			return newMobile(player, mobileBuilder);
 		case "3":
 		case "longdescription":
-			mobileBuilder.description(Godcreate.askQuestion("What is the mobile's long description?", player));
+			mobileBuilder.setDescription(Godcreate.askQuestion("What is the mobile's long description?", player));
 			return newMobile(player, mobileBuilder);
 		case "4":
 		case "shortdescription":
-			mobileBuilder.shortDescription(Godcreate.askQuestion("What is the mobile's short description?", player));
+			mobileBuilder.setShortDescription(Godcreate.askQuestion("What is the mobile's short description?", player));
 			return newMobile(player, mobileBuilder);
 		case "5":
 		case "level":
 			try {
-				mobileBuilder.level(Integer.parseInt(Godcreate.askQuestion("What level will this mobile be at?", player)));
+				mobileBuilder.setLevel(Integer.parseInt(Godcreate.askQuestion("What level will this mobile be at?", player)));
 			} catch(NumberFormatException e) {
 				player.tell("That was not formatted as a valid number.");
 			}
@@ -125,14 +278,14 @@ public class MobileBuilder {
 		case "6":
 		case "currentHp":
 			try {
-				mobileBuilder.currentHp(Integer.parseInt(Godcreate.askQuestion("What hp will the mobile start at?", player)));
+				mobileBuilder.setCurrentHp(Integer.parseInt(Godcreate.askQuestion("What hp will the mobile start at?", player)));
 			} catch(NumberFormatException e) {
 				player.tell("That was not formatted as a valid number.");
 			}
 			return newMobile(player, mobileBuilder);
 		case "7":
 		case "isdead":
-			mobileBuilder.isDead(Boolean.parseBoolean(Godcreate.askQuestion("true/false is the mobile already dead?", player)));
+			mobileBuilder.setIsDead(Boolean.parseBoolean(Godcreate.askQuestion("true/false is the mobile already dead?", player)));
 			player.tell("isDead has been set to: " + mobileBuilder.isDead);
 			return newMobile(player, mobileBuilder);
 		case "8":
@@ -140,7 +293,7 @@ public class MobileBuilder {
 			int locationId = Integer.parseInt(Godcreate.askQuestion("What location id will this mobile start in?", player));
 			Location location = WorldServer.gameState.locationCollection.get(locationId);
 			if (location != null) {
-				mobileBuilder.location(location);
+				mobileBuilder.setLocation(location);
 			} else {
 				player.tell("Could not find that location id.");
 			}		
@@ -156,14 +309,14 @@ public class MobileBuilder {
 		case "11":
 		case "xpworth":
 			try {
-				mobileBuilder.xpWorth(Integer.parseInt(Godcreate.askQuestion("What is the mobile's xp worth?", player)));
+				mobileBuilder.setXpWorth(Integer.parseInt(Godcreate.askQuestion("What is the mobile's xp worth?", player)));
 			} catch(NumberFormatException e) {
 				player.tell("That was not formatted as a valid number.");
 			}
 			return newMobile(player, mobileBuilder);
 		case "12":
 		case "loadonstartup":
-			mobileBuilder.loadOnStartUp(Boolean.parseBoolean(Godcreate.askQuestion("true/false should the mobile load on startup?", player)));
+			mobileBuilder.setLoadOnStartUp(Boolean.parseBoolean(Godcreate.askQuestion("true/false should the mobile load on startup?", player)));
 			player.tell("loadOnStartUp has been set to: " + mobileBuilder.loadOnStartUp);
 			return newMobile(player, mobileBuilder);
 		case "13":
