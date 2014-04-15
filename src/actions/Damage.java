@@ -1,16 +1,11 @@
 package actions;
 
 import interfaces.*;
-
-import java.sql.SQLException;
 import java.util.*;
-
 import TargettingStrategies.*;
 import processes.*;
 
-//TODO Should damage contain TYPE, so that devs can specify what type that damage is, rather than relying on skill knowing?
-// And what about different weapons changing amount of damage?
-// Especially when we don't know if the damage SHOULD be affected by an item.
+
 public class Damage extends Action {
 	
 	
@@ -65,7 +60,7 @@ public class Damage extends Action {
 	}
 	
 	@Override
-	protected void insertOneself(int position) {
+	public void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT IGNORE INTO BLOCK (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE, BOOLEANONE, TYPE) VALUES ('DAMAGE', " 
 					+ position + ", " +  intensity + ", '" + what.toString() + "', '" + where.toString() + "', '" + doesWeaponMatter + "'"

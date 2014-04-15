@@ -65,7 +65,7 @@ public class BalanceEffect extends Action {
 		return WorldServer.databaseInterface.returnBlockView(blockQuery);
 	}
 	@Override
-	protected void insertOneself(int position) {
+	public void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT INTO block (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) VALUES ('BALANCECOST', " 
 					+ position + ", '" + duration + "', '" + what.toString() + "', '" + where.toString() + "');";

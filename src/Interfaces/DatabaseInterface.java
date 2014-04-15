@@ -1,7 +1,4 @@
-package processes;
-
-import interfaces.Container;
-import interfaces.Mobile;
+package interfaces;
 
 import java.sql.SQLException;
 import java.util.HashMap;

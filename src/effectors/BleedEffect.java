@@ -75,7 +75,7 @@ public class BleedEffect extends Action {
 		return WorldServer.databaseInterface.returnBlockView(blockQuery);
 	}
 	@Override
-	protected void insertOneself(int position) {
+	public void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE) VALUES ('BLEEDEFFECT', " 
 					 + position + ", " + duration + ", '" + what.toString() + "', '" + where.toString() + "');";

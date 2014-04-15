@@ -24,7 +24,7 @@ public abstract class Action {
 		return true;
 	}
 	
-	protected abstract void insertOneself(int position);
+	public abstract void insertOneself(int position);
 	public abstract HashMap<String, Object> selectOneself(int position);
 	
 	public int getId() {

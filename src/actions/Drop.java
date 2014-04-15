@@ -54,7 +54,7 @@ public class Drop extends Action {
 		return WorldServer.databaseInterface.returnBlockView(blockQuery);
 	}
 	@Override
-	protected void insertOneself(int position) {
+	public void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, ENDWHERE, TARGETWHO, TARGETWHERE) VALUES ('DROP', " 
 					+ position + ", '" +  finalLoc.toString() + "', '" + what.toString() + "', '" + where.toString() + "');";

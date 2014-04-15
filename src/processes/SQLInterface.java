@@ -31,20 +31,20 @@ import processes.Skill.Syntax;
 // NEED TO CHECK FOR SQL INJECTIONS. Things like ";" in the name or anything else the use can input.
 public class SQLInterface implements DatabaseInterface{
 
-	private  java.sql.Connection con = null;
-	private  String url = "jdbc:mysql://localhost:3306/jasmud";
-	private  String username = null;
-	private  char[] password = null;
-	private  Statement stmt = null;
+	protected  java.sql.Connection con = null;
+	protected  String url = "jdbc:mysql://localhost:3306/jasmud";
+	protected  String username = null;
+	protected  char[] password = null;
+	protected  Statement stmt = null;
 
 	@Override
 	public  void connect(String username1, char[] password1) {
 		
 		try {			
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			con = DriverManager.getConnection(url, username1, String.valueOf(password1));
-			if (con != null) {
-				System.out.println(" A database connection has been established!");
+			this.con = DriverManager.getConnection(url, username1, String.valueOf(password1));
+			if (this.con != null) {
+				System.out.println(" A database connection has been established!: " + url);
 				username = username1;
 				password = password1;
 			}		
@@ -62,7 +62,7 @@ public class SQLInterface implements DatabaseInterface{
 	public  void loadLocations() {
 		makeConnection();
 		try {
-			stmt = con.createStatement();	
+			stmt = this.con.createStatement();	
 			String sql = ("insert into sequencetable values(NULL);");
 			for (int i = 0; i < 25; i++) {
 				stmt.execute(sql);
@@ -125,7 +125,7 @@ public class SQLInterface implements DatabaseInterface{
 		}
 		makeConnection();
 		try {
-			Statement stmt = con.createStatement();
+			Statement stmt = this.con.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
 			int itemId = -1;
 			String itemName = "";
@@ -244,7 +244,7 @@ public class SQLInterface implements DatabaseInterface{
 		Mobile finishedPlayer = null;
 		MobileBuilder loadedPlayer = new MobileBuilder();
 		try {
-			stmt = con.createStatement();			
+			stmt = this.con.createStatement();			
 			String sql = ("SELECT * FROM mobstats WHERE MOBNAME='" + name + "' AND MOBPASS='" + password + "'");			
 			ResultSet rs = stmt.executeQuery(sql);	
 			if (rs.next()) {
@@ -317,7 +317,7 @@ public class SQLInterface implements DatabaseInterface{
 		System.out.println(sql);
 		makeConnection();
 		try {
-			stmt = con.createStatement();		
+			stmt = this.con.createStatement();		
 			stmt.executeUpdate(sql);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -336,7 +336,7 @@ public class SQLInterface implements DatabaseInterface{
 		makeConnection();
 		Object result = null;
 		try {
-			stmt = con.createStatement();
+			stmt = this.con.createStatement();
 			
 			ResultSet rs = stmt.executeQuery(blockQuery);
 			ResultSetMetaData rsmd = rs.getMetaData();
@@ -365,7 +365,7 @@ public class SQLInterface implements DatabaseInterface{
 		makeConnection();
 		HashMap<String, Object> blockView = new HashMap<String, Object>();
 		try {
-			stmt = con.createStatement();
+			stmt = this.con.createStatement();
 		
 			ResultSet rs = stmt.executeQuery(blockQuery);
 			ResultSetMetaData rsmd = rs.getMetaData();
@@ -402,10 +402,10 @@ public class SQLInterface implements DatabaseInterface{
 	 */
 	@Override
 	public  void makeConnection() {
-		if (con == null) {
+		if (this.con == null) {
 			try {
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
-				con = DriverManager.getConnection(url, username, String.valueOf(password));	
+				this.con = DriverManager.getConnection(url, username, String.valueOf(password));	
 			} catch (Exception e) {
 				System.out.println("Problem: " + e.toString());
 			}
@@ -417,13 +417,13 @@ public class SQLInterface implements DatabaseInterface{
 	 */
 	@Override
 	public  void disconnect() {	
-		if (con != null) {
+		if (this.con != null) {
 			try {
-				con.close();
+				this.con.close();
 			} catch (Exception e) {
 				System.out.println(e.toString());
 			}
-			con = null;
+			this.con = null;
 		}
 	}
 
@@ -434,7 +434,7 @@ public class SQLInterface implements DatabaseInterface{
 	public  void loadMobs() {
 		makeConnection();
 		try {
-			stmt = con.createStatement();
+			stmt = this.con.createStatement();
 			
 			String sql = ("SELECT * FROM mobstats WHERE loadonstartup=true");
 			
@@ -549,7 +549,7 @@ public class SQLInterface implements DatabaseInterface{
 				
 				
 				case "MESSAGE":
-					Statement stmt3 = con.createStatement();
+					Statement stmt3 = this.con.createStatement();
 					ResultSet rs3 = stmt3.executeQuery("SELECT msgstrings.* FROM msgstringstable JOIN msgstrings ON msgstringstable.MSGSTRINGSID = msgstrings.MSGSTRINGSID "
 							+ "WHERE msgstringstable.BLOCKID =" + rs.getInt("BLOCKID") + " ORDER BY MSGSTRINGSPOS ASC;");
 					ArrayList<msgStrings> msgstringslist = new ArrayList<msgStrings>();
@@ -559,9 +559,18 @@ public class SQLInterface implements DatabaseInterface{
 					return new Message(rs.getString("STRINGONE"), whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")), msgstringslist);
 							
 				case "CHANCE":
-					int internalActionNum = rs.getInt("BLOCKPOINTERONE");
 					makeConnection();
-					Statement stmt2 = con.createStatement();
+					Statement stmt2 = this.con.createStatement();
+					ResultSet rs2 = stmt2.executeQuery("SELECT blockpointertable.blockpointer FROM blockpointertable WHERE BLOCKID=" + rs.getInt("BLOCKID") + ";");
+					if (rs2.next()) {
+						Action innerAction = determineAction(rs2);
+						return new Chance(rs.getInt("INTVALUE"), innerAction);
+					}
+					return null;
+					/*
+					int internalActionNum = rs.getInt("BLOCKPOINTER");
+					makeConnection();
+					Statement stmt2 = this.con.createStatement();
 					ResultSet rs2 = stmt2.executeQuery("SELECT * FROM block WHERE BLOCKID='" + internalActionNum + "'");
 					
 					if (rs2.next()) {
@@ -569,7 +578,7 @@ public class SQLInterface implements DatabaseInterface{
 						return new Chance(rs.getInt("INTVALUE"), innerAction);
 					}
 					return null;			
-				
+				*/
 				case "SAY":
 					return new Say();
 					
@@ -577,9 +586,22 @@ public class SQLInterface implements DatabaseInterface{
 					return new Examine(whereFactory.parse(rs.getString("TARGETWHERE")));
 					
 				case "OR":
+					makeConnection();
+					Statement stmtOr = this.con.createStatement();
+					ResultSet rsOr = stmtOr.executeQuery("SELECT blockpointertable.blockpointer FROM blockpointertable WHERE BLOCKID=" + rs.getInt("BLOCKID") + ";");
+					Action innerOrActionOne = null;
+					Action innerOrActionTwo = null;
+					if (rsOr.next()) {
+						innerOrActionOne = determineAction(rsOr);
+					}
+					if (rsOr.next()) {
+						innerOrActionTwo = determineAction(rsOr);
+					}
+					return new Or(innerOrActionOne, innerOrActionTwo);
+					/*
 					int internalActionNumOrOne = rs.getInt("BLOCKPOINTERONE");
 					int internalActionNumOrTwo = rs.getInt("BLOCKPOINTERTWO");
-					Statement stmtOR = con.createStatement();
+					Statement stmtOR = this.con.createStatement();
 					ResultSet rsOR = stmtOR.executeQuery("SELECT * FROM block WHERE BLOCKID='" + internalActionNumOrOne + "'");
 					Action innerOrActionOne = null;
 					Action innerOrActionTwo = null;
@@ -591,7 +613,7 @@ public class SQLInterface implements DatabaseInterface{
 						innerOrActionTwo = determineAction(rsOR);
 					}
 					return new Or(innerOrActionOne, innerOrActionTwo);
-					
+					*/
 				case "GET":
 					return new Get(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")));
 				case "LOOK":
@@ -657,7 +679,7 @@ public class SQLInterface implements DatabaseInterface{
 	public  void increaseSequencer() {
 		makeConnection();
 		try {
-			stmt = con.createStatement();			
+			stmt = this.con.createStatement();			
 			String sql = ("insert into sequencetable values(NULL);");
 			for (int i = 0; i < 25; i++) {
 				stmt.execute(sql);

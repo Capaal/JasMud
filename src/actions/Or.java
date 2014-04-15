@@ -1,9 +1,7 @@
 package actions;
 
-import java.sql.SQLException;
-import java.util.HashMap;
 
-import processes.SQLInterface;
+import java.util.HashMap;
 import processes.Skill;
 import processes.WorldServer;
 import interfaces.Action;
@@ -52,15 +50,22 @@ public class Or extends Action {
 	}
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
-		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='OR' AND BLOCKPOS=" + position
-				+ " AND BLOCKPOINTERONE=" + actionOne.getId() + " AND BLOCKPOINTERTWO=" + actionTwo.getId() + ";";
+		String blockQuery = "SELECT BLOCK.BLOCKID, BLOCK.BLOCKPOS, BLOCK.BLOCKTYPE, BLOCKPOINTERTABLE.BLOCKPOINTER"
+				+ " FROM BLOCK LEFT JOIN BLOCKPOINTERTABLE"
+				+ " ON BLOCK.BLOCKID = BLOCKPOINTERTABLE.BLOCKID WHERE BLOCKTYPE='OR' AND BLOCKPOS=" + position + ";";		
+	//	String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='OR' AND BLOCKPOS=" + position
+	//			+ " AND BLOCKPOINTERONE=" + actionOne.getId() + " AND BLOCKPOINTERTWO=" + actionTwo.getId() + ";";
 		return WorldServer.databaseInterface.returnBlockView(blockQuery);
 	}
 	@Override
-	protected void insertOneself(int position) {
+	public void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
-			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, BLOCKPOINTERONE, BLOCKPOINTERTWO) VALUES ('OR', " 
-					+ position + ", " + actionOne.getId() + ", " + actionTwo.getId() + ");";
+			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS) VALUES ('OR', " 
+					+ position + ");";
+			WorldServer.databaseInterface.saveAction(sql);
+			sql = "insert ignore into blockpointertable (BLOCKID, BLOCKPOINTER) values (" + getId() + ", " + actionOne.getId() + ");";
+			WorldServer.databaseInterface.saveAction(sql);
+			sql = "insert ignore into blockpointertable (BLOCKID, BLOCKPOINTER) values (" + getId() + ", " + actionTwo.getId() + ");";
 			WorldServer.databaseInterface.saveAction(sql);
 		}
 	}

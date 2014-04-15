@@ -63,7 +63,7 @@ public class Look extends Action {
 		return WorldServer.databaseInterface.returnBlockView(blockQuery);
 	}
 	@Override
-	protected void insertOneself(int position) {
+	public void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, TARGETWHERE) VALUES ('LOOK', " 
 					+ position + ", '" + where.toString() + "');";

@@ -54,6 +54,10 @@ public class SkillBuilder {
 		return true;		
 	}
 	
+	public Skill getFinishedSkill() {
+		return finishedSkill;
+	}
+	
 	public void save() {
 		finishedSkill.save();
 		for (SkillBook finalSkillBooks : getAttachedBooks()) {		

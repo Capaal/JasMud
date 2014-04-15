@@ -68,7 +68,7 @@ public class Get extends Action {
 		return WorldServer.databaseInterface.returnBlockView(blockQuery);
 	}
 	@Override
-	protected void insertOneself(int position) {
+	public void insertOneself(int position) {
 		if (selectOneself(position).get("BLOCKID") == null) {
 			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE) VALUES ('DAMAGE', " 
 					+ position + ", '" + what.toString() + "', '" + where.toString() + "');";

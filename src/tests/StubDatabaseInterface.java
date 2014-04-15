@@ -2,8 +2,8 @@ package tests;
 
 import java.util.HashMap;
 
-import processes.DatabaseInterface;
 import interfaces.Container;
+import interfaces.DatabaseInterface;
 import interfaces.Mobile;
 
 public class StubDatabaseInterface implements DatabaseInterface {

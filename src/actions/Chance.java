@@ -55,16 +55,23 @@ public class Chance extends Action {
 	}
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
-		HashMap<String, Object> chanceActionView = action.selectOneself(0);
-		String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='CHANCE' AND INTVALUE=" + chance + " AND BLOCKPOS=" + position
-				+ " AND BLOCKPOINTERONE='" + chanceActionView.get("BLOCKID") + "';";
+		//HashMap<String, Object> chanceActionView = action.selectOneself(0);
+		String blockQuery = "SELECT BLOCK.*, BLOCKPOINTERTABLE.BLOCKPOINTER FROM BLOCK LEFT JOIN BLOCKPOINTERTABLE"
+				+ " ON BLOCK.BLOCKID = BLOCKPOINTERTABLE.BLOCKID WHERE BLOCKTYPE='CHANCE'"
+				+ " AND INTVALUE=" + chance + " AND BLOCKPOS=" + position + " AND BLOCKPOINTER=" + action.getId() + ";";
+
+	//	String blockQuery = "SELECT * FROM BLOCK WHERE BLOCKTYPE='CHANCE' AND INTVALUE=" + chance + " AND BLOCKPOS=" + position
+	//			+ " AND BLOCKPOINTERONE='" + chanceActionView.get("BLOCKID") + "';";
 		return WorldServer.databaseInterface.returnBlockView(blockQuery);
 	}
 	@Override
-	protected void insertOneself(int position) {
-		if (selectOneself(position).isEmpty()) {
-			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, INTVALUE, BLOCKPOINTERONE) VALUES ('CHANCE', " 
-					+ position + ", " +  chance + ", " + action.getId() + ");";
+	public void insertOneself(int position) {
+		if (selectOneself(position).isEmpty()) {			
+			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, INTVALUE) VALUES ('CHANCE', " 
+					+ position + ", " +  chance + ");";
+			WorldServer.databaseInterface.saveAction(sql);
+			sql = "insert IGNORE into BLOCKPOINTERTABLE(BLOCKID, BLOCKPOINTER) VALUES "
+					+ "(" + this.getId() + ", " + action.getId() + ");";
 			WorldServer.databaseInterface.saveAction(sql);
 		}
 	}

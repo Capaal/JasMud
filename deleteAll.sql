@@ -6,6 +6,7 @@ drop table skilltable;
 drop table skill;
 drop table blocktable;
 drop table block;
+drop table blockpointertable;
 drop table syntaxtable;
 drop table syntax;
 drop table itemtypetable;

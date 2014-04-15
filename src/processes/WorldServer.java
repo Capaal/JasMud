@@ -1,7 +1,6 @@
 package processes;
 
-import interfaces.Mobile;
-import items.*;
+import interfaces.DatabaseInterface;
 
 import java.io.IOException;
 import java.net.*; // Needed for Socket.
@@ -60,8 +59,11 @@ public class WorldServer {
 	}
 	
 	public static void setInterface(DatabaseInterface newInterface) {
-		databaseInterface = newInterface;
-		
+		databaseInterface = newInterface;		
+	}
+	
+	public static DatabaseInterface getInterface() {
+		return databaseInterface;
 	}
 
 	public static void setGameState(GameState newGameState) {

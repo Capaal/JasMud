@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import TargettingStrategies.*;
 import processes.Equipment;
@@ -102,7 +103,7 @@ public class EquipChange extends Action {
 			if (m instanceof Mobile) {
 				if (equip) {
 					Holdable toMove = ((Mobile) m).getHoldableFromString(s.getStringInfo(Syntax.ITEM, fullCommand));
-					EnumSet<EquipmentEnum> slots = toMove.getAllowedEquipSlots();
+					Set<EquipmentEnum> slots = toMove.getAllowedEquipSlots();
 					if (slots == null) {
 						return false;
 					}
@@ -157,7 +158,7 @@ public class EquipChange extends Action {
 	}
 	
 	@Override
-	protected void insertOneself(int position) {
+	public void insertOneself(int position) {
 		if (selectOneself(position).isEmpty()) {
 			String sql = "INSERT IGNORE INTO block (BLOCKTYPE, BLOCKPOS, BOOLEANONE, TARGETWHO, TARGETWHERE) VALUES ('EQUIPCHANGE', " 
 					+ position + ", '" + equip + "', '" + what.toString() + "', '" + where.toString() + "');";
