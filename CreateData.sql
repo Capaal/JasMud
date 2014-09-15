@@ -50,7 +50,7 @@ insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TARGETWHO, TARGETWHERE, INTVALU
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE, BOOLEANONE, TYPE) values('6', 'DAMAGE', 6, '10', 'TARGET', 'HERE', 'TRUE', 'SHARP');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, INTVALUETWO, TARGETWHO, TARGETWHERE) values('7', 'BLEEDEFFECT', 4, 5000, 5, 'TARGET', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, INTVALUE, TARGETWHO, TARGETWHERE, BOOLEANONE, TYPE) values('8', 'DAMAGE', 3, '-15', 'SELF', 'HERE', 'FALSE', 'NULL');
-insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BLOCKPOINTERONE) values('9', 'CHANCE', 5, '8');
+/*insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BLOCKPOINTERONE) values('9', 'CHANCE', 5, '8');*/
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, TYPE, TARGETWHO, TARGETWHERE) values('10', 'WEAPONEQUIPPEDCHECK', 2, 'SHARP', 'SELF', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('11', 'MESSAGE', 7, 'You make a sharp slash at %s and then %s turns and fights back.', 'SELF', 'HERE');
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, STRINGONE, TARGETWHO, TARGETWHERE) values('12', 'MESSAGE', 8, 'You watch as %s slashes horribly at %s and %s turns to fight back.', 'OTHERS', 'HERE');
@@ -95,14 +95,14 @@ insert into syntaxtable (SKILLID, SYNTAXID) values ('5', '3');
 insert into syntaxtable (SKILLID, SYNTAXID) values ('5', '1');
 
 /* EXAMINE */
-insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values('6', 'examine', 'Taking a closer look at objects', 'Examining the air is difficult.');
+/*insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values('6', 'examine', 'Taking a closer look at objects', 'Examining the air is difficult.');
 insert into SKILLTABLE (SKILLBOOKID, SKILLID) values(1, 6);
 insert into block (BLOCKID, BLOCKTYPE, BLOCKPOS, BLOCKPOINTERONE, BLOCKPOINTERTWO) values('16', 'OR', '1', '17', '18');
 insert into block (BLOCKID, BLOCKTYPE, TARGETWHERE) values('17', 'EXAMINE','INVENTORY');
 insert into block (BLOCKID, BLOCKTYPE, TARGETWHERE) values('18', 'EXAMINE','HERE');
 insert into blocktable (SKILLID, BLOCKID) values('6', '16');
 insert into syntaxtable (SKILLID, SYNTAXID) values ('6', '2');
-insert into syntaxtable (SKILLID, SYNTAXID) values ('6', '1');
+insert into syntaxtable (SKILLID, SYNTAXID) values ('6', '1');*/
 
 /* GET */
 insert into SKILL (SKILLID, SKILLNAME, SKILLDES, SKILLFAILMSG) values ('7', 'get', 'Picking up objects.', 'You grab at the air, did you get it?');

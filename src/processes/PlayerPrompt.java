@@ -108,8 +108,9 @@ public class PlayerPrompt implements Runnable {
 					} else {
 						com = currentPlayer.getCommand(command);
 					}
-					if (com != null) {
-						com.perform(str, currentPlayer);
+					if (com != null) {		
+						WorldServer.gameState.addToQueue(com, str, currentPlayer);
+				//		com.perform(str, currentPlayer);
 						commandFound = true;
 					}			
 					if (commandFound == false) {

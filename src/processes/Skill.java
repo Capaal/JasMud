@@ -7,7 +7,7 @@ import java.util.*;
 import TargettingStrategies.*;
 import actions.Damage;
 
-public class Skill {
+public class Skill implements Runnable {
 	
 	private final String name;
 	private final int id; 
@@ -26,6 +26,10 @@ public class Skill {
 		this.actions = build.getActions();
 		this.failMsg = build.getFailMsg();
 		this.syntax = build.getSyntax();
+	}
+	
+	public void run() {
+		
 	}
 	
 	public String getName() {return name;}	
