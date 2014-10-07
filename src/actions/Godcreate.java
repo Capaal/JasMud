@@ -147,7 +147,7 @@ public class Godcreate extends Action {
 			}
 			StringBuilder possibleBooks = new StringBuilder();
 			possibleBooks.append("Which skillbook do you want this skill attached to?: ");
-			for (SkillBook skillBook : WorldServer.gameState.AllSkillBooks.values()) {
+			for (SkillBook skillBook : WorldServer.gameState.viewAllBooks()) {
 				possibleBooks.append(skillBook.getId());
 				possibleBooks.append(":");
 				possibleBooks.append(skillBook.getName());
@@ -155,8 +155,8 @@ public class Godcreate extends Action {
 			}
 			player.tell(currentBooks.toString());
 			Integer skillBookId = Integer.parseInt(askQuestion(possibleBooks.toString(), player));
-			if (WorldServer.gameState.AllSkillBooks.containsKey(skillBookId)) {
-				newSkill.addBook(WorldServer.gameState.AllSkillBooks.get(skillBookId));
+			if (WorldServer.gameState.checkForBookId(skillBookId)) {
+				newSkill.addBook(WorldServer.gameState.getBook(skillBookId));
 			}
 			return processCreateNewSkill(player, newSkill);	
 		case "6":

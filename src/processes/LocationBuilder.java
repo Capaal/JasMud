@@ -113,8 +113,8 @@ public class LocationBuilder {
 		// SQL will call for a direction even if there is no location here, so just ends.
 		if (newLocationId != 0) {	
 			Direction futureDirection = Direction.NORTH;			
-			if (WorldServer.gameState.locationCollection.containsKey(idOfConnectingLocation)) {
-				Location futureLoc = WorldServer.gameState.locationCollection.get(idOfConnectingLocation);	
+			if (WorldServer.gameState.checkForLocation(idOfConnectingLocation)) {
+				Location futureLoc = WorldServer.gameState.viewLocations().get(idOfConnectingLocation);	
 				if (directionConnectingLocationWillConnectToNewLocation != null) {
 					try {
 						futureDirection = Direction.valueOf(directionConnectingLocationWillConnectToNewLocation.toUpperCase());
@@ -213,7 +213,7 @@ public class LocationBuilder {
 				player.tell("That isn't a valid number.");
 				return newConnection(player, builderLocation);
 			}
-			Location connectedLocation = WorldServer.gameState.locationCollection.get(newConnectionId);
+			Location connectedLocation = WorldServer.gameState.viewLocations().get(newConnectionId);
 			if (newConnectionDirection == null || newConnectionId == 0 || connectedLocation == null) {
 				player.tell("Invalid state");
 				return newConnection(player, builderLocation);

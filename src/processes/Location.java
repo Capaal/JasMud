@@ -25,9 +25,9 @@ public class Location implements Container {
 		this.description = builder.getDescription();
 		this.groundType = builder.getGroundType();
 		this.locationMap = builder.locationMap;
-		WorldServer.gameState.locationCollection.put(this.id, this);		
+		WorldServer.gameState.addLocation(this.id, this);		
 		for (int s : builder.locationConnections.keySet()){
-			Location futureLoc = WorldServer.gameState.locationCollection.get(s);
+			Location futureLoc = WorldServer.gameState.viewLocations().get(s);
 			if (futureLoc != null) {
 				Direction currentDirection = builder.locationConnections.get(s);
 				futureLoc.setLocation(this, currentDirection);

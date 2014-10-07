@@ -4,7 +4,6 @@ import interfaces.DatabaseInterface;
 
 import java.io.IOException;
 import java.net.*; // Needed for Socket.
-import java.util.*; // Needed for HashSet.
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -50,7 +49,7 @@ public class WorldServer {
 			while (true) {
 				Socket incoming = s.accept();
 				PlayerPrompt newClient = new PlayerPrompt(incoming);
-				gameState.activeClients.add(newClient);
+				gameState.addClient(newClient);
 				executor.execute(newClient);
 			}
 		}

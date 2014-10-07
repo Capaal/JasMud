@@ -174,7 +174,7 @@ public class UsefulCommands {
 	
 	
 	//Obsolete?
-	public static int getPosID(int i) {
+/*	public static int getPosID(int i) {
 		boolean fail = false;
 		int posID = (i);
 		for (int j = 0; j < WorldServer.gameState.allItems.size(); j++) {
@@ -188,7 +188,7 @@ public class UsefulCommands {
 			return posID;
 		}
 	return posID;
-	}
+	}*/
 	
 	// string, container to holdable
 /*	public static Holdable stringToHoldable(String item, Collection<Holdable> place) {

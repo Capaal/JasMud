@@ -33,7 +33,7 @@ public class StdItem implements Holdable {
 		this.types = build.getTypes();
 		this.itemTags = build.getItemTags();
 		this.allowedEquipSlots = build.getAllowedSlots();
-		WorldServer.gameState.allItems.put(name + id, this);
+		WorldServer.gameState.addItem(name + id, this);
 		itemLocation.acceptItem(this);
 	}
 	
@@ -98,7 +98,7 @@ public class StdItem implements Holdable {
 	public void removeFromWorld() {
 		save();
 		this.getContainer().removeItemFromLocation(this);
-		WorldServer.gameState.allItems.remove(this.getName() + this.getId());
+		WorldServer.gameState.removeItem(this.getName() + this.getId());
 	}
 	
 	public enum ItemType {

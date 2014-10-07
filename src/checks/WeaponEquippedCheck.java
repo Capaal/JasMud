@@ -1,6 +1,5 @@
 package checks;
 
-import java.sql.SQLException;
 import java.util.*;
 
 import TargettingStrategies.*;

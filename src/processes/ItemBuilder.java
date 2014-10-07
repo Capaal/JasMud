@@ -24,7 +24,7 @@ public class ItemBuilder {
 	private int currentDurability = 1;
 	private ArrayList<Type> types = new ArrayList<Type>();
 	private ArrayList<ItemType> itemTags = new ArrayList<ItemType>();
-	private Container itemContainer = WorldServer.gameState.locationCollection.get(1);		
+	private Container itemContainer = WorldServer.gameState.viewLocations().get(1);		
 	private EnumSet<EquipmentEnum> allowedSlots = EnumSet.noneOf(EquipmentEnum.class);
 	
 	private StdItem finishedItem;
@@ -206,7 +206,7 @@ public class ItemBuilder {
 				newItemLocation = player.getContainer();
 			} else {
 				try {
-					newItemLocation = WorldServer.gameState.locationCollection.get(Integer.parseInt(tryLocation));
+					newItemLocation = WorldServer.gameState.viewLocations().get(Integer.parseInt(tryLocation));
 				} catch(NumberFormatException e) {
 					player.tell("That wasn't a valid number, be sure to keep it to just a number i.e. 1");
 					return newItem(player, builderItem);

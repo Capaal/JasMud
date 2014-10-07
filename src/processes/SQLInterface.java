@@ -1,7 +1,6 @@
 package processes;
 
 import interfaces.*;
-import items.StdItem;
 import items.StdItem.ItemType;
 
 import java.sql.*;
@@ -24,7 +23,6 @@ import processes.Skill.Syntax;
  * Handles all interaction with the database, all load and saves of any type will pass through here as well as connecting and disconnecting.
  * <p>
  * The current database URL is found at the String "url", 
- * @author Jason
  */
 
 
@@ -157,7 +155,7 @@ public class SQLInterface implements DatabaseInterface{
 						newItem.setAllowedSlots(allowedEquipSlots);
 						switch(itemLocType) {						
 							case "LOCATION":						
-								newItem.setItemContainer(WorldServer.gameState.locationCollection.get(itemLocation));
+								newItem.setItemContainer(WorldServer.gameState.viewLocations().get(itemLocation));
 								newItem.complete();						
 							break;
 							case "INVENTORY":
@@ -212,7 +210,7 @@ public class SQLInterface implements DatabaseInterface{
 				newItem.setAllowedSlots(allowedEquipSlots);
 				switch(itemLocType) {						
 					case "LOCATION":						
-						newItem.setItemContainer(WorldServer.gameState.locationCollection.get(itemLocation));
+						newItem.setItemContainer(WorldServer.gameState.viewLocations().get(itemLocation));
 						newItem.complete();						
 					break;
 					case "INVENTORY":
@@ -256,7 +254,7 @@ public class SQLInterface implements DatabaseInterface{
 					loadedPlayer.setDescription(rs.getString("MOBDESC"));
 					loadedPlayer.setPassword(rs.getString("MOBPASS"));
 					loadedPlayer.setShortDescription(rs.getString("MOBSHORTD"));
-					loadedPlayer.setLocation(WorldServer.gameState.locationCollection.get(rs.getInt("MOBLOC")));
+					loadedPlayer.setLocation(WorldServer.gameState.viewLocations().get(rs.getInt("MOBLOC")));
 				//	loadedPlayer.maxHp(rs.getInt("MOBMAXHP"));
 					loadedPlayer.setCurrentHp(rs.getInt("MOBCURRENTHP"));
 					loadedPlayer.setIsDead(rs.getInt("MOBDEAD"));
@@ -279,7 +277,7 @@ public class SQLInterface implements DatabaseInterface{
 							+ " LEFT JOIN ITEMTYPETABLE ON itemstats.ITEMID = itemtypetable.ITEMID"
 							+ " WHERE ITEMLOC=" + finishedPlayer.getId() + " AND (ITEMLOCTYPE='INVENTORY' OR ITEMLOCTYPE ='EQUIPMENT');";
 					loadItems(sql, finishedPlayer);					
-					WorldServer.gameState.mobList.put(finishedPlayer.getName() + finishedPlayer.getId(), finishedPlayer);
+					WorldServer.gameState.addMob(finishedPlayer.getName() + finishedPlayer.getId(), finishedPlayer);
 					finishedPlayer.getContainer().acceptItem(finishedPlayer);
 				break;				
 				}
@@ -297,11 +295,11 @@ public class SQLInterface implements DatabaseInterface{
 				mobSkillBooks.put(rs.getInt("SKILLBOOKID"), rs.getInt("MOBPROGRESS"));			
 			}			
 			for (int skillBookId : mobSkillBooks.keySet()) {
-				if (!WorldServer.gameState.AllSkillBooks.containsKey(skillBookId)) {
+				if (!WorldServer.gameState.checkForBookId(skillBookId)) {
 					System.out.println("Error, book not loaded.");
 					throw new IllegalStateException("Critical error, skillbooks do not align.");				
 				}
-				finishedPlayer.addBook(WorldServer.gameState.AllSkillBooks.get(skillBookId), mobSkillBooks.get(skillBookId));
+				finishedPlayer.addBook(WorldServer.gameState.getBook(skillBookId), mobSkillBooks.get(skillBookId));
 			}		
 					
 		} catch (SQLException e) {
@@ -460,7 +458,7 @@ public class SQLInterface implements DatabaseInterface{
 			}		
 			for (int skillBookId : skillBooks) {
 				SkillBook skillBook = null;
-				if (!WorldServer.gameState.AllSkillBooks.containsKey(skillBookId)) {	
+				if (!WorldServer.gameState.checkForBookId(skillBookId)) {	
 									
 					sql = ("SELECT skillbook.SKILLBOOKNAME, skill.SKILLID FROM skilltable JOIN skillbook ON skilltable.SKILLBOOKID = skillbook.SKILLBOOKID "
 							+ " JOIN skill ON skill.SKILLID = skilltable.SKILLID WHERE skilltable.SKILLBOOKID='" + skillBookId + "'");
@@ -510,7 +508,7 @@ public class SQLInterface implements DatabaseInterface{
 						skillBuild.complete();	
 					}
 				}		
-				WorldServer.gameState.AllSkillBooks.put(skillBookId, skillBook);
+				WorldServer.gameState.addBook(skillBookId, skillBook);
 			}
 		} catch (SQLException e) {
 			System.out.println("Critical error loading skillbooks.");

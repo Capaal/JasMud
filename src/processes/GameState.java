@@ -9,20 +9,83 @@ import java.util.concurrent.BlockingQueue;
 
 public class GameState {
 	// Contains transient sockets of each connected Player.
-	public static Set<PlayerPrompt> activeClients = new HashSet<PlayerPrompt>();	
+	private Set<PlayerPrompt> activeClients = new HashSet<PlayerPrompt>();	
 	
 	// Contains all Location objects. Location's id to location object.
-	public static Map<Integer, Location> locationCollection = new TreeMap<Integer, Location>();
+	private Map<Integer, Location> locationCollection = new TreeMap<Integer, Location>();
 	
 	// Mob list name + id
-	public static Map<String, Mobile> mobList = new TreeMap<String, Mobile>();
+	private Map<String, Mobile> mobList = new TreeMap<String, Mobile>();
 	
 	// List of all items name + id
-	public static Map<String, StdItem> allItems = new TreeMap<String, StdItem>();
+	private Map<String, StdItem> allItems = new TreeMap<String, StdItem>();
 	
 	// Collection of all skill books, Mobs then load a copy of each skill book.
-	public static HashMap<Integer, SkillBook> AllSkillBooks = new HashMap<Integer, SkillBook>();
+	private HashMap<Integer, SkillBook> AllSkillBooks = new HashMap<Integer, SkillBook>();
 	
+	public boolean addClient(PlayerPrompt pp) {
+		return activeClients.add(pp);
+	}
+	
+	public boolean removeClient(PlayerPrompt pp) {
+		return activeClients.remove(pp);
+	}
+	
+	public Set<PlayerPrompt> viewActiveClients() {
+		return new HashSet<PlayerPrompt>(activeClients);
+	}
+	
+	public Set<StdItem> viewAllItems() {
+		return new HashSet<StdItem>(allItems.values());
+	}
+	
+	public void addItem(String nameId, StdItem newItem) {
+		allItems.put(nameId, newItem);
+	}
+	
+	public boolean removeItem(String nameId) {
+		return allItems.remove(nameId) != null;
+	}
+	
+	public Set<SkillBook> viewAllBooks() {
+		return new HashSet<SkillBook>(AllSkillBooks.values());
+	}
+	
+	public boolean checkForBookId(int Id) {
+		return AllSkillBooks.containsKey(Id);
+	}
+	
+	public SkillBook getBook(int Id) {
+		return AllSkillBooks.get(Id);
+	}
+	
+	public void addBook(int bookId, SkillBook sb) {
+		AllSkillBooks.put(bookId, sb);
+	}
+	
+	public void addMob(String nameId, Mobile mob) {
+		mobList.put(nameId, mob);
+	}
+	
+	public void removeMob(String nameId) {
+		mobList.remove(nameId);
+	}
+	
+	public boolean checkForMob(String nameId) {
+		return mobList.containsKey(nameId);
+	}
+	
+	public Map<Integer, Location> viewLocations() {
+		return new TreeMap<Integer, Location>(locationCollection);
+	}
+	
+	public void addLocation(int id, Location location) {
+		locationCollection.put(id, location);
+	}
+	
+	public boolean checkForLocation(int id) {
+		return locationCollection.containsKey(id);
+	}
 	
 	public static BlockingQueue<QueueInformation> SkillQueue = new ArrayBlockingQueue<QueueInformation>(1024);
 	

@@ -61,7 +61,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		this.experience = build.getExperience();
 		equipment.setOwner(this);
 		effectManager = new EffectManager();
-		WorldServer.gameState.mobList.put(name + id, this);
+		WorldServer.gameState.addMob(name + id, this);
 	}
 	
 	public String getName() {return name;}	
@@ -360,7 +360,7 @@ public class StdMob implements Mobile, Container, Holdable {
 			save();
 			effectManager.shutDown();
 			mobLocation.removeItemFromLocation(this);
-			WorldServer.gameState.mobList.remove(this.getName() + this.getId());
+			WorldServer.gameState.removeMob(this.getName() + this.getId());
 		}
 	}
 	
@@ -444,7 +444,7 @@ public class StdMob implements Mobile, Container, Holdable {
 			WorldServer.databaseInterface.increaseSequencer();
 			findNewId(name);
 		} else {
-			if (WorldServer.gameState.mobList.containsKey(name + availableId)) {
+			if (WorldServer.gameState.checkForMob(name + availableId)) {
 				throw new IllegalStateException("A mob of the id already exists.");
 			}
 			return (int)availableId;

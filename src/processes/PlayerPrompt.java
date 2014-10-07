@@ -85,10 +85,10 @@ public class PlayerPrompt implements Runnable {
 					break;
 				} else if (str.trim().toLowerCase().equals("shutdown")) {
 					stayInsideLoop = false;
-					for (PlayerPrompt player : WorldServer.gameState.activeClients) {
+					for (PlayerPrompt player : WorldServer.gameState.viewActiveClients()) {
 						player.currentPlayer.removeFromWorld();
 					}
-					for (StdItem item : WorldServer.gameState.allItems.values()) {
+					for (StdItem item : WorldServer.gameState.viewAllItems()) {
 						item.removeFromWorld();
 					}
 					destroyConnection();
@@ -138,7 +138,8 @@ public class PlayerPrompt implements Runnable {
 			System.out.println("Failed to close socket connection");
 			e.printStackTrace();
 		}
-		WorldServer.gameState.activeClients.remove(this);
+	//	WorldServer.gameState.activeClients.remove(this);
+		WorldServer.gameState.removeClient(this);
 	}
 }
 

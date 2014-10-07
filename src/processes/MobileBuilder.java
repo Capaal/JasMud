@@ -23,7 +23,7 @@ public class MobileBuilder {
 	private String shortDescription = "Short and Generic.";
 	private int maxHp = 100;
 	private int currentHp = 100;
-	private Container location = WorldServer.gameState.locationCollection.get(1);
+	private Container location = WorldServer.gameState.viewLocations().get(1);
 	private boolean isDead = false;
 	private int xpWorth = 1;
 	private int experience = 1;
@@ -291,7 +291,7 @@ public class MobileBuilder {
 		case "8":
 		case "location":		
 			int locationId = Integer.parseInt(Godcreate.askQuestion("What location id will this mobile start in?", player));
-			Location location = WorldServer.gameState.locationCollection.get(locationId);
+			Location location = WorldServer.gameState.viewLocations().get(locationId);
 			if (location != null) {
 				mobileBuilder.setLocation(location);
 			} else {

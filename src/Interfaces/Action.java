@@ -37,7 +37,5 @@ public abstract class Action {
 	
 	public abstract Action newBlock(Mobile player);
 	
-	public abstract void explainOneself(Mobile player);
-	
-	
+	public abstract void explainOneself(Mobile player);	
 }
