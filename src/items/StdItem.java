@@ -95,6 +95,23 @@ public class StdItem implements Holdable {
 	}
 	
 	@Override
+	public boolean firstTimeSave() { // TODO Change to saveItem() and the databaseinterface knows how to extract what it wants, take out sql strings.
+		DatabaseInterface databaseInterface = WorldServer.getInterface();
+		
+		databaseInterface.saveAction("Insert into ITEMSTATS (ITEMID, ITEMNAME, ITEMPHYS, ITEMBAL, ITEMDESC, ITEMMAXDUR, ITEMCURDUR, ITEMLOC, EQUIPSLOTS, ITEMLOCTYPE)"
+				+ " values ("
+				+ "'" + id + "', "
+				+ "'" + name + "', "
+				+ "'" + physicalMult + "', "
+				+ "'" + balanceMult + "', "
+				+ "'" + description + "', "
+				+ "'" + maxDurability + "', "
+				+ "'" + currentDurability + "', "
+				+ "'" + itemLocation + "');"); // this will probably break because how db saves item location is changing TODO
+		return false; //TEMP
+	}
+	
+	@Override
 	public void removeFromWorld() {
 		save();
 		this.getContainer().removeItemFromLocation(this);

@@ -76,31 +76,19 @@ Create table ITEMSTATS (
 	ITEMDESC text not null,
 	ITEMMAXDUR integer unsigned not null DEFAULT 1,
 	ITEMCURDUR integer unsigned not null DEFAULT 1,
-	ITEMLOC integer unsigned not null DEFAULT 1,
-	EQUIPSLOT ENUM('HEAD', 'NECK', 'LEFTEAR', 'RIGHTEAR', 'LEFTHAND', 'RIGHTHAND', 'LEFTFINGER', 'RIGHTFINGER', 'CHEST', 'LEGS', 'FEET') DEFAULT null,
-	/* The below enum might have pouch and/or pack? */
-	ITEMLOCTYPE ENUM('LOCATION', 'INVENTORY', 'CONTAINER', 'EQUIPMENT') not null DEFAULT 'LOCATION',
-	PRIMARY KEY (ITEMID, ITEMNAME),
-	index (ITEMLOC) 
+	PRIMARY KEY (ITEMID, ITEMNAME)
 );
 
-Create table SLOTTABLE (
+Create table EQUIPABLESLOTTABLE (
 	/*SLOTTABLEID integer unsigned not null auto_increment,*/
 	ITEMID integer unsigned not null,
-	SLOTID integer unsigned not null,
-	PRIMARY KEY (ITEMID, SLOTID),
+	SLOTTYPE ENUM('HEAD', 'LEFTEAR', 'RIGHTEAR', 'NECK', 'CHEST', 'LEFTHAND', 'RIGHTHAND', 'LEFTFINGER', 'RIGHTFINGER', 'LEGS', 'FEET'),
+	PRIMARY KEY (ITEMID, SLOTTYPE),
 	index (ITEMID),
-	index (SLOTID),
-	FOREIGN KEY (ITEMID) REFERENCES ITEMSTATS (ITEMID),
-	FOREIGN KEY (SLOTID) REFERENCES SLOT (SLOTID)
+	index (SLOTTYPE),
+	FOREIGN KEY (ITEMID) REFERENCES ITEMSTATS (ITEMID)
 );
 
-Create table SLOT (
-	SLOTID integer unsigned not null auto_increment,
-	SLOT ENUM('HEAD', 'NECK', 'LEFTEAR', 'RIGHTEAR', 'LEFTHAND', 'RIGHTHAND', 'LEFTFINGER', 'RIGHTFINGER', 'CHEST', 'LEGS', 'FEET'),
-	PRIMARY KEY (SLOTID)
-);
-/*
 Create table LOCINV (
 	LOCID integer unsigned not null,
 	ITEMID integer unsigned not null,
@@ -108,7 +96,7 @@ Create table LOCINV (
 	index (ITEMID),
 	FOREIGN KEY (ITEMID) REFERENCES ITEMSTATS (ITEMID),
 	FOREIGN KEY (LOCID) REFERENCES LOCATIONSTATS (LOCID)
-);*/
+);
 
 Create table MOBSTATS (
 	MOBID integer unsigned not null AUTO_INCREMENT,
@@ -133,15 +121,17 @@ Create table MOBSTATS (
 	index (MOBLOC),
 	FOREIGN KEY (MOBLOC) REFERENCES LOCATIONSTATS (LOCID)
 );
-/*
+
 Create table MOBINV (
 	MOBID integer unsigned not null,
 	ITEMID integer unsigned not null,
+	EQUIPEDSLOT ENUM('HEAD', 'LEFTEAR', 'RIGHTEAR', 'NECK', 'CHEST', 'LEFTHAND', 'RIGHTHAND', 'LEFTFINGER', 'RIGHTFINGER', 'LEGS', 'FEET', 'NONE') DEFAULT 'NONE',
 	PRIMARY KEY (MOBID, ITEMID),
 	index (ITEMID),
 	FOREIGN KEY (ITEMID) REFERENCES ITEMSTATS (ITEMID),
 	FOREIGN KEY (MOBID) REFERENCES MOBSTATS (MOBID)
-);*/
+);
+
 
 Create table SKILLBOOKTABLE (
 	/*SKILLBOOKTABLEID integer unsigned not null auto_increment,*/
@@ -198,7 +188,7 @@ Create table ITEMTYPETABLE (
 	PRIMARY KEY (ITEMID, TYPE),
 	index (ITEMID),
 	index (TYPE),
-	FOREIGN KEY (ITEMID) REFERENCES ITEM (ITEMID)
+	FOREIGN KEY (ITEMID) REFERENCES ITEMSTATS (ITEMID)
 );
 
 /*

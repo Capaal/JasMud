@@ -21,11 +21,10 @@ public interface DatabaseInterface {
 	 */
 	public abstract void loadLocations();
 
-	// ONLY LOADS ITEMS ON THE GROUND
-	public abstract void loadLocationItems();
+	
 
 	//TODO fix duplicate switch
-	public abstract void loadItems(String sql, Container container);
+//	public abstract void loadItems(String sql, Container container);
 
 	// Needs to be refactored to use a single query.
 	/**

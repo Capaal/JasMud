@@ -451,6 +451,12 @@ public class StdMob implements Mobile, Container, Holdable {
 		}
 		return 0;
 	}
+
+	@Override
+	public boolean firstTimeSave() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 
 	

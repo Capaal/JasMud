@@ -281,4 +281,9 @@ public class MobileDecorator implements Mobile {
 		
 	}
 
+	@Override
+	public boolean firstTimeSave() {
+		return decoratedMobile.firstTimeSave();
+	}
+
 }

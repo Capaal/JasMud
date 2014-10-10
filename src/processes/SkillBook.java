@@ -65,4 +65,10 @@ public class SkillBook {
 			WorldServer.databaseInterface.saveAction(skillInsert);
 		}
 	}
+	
+	protected SkillBook duplicate(SkillBook toBeCopied) {
+		SkillBook newSkillBook = new SkillBook(toBeCopied.name, toBeCopied.id);
+		newSkillBook.skillList = toBeCopied.skillList;
+		return newSkillBook;
+	}
 }

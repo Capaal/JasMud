@@ -10,7 +10,6 @@ update locationstats set locwest='2',locwestdir='EAST' where locid='4';
 update locationstats set locnorth='1',locnorthdir='SOUTH' where locid='5';
 select * from locationstats;
 
-
 insert into mobstats (MOBID, MOBNAME, MOBPASS, MOBDESC, MOBSHORTD, MOBLOC, MOBTYPE, MOBCURRENTHP, MOBDEAD, MOBXPWORTH, MOBCURRENTXP, MOBCURRENTLEVEL, MOBAGE, LOADONSTARTUP)
 	values	(NULL, 'James', 'James', 'He is a farmer named James.','a farmer', 1, 'STDMOB', 50, false, 10, 1, 1, 1, true);
 /*insert into mobstats values ('3','defaultGod', 'defaultGod', 'Contains God skills.', 'A god skin.','1', 'STDMOB', false);*/

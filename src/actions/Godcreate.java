@@ -20,6 +20,7 @@ import processes.Skill.Syntax;
 import processes.WorldServer;
 import interfaces.Action;
 import interfaces.Mobile;
+import items.StdItem;
 
 public class Godcreate extends Action {
 	
@@ -234,7 +235,13 @@ public class Godcreate extends Action {
 	private boolean processCreateItem(Mobile player) {
 		player.tell("OK! Lets get started with item creation.");
 		player.tell("The choices of items we can create are:");
-		return ItemBuilder.newItem(player, new ItemBuilder());	
+		ItemBuilder newItem = new ItemBuilder();	
+		boolean finished = ItemBuilder.newItem(player, newItem);	
+		if (finished) {
+			StdItem finishedItem = newItem.getFinishedItem();
+			finishedItem.firstTimeSave();
+		}
+		return finished;
 	}
 	
 	/***************************************************************************

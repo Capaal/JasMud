@@ -44,6 +44,14 @@ public class LocationBuilder {
 		return true;
 	}
 	
+	public Location getFinishedLocation() {
+		if (buildComplete) {
+			return finishedLocation;
+		} else {
+			throw new IllegalStateException("Location is not complete.");
+		}
+	}
+	
 	public int getId() {
 		return id;
 	}

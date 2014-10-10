@@ -13,7 +13,6 @@ public class CreateWorld {
 		WorldServer.databaseInterface.loadLocations();
 		WorldServer.databaseInterface.loadSkillBooks();
 		WorldServer.databaseInterface.loadMobs();
-		WorldServer.databaseInterface.loadLocationItems();
 		WorldServer.databaseInterface.disconnect();
 	}
 }

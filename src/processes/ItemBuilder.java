@@ -139,7 +139,7 @@ public class ItemBuilder {
 			} 	
 		}
 		buildComplete = true;
-		finishedItem = new StdItem(this);	
+		finishedItem = new StdItem(this);
 		return true;
 	}
 	

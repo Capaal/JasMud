@@ -1,6 +1,7 @@
 package processes;
 
 import interfaces.*;
+import items.StdItem;
 import items.StdItem.ItemType;
 
 import java.sql.*;
@@ -22,7 +23,7 @@ import processes.Skill.Syntax;
 /**
  * Handles all interaction with the database, all load and saves of any type will pass through here as well as connecting and disconnecting.
  * <p>
- * The current database URL is found at the String "url", 
+ * The current database URL is found at the String "url".
  */
 
 
@@ -36,8 +37,7 @@ public class SQLInterface implements DatabaseInterface{
 	protected  Statement stmt = null;
 
 	@Override
-	public  void connect(String username1, char[] password1) {
-		
+	public  void connect(String username1, char[] password1) {		
 		try {			
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			this.con = DriverManager.getConnection(url, username1, String.valueOf(password1));
@@ -60,176 +60,135 @@ public class SQLInterface implements DatabaseInterface{
 	public  void loadLocations() {
 		makeConnection();
 		try {
-			stmt = this.con.createStatement();	
-			String sql = ("insert into sequencetable values(NULL);");
-			for (int i = 0; i < 25; i++) {
-				stmt.execute(sql);
-			}
-			sql = ("SELECT * FROM locationstats ORDER BY locid ASC");
-			ResultSet rs = stmt.executeQuery(sql);
-			while (rs.next()) {
-				int id = rs.getInt("LOCID");
-				String name = rs.getString("LOCNAME");
-				String description = rs.getString("LOCDES");
-	//			int inventory = rs.getInt("LOCINV");		// Not implemented
-	//			GroundType g = GroundType.valueOf(rs.getString("LOCTYPE"));		// Not implemented		
-				LocationBuilder newLocation = new LocationBuilder();
-				newLocation.setName(name);
-				newLocation.setId(id);
-				newLocation.setDescription(description);
-				newLocation.north(rs.getInt("LOCNORTH"), rs.getString("LOCNORTHDIR"));
-				newLocation.northEast(rs.getInt("LOCNORTHEAST"), rs.getString("LOCNORTHEASTDIR"));
-				newLocation.east(rs.getInt("LOCEAST"), rs.getString("LOCEASTDIR"));
-				newLocation.southEast(rs.getInt("LOCSOUTHEAST"), rs.getString("LOCSOUTHEASTDIR"));
-				newLocation.south(rs.getInt("LOCSOUTH"), rs.getString("LOCSOUTHDIR"));
-				newLocation.southWest(rs.getInt("LOCSOUTHWEST"), rs.getString("LOCSOUTHWESTDIR"));
-				newLocation.west(rs.getInt("LOCWEST"), rs.getString("LOCWESTDIR"));
-				newLocation.northWest(rs.getInt("LOCNORTHWEST"), rs.getString("LOCNORTHWESTDIR"));
-				newLocation.up(rs.getInt("LOCUP"), rs.getString("LOCUPDIR"));
-				newLocation.down(rs.getInt("LOCDOWN"), rs.getString("LOCDOWNDIR"));
-				newLocation.in(rs.getInt("LOCIN"), rs.getString("LOCINDIR"));
-				newLocation.out(rs.getInt("LOCOUT"), rs.getString("LOCOUTDIR"));
-				newLocation.complete();		
+			stmt = this.con.createStatement();				
+			increaseSequenceTable(stmt);			
+			ResultSet allLocations = obtainAllLocations(stmt);			
+			while (allLocations.next()) {				
+				buildLocation(allLocations);					
 			}			
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.toString());
 			System.out.println("Locations failed to load, critical error, sql: SELECT * FROM locationstats ORDER BY locid ASC");
 		}
-//		disconnect();
 	}
 	
-	// ONLY LOADS ITEMS ON THE GROUND
-	/* (non-Javadoc)
-	 * @see processes.DatabaseInterface#loadLocationItems()
-	 */
-	@Override
-	public  void loadLocationItems() {
-		String sql = "SELECT itemstats.*, slot.SLOT, itemtypetable.TYPE FROM itemstats"
-				+ " LEFT JOIN SLOTTABLE ON itemstats.ITEMID = slottable.ITEMID"
-				+ " LEFT JOIN ITEMTYPETABLE ON itemstats.ITEMID = itemtypetable.ITEMID"
-				+ " LEFT JOIN SLOT ON slottable.SLOTID = slot.SLOTID WHERE ITEMLOCTYPE='LOCATION';";
-		
-		loadItems(sql, null);		
-		disconnect();		
+	// TODO Join the player table and the item tables, so that it can grab everything.
+	
+	private ResultSet obtainAllLocations(Statement stmt) throws SQLException {
+		String sql = ("SELECT * FROM locationstats ORDER BY locid ASC");
+		return stmt.executeQuery(sql);
 	}
-	//TODO fix duplicate switch
-	/* (non-Javadoc)
-	 * @see processes.DatabaseInterface#loadItems(java.lang.String, interfaces.Container)
-	 */
-	@Override
-	public  void loadItems(String sql, Container container) {
+	
+	
+	private void buildLocation(ResultSet currentLocation) throws SQLException {
+		int id = currentLocation.getInt("LOCID");
+		String name = currentLocation.getString("LOCNAME");
+		String description = currentLocation.getString("LOCDES");
+//			int inventory = currentLocation.getInt("LOCINV");		// TODO  Not implemented
+//			GroundType g = GroundType.valueOf(currentLocation.getString("LOCTYPE"));		// TODO  Not implemented		
+		LocationBuilder newLocation = new LocationBuilder();
+		newLocation.setName(name);
+		newLocation.setId(id);
+		newLocation.setDescription(description);
+		newLocation.north(currentLocation.getInt("LOCNORTH"), currentLocation.getString("LOCNORTHDIR"));
+		newLocation.northEast(currentLocation.getInt("LOCNORTHEAST"), currentLocation.getString("LOCNORTHEASTDIR"));
+		newLocation.east(currentLocation.getInt("LOCEAST"), currentLocation.getString("LOCEASTDIR"));
+		newLocation.southEast(currentLocation.getInt("LOCSOUTHEAST"), currentLocation.getString("LOCSOUTHEASTDIR"));
+		newLocation.south(currentLocation.getInt("LOCSOUTH"), currentLocation.getString("LOCSOUTHDIR"));
+		newLocation.southWest(currentLocation.getInt("LOCSOUTHWEST"), currentLocation.getString("LOCSOUTHWESTDIR"));
+		newLocation.west(currentLocation.getInt("LOCWEST"), currentLocation.getString("LOCWESTDIR"));
+		newLocation.northWest(currentLocation.getInt("LOCNORTHWEST"), currentLocation.getString("LOCNORTHWESTDIR"));
+		newLocation.up(currentLocation.getInt("LOCUP"), currentLocation.getString("LOCUPDIR"));
+		newLocation.down(currentLocation.getInt("LOCDOWN"), currentLocation.getString("LOCDOWNDIR"));
+		newLocation.in(currentLocation.getInt("LOCIN"), currentLocation.getString("LOCINDIR"));
+		newLocation.out(currentLocation.getInt("LOCOUT"), currentLocation.getString("LOCOUTDIR"));
+		newLocation.complete();		
+		
+		loadLocationItems(id, newLocation.getFinishedLocation());		
+	}
+	
+	private void loadLocationItems(int id, Location newLocation) {
+		String sql = "SELECT itemstats.*, equipableslottable.SLOTTYPE, itemtypetable.TYPE FROM itemstats"
+				+ " LEFT JOIN EQUIPABLESLOTTABLE ON itemstats.ITEMID = equipableslottable.ITEMID"
+				+ " LEFT JOIN ITEMTYPETABLE ON itemstats.ITEMID = itemtypetable.ITEMID"
+				+ " LEFT JOIN LOCINV ON locinv.LOCID = " + id + ";";
+		loadItems(sql, newLocation);
+	}
+	
+	//TODO STILL DOESN'T SEEM TO BE WORKING	
+	// Try using group by with a nested select for the repeatable items below. I think you'd then be able to convert it into a list that you'd just need to process.
+	private  void loadItems(String sql, Container container) {
 		if (sql == null) {
 			throw new NullPointerException("Sql string may not be null.");
 		}
-		makeConnection();
-		try {
+		makeConnection(); // Will this break things if there are resultsets above?
+		try {			
 			Statement stmt = this.con.createStatement();
-			ResultSet rs = stmt.executeQuery(sql);
-			int itemId = -1;
-			String itemName = "";
-			double itemPhysicalMult = 1;
-			double itemBalanceMult = 1;
-			String itemDescription = "";
-			String itemShortDescription = "";
-			int itemMaxDurability = 1;
-			int itemCurrentDurability = 1;
-			int itemLocation = 1;
-			EquipmentEnum equipSlot = null;
-			String itemLocType = "";
-			EnumSet<EquipmentEnum> allowedEquipSlots = EnumSet.noneOf(EquipmentEnum.class);
-			ArrayList<ItemType> itemTags = new ArrayList<ItemType>();
-			ArrayList<Type> itemTypes = new ArrayList<Type>();
-			while (rs.next()) {
-				if (rs.getInt("ITEMID") != itemId) {
-					if (itemId != -1) {
-						ItemBuilder newItem = new ItemBuilder();
-						newItem.setName(itemName);
-						newItem.setId(itemId);
-						newItem.setPhysicalMult(itemPhysicalMult);
-						newItem.setBalanceMult(itemBalanceMult);
-						newItem.setDescription(itemDescription);
-						newItem.setMaxDurability(itemMaxDurability);
-						newItem.setCurrentDurability(itemCurrentDurability);
-						newItem.setTypes(itemTypes);
-						newItem.setItemTags(itemTags);
-						newItem.setAllowedSlots(allowedEquipSlots);
-						switch(itemLocType) {						
-							case "LOCATION":						
-								newItem.setItemContainer(WorldServer.gameState.viewLocations().get(itemLocation));
-								newItem.complete();						
-							break;
-							case "INVENTORY":
-								newItem.setItemContainer(container);
-								newItem.complete();
-							break;
-							case "EQUIPMENT":
-								newItem.setItemContainer(container);
-								if (newItem.complete()) {
-									((Mobile)container).equip(equipSlot, newItem.getFinishedItem());
-								}
-							break;
-							default:
-								System.out.println("itemLocType mismatch on item " + itemId + " giving " + itemLocType);
-						}
+			ResultSet itemsList = stmt.executeQuery(sql);				
+			ItemBuilder newItem = null;			
+			while (itemsList.next()) { // one item at a time that is present in given container.
+				
+				// Below two ifs can be nested TODO
+				if (isFirstViewOfItem(itemsList, newItem) && newItem != null) {
+					if (newItem.complete()) {									
+						StdItem finishedItem = newItem.getFinishedItem();
+						finishedItem.getContainer().acceptItem(finishedItem);
+					} else {
+						System.out.println("Item failed to complete while loading from SQL: " + sql);
 					}
-					allowedEquipSlots = EnumSet.noneOf(EquipmentEnum.class);
-					itemTypes = new ArrayList<Type>();
-				//	itemTags = new ArrayList<ItemType>();
-					itemId = -1;
 				}
-				allowedEquipSlots.add(EquipmentEnum.valueOf(rs.getString("SLOT")));
-				itemTypes.add(Type.valueOf(rs.getString("TYPE")));
-			//	itemTags.add(ItemType.valueOf(rs.getString("TAG")));
-				if (itemId == -1) {
-					itemId = rs.getInt("ITEMID");
-					itemName = rs.getString("ITEMNAME");
-					itemPhysicalMult = rs.getDouble("ITEMPHYS");
-					itemBalanceMult = rs.getDouble("ITEMBAL");
-					itemDescription = rs.getString("ITEMDESC");
-					itemShortDescription = rs.getString("ITEMSHORTD");
-					itemMaxDurability = rs.getInt("ITEMMAXDUR");
-					itemCurrentDurability = rs.getInt("ITEMCURDUR");
-					itemLocation = rs.getInt("ITEMLOC");					
-					itemLocType = rs.getString("ITEMLOCTYPE");
-					if (itemLocType.equals("EQUIPMENT")) {
-						equipSlot = EquipmentEnum.valueOf(rs.getString("EQUIPSLOT"));
-					}
-				} 
+				if (isFirstViewOfItem(itemsList, newItem)) {
+					newItem = new ItemBuilder(); // All defaults set already...
+					// IF container is a mob { TODO
+					//		IF MOBINV EQUIPEDSLOT is NOT 'NONE'
+					// 				Equip this item instead of put in inventory	
+					// 		Else :
+							newItem.setItemContainer(container);
+					setItemStats(itemsList, newItem);
+					setRepeatableItemStats(itemsList, newItem);						
+				} else {
+					setRepeatableItemStats(itemsList, newItem);
+				}
+				
 			}
-			if (itemId != -1) {
-				ItemBuilder newItem = new ItemBuilder();
-				newItem.setName(itemName);
-				newItem.setId(itemId);
-				newItem.setPhysicalMult(itemPhysicalMult);
-				newItem.setBalanceMult(itemBalanceMult);
-				newItem.setDescription(itemDescription);
-				newItem.setMaxDurability(itemMaxDurability);
-				newItem.setCurrentDurability(itemCurrentDurability);
-				newItem.setTypes(itemTypes);
-				newItem.setItemTags(itemTags);
-				newItem.setAllowedSlots(allowedEquipSlots);
-				switch(itemLocType) {						
-					case "LOCATION":						
-						newItem.setItemContainer(WorldServer.gameState.viewLocations().get(itemLocation));
-						newItem.complete();						
-					break;
-					case "INVENTORY":
-						newItem.setItemContainer(container);
-						newItem.complete();
-					break;
-					case "EQUIPMENT":
-						newItem.setItemContainer(container);
-						if (newItem.complete()) {
-							((Mobile)container).equip(equipSlot, newItem.getFinishedItem());
-						}
-					break;
-					default:
-						System.out.println("itemLocType mismatch on item " + itemId + " giving " + itemLocType);
-				}
+			if (newItem.complete()) {									
+				StdItem finishedItem = newItem.getFinishedItem();
+				finishedItem.getContainer().acceptItem(finishedItem);
+			} else {
+				System.out.println("Item failed to complete while loading from SQL: " + sql);
 			}
 		} catch(SQLException e) {
 			System.out.println("Load items failed via: " + sql);
-			System.out.println("Error " + e.toString());
+			System.out.println("Error: " + e.toString());
+		}		
+	}
+	
+	private boolean isFirstViewOfItem(ResultSet rs, ItemBuilder newItem) throws SQLException {
+		if (newItem == null) {
+			return true;
+		}
+		return rs.getInt("ITEMID") != newItem.getId();
+	}
+	
+	private void setItemStats(ResultSet itemInfo, ItemBuilder newItem) throws SQLException {
+		newItem.setId(itemInfo.getInt("ITEMID"));
+		newItem.setName(itemInfo.getString("ITEMNAME"));
+		newItem.setPhysicalMult(itemInfo.getDouble("ITEMPHYS"));
+		newItem.setBalanceMult(itemInfo.getDouble("ITEMBAL"));
+		newItem.setDescription(itemInfo.getString("ITEMDESC"));
+		newItem.setMaxDurability(itemInfo.getInt("ITEMMAXDUR"));
+		newItem.setCurrentDurability(itemInfo.getInt("ITEMCURDUR"));
+	}
+	
+	// TODO fix valueOf so that I don't have to do this stupid check
+	private void setRepeatableItemStats(ResultSet itemInfo, ItemBuilder newItem) throws SQLException {
+		String allowedEquipSlot = itemInfo.getString("SLOTTYPE");
+		String itemType = itemInfo.getString("TYPE");
+		if (allowedEquipSlot != null) {
+			newItem.setAllowedSlots(EquipmentEnum.valueOf(itemInfo.getString("SLOTTYPE")));
+		}
+		if (itemType != null) {
+			newItem.setTypes(Type.valueOf(itemInfo.getString("TYPE")));
 		}
 	}
 	
@@ -246,72 +205,78 @@ public class SQLInterface implements DatabaseInterface{
 			String sql = ("SELECT * FROM mobstats WHERE MOBNAME='" + name + "' AND MOBPASS='" + password + "'");			
 			ResultSet rs = stmt.executeQuery(sql);	
 			if (rs.next()) {
-				String type = rs.getString("MOBTYPE"); // NOT IMPLEMENTS TODO
-				loadedPlayer.setId(rs.getInt("MOBID"));
-				loadedPlayer.setName(rs.getString("MOBNAME"));
-				switch (type) {
-				case "STDMOB":
-					loadedPlayer.setDescription(rs.getString("MOBDESC"));
-					loadedPlayer.setPassword(rs.getString("MOBPASS"));
-					loadedPlayer.setShortDescription(rs.getString("MOBSHORTD"));
-					loadedPlayer.setLocation(WorldServer.gameState.viewLocations().get(rs.getInt("MOBLOC")));
-				//	loadedPlayer.maxHp(rs.getInt("MOBMAXHP"));
-					loadedPlayer.setCurrentHp(rs.getInt("MOBCURRENTHP"));
-					loadedPlayer.setIsDead(rs.getInt("MOBDEAD"));
-					loadedPlayer.setXpWorth(rs.getInt("MOBXPWORTH"));
-					loadedPlayer.setExperience(rs.getInt("MOBCURRENTXP"));
-					loadedPlayer.setLevel(rs.getInt("MOBCURRENTLEVEL"));
-					loadedPlayer.setAge(rs.getInt("MOBAGE"));
-					int startUp = rs.getInt("LOADONSTARTUP");					
-					if (startUp == 1) {
-						loadedPlayer.setLoadOnStartUp(true);
-						loadedPlayer.complete();
-						finishedPlayer = new AggresiveMobileDecorator(loadedPlayer.getFinishedMob());
-					} else {
-						loadedPlayer.setLoadOnStartUp(false);
-						loadedPlayer.complete();
-						finishedPlayer = loadedPlayer.getFinishedMob();
-					}
-					sql = "SELECT itemstats.*, slot.SLOT, itemtypetable.TYPE FROM itemstats LEFT JOIN SLOTTABLE ON itemstats.ITEMID = slottable.ITEMID"
-							+ " LEFT JOIN SLOT ON slottable.SLOTID = slot.SLOTID"
-							+ " LEFT JOIN ITEMTYPETABLE ON itemstats.ITEMID = itemtypetable.ITEMID"
-							+ " WHERE ITEMLOC=" + finishedPlayer.getId() + " AND (ITEMLOCTYPE='INVENTORY' OR ITEMLOCTYPE ='EQUIPMENT');";
-					loadItems(sql, finishedPlayer);					
-					WorldServer.gameState.addMob(finishedPlayer.getName() + finishedPlayer.getId(), finishedPlayer);
-					finishedPlayer.getContainer().acceptItem(finishedPlayer);
-				break;				
-				}
+				finishedPlayer = setMobStats(rs, loadedPlayer, finishedPlayer);
 			} 	else {
 				System.out.println("Player not found?");
-				// Player of that name and id was not found in the database.
 				return null;
-			}
-			
-			sql = ("SELECT SKILLBOOKID, MOBPROGRESS FROM skillbooktable WHERE MOBID='" + finishedPlayer.getId() + "'");
-			rs = stmt.executeQuery(sql);
-			//Skillbook id --> skillbook progress for this particular mob
-			Map<Integer, Integer> mobSkillBooks = new HashMap<Integer, Integer>();
-			while (rs.next()) {
-				mobSkillBooks.put(rs.getInt("SKILLBOOKID"), rs.getInt("MOBPROGRESS"));			
-			}			
-			for (int skillBookId : mobSkillBooks.keySet()) {
-				if (!WorldServer.gameState.checkForBookId(skillBookId)) {
-					System.out.println("Error, book not loaded.");
-					throw new IllegalStateException("Critical error, skillbooks do not align.");				
-				}
-				finishedPlayer.addBook(WorldServer.gameState.getBook(skillBookId), mobSkillBooks.get(skillBookId));
-			}		
-					
+			}				
+			setMobSkillBooks(rs, finishedPlayer);					
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.toString());
 		}
-//		disconnect();
 		return finishedPlayer;
 	}
+		
+	private Mobile setMobStats(ResultSet rs, MobileBuilder loadedPlayer, Mobile finishedPlayer) throws SQLException {
+		String type = rs.getString("MOBTYPE"); // NOT IMPLEMENTS TODO
+		loadedPlayer.setId(rs.getInt("MOBID"));
+		loadedPlayer.setName(rs.getString("MOBNAME"));
+		switch (type) {
+		case "STDMOB":
+			loadedPlayer.setDescription(rs.getString("MOBDESC"));
+			loadedPlayer.setPassword(rs.getString("MOBPASS"));
+			loadedPlayer.setShortDescription(rs.getString("MOBSHORTD"));
+			loadedPlayer.setLocation(WorldServer.gameState.viewLocations().get(rs.getInt("MOBLOC")));
+		//	loadedPlayer.maxHp(rs.getInt("MOBMAXHP"));
+			loadedPlayer.setCurrentHp(rs.getInt("MOBCURRENTHP"));
+			loadedPlayer.setIsDead(rs.getInt("MOBDEAD"));
+			loadedPlayer.setXpWorth(rs.getInt("MOBXPWORTH"));
+			loadedPlayer.setExperience(rs.getInt("MOBCURRENTXP"));
+			loadedPlayer.setLevel(rs.getInt("MOBCURRENTLEVEL"));
+			loadedPlayer.setAge(rs.getInt("MOBAGE"));
+			int startUp = rs.getInt("LOADONSTARTUP");					
+			if (startUp == 1) {
+				loadedPlayer.setLoadOnStartUp(true);
+				loadedPlayer.complete();
+				finishedPlayer = new AggresiveMobileDecorator(loadedPlayer.getFinishedMob());
+			} else {
+				loadedPlayer.setLoadOnStartUp(false);
+				loadedPlayer.complete();
+				finishedPlayer = loadedPlayer.getFinishedMob();
+			}
+			String sql = "SELECT itemstats.*, EQUIPABLESLOTTABLE.SLOTTYPE, itemtypetable.TYPE, MOBINV.EQUIPEDSLOT FROM itemstats"
+					+ " LEFT JOIN EQUIPABLESLOTTABLE ON EQUIPABLESLOTTABLE.ITEMID = itemstats.ITEMID"
+					+ " LEFT JOIN ITEMTYPETABLE ON itemstats.ITEMID = itemtypetable.ITEMID"
+					+ " LEFT JOIN MOBINV ON mobinv.MOBID = " + finishedPlayer.getId() + ";";
+			loadItems(sql, finishedPlayer);					
+			WorldServer.gameState.addMob(finishedPlayer.getName() + finishedPlayer.getId(), finishedPlayer);
+			finishedPlayer.getContainer().acceptItem(finishedPlayer);
+		break;				
+		}
+		return finishedPlayer;	
+	}
+	
+	private void setMobSkillBooks(ResultSet rs, Mobile finishedPlayer) throws SQLException {
+		String sql = ("SELECT SKILLBOOKID, MOBPROGRESS FROM skillbooktable WHERE MOBID='" + finishedPlayer.getId() + "'");
+		rs = stmt.executeQuery(sql);
+		//Skillbook id --> skillbook progress for this particular mob
+		Map<Integer, Integer> mobSkillBooks = new HashMap<Integer, Integer>();
+		while (rs.next()) {
+			mobSkillBooks.put(rs.getInt("SKILLBOOKID"), rs.getInt("MOBPROGRESS"));			
+		}			
+		for (int skillBookId : mobSkillBooks.keySet()) {
+			if (!WorldServer.gameState.checkForBookId(skillBookId)) {
+				System.out.println("Error, book not loaded.");
+				throw new IllegalStateException("Critical error, skillbooks do not align.");				
+			}
+			finishedPlayer.addBook(WorldServer.gameState.getBook(skillBookId), mobSkillBooks.get(skillBookId));
+		}	
+	}	
 	
 	
+	// TODO This seems very dangerous, should probably hide this under controllable actions, like saveMobile and saveLocation and saveItem. Accepting an interface like Saveable.
 	@Override
-	public  void saveAction(String sql)  {
+	public void saveAction(String sql)  {
 		System.out.println(sql);
 		makeConnection();
 		try {
@@ -320,15 +285,9 @@ public class SQLInterface implements DatabaseInterface{
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(sql);
-	//		return false;
-		}
-	//	disconnect();		
+		}	
 	}
 	
-		
-	/* (non-Javadoc)
-	 * @see processes.DatabaseInterface#viewData(java.lang.String, java.lang.String)
-	 */
 	@Override
 	public  Object viewData(String blockQuery, String column) {
 		makeConnection();
@@ -351,13 +310,9 @@ public class SQLInterface implements DatabaseInterface{
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.toString());
 		}
-	//	disconnect();
 		return result;
 	}
 	
-	/* (non-Javadoc)
-	 * @see processes.DatabaseInterface#returnBlockView(java.lang.String)
-	 */
 	@Override
 	public  HashMap<String, Object> returnBlockView(String blockQuery) {
 		makeConnection();
@@ -386,7 +341,6 @@ public class SQLInterface implements DatabaseInterface{
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.toString());
 		}
-	//	disconnect();
 		return blockView;
 	}
 	
@@ -394,10 +348,7 @@ public class SQLInterface implements DatabaseInterface{
 	 * Re-connects to the database using the settings saved from "connect()", which must have been run previously.
 	 * <p>
 	 * This connection does not auto-close, it is recommended that "disconnect()" is ran after each immediate use of the database connection.
-	 */
-	/* (non-Javadoc)
-	 * @see processes.DatabaseInterface#makeConnection()
-	 */
+	 */	
 	@Override
 	public  void makeConnection() {
 		if (this.con == null) {
@@ -410,9 +361,6 @@ public class SQLInterface implements DatabaseInterface{
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see processes.DatabaseInterface#disconnect()
-	 */
 	@Override
 	public  void disconnect() {	
 		if (this.con != null) {
@@ -425,19 +373,13 @@ public class SQLInterface implements DatabaseInterface{
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see processes.DatabaseInterface#loadMobs()
-	 */
 	@Override
 	public  void loadMobs() {
 		makeConnection();
 		try {
-			stmt = this.con.createStatement();
-			
-			String sql = ("SELECT * FROM mobstats WHERE loadonstartup=true");
-			
-			ResultSet rs = stmt.executeQuery(sql);
-			
+			stmt = this.con.createStatement();			
+			String sql = ("SELECT * FROM mobstats WHERE loadonstartup=true");			
+			ResultSet rs = stmt.executeQuery(sql);			
 			while (rs.next()) {
 				loadPlayer(rs.getString("mobname"), rs.getString("mobpass"));
 			}
@@ -447,74 +389,68 @@ public class SQLInterface implements DatabaseInterface{
 		disconnect();
 	}
 	
+	// Loads all skillbooks, then loaded mobs grab a pointer to already existing books.
 	@Override
 	public  void loadSkillBooks() {
-		try {
-			String sql = ("SELECT DISTINCT SKILLBOOKID FROM skillbook");
-			ResultSet rs = stmt.executeQuery(sql);		
-			ArrayList<Integer> skillBooks = new ArrayList<Integer>();
-			while (rs.next()) {
-				skillBooks.add(rs.getInt("SKILLBOOKID"));			
-			}		
-			for (int skillBookId : skillBooks) {
-				SkillBook skillBook = null;
-				if (!WorldServer.gameState.checkForBookId(skillBookId)) {	
-									
-					sql = ("SELECT skillbook.SKILLBOOKNAME, skill.SKILLID FROM skilltable JOIN skillbook ON skilltable.SKILLBOOKID = skillbook.SKILLBOOKID "
-							+ " JOIN skill ON skill.SKILLID = skilltable.SKILLID WHERE skilltable.SKILLBOOKID='" + skillBookId + "'");
-					rs = stmt.executeQuery(sql);
-					
-					ArrayList<Integer> mobSkills = new ArrayList<Integer>();
-					String skillBookName = null;
-					while (rs.next()) {
-						mobSkills.add(rs.getInt("SKILLID"));
-						if (skillBookName == null) {
-							skillBookName = rs.getString("SKILLBOOKNAME");
-						}
-					}				
-					for (int i : mobSkills) {
-						SkillBuilder skillBuild = new SkillBuilder();
-						if (skillBook == null)	{
-							skillBook = new SkillBook(skillBookName, skillBookId);
-						}
-						String sql1 = "SELECT * FROM skill WHERE SKILLID=" + i + ";";
-						ResultSet rs1 = stmt.executeQuery(sql1);
-						if (!rs1.next()) {
-							System.out.println("Select skill in SQLInterface failed.");
-						}						
-						skillBuild.setName(rs1.getString("SKILLNAME"));		
-						skillBuild.setFailMsg(rs1.getString("SKILLFAILMSG"));
-						skillBuild.setDescription(rs1.getString("SKILLDES"));
-						skillBuild.setId(i);
-						int skillId = i;
-						sql1 = ("SELECT syntax.* FROM syntaxtable JOIN syntax ON syntaxtable.SYNTAXID = syntax.SYNTAXID"
-								+ " WHERE syntaxtable.SKILLID = '" + skillId + "' ORDER BY SYNTAXPOS ASC");
-						rs1 = stmt.executeQuery(sql1);
-						if (!rs1.isBeforeFirst() ) {    
-							 System.out.println("No data for syntax on skill: " + i); 				
-						} 
-						ArrayList<Syntax> skillSyntax = new ArrayList<Syntax>();
-						while (rs1.next()) {						
-							skillSyntax.add(Syntax.valueOf(rs1.getString("SYNTAXTYPE")));
-						}
-						skillBuild.setSyntax(skillSyntax);						
-						sql1 = ("SELECT block.* FROM blocktable JOIN block ON blocktable.BLOCKID = block.BLOCKID"
-								+ " WHERE blocktable.SKILLID = '" + skillId + "' ORDER BY BLOCKPOS ASC");
-						rs1 = stmt.executeQuery(sql1);						
-						while (rs1.next()) {						
-							skillBuild.addAction(determineAction(rs1));					
-						}
-						skillBuild.addBook(skillBook);  
-						skillBuild.complete();	
+		try {	
+			String sql = ("SELECT skillbook.skillbookname, skillbook.skillbookid, skill.*, syntax.* FROM skillbook" +
+					" LEFT JOIN skilltable ON skilltable.skillbookid = skillbook.skillbookid" +
+					" LEFT JOIN skill ON skill.skillid = skilltable.skillid" +
+					" LEFT JOIN syntaxtable ON syntaxtable.skillid = skill.skillid" +
+					" LEFT JOIN syntax ON syntax.syntaxid = syntaxtable.syntaxid" +
+					" ORDER BY skillbookid ASC, skillid ASC, SYNTAXPOS ASC;");
+			ResultSet rsMain = stmt.executeQuery(sql);
+			SkillBook tempBook = null;
+			SkillBuilder tempSkill = null;
+			while (rsMain.next()) {
+				int currentBookId = Integer.parseInt(rsMain.getString("skillbookid"));
+				do {					
+					if (tempBook == null) {
+						tempBook = new SkillBook(rsMain.getString("skillbookname"), currentBookId);
 					}
-				}		
-				WorldServer.gameState.addBook(skillBookId, skillBook);
-			}
+					int currentSkillId = Integer.parseInt(rsMain.getString("skillid"));
+					do {						
+						if (tempSkill == null) {
+							tempSkill = new SkillBuilder();
+							tempSkill.setName(rsMain.getString("SKILLNAME"));		
+							tempSkill.setFailMsg(rsMain.getString("SKILLFAILMSG"));
+							tempSkill.setDescription(rsMain.getString("SKILLDES"));
+							tempSkill.setId(currentSkillId);
+							
+							String blockSQL = ("SELECT block.* FROM block" +
+									" INNER JOIN blocktable on blocktable.blockid = block.blockid" +
+									" WHERE blocktable.skillid = " + currentSkillId +
+									" ORDER BY blockpos ASC;");
+							Statement stmtTwo = this.con.createStatement();	
+							ResultSet rsBlock = stmtTwo.executeQuery(blockSQL);
+							while (rsBlock.next()) {
+								tempSkill.addAction(determineAction(rsBlock));							
+							}							
+						}						
+						tempSkill.addSyntax(Syntax.valueOf(rsMain.getString("syntaxtype")));						
+						if (rsMain.next()) {
+							currentSkillId = Integer.parseInt(rsMain.getString("skillid"));
+						} else {
+							currentSkillId = -1;
+						}
+					} while (currentSkillId == tempSkill.getId());	
+					tempSkill.addBook(tempBook);  
+					tempSkill.complete();	
+					tempSkill = null;
+					if (currentSkillId != -1) {
+						currentBookId = Integer.parseInt(rsMain.getString("skillbookid"));
+					} else {
+						currentBookId = -1;
+					}
+				} while (currentBookId == tempBook.getId());	
+				WorldServer.gameState.addBook(tempBook.getId(), tempBook.duplicate(tempBook));	
+				tempBook = null;
+			}	
 		} catch (SQLException e) {
 			System.out.println("Critical error loading skillbooks.");
 			e.printStackTrace();
 		}
-	}
+	}	
 	
 	/**
 	 * Takes a very specific ResultSet from "loadPlayer()" or recursively in order to exactly rebuild skills as they were designed.
@@ -674,17 +610,21 @@ public class SQLInterface implements DatabaseInterface{
 	 * @see processes.DatabaseInterface#increaseSequencer()
 	 */
 	@Override
-	public  void increaseSequencer() {
+	public void increaseSequencer() {
 		makeConnection();
 		try {
 			stmt = this.con.createStatement();			
-			String sql = ("insert into sequencetable values(NULL);");
-			for (int i = 0; i < 25; i++) {
-				stmt.execute(sql);
-			}
+			increaseSequenceTable(stmt);
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.toString());
 		}
 	//	disconnect();
-	}		
+	}	
+	
+	private void increaseSequenceTable(Statement stmt) throws SQLException {
+		String sql = ("insert into sequencetable values(NULL);");
+		for (int i = 0; i < 25; i++) {
+			stmt.execute(sql);
+		}
+	}
 }

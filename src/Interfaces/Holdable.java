@@ -15,6 +15,7 @@ public interface Holdable {
 	public void setContainer(Container con);
 	public Container getContainer();
 	public boolean save();
+	public boolean firstTimeSave();
 	public void removeFromWorld();
 	public Set<EquipmentEnum> getAllowedEquipSlots();
 	public boolean containsType(Type type);
