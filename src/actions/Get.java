@@ -26,17 +26,23 @@ public class Get extends Action {
 	}	
 	
 	@Override
+	//Checks if the location (here) has the item in question, then moves it from (here) to the player.
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+		//identifies item from fullcommand
 		String toGet = s.getStringInfo(Syntax.ITEM, fullCommand);
+		//identifies list of items in location (here)
 		List<Container> possibleContainers = where.findWhere(s, fullCommand, currentPlayer);
+		//searches list for the item
 		for (Container c : possibleContainers) {
 			Holdable item = c.getHoldableFromString(toGet);
+			//If item found, moves the item.
 			if (item != null) {
 				moveItem(item, item.getContainer(), currentPlayer);
 				currentPlayer.tell("You pick up " + item.getName() + ".");
 				return true;
 			} 
 		}
+		//item not found, should there be a message here or elsewhere?
 		return false;
 	}
 	
