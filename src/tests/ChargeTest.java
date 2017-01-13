@@ -22,8 +22,8 @@ public class ChargeTest {
 		
 	@BeforeClass
 	public static void testTheSQLInterfaceTest() {
-		WorldServer.setInterface(new TestSQLInterface());
-		WorldServer.databaseInterface.connect("root", "".toCharArray());	
+	//	WorldServer.setInterface(new TestSQLInterface());
+	//	WorldServer.databaseInterface.connect("root", "".toCharArray());	
 	}
 
 	

@@ -75,8 +75,8 @@ public class PlayerPrompt implements Runnable {
 									
 					WorldServer.gameState.addMob(currentPlayer.getName() + currentPlayer.getId(), currentPlayer);
 					currentPlayer.getContainer().acceptItem(currentPlayer);
-				
-				
+				//adding hardcoded skillbook
+				currentPlayer.addBook(CreateWorld.generalSkills,100);
 			
 				
 				currentPlayer.setSendBack(sendBack);
