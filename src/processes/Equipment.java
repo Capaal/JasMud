@@ -13,6 +13,7 @@ import processes.Location.GroundType;
 // Should an interface exist for each slot. all items can be held in hands, chest in chest legs on legs
 // And so on, and then I will extend StdItems to each of these new classes, the big difference being where they can be worn.
 // Flaw might be, can anything be worn in multiple places?
+// Two-handed weapons? shit
 public class Equipment implements Container {
 
 	private Map<EquipmentEnum, Holdable> equipmentToItemMap;

@@ -286,4 +286,21 @@ public class MobileDecorator implements Mobile {
 		return decoratedMobile.firstTimeSave();
 	}
 
+	@Override
+	public boolean isCreating() {
+		return decoratedMobile.isCreating();
+	}
+
+	@Override
+	public void startCreating() {
+		decoratedMobile.startCreating();
+		
+	}
+
+	@Override
+	public void stopCreating() {
+		decoratedMobile.stopCreating();
+		
+	}
+
 }

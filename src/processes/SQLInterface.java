@@ -115,7 +115,6 @@ public class SQLInterface implements DatabaseInterface{
 		loadItems(sql, newLocation);
 	}
 	
-	//TODO STILL DOESN'T SEEM TO BE WORKING	
 	// Try using group by with a nested select for the repeatable items below. I think you'd then be able to convert it into a list that you'd just need to process.
 	private  void loadItems(String sql, Container container) {
 		if (sql == null) {
@@ -581,11 +580,7 @@ public class SQLInterface implements DatabaseInterface{
 			return null;
 		}
 	}
-	 /**
-	  * Translates an ENUM('true', 'false') from the database into a boolean primitive.
-	  * @param ifBoolean String from the database enum.
-	  * @return Returns a boolean primitive translated from the database enum of a boolean.
-	  */
+	
 	private  boolean checkBoolean(String ifBoolean) {
 		if (ifBoolean != null && (ifBoolean.equalsIgnoreCase("true") || ifBoolean.equalsIgnoreCase("false"))) {
 		    return Boolean.valueOf(ifBoolean);
@@ -606,9 +601,6 @@ public class SQLInterface implements DatabaseInterface{
 		return newType;
 	}
 	
-	/* (non-Javadoc)
-	 * @see processes.DatabaseInterface#increaseSequencer()
-	 */
 	@Override
 	public void increaseSequencer() {
 		makeConnection();
@@ -618,7 +610,6 @@ public class SQLInterface implements DatabaseInterface{
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.toString());
 		}
-	//	disconnect();
 	}	
 	
 	private void increaseSequenceTable(Statement stmt) throws SQLException {

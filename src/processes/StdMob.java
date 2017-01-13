@@ -46,6 +46,8 @@ public class StdMob implements Mobile, Container, Holdable {
 	protected final EffectManager effectManager;
 	protected Mobile lastAggressor;
 	
+	private boolean creating = false;
+	
 	public StdMob(MobileBuilder build) {
 		this.id = build.getId();
 		this.name = build.getName();		
@@ -303,15 +305,15 @@ public class StdMob implements Mobile, Container, Holdable {
 	
 	@Override
 	public boolean save() {
-		if (!saveStats()) {
-			System.out.println("Failed save of stats for " + this.getName());
-			return false;
-			
-		}
-		if (!saveItems()) {
-			System.out.println("Failed save of items for " + this.getName());
-			return false;
-		}	
+	//	if (!saveStats()) {
+	//		System.out.println("Failed save of stats for " + this.getName());
+	//		return false;
+	//		
+	//	}
+	//	if (!saveItems()) {
+	//		System.out.println("Failed save of items for " + this.getName());
+	//		return false;
+	//	}	
 		return true;
 	}
 	
@@ -436,10 +438,11 @@ public class StdMob implements Mobile, Container, Holdable {
 		
 	}
 	private static int findNewId(String name) {
-		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
+/*		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
 				+ " LEFT JOIN MOBSTATS ON sequencetable.sequenceid = mobstats.mobid"
 				+ " WHERE mobstats.mobid IS NULL";		
-		Object availableId = (int) WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
+		Object availableId = 1;
+	//	Object availableId = (int) WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
 		if (availableId == null || !(availableId instanceof Integer)) {
 			WorldServer.databaseInterface.increaseSequencer();
 			findNewId(name);
@@ -449,7 +452,8 @@ public class StdMob implements Mobile, Container, Holdable {
 			}
 			return (int)availableId;
 		}
-		return 0;
+		return 0;*/
+		return 1;
 	}
 
 	@Override
@@ -458,6 +462,20 @@ public class StdMob implements Mobile, Container, Holdable {
 		return false;
 	}
 	
+	@Override
+	public boolean isCreating() {
+		return creating;
+	}
+	
+	@Override
+	public void startCreating() {
+		creating = true;
+	}
+	
+	@Override
+	public void stopCreating() {
+		creating = false;
+	}
 
 	
 }

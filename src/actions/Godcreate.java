@@ -29,11 +29,14 @@ public class Godcreate extends Action {
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		Mobile player = currentPlayer;
+		currentPlayer.startCreating();
 		createActionMap();
 		player.tell("Welcome to the creation Menu.");
 		player.tell("Here you can create an enormous variety of skills, items, locations, and mobiles");
 		player.tell("But remember that this is an out of game menu and to exit you must type \"exit\".");
-		return processCreateType(player);
+		boolean finishedCreating = processCreateType(player);
+		currentPlayer.stopCreating();
+		return finishedCreating;
 	}
 	
 	private boolean processCreateType(Mobile player) {

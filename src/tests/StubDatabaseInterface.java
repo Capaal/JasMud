@@ -25,18 +25,7 @@ public class StubDatabaseInterface implements DatabaseInterface {
 			// TODO Auto-generated method stub
 			
 		}
-
-		@Override
-		public void loadLocationItems() {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void loadItems(String sql, Container container) {
-			// TODO Auto-generated method stub
-			
-		}
+	
 
 		@Override
 		public Mobile loadPlayer(String name, String password) {

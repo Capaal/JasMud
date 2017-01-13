@@ -73,32 +73,16 @@ public class StdItem implements Holdable {
 	
 	// not sure how packs will work yet...
 	@Override
-	public boolean save() {		
-		String locationType = null;
-		if (itemLocation instanceof Location) {
-			locationType = "LOCATION";
-			String updateItem = "UPDATE ITEMSTATS SET EQUIPSLOT=null WHERE ITEMID=" + getId() + ";";
-			WorldServer.databaseInterface.saveAction(updateItem);
-		} else if (itemLocation instanceof StdMob) {
-			locationType = "INVENTORY";
-			String updateItem = "UPDATE ITEMSTATS SET EQUIPSLOT=null WHERE ITEMID=" + getId() + ";";
-			WorldServer.databaseInterface.saveAction(updateItem);
-		} else {
-			locationType = "EQUIPMENT";
-			String updateItem = "UPDATE ITEMSTATS SET EQUIPSLOT='" + ((Equipment)getContainer()).getKey(this) + "' WHERE ITEMID=" + getId() + ";";
-			WorldServer.databaseInterface.saveAction(updateItem);
-		} 
-		String updateItem = "UPDATE ITEMSTATS SET ITEMCURDUR=" + currentDurability + ", ITEMLOC=" + itemLocation.getId() 
-				+ ", ITEMLOCTYPE='" + locationType + "' WHERE ITEMID=" + getId() + ";";
+	public boolean save() {			
+		String updateItem = "UPDATE ITEMSTATS SET ITEMCURDUR=" + currentDurability + ", WHERE ITEMID=" + getId() + ";";
 		WorldServer.databaseInterface.saveAction(updateItem);
 		return true;
 	}
 	
 	@Override
-	public boolean firstTimeSave() { // TODO Change to saveItem() and the databaseinterface knows how to extract what it wants, take out sql strings.
-		DatabaseInterface databaseInterface = WorldServer.getInterface();
-		
-		databaseInterface.saveAction("Insert into ITEMSTATS (ITEMID, ITEMNAME, ITEMPHYS, ITEMBAL, ITEMDESC, ITEMMAXDUR, ITEMCURDUR, ITEMLOC, EQUIPSLOTS, ITEMLOCTYPE)"
+	public boolean firstTimeSave() { 
+		DatabaseInterface databaseInterface = WorldServer.getInterface();		
+		databaseInterface.saveAction("Insert into ITEMSTATS (ITEMID, ITEMNAME, ITEMPHYS, ITEMBAL, ITEMDESC, ITEMMAXDUR, ITEMCURDUR, ITEMLOC, EQUIPSLOTS)"
 				+ " values ("
 				+ "'" + id + "', "
 				+ "'" + name + "', "
@@ -106,9 +90,8 @@ public class StdItem implements Holdable {
 				+ "'" + balanceMult + "', "
 				+ "'" + description + "', "
 				+ "'" + maxDurability + "', "
-				+ "'" + currentDurability + "', "
-				+ "'" + itemLocation + "');"); // this will probably break because how db saves item location is changing TODO
-		return false; //TEMP
+				+ currentDurability + ");"); 
+		return true;
 	}
 	
 	@Override

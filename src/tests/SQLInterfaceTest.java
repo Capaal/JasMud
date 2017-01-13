@@ -34,7 +34,5 @@ public class SQLInterfaceTest {
 		String skillSelect = "SELECT * FROM SKILL WHERE SKILLNAME='fakenamethatdoesnotexist';";
 		HashMap<String, Object> skillView = WorldServer.databaseInterface.returnBlockView(skillSelect);
 		assertTrue("A skill that doesn't exist should return an empty map.", skillView.isEmpty());
-	}
-	
-	
+	}	
 }

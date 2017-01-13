@@ -61,7 +61,7 @@ public class LocationBuilder {
 	}
 	
 	private void setId() throws IllegalStateException {
-		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
+	/*	String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
 				+ " LEFT JOIN locationstats ON sequencetable.sequenceid = locationstats.locid"
 				+ " WHERE locationstats.locid IS NULL";		
 		Object availableId = WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
@@ -75,7 +75,7 @@ public class LocationBuilder {
 			}
 		} else {
 			id = (int)availableId;
-		}		
+		}		*/
 	}
 	
 	public String getName() {

@@ -191,7 +191,7 @@ public class ItemBuilder {
 			}
 			return newItem(player, builderItem);
 		case "4":
-		case "balancemult":
+		case "balancemult": // TODO can't seem to do things like ".2" the decimal is being lost somewhere
 			try {
 				builderItem.setBalanceMult(Double.parseDouble(Godcreate.askQuestion("What is the balance multiplier for this item? 1.0 is normal.", player)));
 			} catch(NumberFormatException e) {

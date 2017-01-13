@@ -48,4 +48,8 @@ public interface Mobile extends Container, Holdable {
 	public void setSendBack(SendMessage sendBack);
 	public SendMessage getSendBack();
 	public void informLastAggressor(Mobile currentPlayer);
+	public boolean isCreating();
+	public void startCreating();
+	public void stopCreating();
+	
 }
