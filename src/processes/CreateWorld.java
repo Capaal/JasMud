@@ -25,7 +25,9 @@ public class CreateWorld {
 	
 	//Hardcoded skill list
 	public static void makeSkills() {
+		WorldServer.gameState.addBook(1, generalSkills);
 		kickSkill();
+		addGodCreateSkill();
 	}
 	
 	public static void makeWorldFromDatabase() {
@@ -56,5 +58,18 @@ public class CreateWorld {
 		kickBuilder.complete();
 		kickSkill = new Skill(kickBuilder);
 		generalSkills.addSkill(kickSkill);
+	}
+	
+	public static void addGodCreateSkill() {
+		Skill godCreate;
+		SkillBuilder godCreateBuilder = new SkillBuilder();
+		godCreateBuilder.addAction(new Godcreate());
+		godCreateBuilder.addBook(generalSkills);
+		godCreateBuilder.setName("godcreate");
+		godCreateBuilder.addSyntax(Skill.Syntax.SKILL);
+		godCreateBuilder.setId(10);
+		godCreateBuilder.complete();
+		godCreate = new Skill(godCreateBuilder);
+		generalSkills.addSkill(godCreate);
 	}
 }
