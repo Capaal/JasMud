@@ -11,14 +11,14 @@ import interfaces.*;
 public class WeaponEquippedCheck extends Action {
 	
 	private final Type isItThis;
-	private final WhatTargettingStrategy who;
-	private final WhereTargettingStrategy where;
+	private final WhatStrategyInterface who;
+	private final WhereStrategyInterface where;
 	
 	public WeaponEquippedCheck() {
-		this(Type.BLUNT, new TargetSelfWhatStrategy(), new TargetHereWhereStrategy());
+		this(Type.BLUNT, new WhatStrategySelf(), new WhereStrategyHere());
 	}
 	
-	public WeaponEquippedCheck(Type isItThis, WhatTargettingStrategy who, WhereTargettingStrategy where) {
+	public WeaponEquippedCheck(Type isItThis, WhatStrategyInterface who, WhereStrategyInterface where) {
 		this.isItThis = isItThis;
 		this.who = who;
 		this.where = where;
@@ -44,11 +44,11 @@ public class WeaponEquippedCheck extends Action {
 	}
 	@Override
 	public Action newBlock(Mobile player) {
-		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
-		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
+		WhatFactory whatFactory = new WhatFactory();
+		WhereFactory whereFactory = new WhereFactory();
 		Type newType = isItThis;
-		WhatTargettingStrategy newWho = who;
-		WhereTargettingStrategy newWhere = where;
+		WhatStrategyInterface newWho = who;
+		WhereStrategyInterface newWhere = where;
 		try {
 			newWho = whatFactory.parse((Godcreate.askQuestion("Who do you want to check? (this is using Syntax).", player)).toUpperCase());
 			newWhere = whereFactory.parse((Godcreate.askQuestion("Where is this person? (this is using Syntax).", player)).toUpperCase());

@@ -9,7 +9,7 @@ import java.util.List;
 
 import processes.Skill;
 
-public class TargetAllWhatStrategy implements WhatTargettingStrategy {
+public class TargetAllWhatStrategy implements WhatStrategyInterface {
 
 	@Override
 	public List<Holdable> findWhat(Skill s, String fullCommand,	Mobile currentPlayer, List<Container> containersToSearch) {

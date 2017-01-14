@@ -17,14 +17,14 @@ public class BleedEffect extends Action {
 	
 	private final int duration;
 	private final int times;
-	private final WhatTargettingStrategy what;
-	private final WhereTargettingStrategy where;	
+	private final WhatStrategyInterface what;
+	private final WhereStrategyInterface where;	
 	
 	public BleedEffect() {
-		this(100, 0,  new TargetSelfWhatStrategy(),  new TargetHereWhereStrategy());
+		this(100, 0,  new WhatStrategySelf(),  new WhereStrategyHere());
 	}
 	
-	public BleedEffect(int duration, int times, WhatTargettingStrategy what, WhereTargettingStrategy where) {
+	public BleedEffect(int duration, int times, WhatStrategyInterface what, WhereStrategyInterface where) {
 		this.duration = duration;
 		this.what = what;
 		this.where = where;
@@ -46,12 +46,12 @@ public class BleedEffect extends Action {
 	}
 	@Override
 	public Action newBlock(Mobile player) {
-		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
-		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
+		WhatFactory whatFactory = new WhatFactory();
+		WhereFactory whereFactory = new WhereFactory();
 		int newDuration = duration;
 		int newTimes = times;
-		WhatTargettingStrategy newWho = what;
-		WhereTargettingStrategy newWhere = where;
+		WhatStrategyInterface newWho = what;
+		WhereStrategyInterface newWhere = where;
 		try {
 			newDuration = Integer.parseInt(Godcreate.askQuestion("How long should the bleed last?", player));
 			newTimes = Integer.parseInt(Godcreate.askQuestion("How many times should the bleed trigger?", player));

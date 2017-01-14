@@ -8,7 +8,7 @@ import java.util.List;
 
 import processes.Skill;
 
-public class TargetInventoryWhereStrategy implements WhereTargettingStrategy {
+public class TargetInventoryWhereStrategy implements WhereStrategyInterface {
 
 	@Override
 	public List<Container> findWhere(Skill s, String fullCommand,

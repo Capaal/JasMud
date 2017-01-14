@@ -10,16 +10,16 @@ public class Damage extends Action {
 	
 	
 	private final int intensity;
-	private final WhatTargettingStrategy what;
-	private final WhereTargettingStrategy where;
+	private final WhatStrategyInterface what;
+	private final WhereStrategyInterface where;
 	private final boolean doesWeaponMatter;
 	private final Type damageType;
 
 	public Damage() {
-		this(0, new TargetSelfWhatStrategy(), new TargetHereWhereStrategy(), true, null);
+		this(0, new WhatStrategySelf(), new WhereStrategyHere(), true, null);
 	}
 	
-	public Damage(int intensity, WhatTargettingStrategy what, WhereTargettingStrategy where, boolean weaponMatter, Type newType) {
+	public Damage(int intensity, WhatStrategyInterface what, WhereStrategyInterface where, boolean weaponMatter, Type newType) {
 		this.intensity = intensity;
 		this.what = what;
 		this.where = where;
@@ -72,10 +72,10 @@ public class Damage extends Action {
 	@Override
 	public Action newBlock(Mobile player) {
 		int newIntensity = intensity;
-		WhatTargettingStrategy newWho = what;
-		WhereTargettingStrategy newWhere = where;
-		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
-		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
+		WhatStrategyInterface newWho = what;
+		WhereStrategyInterface newWhere = where;
+		WhatFactory whatFactory = new WhatFactory();
+		WhereFactory whereFactory = new WhereFactory();
 		Type newType = damageType;
 		try {
 			newIntensity = Integer.parseInt(Godcreate.askQuestion("How much damage would you like to cause? Negative is ok.", player));

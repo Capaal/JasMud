@@ -14,13 +14,13 @@ import interfaces.*;
 
 public class Look extends Action {
 	
-	private WhereTargettingStrategy where;
+	private WhereStrategyInterface where;
 	
 	public Look() {
-		this(new TargetHereWhereStrategy());
+		this(new WhereStrategyHere());
 	}
 	
-	public Look(WhereTargettingStrategy where) {
+	public Look(WhereStrategyInterface where) {
 		this.where = where;
 	}
 
@@ -38,7 +38,7 @@ public class Look extends Action {
 				}
 			}
 		} else {
-			for (Container c : new TargetHereWhereStrategy().findWhere(s, fullCommand, currentPlayer)) {
+			for (Container c : new WhereStrategyHere().findWhere(s, fullCommand, currentPlayer)) {
 				c.look(currentPlayer);
 			}
 		}
@@ -46,8 +46,8 @@ public class Look extends Action {
 	}
 	@Override
 	public Action newBlock(Mobile player) {
-		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
-		WhereTargettingStrategy newWhere = where;
+		WhereFactory whereFactory = new WhereFactory();
+		WhereStrategyInterface newWhere = where;
 		try {
 			newWhere = whereFactory.parse((Godcreate.askQuestion("Which locations will be looked at? (this is using Syntax).", player)).toUpperCase());
 		} catch (IllegalArgumentException e) {

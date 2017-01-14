@@ -13,15 +13,15 @@ import interfaces.*;
 
 public class Move extends Action {
 		
-	private final WhatTargettingStrategy what;
-	private final WhereTargettingStrategy where;
-	private final WhereTargettingStrategy finalLoc;
+	private final WhatStrategyInterface what;
+	private final WhereStrategyInterface where;
+	private final WhereStrategyInterface finalLoc;
 	
 	public Move() {
-		this(new TargetSelfWhatStrategy(), new TargetHereWhereStrategy(), new TargetHereWhereStrategy());
+		this(new WhatStrategySelf(), new WhereStrategyHere(), new WhereStrategyHere());
 	}
 	
-	public Move(WhatTargettingStrategy what, WhereTargettingStrategy where, WhereTargettingStrategy finalLoc) {
+	public Move(WhatStrategyInterface what, WhereStrategyInterface where, WhereStrategyInterface finalLoc) {
 		this.what = what;
 		this.where = where;
 		this.finalLoc = finalLoc;
@@ -46,11 +46,11 @@ public class Move extends Action {
 	}
 	@Override
 	public Action newBlock(Mobile player) {
-		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
-		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
-		WhatTargettingStrategy newWho = what;
-		WhereTargettingStrategy newWhere = where;
-		WhereTargettingStrategy newFinal = finalLoc;
+		WhatFactory whatFactory = new WhatFactory();
+		WhereFactory whereFactory = new WhereFactory();
+		WhatStrategyInterface newWho = what;
+		WhereStrategyInterface newWhere = where;
+		WhereStrategyInterface newFinal = finalLoc;
 		try {
 			newWho = whatFactory.parse((Godcreate.askQuestion("Who do you want to move? (this is using Syntax).", player)).toUpperCase());
 			newWhere = whereFactory.parse((Godcreate.askQuestion("Where is this target? (this is using Syntax).", player)).toUpperCase());

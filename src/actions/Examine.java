@@ -9,13 +9,13 @@ import processes.*;
 
 public class Examine extends Action {
 	
-	private final WhereTargettingStrategy where;
+	private final WhereStrategyInterface where;
 
 	public Examine() {
-		this(new TargetHereWhereStrategy());
+		this(new WhereStrategyHere());
 	}
 	
-	public Examine(WhereTargettingStrategy where) {
+	public Examine(WhereStrategyInterface where) {
 		this.where = where;
 	}
 	
@@ -34,8 +34,8 @@ public class Examine extends Action {
 	}	
 	@Override
 	public Action newBlock(Mobile player) {
-		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
-		WhereTargettingStrategy newWhere = where;
+		WhereFactory whereFactory = new WhereFactory();
+		WhereStrategyInterface newWhere = where;
 		try {
 			newWhere = whereFactory.parse((Godcreate.askQuestion("Where will they look for the item? (this is using Syntax).", player)).toUpperCase());
 		} catch (IllegalArgumentException e) {

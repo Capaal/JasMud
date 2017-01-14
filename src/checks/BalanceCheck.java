@@ -12,14 +12,14 @@ import interfaces.*;
 
 public class BalanceCheck extends Action {
 	
-	private final WhatTargettingStrategy what;
-	private final WhereTargettingStrategy where;
+	private final WhatStrategyInterface what;
+	private final WhereStrategyInterface where;
 	
 	public BalanceCheck() {
-		this(new TargetSelfWhatStrategy(), new TargetHereWhereStrategy());
+		this(new WhatStrategySelf(), new WhereStrategyHere());
 	}
 	
-	public BalanceCheck(WhatTargettingStrategy what, WhereTargettingStrategy where) {
+	public BalanceCheck(WhatStrategyInterface what, WhereStrategyInterface where) {
 		this.what = what;
 		this.where = where;
 	}
@@ -35,10 +35,10 @@ public class BalanceCheck extends Action {
 	}
 	@Override
 	public Action newBlock(Mobile player) {
-		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
-		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
-		WhatTargettingStrategy newWho = what;
-		WhereTargettingStrategy newWhere = where;
+		WhatFactory whatFactory = new WhatFactory();
+		WhereFactory whereFactory = new WhereFactory();
+		WhatStrategyInterface newWho = what;
+		WhereStrategyInterface newWhere = where;
 		try {
 			newWho = whatFactory.parse((Godcreate.askQuestion("Who do you want to check? (this is using Syntax).", player)).toUpperCase());
 			newWhere = whereFactory.parse((Godcreate.askQuestion("Where is this target? (this is using Syntax).", player)).toUpperCase());

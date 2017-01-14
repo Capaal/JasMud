@@ -35,7 +35,7 @@ public class DamageTest {
 	@Test
 	public void testActivateWeaponDoesNotMatter() {
 		SkillBuilder testBuilder = new SkillBuilder();
-		testBuilder.addAction(new Damage(10, new TargetSelfWhatStrategy(), new TargetHereWhereStrategy(), false, null));
+		testBuilder.addAction(new Damage(10, new WhatStrategySelf(), new WhereStrategyHere(), false, null));
 		testBuilder.setId(10);;
 		testBuilder.complete();
 		testSkill = new SkillStub(testBuilder);
@@ -48,7 +48,7 @@ public class DamageTest {
 	@Test
 	public void testActivateWeaponMatters() {
 		SkillBuilder testBuilder = new SkillBuilder();
-		testBuilder.addAction(new Damage(10, new TargetSelfWhatStrategy(), new TargetHereWhereStrategy(), true, null));
+		testBuilder.addAction(new Damage(10, new WhatStrategySelf(), new WhereStrategyHere(), true, null));
 		testBuilder.setId(1);
 		testBuilder.complete();
 		testSkill = new SkillStub(testBuilder);

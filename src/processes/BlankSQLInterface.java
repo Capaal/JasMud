@@ -12,8 +12,8 @@ import java.util.Map;
 
 import checks.*;
 import effectors.*;
-import TargettingStrategies.WhatTargettingFactory;
-import TargettingStrategies.WhereTargettingFactory;
+import TargettingStrategies.WhatFactory;
+import TargettingStrategies.WhereFactory;
 import actions.*;
 import actions.Message.msgStrings;
 import processes.Equipment.EquipmentEnum;

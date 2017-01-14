@@ -13,14 +13,18 @@ import processes.WorldServer;
 
 public class Get extends Action {
 	
-	private final WhatTargettingStrategy what;
-	private final WhereTargettingStrategy where;
+	/* How to get GET to work
+	 * delete it
+	 */
+	
+	private final WhatStrategyInterface what;
+	private final WhereStrategyInterface where;
 	
 	public Get() {
-		this(new TargetSelfWhatStrategy(), new TargetHereWhereStrategy());
+		this(new WhatStrategySelf(), new WhereStrategyHere());
 	}
 	
-	public Get(WhatTargettingStrategy what, WhereTargettingStrategy where) {
+	public Get(WhatStrategyInterface what, WhereStrategyInterface where) {
 		this.what = what;
 		this.where = where;
 	}	
@@ -54,10 +58,10 @@ public class Get extends Action {
 	
 	@Override
 	public Action newBlock(Mobile player) {
-		WhatTargettingStrategy newWhat = what;
-		WhereTargettingStrategy newWhere = where;
-		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
-		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
+		WhatStrategyInterface newWhat = what;
+		WhereStrategyInterface newWhere = where;
+		WhatFactory whatFactory = new WhatFactory();
+		WhereFactory whereFactory = new WhereFactory();
 		try {
 			newWhat = whatFactory.parse((Godcreate.askQuestion("Who do you want to get the item? (this is using Syntax).", player)).toUpperCase());
 			newWhere = whereFactory.parse((Godcreate.askQuestion("Where must this person be? (this is using Syntax).", player)).toUpperCase());

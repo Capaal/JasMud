@@ -47,8 +47,8 @@ public class Skill implements Runnable {
 				break;
 			}
 			if (shouldInformTarget) {
-				List<Container> loc = new TargetHereWhereStrategy().findWhere(this, fullCommand, currentPlayer);
-				List<Holdable> target = new TargetTargetWhatStrategy().findWhat(this, fullCommand, currentPlayer, loc);
+				List<Container> loc = new WhereStrategyHere().findWhere(this, fullCommand, currentPlayer);
+				List<Holdable> target = new WhatStrategyTarget().findWhat(this, fullCommand, currentPlayer, loc);
 				if (!target.isEmpty() && target.get(0) instanceof Mobile) {
 					((Mobile)target.get(0)).informLastAggressor(currentPlayer);
 				}

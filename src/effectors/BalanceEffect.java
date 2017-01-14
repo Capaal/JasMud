@@ -13,15 +13,15 @@ import interfaces.*;
 
 public class BalanceEffect extends Action {
 	
-	private final WhatTargettingStrategy what;
-	private final WhereTargettingStrategy where;
+	private final WhatStrategyInterface what;
+	private final WhereStrategyInterface where;
 	private final int duration;
 	
 	public BalanceEffect() {
-		this(0, new TargetSelfWhatStrategy(), new TargetHereWhereStrategy());
+		this(0, new WhatStrategySelf(), new WhereStrategyHere());
 	}
 	
-	public BalanceEffect(int duration, WhatTargettingStrategy what, WhereTargettingStrategy where) {
+	public BalanceEffect(int duration, WhatStrategyInterface what, WhereStrategyInterface where) {
 		this.what = what;
 		this.where = where;
 		this.duration = duration;
@@ -38,11 +38,11 @@ public class BalanceEffect extends Action {
 	}
 	@Override
 	public Action newBlock(Mobile player) {
-		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
-		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
+		WhatFactory whatFactory = new WhatFactory();
+		WhereFactory whereFactory = new WhereFactory();
 		int newDuration = duration;
-		WhatTargettingStrategy newWho = what;
-		WhereTargettingStrategy newWhere = where;
+		WhatStrategyInterface newWho = what;
+		WhereStrategyInterface newWhere = where;
 		try {
 			newDuration = Integer.parseInt(Godcreate.askQuestion("How long should they be put off balance? In milliseconds", player));
 		} catch (NumberFormatException e) {

@@ -7,11 +7,15 @@ import interfaces.Container;
 import interfaces.Mobile;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import processes.Skill.Syntax;
 import tests.DamageTest.SkillStub;
-import TargettingStrategies.TargetHereWhereStrategy;
-import TargettingStrategies.TargetSelfWhatStrategy;
+import TargettingStrategies.WhereStrategyHere;
+import TargettingStrategies.WhatStrategySelf;
 import actions.*;
+import actions.Message.msgStrings;
 
 public class CreateWorld {
 	
@@ -51,10 +55,11 @@ public class CreateWorld {
 	public static void kickSkill() {
 		Skill kickSkill;
 		SkillBuilder kickBuilder = new SkillBuilder();
-		kickBuilder.addAction(new Damage(10, new TargetSelfWhatStrategy(), new TargetHereWhereStrategy(), false, null));
-		kickBuilder.addAction(new Message("You kicked yourself.", new TargetSelfWhatStrategy(), new TargetHereWhereStrategy(), null));
+		kickBuilder.addAction(new Damage(10, new WhatStrategySelf(), new WhereStrategyHere(), false, null));
+		kickBuilder.addAction(new Message("You kicked yourself.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<msgStrings>()));
+		kickBuilder.setId(10);
 		kickBuilder.setName("kick");
-		kickBuilder.setId(10);;
+		kickBuilder.addSyntax(Skill.Syntax.SKILL);
 		kickBuilder.complete();
 		kickSkill = new Skill(kickBuilder);
 		generalSkills.addSkill(kickSkill);

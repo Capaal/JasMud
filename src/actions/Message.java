@@ -21,16 +21,16 @@ import processes.WorldServer;
 public class Message extends Action {
 	
 	private final String msg;
-	private final WhatTargettingStrategy what;
-	private final WhereTargettingStrategy where;
+	private final WhatStrategyInterface what;
+	private final WhereStrategyInterface where;
 //	private final ArrayList<Who> targetNames;
 	private final ArrayList<msgStrings> msgList;
 	
 	public Message() {
-		this("", new TargetSelfWhatStrategy(), new TargetHereWhereStrategy(), new ArrayList<msgStrings>());
+		this("", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<msgStrings>());
 	}
 
-	public Message(String m, WhatTargettingStrategy what, WhereTargettingStrategy where, ArrayList<msgStrings> msgstringslist) {
+	public Message(String m, WhatStrategyInterface what, WhereStrategyInterface where, ArrayList<msgStrings> msgstringslist) {
 		this.msg = m;
 		this.what = what;
 		this.where = where;
@@ -78,10 +78,10 @@ public class Message extends Action {
 	}
 	@Override
 	public Action newBlock(Mobile player) {
-		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
-		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
-		WhatTargettingStrategy newWhat = what;
-		WhereTargettingStrategy newWhere = where;
+		WhatFactory whatFactory = new WhatFactory();
+		WhereFactory whereFactory = new WhereFactory();
+		WhatStrategyInterface newWhat = what;
+		WhereStrategyInterface newWhere = where;
 		ArrayList<msgStrings> newMsgList = msgList;
 		String newMsg = Godcreate.askQuestion("What message will be displayed? Remember to use %s to replace strings you don't know yet.", player);
 		int numMsgStrings = 0;

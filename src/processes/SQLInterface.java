@@ -12,8 +12,8 @@ import java.util.Map;
 
 import checks.*;
 import effectors.*;
-import TargettingStrategies.WhatTargettingFactory;
-import TargettingStrategies.WhereTargettingFactory;
+import TargettingStrategies.WhatFactory;
+import TargettingStrategies.WhereFactory;
 import actions.*;
 import actions.Message.msgStrings;
 import processes.Equipment.EquipmentEnum;
@@ -459,8 +459,8 @@ public class SQLInterface implements DatabaseInterface{
 	 * @return Returns the block or action requested, is rebuilt in terms of the game server from database stats.
 	 */
 	private  Action determineAction(ResultSet rs) {
-		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
-		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
+		WhatFactory whatFactory = new WhatFactory();
+		WhereFactory whereFactory = new WhereFactory();
 		String blockType = null;
 		try {
 			blockType = rs.getString("BLOCKTYPE");

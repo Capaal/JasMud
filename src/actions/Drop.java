@@ -12,15 +12,15 @@ import processes.WorldServer;
 
 public class Drop extends Action {
 	
-	private final WhatTargettingStrategy what;
-	private final WhereTargettingStrategy where;
-	private final WhereTargettingStrategy finalLoc;
+	private final WhatStrategyInterface what;
+	private final WhereStrategyInterface where;
+	private final WhereStrategyInterface finalLoc;
 	
 	public Drop() {
-		this(new TargetSelfWhatStrategy(), new TargetHereWhereStrategy(), new TargetHereWhereStrategy());
+		this(new WhatStrategySelf(), new WhereStrategyHere(), new WhereStrategyHere());
 	}
 
-	public Drop(WhatTargettingStrategy what, WhereTargettingStrategy where, WhereTargettingStrategy finalLoc) {
+	public Drop(WhatStrategyInterface what, WhereStrategyInterface where, WhereStrategyInterface finalLoc) {
 		this.what = what;
 		this.where = where;
 		this.finalLoc = finalLoc;
@@ -63,11 +63,11 @@ public class Drop extends Action {
 	}
 	@Override
 	public Action newBlock(Mobile player) {
-		WhatTargettingStrategy newWhat = what;
-		WhereTargettingStrategy newWhere = where;
-		WhereTargettingStrategy newFinal = finalLoc;
-		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
-		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
+		WhatStrategyInterface newWhat = what;
+		WhereStrategyInterface newWhere = where;
+		WhereStrategyInterface newFinal = finalLoc;
+		WhatFactory whatFactory = new WhatFactory();
+		WhereFactory whereFactory = new WhereFactory();
 		try {
 			newWhat = whatFactory.parse((Godcreate.askQuestion("what do you want to drop something (this is using Syntax).", player)).toUpperCase());
 			newWhere = whereFactory.parse((Godcreate.askQuestion("WhereTargettingStrategy must this target be? (this is using Syntax).", player)).toUpperCase());

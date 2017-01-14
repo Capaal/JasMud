@@ -11,16 +11,16 @@ import interfaces.*;
 
 public class MoveCheck extends Action {
 	
-	private final WhatTargettingStrategy who;
-	private final WhereTargettingStrategy where;
-	private final WhereTargettingStrategy finalLoc;
+	private final WhatStrategyInterface who;
+	private final WhereStrategyInterface where;
+	private final WhereStrategyInterface finalLoc;
 	private final GroundType moveType;
 	
 	public MoveCheck() {
-		this(GroundType.GROUND, new TargetSelfWhatStrategy(), new TargetHereWhereStrategy(), new TargetHereWhereStrategy());
+		this(GroundType.GROUND, new WhatStrategySelf(), new WhereStrategyHere(), new WhereStrategyHere());
 	}
 		
-	public MoveCheck(GroundType moveType, WhatTargettingStrategy who, WhereTargettingStrategy where, WhereTargettingStrategy finalLoc) {
+	public MoveCheck(GroundType moveType, WhatStrategyInterface who, WhereStrategyInterface where, WhereStrategyInterface finalLoc) {
 		this.who = who;
 		this.where = where;
 		this.finalLoc = finalLoc;
@@ -46,12 +46,12 @@ public class MoveCheck extends Action {
 	}
 	@Override
 	public Action newBlock(Mobile player) {
-		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
-		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
+		WhatFactory whatFactory = new WhatFactory();
+		WhereFactory whereFactory = new WhereFactory();
 		GroundType newGround = moveType;
-		WhatTargettingStrategy newWho = who;
-		WhereTargettingStrategy newWhere = where;
-		WhereTargettingStrategy newFinal = finalLoc;
+		WhatStrategyInterface newWho = who;
+		WhereStrategyInterface newWhere = where;
+		WhereStrategyInterface newFinal = finalLoc;
 		try {
 			newGround = GroundType.valueOf(Godcreate.askQuestion("", player).toUpperCase());
 			newWho = whatFactory.parse((Godcreate.askQuestion("Who do you want to check if they can move? (this is using Syntax).", player)).toUpperCase());

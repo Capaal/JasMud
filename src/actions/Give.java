@@ -5,26 +5,26 @@ import interfaces.Mobile;
 
 import java.util.HashMap;
 
-import TargettingStrategies.TargetHereWhereStrategy;
-import TargettingStrategies.TargetSelfWhatStrategy;
-import TargettingStrategies.WhatTargettingStrategy;
-import TargettingStrategies.WhereTargettingStrategy;
+import TargettingStrategies.WhereStrategyHere;
+import TargettingStrategies.WhatStrategySelf;
+import TargettingStrategies.WhatStrategyInterface;
+import TargettingStrategies.WhereStrategyInterface;
 import processes.Skill;
 import processes.Type;
 
 //Work in progress. Need to rework targetting strategies?
 public class Give extends Action {
 
-	private final WhatTargettingStrategy whatItem;
+	private final WhatStrategyInterface whatItem;
 //	private final WhatTargettingStrategy whatSelf;
-	private final WhatTargettingStrategy whatMob;
+	private final WhatStrategyInterface whatMob;
 //	private final WhereTargettingStrategy where; 
 	
 //	public Give() {
 	//	this(new TargetTargetWhatStrategy(), new TargetTargetWhatStrategy());
 //	}
 	
-	public Give(WhatTargettingStrategy whatItem, WhatTargettingStrategy whatMob) {
+	public Give(WhatStrategyInterface whatItem, WhatStrategyInterface whatMob) {
 		this.whatItem = whatItem;
 		this.whatMob = whatMob;
 	}	

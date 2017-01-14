@@ -12,8 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import actions.Get;
-import TargettingStrategies.WhatTargettingStrategy;
-import TargettingStrategies.WhereTargettingStrategy;
+import TargettingStrategies.WhatStrategyInterface;
+import TargettingStrategies.WhereStrategyInterface;
 import processes.Skill;
 import processes.WorldServer;
 import processes.Skill.Syntax;
@@ -51,7 +51,7 @@ public class GetTest {
 		verify(mockItem).setContainer(mockMob);
 	}
 	
-	public class stubWhere implements WhereTargettingStrategy {
+	public class stubWhere implements WhereStrategyInterface {
 		@Override
 		public List<Container> findWhere(Skill s, String fullCommand,
 				Mobile currentPlayer) {
@@ -60,7 +60,7 @@ public class GetTest {
 	}
 	
 	
-	public class stubWhat implements WhatTargettingStrategy {
+	public class stubWhat implements WhatStrategyInterface {
 		@Override
 		public List<Holdable> findWhat(Skill s, String fullCommand,
 				Mobile currentPlayer, List<Container> containersToSearch) {

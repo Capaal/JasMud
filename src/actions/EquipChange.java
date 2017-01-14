@@ -21,15 +21,15 @@ import interfaces.Mobile;
 
 public class EquipChange extends Action {
 
-	private final WhatTargettingStrategy what;
-	private final WhereTargettingStrategy where;
+	private final WhatStrategyInterface what;
+	private final WhereStrategyInterface where;
 	private final boolean equip;
 	
 	public EquipChange() {
-		this(new TargetSelfWhatStrategy(), new TargetHereWhereStrategy(), true);
+		this(new WhatStrategySelf(), new WhereStrategyHere(), true);
 	}
 
-	public EquipChange(WhatTargettingStrategy what, WhereTargettingStrategy where, boolean equip) {
+	public EquipChange(WhatStrategyInterface what, WhereStrategyInterface where, boolean equip) {
 		this.what = what;
 		this.where = where;
 		this.equip = equip;
@@ -129,10 +129,10 @@ public class EquipChange extends Action {
 	
 	@Override
 	public Action newBlock(Mobile player) {
-		WhatTargettingStrategy newWhatTargettingStrategy = what;
-		WhereTargettingStrategy newWhereTargettingStrategy = where;
-		WhatTargettingFactory whatFactory = new WhatTargettingFactory();
-		WhereTargettingFactory whereFactory = new WhereTargettingFactory();
+		WhatStrategyInterface newWhatTargettingStrategy = what;
+		WhereStrategyInterface newWhereTargettingStrategy = where;
+		WhatFactory whatFactory = new WhatFactory();
+		WhereFactory whereFactory = new WhereFactory();
 		boolean newEquip = equip;
 		String answerEquip = Godcreate.askQuestion("Is this equiping the item? true/false.", player);
 		if ("true".equals(answerEquip) || "false".equals(answerEquip)) {
