@@ -14,3 +14,6 @@ src/Interfaces/Container.java.orig
 src/locationCollection.ser
 src/database/CREATETABLES.sql
 src/database/CreateData.sql
+mysql-connector-java-gpl-5.1.32.msi
+Jasmud.gpj
+src/interfaces/Container.java.orig
