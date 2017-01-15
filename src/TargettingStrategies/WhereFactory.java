@@ -6,8 +6,8 @@ public class WhereFactory {
 		switch(targetting.toLowerCase()) {
 		case "HERE":
 			return new WhereStrategyHere();
-		case "INVENTORY":
-			return new TargetInventoryWhereStrategy();
+		case "SELFINVENTORY":
+			return new WhereStrategySelfInventory();
 		case "ONEAWAY":
 			return new WhereStrategyOneAway();
 		default:

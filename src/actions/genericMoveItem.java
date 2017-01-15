@@ -53,7 +53,7 @@ public class genericMoveItem extends Action {
 					List<Container> endTargLoc = whereTarget.findWhere(s, fullCommand, currentPlayer);
 					for (Container a : endTargLoc) {
 						String tempTargName = a.getName().toLowerCase();
-						if (tempItemName.equals(endTarg) || (tempItemName + h.getId()).equals(endTarg)) {
+						if (tempTargName.equals(endTarg) || (tempTargName + a.getId()).equals(endTarg)) {
 							if (a != null) {
 								moveItem(item, a); 
 								currentPlayer.tell(h.getName() + " is moved."); // This should be a message block in the skill instead.

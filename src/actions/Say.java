@@ -16,7 +16,7 @@ public class Say extends Action {
 
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
-		WhatStrategyInterface what = new TargetAllWhatStrategy();
+		WhatStrategyInterface what = new WhatStrategyAll();
 		WhereStrategyInterface where = new WhereStrategyHere();	
 		StringBuffer sb = new StringBuffer();
 		sb.append(currentPlayer.getName() + " says, \"");

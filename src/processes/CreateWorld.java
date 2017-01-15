@@ -12,8 +12,7 @@ import java.util.List;
 
 import processes.Skill.Syntax;
 import tests.DamageTest.SkillStub;
-import TargettingStrategies.WhereStrategyHere;
-import TargettingStrategies.WhatStrategySelf;
+import TargettingStrategies.*;
 import actions.*;
 import actions.Message.msgStrings;
 
@@ -32,6 +31,7 @@ public class CreateWorld {
 		WorldServer.gameState.addBook(1, generalSkills);
 		kickSkill();
 		addGodCreateSkill();
+		addGetSkill();
 	}
 	
 	public static void makeWorldFromDatabase() {
@@ -76,5 +76,21 @@ public class CreateWorld {
 		godCreateBuilder.complete();
 		godCreate = new Skill(godCreateBuilder);
 		generalSkills.addSkill(godCreate);
+	}
+	
+	// get dagger12345
+	public static void addGetSkill() {
+		Skill get;
+		SkillBuilder getBuilder = new SkillBuilder();
+		getBuilder.addAction(new genericMoveItem(new WhereStrategyHere(), new WhereStrategySelfInventory()));
+	//	getBuilder.addAction(new Message("You p")); bah, wtf messages
+		getBuilder.addBook(generalSkills);
+		getBuilder.setName("get");
+		getBuilder.addSyntax(Skill.Syntax.SKILL);
+		getBuilder.addSyntax(Skill.Syntax.ITEM);
+		getBuilder.setId(11);
+		getBuilder.complete();
+		get = new Skill(getBuilder);
+		generalSkills.addSkill(get);		
 	}
 }

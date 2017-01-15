@@ -9,13 +9,15 @@ public class WhatFactory {
 		case "SELF":
 			return new WhatStrategySelf();
 		case "ALL":
-			return new TargetAllWhatStrategy();
+			return new WhatStrategyAll();
 		case "OTHERMOBILES":
 			return new WhatStrategyOtherMobiles();
 		case "TARGET":
 			return new WhatStrategyTarget();
 		case "ALLTARGETS":
 			return new WhatStrategyAllTargets();
+		case "ALLMOBILES":
+			return new WhatStrategyAllMobiles();
 		default:
 			throw new IllegalArgumentException("Not a valid WhatTargettingStrategy:" + targetting);
 		}

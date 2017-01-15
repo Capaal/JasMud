@@ -5,16 +5,17 @@ import java.util.*;
 import TargettingStrategies.*;
 import processes.*;
 
-
-public class Damage extends Action {
-	
+// Basic building block to change HP of a Mobile.
+// In current state handles weapon's affect + damage type, but should skill handle this instead? (with a different block)
+public class Damage extends Action {	
 	
 	private final int intensity;
 	private final WhatStrategyInterface what;
 	private final WhereStrategyInterface where;
-	private final boolean doesWeaponMatter;
+	private final boolean doesWeaponMatter; 
 	private final Type damageType;
 
+	// Default construction if called (should not be called).
 	public Damage() {
 		this(0, new WhatStrategySelf(), new WhereStrategyHere(), true, null);
 	}

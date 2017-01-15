@@ -16,10 +16,12 @@ public class Chance extends Action {
 	private final Action action;
 	private final Random ran = new Random();
 	
+	// Int chance and action required, creates default if called.
 	public Chance() {
 		this(0, new Damage());
 	}
 	
+	// Accepts percent chance, between 0 and 100. < 0 becomes 0, > 100 becomes 100.
 	public Chance(int incChance, Action action) {
 		if (action == null) {
 			throw new IllegalArgumentException("The action may not be null.");
@@ -34,6 +36,7 @@ public class Chance extends Action {
 		this.action = action;
 	}
 
+	// Rolls between 0-100, if <= to given chance, activates given action and returns result of action.
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		if (s == null) {
@@ -75,14 +78,16 @@ public class Chance extends Action {
 			WorldServer.databaseInterface.saveAction(sql);
 		}
 	}
+	
+	// Used in godCreate to build skills while program is live.
 	@Override
 	public Action newBlock(Mobile player) {
 		int newChance = chance;
 		Action newAction = action;
 		try {
-			newChance = Integer.parseInt(Godcreate.askQuestion("What percent chance should this action trigger?", player));
+			newChance = Integer.parseInt(Godcreate.askQuestion("What percent chance should this action trigger? (0-100)", player));
 		} catch (NumberFormatException e) {
-			player.tell("That value of intensity is invalid, keep it to integers. (i.e. 10)");
+			player.tell("That chance value is invalid, keep it to integers. (i.e. 10)");
 			return this.newBlock(player);
 		}
 		Godcreate.displayActions(player);		
