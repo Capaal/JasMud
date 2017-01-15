@@ -37,7 +37,7 @@ public class CreateWorld {
 		addMoveSkill();
 		addLookSkill();
 		addDropSkill();
-	//	addGetSkill();
+		addGetSkill();
 	}
 	
 	public static void makeItems() {
@@ -66,6 +66,22 @@ public class CreateWorld {
 		newItem.setId(1);
 		newItem.setName("dagger");
 		newItem.complete();
+	}
+	
+	// get dagger12345
+	public static void addGetSkill() {
+		Skill get;
+		SkillBuilder getBuilder = new SkillBuilder();
+		getBuilder.addAction(new genericMoveItem(new WhereStrategyHere(), new WhereStrategySelfInventory()));
+	//	getBuilder.addAction(new Message("You p")); bah, wtf messages
+		getBuilder.addBook(generalSkills);
+		getBuilder.setName("get");
+		getBuilder.addSyntax(Skill.Syntax.SKILL);
+		getBuilder.addSyntax(Skill.Syntax.ITEM);
+		getBuilder.setId(11);
+		getBuilder.complete();
+		get = new Skill(getBuilder);
+		generalSkills.addSkill(get);
 	}
 	
 	public static void kickSkill() {
