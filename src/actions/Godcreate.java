@@ -193,7 +193,7 @@ public class Godcreate extends Action {
 		actionMap.put("drop", new Drop());
 		actionMap.put("equipchange", new EquipChange());
 		actionMap.put("examine", new Examine());
-		actionMap.put("get", new Get());
+	//	actionMap.put("get", new Get());
 		actionMap.put("look", new Look());
 		actionMap.put("message", new Message());
 		actionMap.put("move", new Move());

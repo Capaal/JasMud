@@ -1,4 +1,4 @@
-package tests;
+/* package tests;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -67,4 +67,4 @@ public class GetTest {
 			return Arrays.asList(mockItem);
 		}		
 	}	
-}
+} */

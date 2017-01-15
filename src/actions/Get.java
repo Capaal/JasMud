@@ -1,4 +1,8 @@
-package actions;
+//USE MOVEITEM
+
+/*
+ * package actions;
+ 
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -13,9 +17,9 @@ import processes.WorldServer;
 
 public class Get extends Action {
 	
-	/* How to get GET to work
-	 * delete it
-	 */
+	// How to get GET to work
+	//  delete it
+	 
 	
 	private final WhatStrategyInterface what;
 	private final WhereStrategyInterface where;
@@ -91,3 +95,5 @@ public class Get extends Action {
 		player.tell("This is empty becase the skill needs to be reworked.");
 	}
 }
+
+*/
