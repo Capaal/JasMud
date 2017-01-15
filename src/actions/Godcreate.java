@@ -52,7 +52,7 @@ public class Godcreate extends Action {
 			return processCreateMobile(player);			
 		case "0":
 		case "exit":
-			return false;		
+			return true;		
 		default:
 			player.tell("That isn't one of the options.");
 			return processCreateType(player);

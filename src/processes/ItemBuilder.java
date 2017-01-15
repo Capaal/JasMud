@@ -152,7 +152,9 @@ public class ItemBuilder {
 	}
 	
 	private void setId() throws IllegalStateException {
-		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
+		// Need to generate valid IDs based on what currently exists
+		id = 10; // But instead, only 1 item can exist
+/*		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
 				+ " LEFT JOIN itemstats ON sequencetable.sequenceid = itemstats.itemid"
 				+ " WHERE itemstats.itemid IS NULL";
 		Object availableId = WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
@@ -166,7 +168,7 @@ public class ItemBuilder {
 			}
 		} else {
 			id = (int)availableId;
-		}		
+		}	*/	
 	}
 	
 	public static boolean newItem(Mobile player, ItemBuilder builderItem) {
@@ -259,6 +261,7 @@ public class ItemBuilder {
 		case "preview":
 			player.tell("Name: " + builderItem.name);
 			player.tell("Id: " + builderItem.id);
+			player.tell("Location: " + builderItem.itemContainer.getName());
 			player.tell("Long Description: " + builderItem.description);
 			player.tell("Physical Multiplier: " + builderItem.physicalMult);
 			player.tell("Balance Multiplier: " + builderItem.balanceMult);

@@ -44,22 +44,22 @@ public class genericMoveItem extends Action {
 		//searches for item in location
 		for (Container h : possibleContainers) {
 			Holdable item = h.getHoldableFromString(toMove);
-			String tempItemName = h.getName().toLowerCase();
-			if (tempItemName.equals(toMove) || (tempItemName + h.getId()).equals(toMove)) {
+			String tempItemName = item.getName().toLowerCase();
+			if (tempItemName.equals(toMove) || (tempItemName + item.getId()).equals(toMove)) {
 				//If item found, searches for where/what to move target to
 				if (h != null) {
 					//Figures out what endTarget is (mob, location, etc) and where endTarget is
-					String endTarg = s.getStringInfo(Syntax.TARGET, fullCommand);
+		//			String endTarg = s.getStringInfo(Syntax.TARGET, fullCommand);
 					List<Container> endTargLoc = whereTarget.findWhere(s, fullCommand, currentPlayer);
 					for (Container a : endTargLoc) {
-						String tempTargName = a.getName().toLowerCase();
-						if (tempTargName.equals(endTarg) || (tempTargName + a.getId()).equals(endTarg)) {
+		//				String tempTargName = a.getName().toLowerCase();
+		//				if (tempTargName.equals(endTarg) || (tempTargName + a.getId()).equals(endTarg)) {
 							if (a != null) {
 								moveItem(item, a); 
 								currentPlayer.tell(h.getName() + " is moved."); // This should be a message block in the skill instead.
 								return true;
 							}
-						}
+		//				}
 					}
 
 				} 

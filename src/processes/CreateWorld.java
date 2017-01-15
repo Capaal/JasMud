@@ -18,12 +18,15 @@ import actions.Message.msgStrings;
 
 public class CreateWorld {
 	
+
+	
 	public static SkillBook generalSkills = new SkillBook("generalSkills", 1);
 	
 	public static void createWorld() {
 //		makeWorldFromDatabase();
 		makeWorldFromNowhere();
 		makeSkills();
+		makeItems();
 	}
 	
 	//Hardcoded skill list
@@ -35,6 +38,10 @@ public class CreateWorld {
 		addLookSkill();
 		addDropSkill();
 	//	addGetSkill();
+	}
+	
+	public static void makeItems() {
+		makeADagger();
 	}
 	
 	public static void makeWorldFromDatabase() {
@@ -54,7 +61,13 @@ public class CreateWorld {
 		newLocation.complete();	
 	}
 	
-//Hardcoded Kick skill 9
+	public static void makeADagger() {
+		ItemBuilder newItem = new ItemBuilder();	
+		newItem.setId(1);
+		newItem.setName("dagger");
+		newItem.complete();
+	}
+	
 	public static void kickSkill() {
 		Skill kickSkill;
 		SkillBuilder kickBuilder = new SkillBuilder();
