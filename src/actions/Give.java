@@ -12,6 +12,7 @@ import TargettingStrategies.WhereStrategyInterface;
 import processes.Skill;
 import processes.Type;
 
+//Delete this?
 //Work in progress. Need to rework targetting strategies?
 public class Give extends Action {
 

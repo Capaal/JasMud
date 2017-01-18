@@ -25,7 +25,7 @@ public class genericMoveItem extends Action {
 		this(new WhereStrategyHere(), new WhereStrategyHere());
 	}
 	
-	// Expects 
+	// Expects where/where
 	public genericMoveItem(WhereStrategyInterface whereItem, WhereStrategyInterface whereTarget) {
 //		this.whatItem = whatItem; // See above.
 //		this.endTarget = endTarget; // See above.
@@ -44,7 +44,8 @@ public class genericMoveItem extends Action {
 		//searches for item in location
 		for (Container h : possibleContainers) {
 			Holdable item = h.getHoldableFromString(toMove);
-			String tempItemName = item.getName().toLowerCase();
+			String tempItemName = ""; //why not use toMove?
+			tempItemName = item.getName().toLowerCase();
 			if (tempItemName.equals(toMove) || (tempItemName + item.getId()).equals(toMove)) {
 				//If item found, searches for where/what to move target to
 				if (h != null) {
@@ -55,9 +56,15 @@ public class genericMoveItem extends Action {
 		//				String tempTargName = a.getName().toLowerCase();
 		//				if (tempTargName.equals(endTarg) || (tempTargName + a.getId()).equals(endTarg)) {
 							if (a != null) {
-								moveItem(item, a); 
-								currentPlayer.tell(h.getName() + " is moved."); // This should be a message block in the skill instead.
-								return true;
+								
+								if (toMove.equalsIgnoreCase(currentPlayer.getName()) && a.getName().equalsIgnoreCase(currentPlayer.getContainer().getName())) {
+									currentPlayer.tell("You pick yourself up off the ground and keep going.");
+									currentPlayer.tell("(You can't pick yourself up.)");
+								} else {						
+									moveItem(item, a); 
+									currentPlayer.tell(h.getName() + " is moved."); // This should be a message block in the skill instead.
+									return true;
+								}
 							}
 		//				}
 					}
@@ -92,14 +99,23 @@ public class genericMoveItem extends Action {
 
 	@Override
 	public Action newBlock(Mobile player) {
-		// TODO Auto-generated method stub
-		return null;
+		WhereStrategyInterface newWhereTarget;
+		WhereStrategyInterface newWhereItem;
+		WhereFactory whereFactoryTarget = new WhereFactory();
+		WhereFactory whereFactoryItem = new WhereFactory();
+		try {
+			newWhereTarget = whereFactoryTarget.parse((Godcreate.askQuestion("Where did the item start? (this is using Syntax).", player)).toUpperCase());
+			newWhereItem = whereFactoryItem.parse((Godcreate.askQuestion("Where is the item going? (this is using Syntax).", player)).toUpperCase());
+		} catch (IllegalArgumentException e) {
+			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE)");
+			return this.newBlock(player);
+		}
+		return new genericMoveItem(newWhereTarget, newWhereItem);
 	}
 
 	@Override
 	public void explainOneself(Mobile player) {
-		// TODO Auto-generated method stub
-
+		player.tell("Takes an item from a container and puts it into a different container.");
 	}
 
 }
