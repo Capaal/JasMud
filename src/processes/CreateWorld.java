@@ -114,9 +114,10 @@ public class CreateWorld {
 		newLoc7.setId(loc7);
 		newLoc7.setName("End of trail.");
 		newLoc7.south(6, "east");
-		newLoc7.out(2,"in");
+		newLoc7.in(2,"east");
 		newLoc7.complete();	
 		
+		// map:
 		//   [5] - [6] - [7]
 		//   [4]
 		//   [3]
