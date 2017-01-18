@@ -15,8 +15,6 @@ import processes.Skill.Syntax;
 public class genericMoveItem extends Action {
 
 	//Item location is based on player.
-//	private final WhatStrategyInterface whatItem; // Not necessary? We are assume it is an item.
-//	private final WhatStrategyInterface endTarget; // Not necessary? end target SHOULD be a container (i.e. a where)
 	private final WhereStrategyInterface whereTarget;
 	private final WhereStrategyInterface whereItem;
 	
@@ -27,8 +25,6 @@ public class genericMoveItem extends Action {
 	
 	// Expects where/where
 	public genericMoveItem(WhereStrategyInterface whereItem, WhereStrategyInterface whereTarget) {
-//		this.whatItem = whatItem; // See above.
-//		this.endTarget = endTarget; // See above.
 		this.whereTarget = whereTarget;
 		this.whereItem = whereItem;
 	}
@@ -36,6 +32,7 @@ public class genericMoveItem extends Action {
 	@Override
 	//True=player is holding the item. Action successful. False=Player does not have the item (but is state now invalid?).
 	// Expects SKILL to indicate a Syntax.ITEM
+	// Need to handle TARGET and DIRECTION, both option. Throw dagger north, throw dagger at player north, throw dagger at player (here)
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		//find item STRING to move
 		String toMove = s.getStringInfo(Syntax.ITEM, fullCommand);
@@ -50,30 +47,27 @@ public class genericMoveItem extends Action {
 				//If item found, searches for where/what to move target to
 				if (h != null) {
 					//Figures out what endTarget is (mob, location, etc) and where endTarget is
-		//			String endTarg = s.getStringInfo(Syntax.TARGET, fullCommand);
 					List<Container> endTargLoc = whereTarget.findWhere(s, fullCommand, currentPlayer);
 					for (Container a : endTargLoc) {
-		//				String tempTargName = a.getName().toLowerCase();
-		//				if (tempTargName.equals(endTarg) || (tempTargName + a.getId()).equals(endTarg)) {
-							if (a != null) {
-								
-								if (toMove.equalsIgnoreCase(currentPlayer.getName()) && a.getName().equalsIgnoreCase(currentPlayer.getContainer().getName())) {
-									currentPlayer.tell("You pick yourself up off the ground and keep going.");
-									currentPlayer.tell("(You can't pick yourself up.)");
-								} else {						
-									moveItem(item, a); 
-									currentPlayer.tell(h.getName() + " is moved."); // This should be a message block in the skill instead.
-									return true;
-								}
+						if (a != null) {
+							String locName = a.getName();
+							String playerLoc = currentPlayer.getName();
+							if (toMove.equalsIgnoreCase(currentPlayer.getName()) && locName.equalsIgnoreCase(playerLoc)) {
+								currentPlayer.tell("You pick yourself up off the ground and keep going.");
+								currentPlayer.tell("(You can't pick yourself up.)");
+							} else {						
+								moveItem(item, a); 
+								currentPlayer.tell(h.getName() + " is moved."); // This should be a message block in the skill instead.
+								return true;
 							}
-		//				}
+						}
 					}
 
 				} 
 			}
 		}
 	//item not found or target not found, should there be a message here or elsewhere?
-		currentPlayer.tell("You don't have: " + s.getStringInfo(Syntax.ITEM, fullCommand) + "."); // atm, skill can accept a "fail message" also, not true
+		currentPlayer.tell("Can't move: " + s.getStringInfo(Syntax.ITEM, fullCommand) + "."); // atm, skill can accept a "fail message" also, not true
 		return false;
 	}
 

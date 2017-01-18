@@ -5,10 +5,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import interfaces.Container;
 import interfaces.Mobile;
+import processes.Location.Direction;
 
 //import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 //import java.util.List;
+import java.util.Map;
 
 //import processes.Skill.Syntax;
 //import tests.DamageTest.SkillStub;
@@ -65,11 +68,12 @@ public class CreateWorld {
 		firstLoc.setName("Start.");
 		firstLoc.complete();	
 
-/*		//2nd location, south exit to 1, north exit to 3
+		//2nd location, south exit to 1, north exit to 3
 		int loc2 = 2;
 		LocationBuilder newLoc2 = new LocationBuilder();
 		newLoc2.setId(loc2);
 		newLoc2.setName("North of Start.");
+		newLoc2.south(1,"north"); //location2 connects south to loc1 from loc1's north
 		newLoc2.complete();	
 		
 		//3rd location, south exit to 2
@@ -77,18 +81,8 @@ public class CreateWorld {
 		LocationBuilder newLoc3 = new LocationBuilder();
 		newLoc3.setId(loc3);
 		newLoc3.setName("Road.");
+		newLoc3.south(2, "north");
 		newLoc3.complete();	
-		
-		//adding to map/connections
-		Direction newDir1 = Direction.NORTH;
-		Map<Direction, Location> loc1Map = new HashMap<Direction, Location>() ;
-		loc1Map.put(newDir1, newLoc2.getFinishedLocation());
-		firstLoc.north(loc2, "north");
-		firstLoc.locationMap = loc1Map;
-		
-		Map<Integer, Direction> firstLocDir = new HashMap<Integer, Direction>();
-		firstLocDir.put(2, newDir1);
-		*/
 		
 	}
 	
@@ -112,7 +106,7 @@ public class CreateWorld {
 		Skill get;
 		SkillBuilder getBuilder = new SkillBuilder();
 		getBuilder.addAction(new genericMoveItem(new WhereStrategyHere(), new WhereStrategySelfInventory()));
-	//	getBuilder.addAction(new Message("You p")); bah, wtf messages
+		getBuilder.addAction(new Message("You get something.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<msgStrings>())); //bah, wtf messages
 		getBuilder.addBook(generalSkills);
 		getBuilder.setName("get");
 		getBuilder.addSyntax(Skill.Syntax.SKILL);
@@ -172,7 +166,7 @@ public class CreateWorld {
 	public static void addLookSkill() {
 		Skill look;
 		SkillBuilder lookBuilder = new SkillBuilder();
-		lookBuilder.addAction(new Look(new WhereStrategyHere()));
+		lookBuilder.addAction(new Look(new WhereStrategyHere())); //need both Here & OneLocAway
 		lookBuilder.addBook(generalSkills);
 		lookBuilder.setName("look");
 		lookBuilder.addSyntax(Skill.Syntax.SKILL);
@@ -188,7 +182,7 @@ public class CreateWorld {
 		Skill drop;
 		SkillBuilder dropBuilder = new SkillBuilder();
 		dropBuilder.addAction(new genericMoveItem(new WhereStrategySelfInventory(), new WhereStrategyHere()));
-//		dropBuilder.addAction(new Message("You drop ", null, null, null));
+		dropBuilder.addAction(new Message("You drop something.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<msgStrings>()));
 		dropBuilder.addBook(generalSkills);
 		dropBuilder.setName("drop");
 		dropBuilder.addSyntax(Skill.Syntax.SKILL);
