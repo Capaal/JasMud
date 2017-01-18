@@ -64,6 +64,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		equipment.setOwner(this);
 		effectManager = new EffectManager();
 		WorldServer.gameState.addMob(name + id, this);
+		this.mobLocation.acceptItem(this);
 	}
 	
 	public String getName() {return name;}	

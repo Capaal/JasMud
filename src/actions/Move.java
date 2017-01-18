@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 import TargettingStrategies.*;
 import processes.SQLInterface;
@@ -33,6 +34,12 @@ public class Move extends Action {
 			List<Container> locs = finalLoc.findWhere(s, fullCommand, currentPlayer);
 			if (locs.isEmpty()) {
 				return false;
+			}
+			for (Object element : locs) {
+		        if (element != null) {
+		        	break;
+		        }
+		        return false;
 			}
 			Container c = locs.get(0);		
 			m.getContainer().removeItemFromLocation(m);

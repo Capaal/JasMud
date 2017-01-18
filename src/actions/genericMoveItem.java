@@ -12,6 +12,8 @@ import interfaces.Mobile;
 import processes.Skill;
 import processes.Skill.Syntax;
 
+
+// DETECTED ERRORS: On call "get daggerr" (extra r) caused null pointer exception and crash.
 public class genericMoveItem extends Action {
 
 	//Item location is based on player.
@@ -20,7 +22,6 @@ public class genericMoveItem extends Action {
 	private final WhereStrategyInterface whereTarget;
 	private final WhereStrategyInterface whereItem;
 	
-	//move item from one player to another holdable (mobiles, stditem)
 	public genericMoveItem() {
 		this(new WhereStrategyHere(), new WhereStrategyHere());
 	}
@@ -34,7 +35,6 @@ public class genericMoveItem extends Action {
 	}
 	
 	@Override
-	//True=player is holding the item. Action successful. False=Player does not have the item (but is state now invalid?).
 	// Expects SKILL to indicate a Syntax.ITEM
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		//find item STRING to move

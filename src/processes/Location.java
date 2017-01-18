@@ -6,7 +6,10 @@ import java.util.Map.Entry;
 import interfaces.*;
 
 
-// Contains all information relating to each "room" a player may visit.
+/*
+ *  Contains all information relating to each "room" a player may visit.
+ *  Should be initiated safely using LocationBuilder
+ */
 public class Location implements Container {
 		
 	private int id;
@@ -68,7 +71,7 @@ public class Location implements Container {
 		currentPlayer.tell(UsefulCommands.ANSI.GREEN + description + UsefulCommands.ANSI.SANE);
 		displayAll(currentPlayer);				
 		currentPlayer.tell(UsefulCommands.ANSI.CYAN + displayExits() + UsefulCommands.ANSI.SANE);
-		currentPlayer.tell("(God sight) Location number: " + id + ". Ground type: " + groundType.name() + ".");
+		currentPlayer.tell("(God sight) Location number: " + id + ". Ground type: " + groundType.name() + ".");  // GOD SIGHT
 	}
 	// Should probably not be here, but just a skill that accesses name and such.
 	public void glance(Mobile currentPlayer) {
@@ -83,7 +86,7 @@ public class Location implements Container {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Looking around you see: ");
 		for (Holdable h : inventory) {
-			sb.append(UsefulCommands.ANSI.BLUE + h.getName() + ". " + UsefulCommands.ANSI.SANE);
+			sb.append(UsefulCommands.ANSI.YELLOW + h.getName() + ". " + UsefulCommands.ANSI.SANE);
 			anItem = true;
 		}
 		if (anItem) {
@@ -97,7 +100,10 @@ public class Location implements Container {
 			
 	public int getId() {return id;}
 	public GroundType getGroundType() {return groundType;}	
-	public void acceptItem(Holdable newItem) {inventory.add(newItem);}	
+	public void acceptItem(Holdable newItem) {
+		inventory.add(newItem);
+		newItem.setContainer(this);
+	}	
 
 	
 	//TODO implement a null location object?

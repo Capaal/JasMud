@@ -138,69 +138,37 @@ public class MobileBuilder {
 		}
 	}
 
-	public int getXpWorth() {
-		return xpWorth;
-	}
+	public int getXpWorth() {return xpWorth;}
 
-	public void setXpWorth(int xpWorth) {
-		this.xpWorth = xpWorth;
-	}
+	public void setXpWorth(int xpWorth) {this.xpWorth = xpWorth;}
 
-	public int getExperience() {
-		return experience;
-	}
+	public int getExperience() {return experience;}
 
-	public void setExperience(int experience) {
-		this.experience = experience;
-	}
+	public void setExperience(int experience) {this.experience = experience;}
 
-	public int getLevel() {
-		return level;
-	}
+	public int getLevel() {return level;}
 
-	public void setLevel(int level) {
-		this.level = level;
-	}
+	public void setLevel(int level) {this.level = level;}
 
-	public int getAge() {
-		return age;
-	}
+	public int getAge() {return age;}
 
-	public void setAge(int age) {
-		this.age = age;
-	}
+	public void setAge(int age) {this.age = age;}
 
-	public boolean isLoadOnStartUp() {
-		return loadOnStartUp;
-	}
+	public boolean isLoadOnStartUp() {return loadOnStartUp;}
 
-	public void setLoadOnStartUp(boolean loadOnStartUp) {
-		this.loadOnStartUp = loadOnStartUp;
-	}
+	public void setLoadOnStartUp(boolean loadOnStartUp) {this.loadOnStartUp = loadOnStartUp;}
 
-	public Set<Holdable> getInventory() {
-		return new HashSet<Holdable>(inventory);
-	}
+	public Set<Holdable> getInventory() {return new HashSet<Holdable>(inventory);	}
 
-	public void setInventory(Set<Holdable> inventory) {
-		this.inventory = inventory;
-	}
+	public void setInventory(Set<Holdable> inventory) {this.inventory = inventory;	}
 
-	public List<Effect> getEffectList() {
-		return new ArrayList<Effect>(effectList);
-	}
+	public List<Effect> getEffectList() {return new ArrayList<Effect>(effectList);	}
 
-	public void setEffectList(ArrayList<Effect> effectList) {
-		this.effectList = effectList;
-	}
+	public void setEffectList(ArrayList<Effect> effectList) {this.effectList = effectList;	}
 
-	public String getName() {
-		return name;
-	}
+	public String getName() {return name;}
 
-	public int getId() {
-		return id;
-	}
+	public int getId() {return id;}
 
 	public void setMaxHp() {
 		maxHp = 100 + level * 5;
@@ -224,9 +192,7 @@ public class MobileBuilder {
 		return true;
 	}
 	
-	public StdMob getFinishedMob() {
-		return finishedMob;
-	}
+	public StdMob getFinishedMob() {return finishedMob;}
 	
 	private void setId() {
 		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"

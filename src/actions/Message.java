@@ -4,51 +4,57 @@ import interfaces.Action;
 import interfaces.Holdable;
 import interfaces.Mobile;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import processes.Skill.Syntax;
 import TargettingStrategies.*;
 import processes.Location.Direction;
-import processes.SQLInterface;
 import processes.Skill;
-import processes.Skill.Syntax;
 import processes.WorldServer;
 
-// Does not seem to be safe from developer mistakes when making new skills.
-// At the moment it can only accept directions to subsitute %s with names, not anything else like "north".
+// Used to display messages to controlled mobs. What/Where strategies obtains who should see the message, msg and syntaxList controls what is displayed.
 public class Message extends Action {
 	
 	private final String msg;
 	private final WhatStrategyInterface what;
 	private final WhereStrategyInterface where;
-//	private final ArrayList<Who> targetNames;
-	private final ArrayList<msgStrings> msgList;
+	private final ArrayList<Syntax> syntaxList;
 	
 	public Message() {
-		this("", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<msgStrings>());
+		this("", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>());
 	}
-
-	public Message(String m, WhatStrategyInterface what, WhereStrategyInterface where, ArrayList<msgStrings> msgstringslist) {
+	/*
+	 *  Typical construction: 
+	 *  skillBuilder.addAction(new Message("%s punches %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.TARGET))));
+	 *  Would display the message: "(your name) punches (target's name)."
+	 *  The Syntax's list ORDER matters, each syntax (in order) replaces each %s.
+	 */
+	public Message(String m, WhatStrategyInterface what, WhereStrategyInterface where, ArrayList<Syntax> syntaxList) {
 		this.msg = m;
 		this.what = what;
 		this.where = where;
-		this.msgList = msgstringslist;
+		this.syntaxList = syntaxList;
 	}
 	
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
-		ArrayList<String> tNames = new ArrayList<String>();
-		for (msgStrings msg : msgList) {
-			tNames.add(msg.getString(s, fullCommand, currentPlayer));
-		}
+		ArrayList<String> substituteWords = new ArrayList<String>();
+		for (Syntax msg : syntaxList) {
+			if (msg.equals(Syntax.SELF)) {
+				substituteWords.add(currentPlayer.getName());
+			} else {
+				substituteWords.add(s.getStringInfo(msg, fullCommand));
+			}			
+		}		
 		List<Holdable> targs = what.findWhat(s, fullCommand, currentPlayer, where.findWhere(s, fullCommand, currentPlayer));
 		for (Holdable m : targs) {
 			if (m != null && m instanceof Mobile && ((Mobile)m).isControlled()) {
-				System.out.println(msg);
-				System.out.println(tNames);
-				((Mobile) m).tell(String.format(msg, tNames.toArray()));
+				System.out.println(msg); // Test Line
+				System.out.println(substituteWords); // Test Line
+				((Mobile) m).tell(String.format(msg, substituteWords.toArray()));
 			}
 		}		
 		return true;
@@ -56,7 +62,7 @@ public class Message extends Action {
 	
 	@Override
 	public boolean save(int position) {	
-		if (!super.save(position)) {
+/*		if (!super.save(position)) {
 			return false;
 		}		
 		int msgStringsCount = 1;
@@ -67,8 +73,8 @@ public class Message extends Action {
 					+ selectMsgStringsId(msgStringsCount, ms.toString()) + ");";
 			WorldServer.databaseInterface.saveAction(msgStringsTableInsert);		
 			msgStringsCount ++;
-		}				
-		return true;			
+		}				*/
+		return true;		
 	}
 	
 	private int selectMsgStringsId(int pos, String type) {
@@ -82,7 +88,7 @@ public class Message extends Action {
 		WhereFactory whereFactory = new WhereFactory();
 		WhatStrategyInterface newWhat = what;
 		WhereStrategyInterface newWhere = where;
-		ArrayList<msgStrings> newMsgList = msgList;
+	//	ArrayList<msgStrings> newMsgList = msgList;
 		String newMsg = Godcreate.askQuestion("What message will be displayed? Remember to use %s to replace strings you don't know yet.", player);
 		int numMsgStrings = 0;
 		try {
@@ -93,7 +99,7 @@ public class Message extends Action {
 		}
 		for (int i = 1; i <= numMsgStrings; i++) {
 			try {
-				newMsgList.add(msgStrings.valueOf(Godcreate.askQuestion("What syntax goes into %s number " + i + "?", player).toUpperCase()));
+	//			newMsgList.add(msgStrings.valueOf(Godcreate.askQuestion("What syntax goes into %s number " + i + "?", player).toUpperCase()));
 			} catch (IllegalArgumentException e) {
 				player.tell("That last one wasn't a valid syntax.");
 				i--;
@@ -106,7 +112,8 @@ public class Message extends Action {
 			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE)");
 			return this.newBlock(player);
 		}
-		return new Message(newMsg, newWhat, newWhere, newMsgList);
+//		return new Message(newMsg, newWhat, newWhere, newMsgList);
+		return null;
 	}
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
@@ -127,63 +134,20 @@ public class Message extends Action {
 		player.tell("Displays messages to whomever you set it up to display to.");
 		StringBuilder sb = new StringBuilder();
 		sb.append("msgStrings:");
-		for (msgStrings ms : msgStrings.values()) {
-			sb.append(" ");
-			sb.append(ms.toString());
-		}
+//		for (msgStrings ms : msgStrings.values()) {
+//			sb.append(" ");
+//			sb.append(ms.toString());
+//		}
 		player.tell(sb.toString());
 		player.tell("Each msgString can be used to convert a %s in your message into the necessary word.");
 		player.tell("Message: " + msg);
 		sb = new StringBuilder();
 		sb.append("Message Strings:");
-		for (msgStrings msgS : msgList) {
-			sb.append(" ");
-			sb.append(msgS.toString());
-		}
+//		for (msgStrings msgS : msgList) {
+//			sb.append(" ");
+//			sb.append(msgS.toString());
+//		}
 		player.tell(sb.toString());
 		player.tell("What: " + what.toString() + " Where: " + where.toString());		
-	}
-	
-	public enum msgStrings {
-		
-		SELF() {
-			@Override
-			public String getString(Skill s, String fullCommand, Mobile currentPlayer) {
-				return currentPlayer.getName();
-			}
-			
-		},
-		
-		TARGET() {
-			@Override
-			public String getString(Skill s, String fullCommand, Mobile currentPlayer) {
-				return s.getStringInfo(Syntax.TARGET, fullCommand);
-			}
-		},
-		
-		MOVE() {
-			@Override
-			public String getString(Skill s, String fullCommand, Mobile currentPlayer) {
-				return s.getStringInfo(Syntax.DIRECTION, fullCommand);
-			}
-		},
-		
-		OPPMOVE() {
-			@Override
-			public String getString(Skill s, String fullCommand, Mobile currentPlayer) {
-				Direction opp = Direction.valueOf((s.getStringInfo(Syntax.DIRECTION, fullCommand)).toUpperCase());
-				return opp.getOpp();
-			}
-		},
-		
-		ITEM() {
-			@Override
-			public String getString(Skill s, String fullCommand, Mobile currentPlayer) {
-				return s.getStringInfo(Syntax.ITEM, fullCommand);
-			}
-		};
-		
-		private msgStrings(){}
-		public abstract String getString(Skill s, String fullCommand, Mobile currentPlayer);
-	}
+	}	
 }

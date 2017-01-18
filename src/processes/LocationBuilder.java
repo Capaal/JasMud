@@ -10,16 +10,29 @@ import actions.Godcreate;
 import processes.Location.Direction;
 import processes.Location.GroundType;
 
+/*
+ * Builder class for safely creating a Location
+ * Typically follows the following steps:
+ * LocationBuilder newLocation = new LocationBuilder();   Readies a new builder and sets variables to generics
+ * newLocation.setID(int id);  Assigns ID for this new location.
+ * newLocation.setName(String name);  Sets a brief name.
+ * newLocation.setDescription(String description);  Longer description of location
+ * newLocation.setGroundType(Groundtype groundtype);  See Location for Groundtype ENUMS
+ * newLocation.north(int futureId, String connectionDirection)  EXAMPLE: newLocation.north(12, "south");
+ * The Above should call the direction FROM THIS LOCATION to another EXISTING LOCATION (so NORTH of here is otherID and connects to here via it's south)	
+ * Additional calls to south, east, in, up etc would follow for other EXISTING locations.
+ * newLocation.complete();   Declares the new Location complete, a Location will be generated, and connections between locations created.
+ * Will over-write an Existing Location's connected locations if existing location's direction would connect to multiple locations.
+ */
 public class LocationBuilder {
+	
 	private int id;
 	private String name;
 	private String description;
 	private GroundType groundType;
 	public Map<Direction, Location> locationMap;
-	public Map<Integer, Direction> locationConnections;
-	
-	private Location finishedLocation;
-	
+	public Map<Integer, Direction> locationConnections;	
+	private Location finishedLocation;	
 	private boolean buildComplete = false;
 	
 	public LocationBuilder() {
@@ -31,7 +44,9 @@ public class LocationBuilder {
 		locationConnections = new HashMap<Integer, Direction>();
 	}
 	
+	// Declares the Location Builder done building. Generates a new Location and finds a valid ID to assign.
 	public boolean complete() {
+		// Should check that ID is ok, if assigned manually.
 		if (getId() == -1) {
 			try {
 				setId();
@@ -45,6 +60,8 @@ public class LocationBuilder {
 		return true;
 	}
 	
+	// If an instance of LocationBuilder has been completed via "complete()" then returns the generated Location.
+	// @Throws IllegalStateException
 	public Location getFinishedLocation() {
 		if (buildComplete) {
 			return finishedLocation;
@@ -57,10 +74,12 @@ public class LocationBuilder {
 		return id;
 	}
 	
+	// Dangerous, remove? Another Location might be assigned that ID, or add a check during Complete()
 	public void setId(int id) {
 		this.id = id;
 	}
 	
+	// UNUSED currently, but needs to search for valid ID. TODO
 	private void setId() throws IllegalStateException {
 	/*	String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
 				+ " LEFT JOIN locationstats ON sequencetable.sequenceid = locationstats.locid"
@@ -99,13 +118,12 @@ public class LocationBuilder {
 		return groundType;
 	}
 
+	// See Location for GroundType Enums.
 	public void setGroundType(GroundType groundType) {
 		this.groundType = groundType;
 	}	
 	
-	public void north(int futureId, String connectionDirection) {
-		buildDirections(id, Direction.NORTH, futureId, connectionDirection);
-	}			
+	public void north(int futureId, String connectionDirection) {buildDirections(id, Direction.NORTH, futureId, connectionDirection);}			
 	public void northEast(int futureId, String connectionDirection) {buildDirections(id, Direction.NORTHEAST, futureId, connectionDirection);}			
 	public void east(int futureId, String connectionDirection) {buildDirections(id, Direction.EAST, futureId, connectionDirection);}				
 	public void southEast(int futureId, String connectionDirection) {buildDirections(id, Direction.SOUTHEAST, futureId, connectionDirection);}		
@@ -118,8 +136,8 @@ public class LocationBuilder {
 	public void in(int futureId, String connectionDirection) {buildDirections(id, Direction.IN, futureId, connectionDirection);}			
 	public void out(int futureId, String connectionDirection) {buildDirections(id, Direction.OUT, futureId, connectionDirection);}			
 	
+	
 	private void buildDirections(int newLocationId, Direction directionConnectingLocationWillBe, int idOfConnectingLocation, String directionConnectingLocationWillConnectToNewLocation) {
-		// SQL will call for a direction even if there is no location here, so just ends.
 		if (newLocationId != 0) {	
 			Direction futureDirection = Direction.NORTH;			
 			if (WorldServer.gameState.checkForLocation(idOfConnectingLocation)) {

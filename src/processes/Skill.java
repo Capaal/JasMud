@@ -57,25 +57,26 @@ public class Skill implements Runnable {
 	}	
 	 // should be inside syntax enum?
 	public String getStringInfo(Syntax neededInfo, String fullCommand) {
-		ArrayList<String> fullCommandArray = new ArrayList<String>();
-		StringTokenizer st = new StringTokenizer(fullCommand);
+		return neededInfo.getStringInfo(neededInfo, fullCommand, this);
+	/*	ArrayList<String> fullCommandArray = new ArrayList<String>(); // To becomes list of each word from fullCommand
+		StringTokenizer st = new StringTokenizer(fullCommand);  // Breaks fullCommand into individual characters.
 		while (st.hasMoreTokens()) {
-			fullCommandArray.add(st.nextToken());
+			fullCommandArray.add(st.nextToken()); // adds individual words to fullCommandArray
 		}
-		int syntaxPos = syntax.indexOf(neededInfo);
-		if (syntaxPos != -1) {
-			if (neededInfo.equals(Syntax.LIST)){
+		int syntaxPos = syntax.indexOf(neededInfo); // Queries THIS skill for the given Syntax (neededInfo) for which position that word should be.
+		if (syntaxPos != -1) { // Would be -1 IF the neededInfo Syntax was NOT defined by this Skill.
+			if (neededInfo.equals(Syntax.LIST)){ // Checks for the special case (which returns all remaining words).
 				StringBuffer sb = new StringBuffer();
 				for (int i = syntaxPos; i < fullCommandArray.size(); i++) {
 					sb.append(fullCommandArray.get(i));
 				}
 				return sb.toString();
 			}
-			if (fullCommandArray.size() > syntaxPos) {
-				return fullCommandArray.get(syntaxPos);
+			if (fullCommandArray.size() > syntaxPos) { // If fullCommand has enough words.
+				return fullCommandArray.get(syntaxPos); // Return the word at the given position.
 			}
 		}
-		return "";
+		return "";*/
 	}
 	
 	public Queue<Action> getActions() {
@@ -181,6 +182,10 @@ public class Skill implements Runnable {
 			
 		},
 		
+		SELF() {
+			
+		},
+		
 		TARGET() {
 			
 		},
@@ -190,7 +195,23 @@ public class Skill implements Runnable {
 		},
 		
 		LIST() {
-			
+			@Override
+			public String getStringInfo(Syntax neededInfo, String fullCommand, Skill s) {
+				ArrayList<String> fullCommandArray = new ArrayList<String>(); // To becomes list of each word from fullCommand
+				StringTokenizer st = new StringTokenizer(fullCommand);  // Breaks fullCommand into individual characters.
+				while (st.hasMoreTokens()) {
+					fullCommandArray.add(st.nextToken()); // adds individual words to fullCommandArray
+				}
+				int syntaxPos = s.syntax.indexOf(neededInfo); // Queries THIS skill for the given Syntax (neededInfo) for which position that word should be.
+				if (syntaxPos != -1) { // Would be -1 IF the neededInfo Syntax was NOT defined by this Skill.					
+					StringBuffer sb = new StringBuffer();
+					for (int i = syntaxPos; i < fullCommandArray.size(); i++) {
+						sb.append(fullCommandArray.get(i));
+					}
+					return sb.toString();					
+				}
+				return "";
+			}			
 		},
 		
 		DIRECTION() {
@@ -207,5 +228,20 @@ public class Skill implements Runnable {
 		
 		
 		private Syntax() {}
+		
+		public String getStringInfo(Syntax neededInfo, String fullCommand, Skill s) {
+			ArrayList<String> fullCommandArray = new ArrayList<String>(); // To becomes list of each word from fullCommand
+			StringTokenizer st = new StringTokenizer(fullCommand);  // Breaks fullCommand into individual characters.
+			while (st.hasMoreTokens()) {
+				fullCommandArray.add(st.nextToken()); // adds individual words to fullCommandArray
+			}
+			int syntaxPos = s.syntax.indexOf(neededInfo); // Queries THIS skill for the given Syntax (neededInfo) for which position that word should be.
+			if (syntaxPos != -1) { // Would be -1 IF the neededInfo Syntax was NOT defined by this Skill.				
+				if (fullCommandArray.size() > syntaxPos) { // If fullCommand has enough words.
+					return fullCommandArray.get(syntaxPos); // Return the word at the given position.
+				}
+			}
+			return "";
+		}
 	}
 }

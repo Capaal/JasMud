@@ -6,15 +6,12 @@ import static org.mockito.Mockito.when;
 import interfaces.Container;
 import interfaces.Mobile;
 
-//import java.sql.SQLException;
 import java.util.ArrayList;
-//import java.util.List;
-
-//import processes.Skill.Syntax;
-//import tests.DamageTest.SkillStub;
+import java.util.Arrays;
+import java.util.List;
+import processes.Skill.Syntax;
 import TargettingStrategies.*;
 import actions.*;
-import actions.Message.msgStrings;
 
 public class CreateWorld {
 	
@@ -32,6 +29,7 @@ public class CreateWorld {
 	public static void makeSkills() {
 		WorldServer.gameState.addBook(1, generalSkills);
 		kickSkill();
+		addPunchSkill();
 		addGodCreateSkill();
 		addMoveSkill();
 		addLookSkill();
@@ -59,19 +57,20 @@ public class CreateWorld {
 	public static void makeWorldFromNowhere() {
 
 		//first location, north exit to 2
-		int loc1 = 1;	
 		LocationBuilder firstLoc = new LocationBuilder();
-		firstLoc.setId(loc1);
+		firstLoc.setId(1);
 		firstLoc.setName("Start.");
+		firstLoc.setDescription("You have to start somewhere");
 		firstLoc.complete();	
 
-/*		//2nd location, south exit to 1, north exit to 3
-		int loc2 = 2;
+		//2nd location, south exit to 1, north exit to 3
 		LocationBuilder newLoc2 = new LocationBuilder();
-		newLoc2.setId(loc2);
+		newLoc2.setId(2);
 		newLoc2.setName("North of Start.");
+		newLoc2.setDescription("Slightly north");
+		newLoc2.south(1, "north");
 		newLoc2.complete();	
-		
+/*		
 		//3rd location, south exit to 2
 		int loc3 = 2;
 		LocationBuilder newLoc3 = new LocationBuilder();
@@ -101,7 +100,7 @@ public class CreateWorld {
 	
 	public static void makeGoblin() {
 		MobileBuilder newGoblin = new MobileBuilder();
-		newGoblin.setId(1);
+		newGoblin.setId(2);
 		newGoblin.setName("goblin");
 		newGoblin.setLoadOnStartUp(true);
 		newGoblin.complete();
@@ -128,13 +127,33 @@ public class CreateWorld {
 		Skill kickSkill;
 		SkillBuilder kickBuilder = new SkillBuilder();
 		kickBuilder.addAction(new Damage(10, new WhatStrategySelf(), new WhereStrategyHere(), false, null));
-		kickBuilder.addAction(new Message("You kicked yourself.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<msgStrings>()));
+		kickBuilder.addAction(new Message("you kicked yourself.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>()));
 		kickBuilder.setId(9);
 		kickBuilder.setName("kick");
 		kickBuilder.addSyntax(Skill.Syntax.SKILL);
 		kickBuilder.complete();
 		kickSkill = new Skill(kickBuilder);
 		generalSkills.addSkill(kickSkill);
+	}
+	
+	public static void addPunchSkill() {
+		Skill punchSkill;
+		SkillBuilder punchBuilder = new SkillBuilder();
+		punchBuilder.addAction(new Damage(10, new WhatStrategyTarget(), new WhereStrategyHere(), false, null));
+//		ArrayList<msgStrings> punchStrings = new ArrayList<msgStrings>();
+//		punchBuilder.addAction(new Message("You punch %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<msgStrings>(Arrays.asList(msgStrings.TARGET))));
+		punchBuilder.addAction(new Message("You punch %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.TARGET))));
+		punchBuilder.addAction(new Message("%s punches %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.TARGET))));
+//		punchStrings.add(msgStrings.SELF);
+//		punchStrings.add(msgStrings.TARGET);
+	//	punchBuilder.addAction(new Message("%s punched %s.", new WhatStrategyOtherMobiles(), new WhereStrategyHere(), punchStrings));
+		punchBuilder.setId(20);
+		punchBuilder.setName("punch");
+		punchBuilder.addSyntax(Skill.Syntax.SKILL);
+		punchBuilder.addSyntax(Skill.Syntax.TARGET);
+		punchBuilder.complete();
+		punchSkill = new Skill(punchBuilder);
+		generalSkills.addSkill(punchSkill);
 	}
 	
 	//hardcoded godcreate skill 10
