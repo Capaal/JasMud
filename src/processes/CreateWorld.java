@@ -77,12 +77,51 @@ public class CreateWorld {
 		newLoc2.complete();	
 		
 		//3rd location, south exit to 2
-		int loc3 = 2;
+		int loc3 = 3;
 		LocationBuilder newLoc3 = new LocationBuilder();
 		newLoc3.setId(loc3);
 		newLoc3.setName("Road.");
 		newLoc3.south(2, "north");
 		newLoc3.complete();	
+		
+		//4th location, south exit to 3
+		int loc4 = 4;
+		LocationBuilder newLoc4 = new LocationBuilder();
+		newLoc4.setId(loc4);
+		newLoc4.setName("Along the road.");
+		newLoc4.south(3, "north");
+		newLoc4.complete();	
+		
+		//5th location, south exit to 4
+		int loc5 = 5;
+		LocationBuilder newLoc5 = new LocationBuilder();
+		newLoc5.setId(loc5);
+		newLoc5.setName("On a bridge.");
+		newLoc5.south(4, "north");
+		newLoc5.complete();	
+		
+		//6th location, west exit to 5
+		int loc6 = 6;
+		LocationBuilder newLoc6 = new LocationBuilder();
+		newLoc6.setId(loc6);
+		newLoc6.setName("Forest trail.");
+		newLoc6.south(5, "east");
+		newLoc6.complete();	
+		
+		//7th location, west exit to 6
+		int loc7 = 7;
+		LocationBuilder newLoc7 = new LocationBuilder();
+		newLoc7.setId(loc7);
+		newLoc7.setName("End of trail.");
+		newLoc7.south(6, "east");
+		newLoc7.out(2,"in");
+		newLoc7.complete();	
+		
+		//   [5] - [6] - [7]
+		//   [4]
+		//   [3]
+		//   [2] - [7]
+		//   [1]
 		
 	}
 	
