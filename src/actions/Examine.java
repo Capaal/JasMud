@@ -2,6 +2,7 @@ package actions;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Set;
 
 import TargettingStrategies.*;
 import interfaces.*;
@@ -21,17 +22,27 @@ public class Examine extends Action {
 	
 	@Override
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
-		String toExamine = UsefulCommands.returnTarget(fullCommand);			
-		for (Container c : where.findWhere(s, fullCommand, currentPlayer)) {
-			for (Holdable h : c.getInventory()) {
-				if (h.getName().equals(toExamine) || (h.getName() + h.getId()).equals(toExamine)) {
-					currentPlayer.tell(h.getDescription());
-					return true;
+		String toExamine = UsefulCommands.returnTarget(fullCommand);		
+		boolean found = false;
+		for (Holdable i : currentPlayer.getInventory()) {
+			if (i.getName().equals(toExamine) || (i.getName() + i.getId()).equals(toExamine)) {
+				currentPlayer.tell(i.getDescription());
+				found = true;
+			}
+		}
+		if (found == false) {
+			for (Container c : where.findWhere(s, fullCommand, currentPlayer)) {
+				for (Holdable h : c.getInventory()) {
+					if (h.getName().equals(toExamine) || (h.getName() + h.getId()).equals(toExamine)) {
+						currentPlayer.tell(h.getDescription());
+						return true;
+					}
 				}
 			}
 		}
 		return false;	
 	}	
+	
 	@Override
 	public Action newBlock(Mobile player) {
 		WhereFactory whereFactory = new WhereFactory();

@@ -57,7 +57,6 @@ public class genericMoveItem extends Action {
 								currentPlayer.tell("(You can't pick yourself up.)");
 							} else {						
 								moveItem(item, a); 
-								currentPlayer.tell(h.getName() + " is moved."); // This should be a message block in the skill instead.
 								return true;
 							}
 						}
