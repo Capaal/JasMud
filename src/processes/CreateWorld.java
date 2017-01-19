@@ -33,6 +33,7 @@ public class CreateWorld {
 		addSaySkill();
 		addThrowSkill();
 		addGiveSkill();
+		addMsgWorldSkill();
 	}
 	
 	public static void makeItems() {
@@ -132,23 +133,19 @@ public class CreateWorld {
 	
 	// get dagger12345
 	public static void addGetSkill() {
-		Skill get;
 		SkillBuilder getBuilder = new SkillBuilder();
 		getBuilder.addAction(new genericMoveItem(new WhereStrategyHere(), new WhereStrategySelfInventory()));
-		getBuilder.addAction(new Message("You get something.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>()));
+		getBuilder.addAction(new Message("You get %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM))));
 		getBuilder.addBook(generalSkills);
 		getBuilder.setName("get");
 		getBuilder.addSyntax(Skill.Syntax.SKILL);
 		getBuilder.addSyntax(Skill.Syntax.ITEM);
 		getBuilder.setId(11);
 		getBuilder.complete();
-		get = new Skill(getBuilder);
-		generalSkills.addSkill(get);
 	}
 	
 	//hardcoded kick skill 9
 	public static void kickSkill() {
-		Skill kickSkill;
 		SkillBuilder kickBuilder = new SkillBuilder();
 		kickBuilder.addAction(new Damage(10, new WhatStrategySelf(), new WhereStrategyHere(), false, null));
 		kickBuilder.addAction(new Message("you kicked yourself.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>()));
@@ -156,33 +153,22 @@ public class CreateWorld {
 		kickBuilder.setName("kick");
 		kickBuilder.addSyntax(Skill.Syntax.SKILL);
 		kickBuilder.complete();
-		kickSkill = new Skill(kickBuilder);
-		generalSkills.addSkill(kickSkill);
 	}
 	
 	public static void addPunchSkill() {
-		Skill punchSkill;
 		SkillBuilder punchBuilder = new SkillBuilder();
 		punchBuilder.addAction(new Damage(10, new WhatStrategyTarget(), new WhereStrategyHere(), false, null));
-//		ArrayList<msgStrings> punchStrings = new ArrayList<msgStrings>();
-//		punchBuilder.addAction(new Message("You punch %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<msgStrings>(Arrays.asList(msgStrings.TARGET))));
 		punchBuilder.addAction(new Message("You punch %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.TARGET))));
 		punchBuilder.addAction(new Message("%s punches %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.TARGET))));
-//		punchStrings.add(msgStrings.SELF);
-//		punchStrings.add(msgStrings.TARGET);
-	//	punchBuilder.addAction(new Message("%s punched %s.", new WhatStrategyOtherMobiles(), new WhereStrategyHere(), punchStrings));
 		punchBuilder.setId(20);
 		punchBuilder.setName("punch");
 		punchBuilder.addSyntax(Skill.Syntax.SKILL);
 		punchBuilder.addSyntax(Skill.Syntax.TARGET);
 		punchBuilder.complete();
-		punchSkill = new Skill(punchBuilder);
-		generalSkills.addSkill(punchSkill);
 	}
 	
 	//hardcoded godcreate skill 10
 	public static void addGodCreateSkill() {
-		Skill godCreate;
 		SkillBuilder godCreateBuilder = new SkillBuilder();
 		godCreateBuilder.addAction(new Godcreate());
 		godCreateBuilder.addBook(generalSkills);
@@ -190,30 +176,22 @@ public class CreateWorld {
 		godCreateBuilder.addSyntax(Skill.Syntax.SKILL);
 		godCreateBuilder.setId(8);
 		godCreateBuilder.complete();
-		godCreate = new Skill(godCreateBuilder);
-		generalSkills.addSkill(godCreate);
 	}
 	
 	//hardcoded move skill 12
 	public static void addMoveSkill() {
-		Skill move;
 		SkillBuilder moveBuilder = new SkillBuilder();
 		moveBuilder.addAction(new Move(new WhatStrategySelf() , new WhereStrategyHere(), new WhereStrategyOneAway()));
-	//	moveBuilder.addAction(new Message("You move ", null, null , null));
-	//	moveBuilder.addAction(new Look(new WhereStrategyHere()));
 		moveBuilder.addBook(generalSkills);
 		moveBuilder.setName("move");
 		moveBuilder.addSyntax(Skill.Syntax.SKILL);
 		moveBuilder.addSyntax(Skill.Syntax.DIRECTION);
 		moveBuilder.setId(12);
 		moveBuilder.complete();
-		move = new Skill(moveBuilder);
-		generalSkills.addSkill(move);
 	}
 	
 	//hardcoded look skill 13
 	public static void addLookSkill() {
-		Skill look;
 		SkillBuilder lookBuilder = new SkillBuilder();
 		lookBuilder.addAction(new Look(new WhereStrategyHere())); //need both Here & OneLocAway
 		lookBuilder.addBook(generalSkills);
@@ -222,29 +200,23 @@ public class CreateWorld {
 		lookBuilder.addSyntax(Skill.Syntax.DIRECTION);
 		lookBuilder.setId(13);
 		lookBuilder.complete();
-		look = new Skill(lookBuilder);
-		generalSkills.addSkill(look);
 	}
 	
 	//hardcoded drop skill 14
 	public static void addDropSkill() {
-		Skill drop;
 		SkillBuilder dropBuilder = new SkillBuilder();
 		dropBuilder.addAction(new genericMoveItem(new WhereStrategySelfInventory(), new WhereStrategyHere()));
-		dropBuilder.addAction(new Message("You drop something.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>()));
+		dropBuilder.addAction(new Message("You drop %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM))));
 		dropBuilder.addBook(generalSkills);
 		dropBuilder.setName("drop");
 		dropBuilder.addSyntax(Skill.Syntax.SKILL);
 		dropBuilder.addSyntax(Skill.Syntax.ITEM);
 		dropBuilder.setId(14);
-		dropBuilder.complete();
-		drop = new Skill(dropBuilder);
-		generalSkills.addSkill(drop);		
+		dropBuilder.complete();	
 	}
 	
 	//hardcoded examine skill 15
 	public static void addExamineSkill() {
-		Skill examine;
 		SkillBuilder examineBuilder = new SkillBuilder();
 		examineBuilder.addAction(new Examine(new WhereStrategyHere()));
 		examineBuilder.addBook(generalSkills);
@@ -252,28 +224,22 @@ public class CreateWorld {
 		examineBuilder.addSyntax(Skill.Syntax.SKILL);
 		examineBuilder.addSyntax(Skill.Syntax.ITEM);
 		examineBuilder.setId(15);
-		examineBuilder.complete();
-		examine = new Skill(examineBuilder);
-		generalSkills.addSkill(examine);		
+		examineBuilder.complete();		
 	}
 	
 	//hardcoded say skill 16
 	public static void addSaySkill() {
-		Skill say;
 		SkillBuilder sayBuilder = new SkillBuilder();
 		sayBuilder.addAction(new Say());
 		sayBuilder.addBook(generalSkills);
 		sayBuilder.setName("say");
 		sayBuilder.addSyntax(Skill.Syntax.SKILL);
 		sayBuilder.setId(16);
-		sayBuilder.complete();
-		say = new Skill(sayBuilder);
-		generalSkills.addSkill(say);		
+		sayBuilder.complete();		
 	}
 	
 	//hardcoded throw skill 17
 	public static void addThrowSkill() {
-		Skill throwItem;
 		SkillBuilder throwBuilder = new SkillBuilder();
 		throwBuilder.addAction(new genericMoveItem(new WhereStrategySelfInventory(), new WhereStrategyHere())); //need Here & OneLocAway
 		throwBuilder.addAction(new Damage(5, new WhatStrategySelf(), new WhereStrategyHere(), false, null)); //dmg based on item?
@@ -284,14 +250,11 @@ public class CreateWorld {
 		throwBuilder.addSyntax(Skill.Syntax.TARGET); //how to syntax throw (item) at (target)?
 		throwBuilder.addSyntax(Skill.Syntax.DIRECTION);
 		throwBuilder.setId(17);
-		throwBuilder.complete();
-		throwItem = new Skill(throwBuilder);
-		generalSkills.addSkill(throwItem);		
+		throwBuilder.complete();	
 	}
 	
 	//hardcoded give skill 18
 	public static void addGiveSkill() {
-		Skill give;
 		SkillBuilder giveBuilder = new SkillBuilder();
 		giveBuilder.addAction(new genericMoveItem(new WhereStrategyHere(), new WhereStrategyHere()));
 		giveBuilder.addBook(generalSkills);
@@ -300,10 +263,25 @@ public class CreateWorld {
 		giveBuilder.addSyntax(Skill.Syntax.ITEM);
 		giveBuilder.addSyntax(Skill.Syntax.TARGET);
 		giveBuilder.setId(18);
-		giveBuilder.complete();
-		give = new Skill(giveBuilder);
-		generalSkills.addSkill(give);		
+		giveBuilder.complete();	
 	}
+	
+	//hardcoded msgWorld skill 19
+	public static void addMsgWorldSkill() {
+		SkillBuilder msgWorldBuilder = new SkillBuilder();
+		msgWorldBuilder.addAction(new Message("%s says: %s", new WhatStrategyAllMobiles(), new WhereStrategyEverywhere(), 
+				new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.SELF,Syntax.LIST))))); 
+		msgWorldBuilder.addBook(generalSkills);
+		msgWorldBuilder.setName("msg");
+		msgWorldBuilder.addSyntax(Skill.Syntax.SKILL);
+		msgWorldBuilder.addSyntax(Skill.Syntax.LIST);
+		msgWorldBuilder.setId(19);
+		msgWorldBuilder.complete();
+
+	}
+	
+	
+
 	
 	
 }
