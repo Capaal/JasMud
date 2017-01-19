@@ -94,7 +94,7 @@ public class CreateWorld {
 		LocationBuilder newLoc6 = new LocationBuilder();
 		newLoc6.setId(loc6);
 		newLoc6.setName("Forest trail.");
-		newLoc6.south(5, "east");
+		newLoc6.west(5, "east");
 		newLoc6.complete();	
 		
 		//7th location, west exit to 6
@@ -102,7 +102,7 @@ public class CreateWorld {
 		LocationBuilder newLoc7 = new LocationBuilder();
 		newLoc7.setId(loc7);
 		newLoc7.setName("End of trail.");
-		newLoc7.south(6, "east");
+		newLoc7.west(6, "east");
 		newLoc7.in(2,"east");
 		newLoc7.complete();	
 		
@@ -200,7 +200,7 @@ public class CreateWorld {
 		SkillBuilder moveBuilder = new SkillBuilder();
 		moveBuilder.addAction(new Move(new WhatStrategySelf() , new WhereStrategyHere(), new WhereStrategyOneAway()));
 	//	moveBuilder.addAction(new Message("You move ", null, null , null));
-		moveBuilder.addAction(new Look(new WhereStrategyHere()));
+	//	moveBuilder.addAction(new Look(new WhereStrategyHere()));
 		moveBuilder.addBook(generalSkills);
 		moveBuilder.setName("move");
 		moveBuilder.addSyntax(Skill.Syntax.SKILL);
@@ -282,6 +282,7 @@ public class CreateWorld {
 		throwBuilder.addSyntax(Skill.Syntax.SKILL);
 		throwBuilder.addSyntax(Skill.Syntax.ITEM);
 		throwBuilder.addSyntax(Skill.Syntax.TARGET); //how to syntax throw (item) at (target)?
+		throwBuilder.addSyntax(Skill.Syntax.DIRECTION);
 		throwBuilder.setId(17);
 		throwBuilder.complete();
 		throwItem = new Skill(throwBuilder);
@@ -303,5 +304,6 @@ public class CreateWorld {
 		give = new Skill(giveBuilder);
 		generalSkills.addSkill(give);		
 	}
+	
 	
 }

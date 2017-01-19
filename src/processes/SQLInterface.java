@@ -15,7 +15,6 @@ import effectors.*;
 import TargettingStrategies.WhatFactory;
 import TargettingStrategies.WhereFactory;
 import actions.*;
-import actions.Message.msgStrings;
 import processes.Equipment.EquipmentEnum;
 import processes.Location.GroundType;
 import processes.Skill.Syntax;
@@ -482,7 +481,7 @@ public class SQLInterface implements DatabaseInterface{
 				
 				
 				case "MESSAGE":
-					Statement stmt3 = this.con.createStatement();
+/*					Statement stmt3 = this.con.createStatement();
 					ResultSet rs3 = stmt3.executeQuery("SELECT msgstrings.* FROM msgstringstable JOIN msgstrings ON msgstringstable.MSGSTRINGSID = msgstrings.MSGSTRINGSID "
 							+ "WHERE msgstringstable.BLOCKID =" + rs.getInt("BLOCKID") + " ORDER BY MSGSTRINGSPOS ASC;");
 					ArrayList<msgStrings> msgstringslist = new ArrayList<msgStrings>();
@@ -490,7 +489,7 @@ public class SQLInterface implements DatabaseInterface{
 						msgstringslist.add(msgStrings.valueOf(rs3.getString("MSGSTRINGSTYPE")));
 					}
 					return new Message(rs.getString("STRINGONE"), whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")), msgstringslist);
-							
+*/							
 				case "CHANCE":
 					makeConnection();
 					Statement stmt2 = this.con.createStatement();
@@ -561,8 +560,8 @@ public class SQLInterface implements DatabaseInterface{
 				case "MOVECHECK":
 					return new MoveCheck(GroundType.valueOf(rs.getString("GROUNDTYPE")), whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")), whereFactory.parse(rs.getString("ENDWHERE")));
 					
-				case "DROP":
-					return new Drop(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")), whereFactory.parse(rs.getString("ENDWHERE")));
+			//	case "DROP":
+			//		return new Drop(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")), whereFactory.parse(rs.getString("ENDWHERE")));
 					
 				case "EQUIPCHANGE":
 					return new EquipChange(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")), checkBoolean(rs.getString("BOOLEANONE")));
