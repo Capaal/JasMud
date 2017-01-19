@@ -30,10 +30,11 @@ public class CreateWorld {
 		addDropSkill();
 		addGetSkill();
 		addExamineSkill();
-		addSaySkill();
 		addThrowSkill();
 		addGiveSkill();
 		addMsgWorldSkill();
+		addSaySkill();
+		addSelfInvSkill();
 	}
 	
 	public static void makeItems() {
@@ -120,6 +121,7 @@ public class CreateWorld {
 		ItemBuilder newItem = new ItemBuilder();	
 		newItem.setId(1);
 		newItem.setName("dagger");
+		newItem.setDescription("It's a dagger!");
 		newItem.complete();
 	}
 	
@@ -127,6 +129,7 @@ public class CreateWorld {
 		MobileBuilder newGoblin = new MobileBuilder();
 		newGoblin.setId(2);
 		newGoblin.setName("goblin");
+		newGoblin.setDescription("An ugly goblin.");
 		newGoblin.setLoadOnStartUp(true);
 		newGoblin.complete();
 	}
@@ -228,16 +231,7 @@ public class CreateWorld {
 		examineBuilder.complete();		
 	}
 	
-	//hardcoded say skill 16
-	public static void addSaySkill() {
-		SkillBuilder sayBuilder = new SkillBuilder();
-		sayBuilder.addAction(new Say());
-		sayBuilder.addBook(generalSkills);
-		sayBuilder.setName("say");
-		sayBuilder.addSyntax(Skill.Syntax.SKILL);
-		sayBuilder.setId(16);
-		sayBuilder.complete();		
-	}
+	
 	
 	//hardcoded throw skill 17
 	public static void addThrowSkill() {
@@ -270,19 +264,41 @@ public class CreateWorld {
 	//hardcoded msgWorld skill 19
 	public static void addMsgWorldSkill() {
 		SkillBuilder msgWorldBuilder = new SkillBuilder();
-		msgWorldBuilder.addAction(new Message("%s says: %s", new WhatStrategyAllMobiles(), new WhereStrategyEverywhere(), 
+		msgWorldBuilder.addAction(new Message("%s says to the world: %s", new WhatStrategyAllMobiles(), new WhereStrategyEverywhere(), 
 				new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.SELF,Syntax.LIST))))); 
 		msgWorldBuilder.addBook(generalSkills);
 		msgWorldBuilder.setName("msg");
 		msgWorldBuilder.addSyntax(Skill.Syntax.SKILL);
 		msgWorldBuilder.addSyntax(Skill.Syntax.LIST);
 		msgWorldBuilder.setId(19);
-		msgWorldBuilder.complete();
-
+		msgWorldBuilder.complete();	
 	}
 	
+	//hardcoded Say skill 20
+	public static void addSaySkill() {
+		SkillBuilder sayBuilder = new SkillBuilder();
+		sayBuilder.addAction(new Message("%s says: %s", new WhatStrategyAllMobiles(), new WhereStrategyHere(), 
+				new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.SELF,Syntax.LIST))))); 
+		sayBuilder.addBook(generalSkills);
+		sayBuilder.setName("say");
+		sayBuilder.addSyntax(Skill.Syntax.SKILL);
+		sayBuilder.addSyntax(Skill.Syntax.LIST);
+		sayBuilder.setId(20);
+		sayBuilder.complete();	
+	}
 	
-
+	//hardcoded selfInventory skill 21
+	public static void addSelfInvSkill() {
+		SkillBuilder selfInvBuilder = new SkillBuilder();
+		selfInvBuilder.addAction(new Message("Your inventory: %s", new WhatStrategySelf(), new WhereStrategySelfInventory(), 
+				new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.SELF)))));
+		selfInvBuilder.addBook(generalSkills);
+		selfInvBuilder.setName("inv");
+		selfInvBuilder.addSyntax(Skill.Syntax.SKILL);
+		selfInvBuilder.addSyntax(Skill.Syntax.SELF);
+		selfInvBuilder.setId(21);
+		selfInvBuilder.complete();	
+	}
 	
 	
 }
