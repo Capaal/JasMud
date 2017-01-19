@@ -21,15 +21,14 @@ public class AggresiveMobileDecorator extends MobileDecorator {
 	}
 	
 	public void makeDecision() {
-		if (lastAggressor != null && lastAggressor.getContainer() == decoratedMobile.getContainer()) {
-			Skill basicSkill = getCommand("jab");
+		if (lastAggressor != null && lastAggressor.getContainer().equals(decoratedMobile.getContainer())) {
+			Skill basicSkill = getCommand("punch");
 			StringBuilder sb = new StringBuilder();
 			sb.append("jab ");
 			sb.append(lastAggressor.getName());
 			basicSkill.perform(sb.toString(), this);
 			executor.schedule(new AITask(this), 800, TimeUnit.MILLISECONDS);
-		}		
-		
+		}				
 	}
 	
 	@Override

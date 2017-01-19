@@ -60,7 +60,7 @@ public class PlayerPrompt implements Runnable {
 		//		this.currentPlayer = WorldServer.databaseInterface.loadPlayer(enteredName, enteredPass);
 				MobileBuilder loadedPlayer = new MobileBuilder();
 				
-				loadedPlayer.setId(1);
+				loadedPlayer.setId(WorldServer.gameState.viewActiveClients().size()+1);
 				loadedPlayer.setName(enteredName);		
 					
 					loadedPlayer.setPassword(enteredPass);
