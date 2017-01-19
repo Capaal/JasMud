@@ -1,17 +1,8 @@
 package processes;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import interfaces.Container;
-import interfaces.Mobile;
-import processes.Location.Direction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import processes.Skill.Syntax;
 import TargettingStrategies.*;
 import actions.*;
@@ -73,7 +64,7 @@ public class CreateWorld {
 		newLoc2.setDescription("Slightly north");
 		newLoc2.south(1, "north");
 		newLoc2.complete();	
-/*		
+	
 		//3rd location, south exit to 2
 		int loc3 = 3;
 		LocationBuilder newLoc3 = new LocationBuilder();
@@ -144,7 +135,7 @@ public class CreateWorld {
 		Skill get;
 		SkillBuilder getBuilder = new SkillBuilder();
 		getBuilder.addAction(new genericMoveItem(new WhereStrategyHere(), new WhereStrategySelfInventory()));
-		getBuilder.addAction(new Message("You get something.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<msgStrings>())); //bah, wtf messages
+		getBuilder.addAction(new Message("You get something.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>()));
 		getBuilder.addBook(generalSkills);
 		getBuilder.setName("get");
 		getBuilder.addSyntax(Skill.Syntax.SKILL);
@@ -197,7 +188,7 @@ public class CreateWorld {
 		godCreateBuilder.addBook(generalSkills);
 		godCreateBuilder.setName("godcreate");
 		godCreateBuilder.addSyntax(Skill.Syntax.SKILL);
-		godCreateBuilder.setId(10);
+		godCreateBuilder.setId(8);
 		godCreateBuilder.complete();
 		godCreate = new Skill(godCreateBuilder);
 		generalSkills.addSkill(godCreate);
@@ -240,7 +231,7 @@ public class CreateWorld {
 		Skill drop;
 		SkillBuilder dropBuilder = new SkillBuilder();
 		dropBuilder.addAction(new genericMoveItem(new WhereStrategySelfInventory(), new WhereStrategyHere()));
-		dropBuilder.addAction(new Message("You drop something.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<msgStrings>()));
+		dropBuilder.addAction(new Message("You drop something.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>()));
 		dropBuilder.addBook(generalSkills);
 		dropBuilder.setName("drop");
 		dropBuilder.addSyntax(Skill.Syntax.SKILL);

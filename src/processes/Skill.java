@@ -35,24 +35,24 @@ public class Skill implements Runnable {
 	public String getName() {return name;}	
 	
 	public void perform(String fullCommand, Mobile currentPlayer) {
-		boolean shouldInformTarget = false;
+	//	boolean shouldInformTarget = false; // Should trigger agro elsewhere, either as a block, or within each block.
 		for (Action a : actions){
-			if (a instanceof Damage) {
-				shouldInformTarget = true;
-			}
+//			if (a instanceof Damage) {
+//				shouldInformTarget = true;
+//			}
 			if (!a.activate(this, fullCommand, currentPlayer)) {
-				System.out.println(a + " returned false.");
+				System.out.println(a + " returned false."); // TEST CODE
 				currentPlayer.tell(failMsg);
-				shouldInformTarget = false; // Is this correct? Should a skill that fails to complete not inform the target of an aggressor?
+//				shouldInformTarget = false; // Is this correct? Should a skill that fails to complete not inform the target of an aggressor?
 				break;
 			}
-			if (shouldInformTarget) {
+/*			if (shouldInformTarget) {
 				List<Container> loc = new WhereStrategyHere().findWhere(this, fullCommand, currentPlayer);
 				List<Holdable> target = new WhatStrategyTarget().findWhat(this, fullCommand, currentPlayer, loc);
 				if (!target.isEmpty() && target.get(0) instanceof Mobile) {
 					((Mobile)target.get(0)).informLastAggressor(currentPlayer);
 				}
-			}
+			}*/
 		}
 	}	
 	 // should be inside syntax enum?
