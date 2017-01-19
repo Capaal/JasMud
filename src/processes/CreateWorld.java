@@ -134,7 +134,7 @@ public class CreateWorld {
 	// get dagger12345
 	public static void addGetSkill() {
 		SkillBuilder getBuilder = new SkillBuilder();
-		getBuilder.addAction(new genericMoveItem(new WhereStrategyHere(), new WhereStrategySelfInventory()));
+		getBuilder.addAction(new MoveHoldable(new WhatStrategyItem(), new WhereStrategyHere(), new WhereStrategySelfInventory()));
 		getBuilder.addAction(new Message("You get %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM))));
 		getBuilder.addBook(generalSkills);
 		getBuilder.setName("get");
@@ -205,10 +205,11 @@ public class CreateWorld {
 	//hardcoded drop skill 14
 	public static void addDropSkill() {
 		SkillBuilder dropBuilder = new SkillBuilder();
-		dropBuilder.addAction(new genericMoveItem(new WhereStrategySelfInventory(), new WhereStrategyHere()));
+		dropBuilder.addAction(new MoveHoldable(new WhatStrategyItem(), new WhereStrategySelfInventory(), new WhereStrategyHere()));
 		dropBuilder.addAction(new Message("You drop %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM))));
 		dropBuilder.addBook(generalSkills);
 		dropBuilder.setName("drop");
+		dropBuilder.setFailMsg("You failed to drop anything.");
 		dropBuilder.addSyntax(Skill.Syntax.SKILL);
 		dropBuilder.addSyntax(Skill.Syntax.ITEM);
 		dropBuilder.setId(14);
@@ -241,7 +242,7 @@ public class CreateWorld {
 	//hardcoded throw skill 17
 	public static void addThrowSkill() {
 		SkillBuilder throwBuilder = new SkillBuilder();
-		throwBuilder.addAction(new genericMoveItem(new WhereStrategySelfInventory(), new WhereStrategyHere())); //need Here & OneLocAway
+	//	throwBuilder.addAction(new genericMoveItem(new WhereStrategySelfInventory(), new WhereStrategyHere())); //need Here & OneLocAway
 		throwBuilder.addAction(new Damage(5, new WhatStrategySelf(), new WhereStrategyHere(), false, null)); //dmg based on item?
 		throwBuilder.addBook(generalSkills);
 		throwBuilder.setName("throw");
@@ -256,7 +257,7 @@ public class CreateWorld {
 	//hardcoded give skill 18
 	public static void addGiveSkill() {
 		SkillBuilder giveBuilder = new SkillBuilder();
-		giveBuilder.addAction(new genericMoveItem(new WhereStrategyHere(), new WhereStrategyHere()));
+		giveBuilder.addAction(new MoveHoldable(new WhatStrategyItem(), new WhereStrategySelfInventory(), new WhereStrategyHere(), new WhatStrategyTarget()));
 		giveBuilder.addBook(generalSkills);
 		giveBuilder.setName("give");
 		giveBuilder.addSyntax(Skill.Syntax.SKILL);

@@ -97,6 +97,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	@Override
 	public void acceptItem(Holdable item) {
 		inventory.add(item);
+		item.setContainer(this);
 	}
 	
 	@Override

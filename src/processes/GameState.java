@@ -75,6 +75,10 @@ public class GameState {
 		return mobList.containsKey(nameId);
 	}
 	
+	public Map<String, Mobile> viewMobs() {
+		return new TreeMap<String, Mobile>(mobList);
+	}
+	
 	public Map<Integer, Location> viewLocations() {
 		return new TreeMap<Integer, Location>(locationCollection);
 	}
