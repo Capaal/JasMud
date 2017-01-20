@@ -37,6 +37,9 @@ public class MoveHoldable extends Action {
 		List<Container> possibleContainersOfHoldable = whereObject.findWhere(s, fullCommand, currentPlayer);
 		List<Holdable> possibleHoldables = whatObject.findWhat(s, fullCommand, currentPlayer, possibleContainersOfHoldable);
 		List<Container> possibleEndContainers = whereContainer.findWhere(s, fullCommand, currentPlayer);
+		if (possibleEndContainers.size() < 1) {
+			return false;
+		}
 		Container finalLocation;
 		if (whatOptionalTarget != null) {
 			List<Holdable> finalTargets = whatOptionalTarget.findWhat(s, fullCommand, currentPlayer, possibleEndContainers);
@@ -50,7 +53,18 @@ public class MoveHoldable extends Action {
 		if (possibleHoldables.size() < 1 || possibleEndContainers.size() < 1) {
 			return false;
 		}
-		moveHoldable(possibleHoldables.get(0), finalLocation);  // Same as above.
+		Holdable finalHoldable = possibleHoldables.get(0);
+		if (!checkLegality(finalLocation, finalHoldable)) {
+			return false;
+		}
+		moveHoldable(finalHoldable, finalLocation);
+		return true;
+	}
+
+	private boolean checkLegality(Container finalLocation, Holdable finalHoldable) {
+		if (finalHoldable instanceof Mobile && finalLocation instanceof Mobile) { // Checks for Mobiles put in a mobiles inventory
+			return false;
+		}
 		return true;
 	}
 

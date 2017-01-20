@@ -198,8 +198,8 @@ public class CreateWorld {
 	//hardcoded move skill 12
 	public static void addMoveSkill() {
 		SkillBuilder moveBuilder = new SkillBuilder();
-		moveBuilder.addAction(new Message("%s moves %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.DIRECTION))));
-		moveBuilder.addAction(new Move(new WhatStrategySelf() , new WhereStrategyHere(), new WhereStrategyOneAway()));
+		moveBuilder.addAction(new MoveHoldable(new WhatStrategySelf(), new WhereStrategyHere(), new WhereStrategyOneAway()));
+		moveBuilder.addAction(new Look());
 		moveBuilder.addBook(generalSkills);
 		moveBuilder.setName("move");
 		moveBuilder.addAction(new Message("%s enters.", new WhatStrategySelf(), new WhereStrategyOneAway(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF))));
@@ -253,8 +253,14 @@ public class CreateWorld {
 	//hardcoded throw skill 17
 	public static void addThrowSkill() {
 		SkillBuilder throwBuilder = new SkillBuilder();
-	//	throwBuilder.addAction(new genericMoveItem(new WhereStrategySelfInventory(), new WhereStrategyHere())); //need Here & OneLocAway
-		throwBuilder.addAction(new Damage(5, new WhatStrategySelf(), new WhereStrategyHere(), false, null)); //dmg based on item?
+		throwBuilder.addAction(new Damage(5, new WhatStrategyTarget(), new WhereStrategyMultiples(new WhereStrategyHere(),
+				new WhereStrategyOneAway()), false, null)); //dmg based on item?
+		throwBuilder.addAction(new MoveHoldable(new WhatStrategyItem(), new WhereStrategySelfInventory(),
+				new WhereStrategyMultiples(new WhereStrategyOneAway(), new WhereStrategyHere()))); 
+		throwBuilder.addAction(new Message("You throw a %s at %s.", new WhatStrategySelf(), new WhereStrategyHere(),
+				new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM, Syntax.TARGET))));
+		throwBuilder.addAction(new Message("%s throws a %s at you!", new WhatStrategyTarget(), new WhereStrategyMultiples(new WhereStrategyHere(),
+				new WhereStrategyOneAway()), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.ITEM))));
 		throwBuilder.addBook(generalSkills);
 		throwBuilder.setName("throw");
 		throwBuilder.addSyntax(Skill.Syntax.SKILL);
@@ -269,6 +275,7 @@ public class CreateWorld {
 	public static void addGiveSkill() {
 		SkillBuilder giveBuilder = new SkillBuilder();
 		giveBuilder.addAction(new MoveHoldable(new WhatStrategyItem(), new WhereStrategySelfInventory(), new WhereStrategyHere(), new WhatStrategyTarget()));
+				
 		giveBuilder.addAction(new Message("You give %s to %s.", new WhatStrategySelf(), new WhereStrategyHere(), 
 				new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM,Syntax.TARGET)))));
 		giveBuilder.addAction(new Message("&s gives %s to %s.", new WhatStrategyOtherMobiles(), new WhereStrategyHere(), 

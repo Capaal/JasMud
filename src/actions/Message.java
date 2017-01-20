@@ -43,7 +43,7 @@ public class Message extends Action {
 	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		ArrayList<String> substituteWords = new ArrayList<String>();
 		for (Syntax msg : syntaxList) {
-			if (msg.equals(Syntax.SELF)) {
+			if (msg.equals(Syntax.SELF)) { // Special Syntax to display currentPlayer's name.
 				substituteWords.add(currentPlayer.getName());
 			} else {
 				substituteWords.add(s.getStringInfo(msg, fullCommand));

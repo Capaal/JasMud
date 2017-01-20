@@ -182,7 +182,7 @@ public class Skill implements Runnable {
 			
 		},
 		
-		SELF() {
+		SELF() {  // Special case for message. Should not be used in skill syntax.
 			
 		},
 		
@@ -220,6 +220,9 @@ public class Skill implements Runnable {
 		
 		SLOT() {
 			
+		},
+		
+		FILLER() {			
 		},
 		
 		TIMES() {

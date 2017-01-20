@@ -126,7 +126,7 @@ public class PlayerPrompt implements Runnable {
 						Direction posDir = Direction.getDirectionName(command);
 						if (posDir != null) {
 							com = currentPlayer.getCommand("move");
-							str = posDir.toString();
+							str = "move " + posDir.toString();
 						} else {
 							com = currentPlayer.getCommand(command);
 						}
