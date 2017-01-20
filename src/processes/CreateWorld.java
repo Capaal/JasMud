@@ -330,5 +330,17 @@ public class CreateWorld {
 		selfInvBuilder.complete();	
 	}
 	
+	//hardcoded who skill 25
+	public static void addWhoSkill() {
+		SkillBuilder whoBuilder = new SkillBuilder();
+		whoBuilder.addAction(new Message("Online: \n%s", new WhatStrategySelf(), new WhereStrategyHere(), 
+				new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.SELF)))));
+		whoBuilder.addBook(generalSkills);
+		whoBuilder.setName("who");
+		whoBuilder.addSyntax(Skill.Syntax.SKILL);
+		whoBuilder.addSyntax(Skill.Syntax.SELF);
+		whoBuilder.setId(25);
+		whoBuilder.complete();
+	}
 	
 }
