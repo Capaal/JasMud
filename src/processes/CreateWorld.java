@@ -108,7 +108,17 @@ public class CreateWorld {
 		newLoc7.in(2,"east");
 		newLoc7.complete();	
 		
-		// map:
+		//8th location, south exit to 5
+		int loc8 = 8;
+		LocationBuilder newLoc8 = new LocationBuilder();
+		newLoc8.setId(loc8);
+		newLoc8.setName("Loop.");
+		newLoc8.south(5, "north");
+		newLoc8.north(5, "north");
+		newLoc8.complete();	
+		
+		// map: 
+		//   [8](loops 5)
 		//   [5] - [6] - [7]
 		//   [4]
 		//   [3]
@@ -151,18 +161,22 @@ public class CreateWorld {
 	public static void kickSkill() {
 		SkillBuilder kickBuilder = new SkillBuilder();
 		kickBuilder.addAction(new Damage(10, new WhatStrategySelf(), new WhereStrategyHere(), false, null));
-		kickBuilder.addAction(new Message("you kicked yourself.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>()));
+		kickBuilder.addAction(new Message("You kicked yourself.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>()));
+		kickBuilder.addBook(generalSkills);
 		kickBuilder.setId(9);
 		kickBuilder.setName("kick");
 		kickBuilder.addSyntax(Skill.Syntax.SKILL);
 		kickBuilder.complete();
 	}
 	
+	//hardcoded punch skill 20
 	public static void addPunchSkill() {
 		SkillBuilder punchBuilder = new SkillBuilder();
 		punchBuilder.addAction(new Damage(10, new WhatStrategyTarget(), new WhereStrategyHere(), false, null));
 		punchBuilder.addAction(new Message("You punch %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.TARGET))));
-		punchBuilder.addAction(new Message("%s punches %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.TARGET))));
+		punchBuilder.addAction(new Message("%s punches %s.", new WhatStrategyOtherMobiles(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.TARGET))));
+		punchBuilder.addAction(new Message("%s punches you.", new WhatStrategyTarget(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.TARGET))));
+		punchBuilder.addBook(generalSkills);
 		punchBuilder.setId(20);
 		punchBuilder.setName("punch");
 		punchBuilder.addSyntax(Skill.Syntax.SKILL);
@@ -170,7 +184,7 @@ public class CreateWorld {
 		punchBuilder.complete();
 	}
 	
-	//hardcoded godcreate skill 10
+	//hardcoded godcreate skill 8
 	public static void addGodCreateSkill() {
 		SkillBuilder godCreateBuilder = new SkillBuilder();
 		godCreateBuilder.addAction(new Godcreate());
@@ -184,9 +198,11 @@ public class CreateWorld {
 	//hardcoded move skill 12
 	public static void addMoveSkill() {
 		SkillBuilder moveBuilder = new SkillBuilder();
+		moveBuilder.addAction(new Message("%s moves %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.DIRECTION))));
 		moveBuilder.addAction(new Move(new WhatStrategySelf() , new WhereStrategyHere(), new WhereStrategyOneAway()));
 		moveBuilder.addBook(generalSkills);
 		moveBuilder.setName("move");
+		moveBuilder.addAction(new Message("%s enters.", new WhatStrategySelf(), new WhereStrategyOneAway(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF))));
 		moveBuilder.addSyntax(Skill.Syntax.SKILL);
 		moveBuilder.addSyntax(Skill.Syntax.DIRECTION);
 		moveBuilder.setId(12);
@@ -210,6 +226,7 @@ public class CreateWorld {
 		SkillBuilder dropBuilder = new SkillBuilder();
 		dropBuilder.addAction(new MoveHoldable(new WhatStrategyItem(), new WhereStrategySelfInventory(), new WhereStrategyHere()));
 		dropBuilder.addAction(new Message("You drop %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM))));
+		dropBuilder.addAction(new Message("%s drops %s.", new WhatStrategyOtherMobiles(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.ITEM))));		
 		dropBuilder.addBook(generalSkills);
 		dropBuilder.setName("drop");
 		dropBuilder.setFailMsg("You failed to drop anything.");
@@ -225,12 +242,12 @@ public class CreateWorld {
 		examineBuilder.addAction(new Examine(new WhereStrategyHere()));
 		examineBuilder.addBook(generalSkills);
 		examineBuilder.setName("examine");
+		examineBuilder.setFailMsg("You don't see \"%s\".");
 		examineBuilder.addSyntax(Skill.Syntax.SKILL);
 		examineBuilder.addSyntax(Skill.Syntax.ITEM);
 		examineBuilder.setId(15);
 		examineBuilder.complete();		
 	}
-	
 	
 	
 	//hardcoded throw skill 17
@@ -252,6 +269,12 @@ public class CreateWorld {
 	public static void addGiveSkill() {
 		SkillBuilder giveBuilder = new SkillBuilder();
 		giveBuilder.addAction(new MoveHoldable(new WhatStrategyItem(), new WhereStrategySelfInventory(), new WhereStrategyHere(), new WhatStrategyTarget()));
+		giveBuilder.addAction(new Message("You give %s to %s.", new WhatStrategySelf(), new WhereStrategyHere(), 
+				new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM,Syntax.TARGET)))));
+		giveBuilder.addAction(new Message("&s gives %s to %s.", new WhatStrategyOtherMobiles(), new WhereStrategyHere(), 
+				new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.ITEM,Syntax.TARGET)))));
+		giveBuilder.addAction(new Message("&s gives %s to you.", new WhatStrategyTarget(), new WhereStrategyHere(), 
+				new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.ITEM)))));
 		giveBuilder.addBook(generalSkills);
 		giveBuilder.setName("give");
 		giveBuilder.addSyntax(Skill.Syntax.SKILL);
@@ -274,7 +297,7 @@ public class CreateWorld {
 		msgWorldBuilder.complete();	
 	}
 	
-	//hardcoded Say skill 20
+	//hardcoded Say skill 22
 	public static void addSaySkill() {
 		SkillBuilder sayBuilder = new SkillBuilder();
 		sayBuilder.addAction(new Message("%s says: %s", new WhatStrategyAllMobiles(), new WhereStrategyHere(), 
@@ -283,7 +306,7 @@ public class CreateWorld {
 		sayBuilder.setName("say");
 		sayBuilder.addSyntax(Skill.Syntax.SKILL);
 		sayBuilder.addSyntax(Skill.Syntax.LIST);
-		sayBuilder.setId(20);
+		sayBuilder.setId(22);
 		sayBuilder.complete();	
 	}
 	
