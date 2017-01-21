@@ -1,10 +1,13 @@
 package processes;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import processes.Equipment.EquipmentEnum;
 import processes.Location.GroundType;
+import processes.Skill.Syntax;
 import interfaces.Container;
 import interfaces.Effect;
 import interfaces.Holdable;
@@ -302,5 +305,20 @@ public class MobileDecorator implements Mobile {
 		decoratedMobile.stopCreating();
 		
 	}
-
+	
+public enum DecoratorType {
+		
+		AGGRESSIVE() {
+			@Override
+			public Mobile getDecorator(Mobile m) {
+				return new AggresiveMobileDecorator(m);
+			}			
+		};	
+		
+		private DecoratorType() {}
+		
+		public Mobile getDecorator(Mobile m) {
+			return m;
+		}
+	}
 }

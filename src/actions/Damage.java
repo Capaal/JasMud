@@ -39,6 +39,7 @@ public class Damage extends Action {
 		for (Holdable m : target) {
 			if (m instanceof Mobile) {
 				((Mobile)m).takeDamage(damageType, finalIntensity);
+				((Mobile) m).informLastAggressor(currentPlayer);
 			}	
 		}
 		return true;

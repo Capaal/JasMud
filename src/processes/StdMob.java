@@ -9,6 +9,7 @@ import java.util.*;
 import effects.Balance;
 import processes.Equipment.EquipmentEnum;
 import processes.Location.GroundType;
+import processes.MobileDecorator.DecoratorType;
 
 /**
  * A basic implentable of the interface Mobile, StdMob contains the basic methods for anything that can move around on it's own, whether
@@ -63,8 +64,22 @@ public class StdMob implements Mobile, Container, Holdable {
 		this.experience = build.getExperience();
 		equipment.setOwner(this);
 		effectManager = new EffectManager();
-		WorldServer.gameState.addMob(name + id, this);
-		this.mobLocation.acceptItem(this);
+		this.skillBookList = build.getSkillBookList();
+		
+		
+		Mobile decoratedMob = decorate(build, this);
+				
+		WorldServer.gameState.addMob(decoratedMob.getName() + decoratedMob.getId(), decoratedMob);
+		decoratedMob.getContainer().acceptItem(decoratedMob);
+	}
+	
+	private Mobile decorate(MobileBuilder build, Mobile m) {
+		if (build.hasNextDecorator()) {
+			DecoratorType nextDecorator = build.getNextDecorator();
+			m = nextDecorator.getDecorator(m);
+			decorate(build, m);
+		}
+		return m;
 	}
 	
 	public String getName() {return name;}	

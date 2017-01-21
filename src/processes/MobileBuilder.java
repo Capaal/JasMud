@@ -7,12 +7,16 @@ import interfaces.Mobile;
 import items.StdItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import actions.Godcreate;
 import processes.Equipment.EquipmentEnum;
+import processes.MobileDecorator.DecoratorType;
 
 public class MobileBuilder {	
 
@@ -32,7 +36,9 @@ public class MobileBuilder {
 	private boolean loadOnStartUp = false;
 	private Set<Holdable> inventory = new HashSet<Holdable>();
 	private Equipment equipment = new Equipment();	
-	private ArrayList<Effect> effectList = new ArrayList<Effect>();		
+	private ArrayList<Effect> effectList = new ArrayList<Effect>();	
+	private Stack<DecoratorType> decorators = new Stack<DecoratorType>();
+	private Map<SkillBook, Integer> skillBookList = new HashMap<SkillBook, Integer>();
 	
 	private boolean buildComplete = false;
 	private StdMob finishedMob;
@@ -312,6 +318,29 @@ public class MobileBuilder {
 			player.tell("That wasn't a valid option, remember, you can use the word, or the number.");
 			return newMobile(player, mobileBuilder);
 		}
+	}
+
+	public void addDecorator(DecoratorType aggresiveMobileDecorator) {
+		this.decorators.push(aggresiveMobileDecorator);		
+	}
+
+	public boolean hasNextDecorator() {
+		if (decorators.isEmpty()) {
+			return false;
+		}
+		return true;
+	}
+
+	public DecoratorType getNextDecorator() {
+		return decorators.pop();
+	}
+
+	public Map<SkillBook, Integer> getSkillBookList() {
+		return skillBookList;
+	}
+
+	public void addSkillBook(SkillBook book) {
+		skillBookList.put(book, 100);		
 	}
 	
 }

@@ -139,6 +139,8 @@ public class CreateWorld {
 	public static void makeGoblin() {
 		MobileBuilder newGoblin = new MobileBuilder();
 		newGoblin.setId(2);
+		newGoblin.addSkillBook(WorldServer.gameState.getBook(1));
+		newGoblin.addDecorator(MobileDecorator.DecoratorType.AGGRESSIVE);
 		newGoblin.setName("goblin");
 		newGoblin.setDescription("An ugly goblin.");
 		newGoblin.setLoadOnStartUp(true);
@@ -255,14 +257,19 @@ public class CreateWorld {
 		examineBuilder.complete();		
 	}
 	
-	
+	// try OR instead of multiplestrategies
 	//hardcoded throw skill 17
 	public static void addThrowSkill() {
 		SkillBuilder throwBuilder = new SkillBuilder();
-		throwBuilder.addAction(new Damage(5, new WhatStrategyTarget(), new WhereStrategyMultiples(new WhereStrategyHere(),
-				new WhereStrategyOneAway()), false, null)); //dmg based on item?
-		throwBuilder.addAction(new MoveHoldable(new WhatStrategyItem(), new WhereStrategySelfInventory(),
-				new WhereStrategyMultiples(new WhereStrategyOneAway(), new WhereStrategyHere()))); 
+		
+		throwBuilder.addAction(new Or(  // Runs the first chain, if it fails, runs the second chain, moves on to next action if one version succeeds.
+				new And(  // Version one deals damage, then moves the thrown item. Searchs for the target HERE
+						new Damage(5, new WhatStrategyTarget(), new WhereStrategyHere(), false, null),
+						new MoveHoldable(new WhatStrategyItem(), new WhereStrategySelfInventory(), new WhereStrategyHere())),
+				new And( // Version one deals damage, then moves the thrown item. Searchs for the target ONE AWAY
+						new Damage(5, new WhatStrategyTarget(), new WhereStrategyOneAway(), false, null),
+						new MoveHoldable(new WhatStrategyItem(), new WhereStrategySelfInventory(), new WhereStrategyOneAway())))); 	
+	
 		throwBuilder.addAction(new Message("You throw a %s at %s.", new WhatStrategySelf(), new WhereStrategyHere(),
 				new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM, Syntax.TARGET))));
 		throwBuilder.addAction(new Message("%s throws a %s at you!", new WhatStrategyTarget(), new WhereStrategyMultiples(new WhereStrategyHere(),
