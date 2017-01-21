@@ -411,7 +411,7 @@ public class SQLInterface implements DatabaseInterface{
 						if (tempSkill == null) {
 							tempSkill = new SkillBuilder();
 							tempSkill.setName(rsMain.getString("SKILLNAME"));		
-							tempSkill.setFailMsg(rsMain.getString("SKILLFAILMSG"));
+//							tempSkill.setFailMsg(rsMain.getString("SKILLFAILMSG"));
 							tempSkill.setDescription(rsMain.getString("SKILLDES"));
 							tempSkill.setId(currentSkillId);
 							
@@ -551,8 +551,8 @@ public class SQLInterface implements DatabaseInterface{
 				case "LOOK":
 					return new Look(whereFactory.parse(rs.getString("TARGETWHERE")));
 					
-				case "MOVE":
-					return new Move(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")), whereFactory.parse(rs.getString("ENDWHERE")));
+		//		case "MOVE":
+		//			return new Move(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")), whereFactory.parse(rs.getString("ENDWHERE")));
 					
 				case "BALANCECHECK":
 					return new BalanceCheck(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")));

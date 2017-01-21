@@ -124,9 +124,9 @@ public class Godcreate extends Action {
 			}
 			return processCreateNewSkill(player, newSkill);	
 		case "3":
-			player.tell("The current fail message is: " + newSkill.getFailMsg());
-			newSkill.setFailMsg(askQuestion("What do you want the fail message to be?", player));
-			return processCreateNewSkill(player, newSkill);	
+	//		player.tell("The current fail message is: " + newSkill.getFailMsg());
+	//		newSkill.setFailMsg(askQuestion("What do you want the fail message to be?", player));
+	//		return processCreateNewSkill(player, newSkill);	
 		case "4":
 			String clearActions = askQuestion("Do you want to clear the actions list? y/n", player);
 			if (clearActions.equals("y")) {
@@ -195,7 +195,7 @@ public class Godcreate extends Action {
 	//	actionMap.put("get", new Get());
 		actionMap.put("look", new Look());
 		actionMap.put("message", new Message());
-		actionMap.put("move", new Move());
+	//	actionMap.put("move", new Move());
 		actionMap.put("or", new Or());
 		actionMap.put("say", new Say());
 		actionMap.put("balancecheck", new BalanceCheck());

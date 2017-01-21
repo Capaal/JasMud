@@ -14,7 +14,7 @@ public class Skill implements Runnable {
 	private final String description;
 	private final Queue<Action> actions;
 	private final List<Syntax> syntax;	
-	private final String failMsg;
+	private final Action failMsg;
 	
 	public Skill(SkillBuilder build) {
 		if (!build.isCompleted()) {
@@ -42,7 +42,7 @@ public class Skill implements Runnable {
 //			}
 			if (!a.activate(this, fullCommand, currentPlayer)) {
 				System.out.println(a + " returned false."); // TEST CODE
-				currentPlayer.tell(failMsg);
+				failMsg.activate(this, fullCommand, currentPlayer);
 //				shouldInformTarget = false; // Is this correct? Should a skill that fails to complete not inform the target of an aggressor?
 				break;
 			}

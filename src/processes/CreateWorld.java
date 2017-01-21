@@ -35,6 +35,7 @@ public class CreateWorld {
 		addMsgWorldSkill();
 		addSaySkill();
 		addSelfInvSkill();
+		addExitsSkill(); 
 	}
 	
 	public static void makeItems() {
@@ -149,8 +150,10 @@ public class CreateWorld {
 		SkillBuilder getBuilder = new SkillBuilder();
 		getBuilder.addAction(new MoveHoldable(new WhatStrategyItem(), new WhereStrategyHere(), new WhereStrategySelfInventory()));
 		getBuilder.addAction(new Message("You get %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM))));
+		getBuilder.addAction(new Message("%s gets %s.", new WhatStrategyNotSelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.ITEM))));
 		getBuilder.addBook(generalSkills);
 		getBuilder.setName("get");
+		getBuilder.setFailMsg(new Message("There is no \"%s\" here.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM)))); 
 		getBuilder.addSyntax(Skill.Syntax.SKILL);
 		getBuilder.addSyntax(Skill.Syntax.ITEM);
 		getBuilder.setId(11);
@@ -176,6 +179,7 @@ public class CreateWorld {
 		punchBuilder.addAction(new Message("You punch %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.TARGET))));
 		punchBuilder.addAction(new Message("%s punches %s.", new WhatStrategyOtherMobiles(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.TARGET))));
 		punchBuilder.addAction(new Message("%s punches you.", new WhatStrategyTarget(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.TARGET))));
+		punchBuilder.setFailMsg(new Message("There is no \"%s\" here for you to punch.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.TARGET))));
 		punchBuilder.addBook(generalSkills);
 		punchBuilder.setId(20);
 		punchBuilder.setName("punch");
@@ -198,10 +202,12 @@ public class CreateWorld {
 	//hardcoded move skill 12
 	public static void addMoveSkill() {
 		SkillBuilder moveBuilder = new SkillBuilder();
+		moveBuilder.addAction(new Message("%s leaves.", new WhatStrategySelf(), new WhereStrategyOneAway(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF))));
 		moveBuilder.addAction(new MoveHoldable(new WhatStrategySelf(), new WhereStrategyHere(), new WhereStrategyOneAway()));
 		moveBuilder.addAction(new Look());
 		moveBuilder.addBook(generalSkills);
 		moveBuilder.setName("move");
+		moveBuilder.setFailMsg(new Message("You can't go %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.DIRECTION))));
 		moveBuilder.addAction(new Message("%s enters.", new WhatStrategySelf(), new WhereStrategyOneAway(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF))));
 		moveBuilder.addSyntax(Skill.Syntax.SKILL);
 		moveBuilder.addSyntax(Skill.Syntax.DIRECTION);
@@ -226,10 +232,10 @@ public class CreateWorld {
 		SkillBuilder dropBuilder = new SkillBuilder();
 		dropBuilder.addAction(new MoveHoldable(new WhatStrategyItem(), new WhereStrategySelfInventory(), new WhereStrategyHere()));
 		dropBuilder.addAction(new Message("You drop %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM))));
-		dropBuilder.addAction(new Message("%s drops %s.", new WhatStrategyOtherMobiles(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.ITEM))));		
+		dropBuilder.addAction(new Message("%s drops %s.", new WhatStrategyNotSelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.ITEM))));		
 		dropBuilder.addBook(generalSkills);
 		dropBuilder.setName("drop");
-		dropBuilder.setFailMsg("You failed to drop anything.");
+		dropBuilder.setFailMsg(new Message("You failed to drop \"%s\".", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM))));
 		dropBuilder.addSyntax(Skill.Syntax.SKILL);
 		dropBuilder.addSyntax(Skill.Syntax.ITEM);
 		dropBuilder.setId(14);
@@ -242,7 +248,7 @@ public class CreateWorld {
 		examineBuilder.addAction(new Examine(new WhereStrategyHere()));
 		examineBuilder.addBook(generalSkills);
 		examineBuilder.setName("examine");
-		examineBuilder.setFailMsg("You don't see \"%s\".");
+		examineBuilder.setFailMsg(new Message("You don't see \"%s\".", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM)))); 
 		examineBuilder.addSyntax(Skill.Syntax.SKILL);
 		examineBuilder.addSyntax(Skill.Syntax.ITEM);
 		examineBuilder.setId(15);
@@ -261,6 +267,8 @@ public class CreateWorld {
 				new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM, Syntax.TARGET))));
 		throwBuilder.addAction(new Message("%s throws a %s at you!", new WhatStrategyTarget(), new WhereStrategyMultiples(new WhereStrategyHere(),
 				new WhereStrategyOneAway()), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.ITEM))));
+		throwBuilder.setFailMsg(new Message("You don't have a \"%s\" to throw.", new WhatStrategySelf(), new WhereStrategyHere(), 
+				new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM)))); //multiple fail messages?
 		throwBuilder.addBook(generalSkills);
 		throwBuilder.setName("throw");
 		throwBuilder.addSyntax(Skill.Syntax.SKILL);
@@ -274,14 +282,15 @@ public class CreateWorld {
 	//hardcoded give skill 18
 	public static void addGiveSkill() {
 		SkillBuilder giveBuilder = new SkillBuilder();
-		giveBuilder.addAction(new MoveHoldable(new WhatStrategyItem(), new WhereStrategySelfInventory(), new WhereStrategyHere(), new WhatStrategyTarget()));
-				
+		giveBuilder.addAction(new MoveHoldable(new WhatStrategyItem(), new WhereStrategySelfInventory(), new WhereStrategyHere(), new WhatStrategyTarget()));				
 		giveBuilder.addAction(new Message("You give %s to %s.", new WhatStrategySelf(), new WhereStrategyHere(), 
 				new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM,Syntax.TARGET)))));
-		giveBuilder.addAction(new Message("&s gives %s to %s.", new WhatStrategyOtherMobiles(), new WhereStrategyHere(), 
+		giveBuilder.addAction(new Message("%s gives %s to %s.", new WhatStrategyOtherMobiles(), new WhereStrategyHere(), 
 				new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.ITEM,Syntax.TARGET)))));
-		giveBuilder.addAction(new Message("&s gives %s to you.", new WhatStrategyTarget(), new WhereStrategyHere(), 
+		giveBuilder.addAction(new Message("%s gives %s to you.", new WhatStrategyTarget(), new WhereStrategyHere(), 
 				new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.ITEM)))));
+		giveBuilder.setFailMsg(new Message("You can't give that away. (generic)", new WhatStrategySelf(), new WhereStrategyHere(), 
+				new ArrayList<Syntax>())); //need multiple fail messages - don't have item, can't find target, (later: can't give away)
 		giveBuilder.addBook(generalSkills);
 		giveBuilder.setName("give");
 		giveBuilder.addSyntax(Skill.Syntax.SKILL);
@@ -333,14 +342,23 @@ public class CreateWorld {
 	//hardcoded who skill 25
 	public static void addWhoSkill() {
 		SkillBuilder whoBuilder = new SkillBuilder();
-		whoBuilder.addAction(new Message("Online: \n%s", new WhatStrategySelf(), new WhereStrategyHere(), 
-				new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.SELF)))));
+		whoBuilder.addAction(new Message("Online: \n%s", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(new ArrayList<Syntax>())));
 		whoBuilder.addBook(generalSkills);
 		whoBuilder.setName("who");
 		whoBuilder.addSyntax(Skill.Syntax.SKILL);
-		whoBuilder.addSyntax(Skill.Syntax.SELF);
 		whoBuilder.setId(25);
 		whoBuilder.complete();
+	}
+	
+	//hardcoded exits skill 26
+	public static void addExitsSkill() {
+		SkillBuilder exitsBuilder = new SkillBuilder();
+		//need location.getExits() to display
+		exitsBuilder.addBook(generalSkills);
+		exitsBuilder.setName("exits");
+		exitsBuilder.addSyntax(Skill.Syntax.SKILL);
+		exitsBuilder.setId(26);
+		exitsBuilder.complete();
 	}
 	
 }

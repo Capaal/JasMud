@@ -4,6 +4,8 @@ import interfaces.*;
 
 import java.util.*;
 
+import TargettingStrategies.WhatStrategyInterface;
+import actions.Message;
 import processes.Skill.Syntax;
 
 public class SkillBuilder {
@@ -12,7 +14,7 @@ public class SkillBuilder {
 	private String name = "default";	
 	private Queue<Action> actions;
 	private String description = "";
-	private String failMsg = "";
+	private Action failMsg = null;
 	private ArrayList<Syntax> syntax;
 	private Set<SkillBook> attachedBooks;
 	private Skill finishedSkill = null;
@@ -103,11 +105,11 @@ public class SkillBuilder {
 		return actions;
 	}
 	
-	public void setFailMsg(String msg) {
+	public void setFailMsg(Action msg) {
 		this.failMsg = msg;
 	}
 	
-	public String getFailMsg() {
+	public Action getFailMsg() {
 		return failMsg;
 	}
 	
