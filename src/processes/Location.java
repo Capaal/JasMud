@@ -159,8 +159,17 @@ public class Location implements Container {
 		System.out.println(insertNewLocation);
 		WorldServer.databaseInterface.saveAction(insertNewLocation);		
 	}
-	
+	// DUPLICATE OF BELOW?
 	public Direction getHowOtherLocationConnectsToThis(Location askingLocation) {
+		for (Entry<Direction, Location> entry : locationMap.entrySet()) {
+			if (entry.getValue() == askingLocation) {
+				return entry.getKey();
+			}
+		}
+		return null;
+	}
+	
+	public Direction getDirectionToLocation(Location askingLocation) {
 		for (Entry<Direction, Location> entry : locationMap.entrySet()) {
 			if (entry.getValue() == askingLocation) {
 				return entry.getKey();

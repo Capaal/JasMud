@@ -306,19 +306,41 @@ public class MobileDecorator implements Mobile {
 		
 	}
 	
+	public void makeDecision() {}
+	
 public enum DecoratorType {
 		
 		AGGRESSIVE() {
 			@Override
 			public Mobile getDecorator(Mobile m) {
 				return new AggresiveMobileDecorator(m);
-			}			
+			}
+		},
+		CHASING() {
+			@Override
+			public Mobile getDecorator(Mobile m) {
+				return new ChasingMobileDecorator(m);
+			}
 		};	
 		
 		private DecoratorType() {}
 		
 		public Mobile getDecorator(Mobile m) {
 			return m;
+		}
+	}
+
+
+	public class AITask implements Runnable {
+		
+		private MobileDecorator mobAI;
+		
+		public AITask(MobileDecorator decoratedMobile) {
+			this.mobAI = decoratedMobile;
+		}
+		
+		public void run() {
+			mobAI.makeDecision();
 		}
 	}
 }

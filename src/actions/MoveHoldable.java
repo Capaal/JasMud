@@ -65,6 +65,9 @@ public class MoveHoldable extends Action {
 		if (finalHoldable instanceof Mobile && finalLocation instanceof Mobile) { // Checks for Mobiles put in a mobiles inventory
 			return false;
 		}
+		if (finalLocation == null || finalHoldable == null) {
+			return false;
+		}
 		return true;
 	}
 

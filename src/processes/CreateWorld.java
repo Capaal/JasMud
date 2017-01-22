@@ -147,6 +147,7 @@ public class CreateWorld {
 		MobileBuilder newGoblin = new MobileBuilder();
 		newGoblin.setId(2);
 		newGoblin.addSkillBook(WorldServer.gameState.getBook(1));
+		newGoblin.addDecorator(MobileDecorator.DecoratorType.CHASING);
 		newGoblin.addDecorator(MobileDecorator.DecoratorType.AGGRESSIVE);
 		newGoblin.setName("goblin");
 		newGoblin.setDescription("An ugly goblin.");
@@ -222,6 +223,7 @@ public class CreateWorld {
 		godCreateBuilder.complete();
 	}
 	
+	// Currently displays "%s leaves" even if they couldn't move a direction, and thus don't leave
 	//hardcoded move skill 12
 	public static void addMoveSkill() {
 		SkillBuilder moveBuilder = new SkillBuilder();

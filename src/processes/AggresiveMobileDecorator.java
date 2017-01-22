@@ -9,6 +9,7 @@ public class AggresiveMobileDecorator extends MobileDecorator {
 
 	private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 	private Mobile lastAggressor;
+	private Boolean hasTask = false;
 	
 	public AggresiveMobileDecorator(Mobile decoratedMobile) {
 		super(decoratedMobile);
@@ -21,7 +22,10 @@ public class AggresiveMobileDecorator extends MobileDecorator {
 	@Override
 	public void takeDamage(Type types, int d) {
 		decoratedMobile.takeDamage(types, d);
-		executor.schedule(new AITask(this), 100, TimeUnit.MILLISECONDS);
+		if (!hasTask) {
+			executor.schedule(new AITask(this), 400, TimeUnit.MILLISECONDS);
+			hasTask = true;		
+		}		
 	}
 	
 	// Will create another scheduler of attacks every time attacked, BAD
@@ -34,27 +38,16 @@ public class AggresiveMobileDecorator extends MobileDecorator {
 			sb.append("punch ");
 			sb.append(lastAggressor.getName());
 			basicSkill.perform(sb.toString(), this);
-			executor.schedule(new AITask(this), 800, TimeUnit.MILLISECONDS);
-		}				
+			executor.schedule(new AITask(this), 900, TimeUnit.MILLISECONDS);
+		} else {
+			hasTask = false;
+		}
 	}
 	
 	@Override
 	public void informLastAggressor(Mobile mob) {
 		decoratedMobile.informLastAggressor(mob);
 		this.lastAggressor = mob;
-	}
-	
-	public class AITask implements Runnable {
-		
-		private AggresiveMobileDecorator mobAI;
-		
-		public AITask(AggresiveMobileDecorator decoratedMobile) {
-			this.mobAI = decoratedMobile;
-		}
-		
-		public void run() {
-			mobAI.makeDecision();
-		}
 	}
 
 }

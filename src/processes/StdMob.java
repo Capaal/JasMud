@@ -77,7 +77,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		if (build.hasNextDecorator()) {
 			DecoratorType nextDecorator = build.getNextDecorator();
 			m = nextDecorator.getDecorator(m);
-			decorate(build, m);
+			return decorate(build, m);
 		}
 		return m;
 	}
