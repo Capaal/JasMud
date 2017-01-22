@@ -511,8 +511,8 @@ public class SQLInterface implements DatabaseInterface{
 					}
 					return null;			
 				*/
-				case "SAY":
-					return new Say();
+			//	case "SAY":
+			//		return new Say();
 					
 				case "EXAMINE":
 					return new Examine(whereFactory.parse(rs.getString("TARGETWHERE")));

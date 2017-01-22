@@ -3,9 +3,13 @@ package processes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import processes.Skill.Syntax;
 import TargettingStrategies.*;
 import actions.*;
+import items.StdItem;
 
 public class CreateWorld {
 	
@@ -36,10 +40,13 @@ public class CreateWorld {
 		addSaySkill();
 		addSelfInvSkill();
 		addExitsSkill(); 
+		addTellSkill();
+		addEmotesSkill();
+		addMakeDaggerSkill();
 	}
 	
 	public static void makeItems() {
-		makeADagger();
+		makeADagger(1);
 		makeGoblin();
 	}
 	
@@ -128,9 +135,9 @@ public class CreateWorld {
 		
 	}
 	
-	public static void makeADagger() {
+	public static void makeADagger(int i) {
 		ItemBuilder newItem = new ItemBuilder();	
-		newItem.setId(1);
+		newItem.setId(i);
 		newItem.setName("dagger");
 		newItem.setDescription("It's a dagger!");
 		newItem.complete();
@@ -147,7 +154,21 @@ public class CreateWorld {
 		newGoblin.complete();
 	}
 	
-	// get dagger12345
+	// (29) making an dagger, then making an item, then making a stditem? holdable? container? o.O maybe also for summoning?
+	//first assuming all items have a blueprint
+	//assuming id will always be a new number
+	public static void addMakeDaggerSkill() {
+		SkillBuilder makeDaggerBuilder = new SkillBuilder();
+		makeDaggerBuilder.addAction(new makeDagger());
+		makeDaggerBuilder.addBook(generalSkills);
+		makeDaggerBuilder.setName("makedagger");
+		makeDaggerBuilder.addSyntax(Skill.Syntax.SKILL);
+		makeDaggerBuilder.setId(29);
+		makeDaggerBuilder.complete();
+	}
+	
+	
+	// hardcoded get skill 11
 	public static void addGetSkill() {
 		SkillBuilder getBuilder = new SkillBuilder();
 		getBuilder.addAction(new MoveHoldable(new WhatStrategyItem(), new WhereStrategyHere(), new WhereStrategySelfInventory()));
@@ -333,6 +354,20 @@ public class CreateWorld {
 		sayBuilder.complete();	
 	}
 	
+	//hardcoded tell skill 27
+	public static void addTellSkill() {
+		SkillBuilder tellBuilder = new SkillBuilder();
+		tellBuilder.addAction(new Message("%s tells you: %s", new WhatStrategyTarget(), new WhereStrategyEverywhere(), 
+				new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.SELF,Syntax.LIST))))); 
+		tellBuilder.addBook(generalSkills);
+		tellBuilder.setName("tell");
+		tellBuilder.addSyntax(Skill.Syntax.SKILL);
+		tellBuilder.addSyntax(Skill.Syntax.TARGET);
+		tellBuilder.addSyntax(Skill.Syntax.LIST);
+		tellBuilder.setId(27);
+		tellBuilder.complete();	
+	}
+	
 	//hardcoded selfInventory skill 21
 	public static void addSelfInvSkill() {
 		SkillBuilder selfInvBuilder = new SkillBuilder();
@@ -362,10 +397,23 @@ public class CreateWorld {
 		SkillBuilder exitsBuilder = new SkillBuilder();
 		//need location.getExits() to display
 		exitsBuilder.addBook(generalSkills);
-		exitsBuilder.setName("exits");
+		exitsBuilder.setName("exits"); //should include "ex"
 		exitsBuilder.addSyntax(Skill.Syntax.SKILL);
 		exitsBuilder.setId(26);
 		exitsBuilder.complete();
+	}
+	
+	//hardcoded custom emotes skill 28
+	public static void addEmotesSkill() {
+		SkillBuilder emotesBuilder = new SkillBuilder();
+		emotesBuilder.addAction(new Message("You %s", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.LIST)))));
+		emotesBuilder.addAction(new Message("%s %s", new WhatStrategyNotSelf(), new WhereStrategyHere(), new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.LIST)))));
+		emotesBuilder.addBook(generalSkills);
+		emotesBuilder.setName("emote"); //should include "em"
+		emotesBuilder.addSyntax(Skill.Syntax.SKILL);
+		emotesBuilder.addSyntax(Skill.Syntax.LIST);
+		emotesBuilder.setId(28);
+		emotesBuilder.complete();
 	}
 	
 }

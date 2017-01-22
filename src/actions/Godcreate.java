@@ -197,7 +197,7 @@ public class Godcreate extends Action {
 		actionMap.put("message", new Message());
 	//	actionMap.put("move", new Move());
 		actionMap.put("or", new Or());
-		actionMap.put("say", new Say());
+	//	actionMap.put("say", new Say());
 		actionMap.put("balancecheck", new BalanceCheck());
 		actionMap.put("movecheck", new MoveCheck());
 		actionMap.put("balancecost", new BalanceEffect());		
