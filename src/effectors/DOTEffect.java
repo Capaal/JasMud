@@ -13,18 +13,18 @@ import processes.WorldServer;
 import effects.Bleed;
 import interfaces.*;
 
-public class BleedEffect extends Action {
+public class DOTEffect extends Action {
 	
 	private final int duration;
 	private final int times;
 	private final WhatStrategyInterface what;
 	private final WhereStrategyInterface where;	
 	
-	public BleedEffect() {
+	public DOTEffect() {
 		this(100, 0,  new WhatStrategySelf(),  new WhereStrategyHere());
 	}
 	
-	public BleedEffect(int duration, int times, WhatStrategyInterface what, WhereStrategyInterface where) {
+	public DOTEffect(int duration, int times, WhatStrategyInterface what, WhereStrategyInterface where) {
 		this.duration = duration;
 		this.what = what;
 		this.where = where;
@@ -66,7 +66,7 @@ public class BleedEffect extends Action {
 			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE)");
 			return this.newBlock(player);
 		}
-		return new BleedEffect(newDuration, newTimes, newWho, newWhere);
+		return new DOTEffect(newDuration, newTimes, newWho, newWhere);
 	}
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {

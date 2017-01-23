@@ -3,8 +3,11 @@ package processes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import processes.Skill.Syntax;
 import TargettingStrategies.*;
@@ -15,6 +18,7 @@ public class CreateWorld {
 	
 	
 	public static SkillBook generalSkills = new SkillBook("generalSkills", 1);
+	private static Map<String, ItemBuilder> itemTemplates = new TreeMap<String, ItemBuilder>(); //list of all template items
 	
 	public static void createWorld() {
 //		makeWorldFromDatabase();
@@ -42,11 +46,13 @@ public class CreateWorld {
 		addExitsSkill(); 
 		addTellSkill();
 		addEmotesSkill();
-		addMakeDaggerSkill();
+		addMakeItemSkill();
 	}
 	
 	public static void makeItems() {
 		makeADagger(1);
+		makeASword(2);
+		makeAStick(3);
 		makeGoblin();
 	}
 	
@@ -135,12 +141,33 @@ public class CreateWorld {
 		
 	}
 	
+	public static Map<String, ItemBuilder> viewItemTemplates() {
+		return new HashMap<String, ItemBuilder>(itemTemplates);
+	}
+	
+	//template items should be stored as builders, not actually existing items
 	public static void makeADagger(int i) {
 		ItemBuilder newItem = new ItemBuilder();	
 		newItem.setId(i);
 		newItem.setName("dagger");
 		newItem.setDescription("It's a dagger!");
-		newItem.complete();
+		itemTemplates.put("dagger", newItem);
+	}
+	
+	public static void makeASword(int i) {
+		ItemBuilder newItem = new ItemBuilder();	
+		newItem.setId(i);
+		newItem.setName("sword");
+		newItem.setDescription("It's a sword!");
+		itemTemplates.put("sword", newItem);
+	}
+	
+	public static void makeAStick(int i) {
+		ItemBuilder newItem = new ItemBuilder();	
+		newItem.setId(i);
+		newItem.setName("stick");
+		newItem.setDescription("It's a stick!");
+		itemTemplates.put("stick", newItem);
 	}
 	
 	public static void makeGoblin() {
@@ -155,17 +182,32 @@ public class CreateWorld {
 		newGoblin.complete();
 	}
 	
-	// (29) making an dagger, then making an item, then making a stditem? holdable? container? o.O maybe also for summoning?
-	//first assuming all items have a blueprint
-	//assuming id will always be a new number
-	public static void addMakeDaggerSkill() {
-		SkillBuilder makeDaggerBuilder = new SkillBuilder();
-		makeDaggerBuilder.addAction(new makeDagger());
-		makeDaggerBuilder.addBook(generalSkills);
-		makeDaggerBuilder.setName("makedagger");
-		makeDaggerBuilder.addSyntax(Skill.Syntax.SKILL);
-		makeDaggerBuilder.setId(29);
-		makeDaggerBuilder.complete();
+	public static void makeHorse() {
+		MobileBuilder newGoblin = new MobileBuilder();
+		newGoblin.setId(3);
+		newGoblin.addSkillBook(WorldServer.gameState.getBook(1));
+		newGoblin.addDecorator(MobileDecorator.DecoratorType.CHASING);
+		newGoblin.addDecorator(MobileDecorator.DecoratorType.AGGRESSIVE);
+		newGoblin.setName("horse");
+		newGoblin.setDescription("A horse stands here.");
+		newGoblin.setLoadOnStartUp(true);
+		newGoblin.complete();
+	}
+	
+	// (29) making an item, for crafting. Needs checks
+	// first assuming all items have a blueprint
+	// how to make ID a new number for all new items?
+	public static void addMakeItemSkill() {
+		SkillBuilder makeItemBuilder = new SkillBuilder();
+		makeItemBuilder.addAction(new MakeItem(new WhatStrategyItem(), new WhereStrategyHere()));
+		makeItemBuilder.addAction(new Message("You made %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM))));
+		makeItemBuilder.setFailMsg(new Message("You cannot make \"%s\".", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM))));
+		makeItemBuilder.addBook(generalSkills);
+		makeItemBuilder.setName("make");
+		makeItemBuilder.addSyntax(Skill.Syntax.SKILL);
+		makeItemBuilder.addSyntax(Skill.Syntax.ITEM);
+		makeItemBuilder.setId(29);
+		makeItemBuilder.complete();
 	}
 	
 	
@@ -416,6 +458,18 @@ public class CreateWorld {
 		emotesBuilder.addSyntax(Skill.Syntax.LIST);
 		emotesBuilder.setId(28);
 		emotesBuilder.complete();
+	}
+	
+	//hardcoded info skill 29 - should handle info here, info item, info inventory
+	public static void addInfoSkill() {
+		SkillBuilder infoBuilder = new SkillBuilder();
+		infoBuilder.addAction(new Message("You see: \n%s", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.LIST)))));
+		infoBuilder.addBook(generalSkills);
+		infoBuilder.setName("info"); 
+		infoBuilder.addSyntax(Skill.Syntax.SKILL);
+		infoBuilder.addSyntax(Skill.Syntax.TARGET);		
+		infoBuilder.setId(26);
+		infoBuilder.complete();
 	}
 	
 }

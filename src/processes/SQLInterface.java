@@ -472,7 +472,7 @@ public class SQLInterface implements DatabaseInterface{
 					return new BalanceEffect(rs.getInt("INTVALUE"), whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")));
 			
 				case "BLEEDEFFECT":
-					return new BleedEffect(rs.getInt("INTVALUE"), rs.getInt("INTVALUETWO"), whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")));
+					return new DOTEffect(rs.getInt("INTVALUE"), rs.getInt("INTVALUETWO"), whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")));
 				
 				case "WEAPONEQUIPPEDCHECK":
 					// rs.getString("SKILLTYPE") actually returns an integer that represents a pointer at a real skilltype

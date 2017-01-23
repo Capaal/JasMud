@@ -14,7 +14,7 @@ public class SkillBuilder {
 	private String name = "default";	
 	private Queue<Action> actions;
 	private String description = "";
-	private Action failMsg = null;
+	private Action failMsg = new Message();
 	private ArrayList<Syntax> syntax;
 	private Set<SkillBook> attachedBooks;
 	private Skill finishedSkill = null;
