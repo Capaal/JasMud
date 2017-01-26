@@ -19,27 +19,28 @@ public class Punch extends Skills {
 		super.description = "Punching things.";
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
-		WorldServer.gameState.getBook(1).addSkill(this);
 	}	
 	
 	// Deals damage to a single target in currentPlayer's location
 	@Override
 	public void perform(String fullCommand, Mobile currentPlayer) {
 		Boolean continueRunning = true;
-		continueRunning = hasBalance(currentPlayer);		
-		Mobile finalTarget = getTarget(fullCommand, currentPlayer);
-		continueRunning = !isBlocking(finalTarget);  // Probably not complete still
-		if (finalTarget == null) {
-			continueRunning = false;
-			messageSelf("There is no " + this.getStringInfo(Syntax.TARGET, fullCommand) + " here for you to punch.", currentPlayer);
+		if (!hasBalance(currentPlayer)) {
+			return;
 		}
-		if (continueRunning) {
-			finalTarget.takeDamage(Type.SHARP, calculateDamage());
-			currentPlayer.addEffect(new Balance(), 3000);
-			messageSelf("You punch " + finalTarget.getName(), currentPlayer);
-			messageTarget(currentPlayer.getName() + " punches you.", Arrays.asList(finalTarget));
-			messageOthers(currentPlayer.getName() + " punches " + finalTarget.getName(), currentPlayer, Arrays.asList(currentPlayer, finalTarget));
+		Mobile finalTarget = getTarget(fullCommand, currentPlayer);
+		if (finalTarget == null) {
+			messageSelf("There is no " + this.getStringInfo(Syntax.TARGET, fullCommand) + " here for you to punch.", currentPlayer);
+			return;
+		}	
+		if (isBlocking(finalTarget)) {  // Probably not complete still
+			return;
 		}		
+		finalTarget.takeDamage(Type.SHARP, calculateDamage());
+		currentPlayer.addEffect(new Balance(), 3000);
+		messageSelf("You punch " + finalTarget.getName(), currentPlayer);
+		messageTarget(currentPlayer.getName() + " punches you.", Arrays.asList(finalTarget));
+		messageOthers(currentPlayer.getName() + " punches " + finalTarget.getName(), currentPlayer, Arrays.asList(currentPlayer, finalTarget));
 	}
 
 	private int calculateDamage() {
