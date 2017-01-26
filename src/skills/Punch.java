@@ -10,12 +10,11 @@ public class Punch extends Skills {
 	
 	private Boolean failed;
 	private int intensity = 10;
-	public String name = "punch";
 	
 	public Punch() {
-		this.name = "punch";
-		this.syntax.add(Syntax.SKILL);
-		this.syntax.add(Syntax.TARGET);
+		super.name = "punch";
+		super.syntax.add(Syntax.SKILL);
+		super.syntax.add(Syntax.TARGET);
 		WorldServer.gameState.getBook(1).addSkill(this);
 	}
 	

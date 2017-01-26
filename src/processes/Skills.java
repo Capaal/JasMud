@@ -6,9 +6,9 @@ import java.util.*;
 
 public abstract class Skills {
 	
-	protected String name = "abstract";
-	protected int id = -1; 
-	protected String description = "not a real skill.";
+	protected String name;
+	protected int id; 
+	protected String description;
 	protected List<Syntax> syntax = new ArrayList<Syntax>();	
 	protected Boolean failed = false;
 	
@@ -104,6 +104,6 @@ public abstract class Skills {
 	}
 
 	public Object getName() {
-		return this.name;
+		return name;
 	}
 }

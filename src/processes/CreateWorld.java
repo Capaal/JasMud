@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+
 import skills.*;
 import processes.Skills.Syntax;
 import TargettingStrategies.*;
@@ -46,7 +48,7 @@ public class CreateWorld {
 		addExitsSkill(); 
 		addTellSkill();
 		addEmotesSkill();
-		addMakeItemSkill();
+		addMakeItemSkill(); */
 	}
 	
 	public static void makeItems() {
@@ -204,8 +206,8 @@ public class CreateWorld {
 		makeItemBuilder.setFailMsg(new Message("You cannot make \"%s\".", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM))));
 		makeItemBuilder.addBook(generalSkills);
 		makeItemBuilder.setName("make");
-		makeItemBuilder.addSyntax(Skill.Syntax.SKILL);
-		makeItemBuilder.addSyntax(Skill.Syntax.ITEM);
+//		makeItemBuilder.addSyntax(Skill.Syntax.SKILL);
+//		makeItemBuilder.addSyntax(Skill.Syntax.ITEM);
 		makeItemBuilder.setId(29);
 		makeItemBuilder.complete();
 	}
@@ -466,8 +468,8 @@ public class CreateWorld {
 		infoBuilder.addAction(new Message("You see: \n%s", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.LIST)))));
 		infoBuilder.addBook(generalSkills);
 		infoBuilder.setName("info"); 
-		infoBuilder.addSyntax(Skill.Syntax.SKILL);
-		infoBuilder.addSyntax(Skill.Syntax.TARGET);		
+//		infoBuilder.addSyntax(Skill.Syntax.SKILL);
+//		infoBuilder.addSyntax(Skill.Syntax.TARGET);		
 		infoBuilder.setId(26);
 		infoBuilder.complete();
 	}
