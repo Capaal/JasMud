@@ -23,8 +23,11 @@ public abstract class Skills {
 	}
 	
 	public Boolean hasBalance(Mobile currentPlayer) {
-	//	messageSelf("You're off balance", currentPlayer);
-		return true;
+		if (currentPlayer.hasBalance()) {
+			return true;
+		}
+		messageSelf("You're off balance", currentPlayer);
+		return false;
 	}
 	
 	public Boolean isBlocking(Mobile target) {

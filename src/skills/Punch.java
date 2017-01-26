@@ -2,6 +2,7 @@ package skills;
 
 import java.util.Arrays;
 
+import effects.Balance;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Skills;
@@ -10,8 +11,7 @@ import processes.WorldServer;
 
 public class Punch extends Skills {
 	
-	private Boolean failed;
-	private int intensity = 10;
+	private final int intensity = 10;
 	
 	public Punch() {
 		super.name = "punch";
@@ -25,16 +25,17 @@ public class Punch extends Skills {
 	// Deals damage to a single target in currentPlayer's location
 	@Override
 	public void perform(String fullCommand, Mobile currentPlayer) {
-		failed = false;
-		failed = !hasBalance(currentPlayer);		
+		Boolean continueRunning = true;
+		continueRunning = hasBalance(currentPlayer);		
 		Mobile finalTarget = getTarget(fullCommand, currentPlayer);
-		failed = isBlocking(finalTarget);
+		continueRunning = !isBlocking(finalTarget);  // Probably not complete still
 		if (finalTarget == null) {
-			failed("There is no " + this.getStringInfo(Syntax.TARGET, fullCommand) + " here for you to punch.", currentPlayer);
+			continueRunning = false;
+			messageSelf("There is no " + this.getStringInfo(Syntax.TARGET, fullCommand) + " here for you to punch.", currentPlayer);
 		}
-		if (!failed) {
-			int finalDamage = calculateDamage();
-			finalTarget.takeDamage(Type.SHARP, finalDamage);
+		if (continueRunning) {
+			finalTarget.takeDamage(Type.SHARP, calculateDamage());
+			currentPlayer.addEffect(new Balance(), 3000);
 			messageSelf("You punch " + finalTarget.getName(), currentPlayer);
 			messageTarget(currentPlayer.getName() + " punches you.", Arrays.asList(finalTarget));
 			messageOthers(currentPlayer.getName() + " punches " + finalTarget.getName(), currentPlayer, Arrays.asList(currentPlayer, finalTarget));
@@ -43,16 +44,6 @@ public class Punch extends Skills {
 
 	private int calculateDamage() {
 		return intensity;
-	}
-
-	private void failed(String msg, Mobile currentPlayer) {
-		failed = true;
-		messageSelf(msg, currentPlayer);
-	}
-	
-	private void checkForBlock() {
-//		if block is active
-//		do something like change final damage, or set a boolean, or fail out
 	}
 	
 	private Mobile getTarget(String fullCommand, Mobile currentPlayer) {
