@@ -1,5 +1,7 @@
 package skills;
 
+import java.util.Arrays;
+
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Skills;
@@ -13,54 +15,39 @@ public class Punch extends Skills {
 	
 	public Punch() {
 		super.name = "punch";
-		super.syntax.add(Syntax.SKILL);
-		super.syntax.add(Syntax.TARGET);
+		super.id = 1;
+		super.description = "Punching things.";
+		super.syntaxList.add(Syntax.SKILL);
+		super.syntaxList.add(Syntax.TARGET);
 		WorldServer.gameState.getBook(1).addSkill(this);
-	}
-	
-	private Mobile finalTarget;
+	}	
 	
 	// Deals damage to a single target in currentPlayer's location
 	@Override
 	public void perform(String fullCommand, Mobile currentPlayer) {
 		failed = false;
-		checkForBalance();
-		checkForBlock();
-		finalTarget = getTarget(fullCommand, currentPlayer);
+		failed = !hasBalance(currentPlayer);		
+		Mobile finalTarget = getTarget(fullCommand, currentPlayer);
+		failed = isBlocking(finalTarget);
 		if (finalTarget == null) {
-			failed(1);
+			failed("There is no " + this.getStringInfo(Syntax.TARGET, fullCommand) + " here for you to punch.", currentPlayer);
 		}
 		if (!failed) {
 			int finalDamage = calculateDamage();
 			finalTarget.takeDamage(Type.SHARP, finalDamage);
-//			messageSelf("You punch " + finalTarget.getName());
-//			messageTarget(currentPlayer.getName() + " punches you.");
-//			messageOthers(currentPlayer.getName() + " punches " + finalTarget.getName());
+			messageSelf("You punch " + finalTarget.getName(), currentPlayer);
+			messageTarget(currentPlayer.getName() + " punches you.", Arrays.asList(finalTarget));
+			messageOthers(currentPlayer.getName() + " punches " + finalTarget.getName(), currentPlayer, Arrays.asList(currentPlayer, finalTarget));
 		}		
 	}
-	
+
 	private int calculateDamage() {
 		return intensity;
 	}
 
-	private void failed(int stage) {
+	private void failed(String msg, Mobile currentPlayer) {
 		failed = true;
-		switch (stage) {
-		case 1:
-//			messageSelf("There is no " + target + " here for you to punch.");
-			break;
-		case 2:
-//			messageSelf("You are off balance and cannot punch.");
-			break;
-		default:
-			break;
-		}
-	}
-	
-	@Override
-	public void checkForBalance() {
-//		if this fails then
-//		failed(2);
+		messageSelf(msg, currentPlayer);
 	}
 	
 	private void checkForBlock() {
