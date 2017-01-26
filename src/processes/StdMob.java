@@ -130,7 +130,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		damage = checkEffectsAgainstIncomingDamage(type, damage);
 		if (currentHp < damage) {
 			damage = currentHp;
-		}
+		} 
 		this.currentHp = currentHp - damage;
 		checkHp();
 	}
@@ -162,7 +162,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	@Override
 	public void checkHp() {
 		if (currentHp <= 0 && !isDead) {
-			tell("You colapse to the ground, unable to fight on.");
+			tell("You collapse to the ground, unable to fight on.");
 			isDead = true;
 		}
 	}	

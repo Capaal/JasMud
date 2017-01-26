@@ -8,23 +8,23 @@ import java.util.List;
 import TargettingStrategies.*;
 import actions.Godcreate;
 import processes.SQLInterface;
-import processes.Skills;
+import processes.Skill;
 import processes.WorldServer;
 import effects.Bleed;
 import interfaces.*;
 
-public class BleedEffect extends Action {
+public class DOTEffect extends Action {
 	
 	private final int duration;
 	private final int times;
 	private final WhatStrategyInterface what;
 	private final WhereStrategyInterface where;	
 	
-	public BleedEffect() {
+	public DOTEffect() {
 		this(100, 0,  new WhatStrategySelf(),  new WhereStrategyHere());
 	}
 	
-	public BleedEffect(int duration, int times, WhatStrategyInterface what, WhereStrategyInterface where) {
+	public DOTEffect(int duration, int times, WhatStrategyInterface what, WhereStrategyInterface where) {
 		this.duration = duration;
 		this.what = what;
 		this.where = where;
@@ -32,7 +32,7 @@ public class BleedEffect extends Action {
 	}
 
 	@Override
-	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
+	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
 		List<Holdable> mobs = what.findWhat(s, fullCommand, currentPlayer,  where.findWhere(s, fullCommand, currentPlayer));
 		if (mobs.isEmpty()) {
 			return false;
@@ -66,7 +66,7 @@ public class BleedEffect extends Action {
 			player.tell("That wasn't a valid enum choice for syntax, please refer to syntax for options. (i.e. SELF, HERE)");
 			return this.newBlock(player);
 		}
-		return new BleedEffect(newDuration, newTimes, newWho, newWhere);
+		return new DOTEffect(newDuration, newTimes, newWho, newWhere);
 	}
 	@Override
 	public HashMap<String, Object> selectOneself(int position) {
