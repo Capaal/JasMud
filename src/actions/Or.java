@@ -2,7 +2,7 @@ package actions;
 
 
 import java.util.HashMap;
-import processes.Skill;
+import processes.Skills;
 import processes.WorldServer;
 import interfaces.Action;
 import interfaces.Mobile;
@@ -22,7 +22,7 @@ public class Or extends Action {
 	}
 
 	@Override
-	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
 		if (actionOne.activate(s, fullCommand, currentPlayer)) {
 			return true;
 		} else if (actionTwo.activate(s, fullCommand, currentPlayer)) {

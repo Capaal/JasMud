@@ -7,7 +7,7 @@ import java.util.StringTokenizer;
 
 import processes.Equipment.EquipmentEnum;
 import processes.Location.GroundType;
-import processes.Skill.Syntax;
+import processes.Skills.Syntax;
 import interfaces.Container;
 import interfaces.Effect;
 import interfaces.Holdable;
@@ -157,7 +157,7 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public Skill getCommand(String command) {
+	public Skills getCommand(String command) {
 		return decoratedMobile.getCommand(command);
 	}
 

@@ -7,13 +7,13 @@ import interfaces.Mobile;
 import java.util.ArrayList;
 import java.util.List;
 
-import processes.Skill;
+import processes.Skills;
 
 public class WhatStrategyAll implements WhatStrategyInterface {
 
 	// Returns all Holdables in given container(s).
 	@Override
-	public List<Holdable> findWhat(Skill s, String fullCommand,	Mobile currentPlayer, List<Container> containersToSearch) {
+	public List<Holdable> findWhat(Skills s, String fullCommand,	Mobile currentPlayer, List<Container> containersToSearch) {
 		List<Holdable> targ = new ArrayList<Holdable>();
 		for (Container l : containersToSearch) {
 			for (Holdable m : l.getInventory()) {

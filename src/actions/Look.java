@@ -7,8 +7,8 @@ import java.util.List;
 
 import TargettingStrategies.*;
 import processes.SQLInterface;
-import processes.Skill;
-import processes.Skill.Syntax;
+import processes.Skills;
+import processes.Skills.Syntax;
 import processes.WorldServer;
 import interfaces.*;
 
@@ -25,7 +25,7 @@ public class Look extends Action {
 	}
 
 	@Override
-	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
 		String dir = s.getStringInfo(Syntax.DIRECTION, fullCommand);		
 		if (!dir.equals("")) {
 			List<Container> locs = where.findWhere(s, fullCommand, currentPlayer);

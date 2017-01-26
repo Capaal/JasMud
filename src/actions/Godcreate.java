@@ -12,11 +12,11 @@ import effectors.*;
 import processes.ItemBuilder;
 import processes.MobileBuilder;
 import processes.SQLInterface;
-import processes.Skill;
+import processes.Skills;
 import processes.SkillBook;
 import processes.SkillBuilder;
 import processes.Type;
-import processes.Skill.Syntax;
+import processes.Skills.Syntax;
 import processes.WorldServer;
 import interfaces.Action;
 import interfaces.Mobile;
@@ -27,7 +27,7 @@ public class Godcreate extends Action {
 	public static Map<String, Action> actionMap;
 	
 	@Override
-	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
 		Mobile player = currentPlayer;
 		currentPlayer.startCreating();
 		createActionMap();

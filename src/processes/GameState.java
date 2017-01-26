@@ -94,18 +94,18 @@ public class GameState {
 	public static BlockingQueue<QueueInformation> SkillQueue = new ArrayBlockingQueue<QueueInformation>(1024);
 	
 	public class QueueInformation {
-		Skill skill;
+		Skills skill;
 		String fullCommand;
 		Mobile currentPlayer;
 		
-		public QueueInformation(Skill skill, String fullCommand, Mobile currentPlayer) {
+		public QueueInformation(Skills skill, String fullCommand, Mobile currentPlayer) {
 			this.skill = skill;
 			this.fullCommand = fullCommand;
 			this.currentPlayer = currentPlayer;
 		}
 	}
 	
-	public void addToQueue(Skill skill, String fullCommand, Mobile currentPlayer) {
+	public void addToQueue(Skills skill, String fullCommand, Mobile currentPlayer) {
 		try {
 			SkillQueue.put(new QueueInformation(skill, fullCommand, currentPlayer));
 		} catch (InterruptedException e) {

@@ -11,8 +11,8 @@ import TargettingStrategies.*;
 import processes.Equipment;
 import processes.Equipment.EquipmentEnum;
 import processes.SQLInterface;
-import processes.Skill;
-import processes.Skill.Syntax;
+import processes.Skills;
+import processes.Skills.Syntax;
 import processes.WorldServer;
 import interfaces.Action;
 import interfaces.Container;
@@ -87,7 +87,7 @@ public class EquipChange extends Action {
 	
 	
 	@Override
-	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
 		List<Container> loc = where.findWhere(s, fullCommand, currentPlayer);
 		List<Holdable> target = what.findWhat(s, fullCommand, currentPlayer, loc);
 		String slotString = s.getStringInfo(Syntax.SLOT, fullCommand);

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import TargettingStrategies.*;
 import actions.Godcreate;
 import processes.SQLInterface;
-import processes.Skill;
+import processes.Skills;
 import processes.WorldServer;
 import interfaces.*;
 
@@ -25,7 +25,7 @@ public class BalanceCheck extends Action {
 	}
 	
 	@Override
-	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
 		for (Holdable m : what.findWhat(s, fullCommand, currentPlayer,  where.findWhere(s, fullCommand, currentPlayer))) {
 			if (m instanceof Mobile && !((Mobile)m).hasBalance()) {
 				return false;

@@ -6,32 +6,32 @@ import java.util.Set;
 
 public class SkillBook {
 
-	private Set<Skill> skillList;
+	private Set<Skills> skillList;
 	private final String name;
 	private final int id;
 	
 	public SkillBook(String name, int id) {
-		skillList = new HashSet<Skill>();
+		skillList = new HashSet<Skills>();
 		this.name = name;
 		this.id = id;
 	}
 	
-	public void addSkill(Skill newSpell) {
+	public void addSkill(Skills newSpell) {
 		synchronized (skillList) {
 			skillList.add(newSpell);
 		}
 	}	
 	
-	public Skill getSkill(String skill) {
+	public Skills getSkill(String skill) {
 		if (skill == null || skill.equals("")) {
 			return null;
 		}
 		return findSkill(skill);
 	}
 	
-	private Skill findSkill(String skill) {
+	private Skills findSkill(String skill) {
 		synchronized (skillList) {
-			for (Skill s : skillList) {
+			for (Skills s : skillList) {
 				if (s.getName().equals(skill)) {
 					return s;
 				}
@@ -50,20 +50,20 @@ public class SkillBook {
 	
 	public void save() {
 		synchronized (skillList) {
-			for (Skill s : skillList) {	
+			for (Skills s : skillList) {	
 				saveSkillBookLink(s);
 			}
 		}
 	}
 	
-	private void saveSkillBookLink(Skill s) {
-		String skillSelect = "SELECT * FROM skilltable WHERE SKILLID='" + s.getId() + "';";
+	private void saveSkillBookLink(Skills s) {
+/*		String skillSelect = "SELECT * FROM skilltable WHERE SKILLID='" + s.getId() + "';";
 		HashMap<String, Object> skillView = WorldServer.databaseInterface.returnBlockView(skillSelect);
 		String skillInsert;
 		if (skillView.get("SKILLID") == null) {
 			skillInsert = "INSERT INTO skilltable (SKILLBOOKID, SKILLID) VALUES (" + this.id + ", " + s.getId() + ");";		
 			WorldServer.databaseInterface.saveAction(skillInsert);
-		}
+		}*/
 	}
 	
 	protected SkillBook duplicate(SkillBook toBeCopied) {

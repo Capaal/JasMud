@@ -6,7 +6,7 @@ import interfaces.Mobile;
 import java.util.ArrayList;
 import java.util.List;
 
-import processes.Skill;
+import processes.Skills;
 
 public class WhereStrategyMultiples implements WhereStrategyInterface {
 	
@@ -19,7 +19,7 @@ public class WhereStrategyMultiples implements WhereStrategyInterface {
 	}
 	
 	@Override
-	public List<Container> findWhere(Skill s, String fullCommand,
+	public List<Container> findWhere(Skills s, String fullCommand,
 			Mobile currentPlayer) {
 		List<Container> multipleStrategies = new ArrayList<Container>();
 		multipleStrategies.addAll(whereOne.findWhere(s, fullCommand, currentPlayer));

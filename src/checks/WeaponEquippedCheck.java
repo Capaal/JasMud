@@ -25,7 +25,7 @@ public class WeaponEquippedCheck extends Action {
 	}
 	
 	@Override
-	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
 		boolean success = false;
 		for (Holdable m : who.findWhat(s, fullCommand, currentPlayer, where.findWhere(s, fullCommand, currentPlayer))) {
 			if (m instanceof Mobile) {

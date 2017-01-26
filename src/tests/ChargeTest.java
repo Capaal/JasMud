@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import processes.Skill;
+import processes.Skills;
 import processes.SkillBuilder;
 import processes.StdMob;
 import processes.WorldServer;
@@ -37,7 +37,7 @@ public class ChargeTest {
 		testQueue.add(mockAction);
 		sb.addAction(new Charge(100, testQueue));
 		sb.complete();
-		Skill testSkill = sb.getFinishedSkill();
+		Skills testSkill = sb.getFinishedSkill();
 		verify(mockAction).activate(testSkill, "", mockMobile);
 	}
 	
@@ -50,7 +50,7 @@ public class ChargeTest {
 		testQueue.add(mockAction);
 		sb.addAction(new Charge(100, testQueue));
 		sb.complete();
-		Skill testSkill = sb.getFinishedSkill();
+		Skills testSkill = sb.getFinishedSkill();
 		fail("Not yet implemented");
 		verify(mockAction).activate(testSkill, "", mockMobile);
 	}

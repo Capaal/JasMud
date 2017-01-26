@@ -2,7 +2,7 @@ package interfaces;
 
 import processes.Equipment.EquipmentEnum;
 import processes.SendMessage;
-import processes.Skill;
+import processes.Skills;
 import processes.SkillBook;
 import processes.Type;
 
@@ -23,7 +23,7 @@ public interface Mobile extends Container, Holdable {
 	public void tell(String msg);
 	public void tellLine(String msg);
 	public void setContainer(Container newLoc);
-	public Skill getCommand(String command);
+	public Skills getCommand(String command);
 	public void acceptItem(Holdable item);
 	public void addEffect(Effect newEffect, int duration);
 	public void addTickingEffect(TickingEffect newEffect, int duration, int times);

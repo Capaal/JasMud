@@ -7,7 +7,7 @@ import interfaces.Action;
 import interfaces.Container;
 import interfaces.Holdable;
 import interfaces.Mobile;
-import processes.Skill;
+import processes.Skills;
 
 public class MoveHoldable extends Action {
 
@@ -33,7 +33,7 @@ public class MoveHoldable extends Action {
 	}
 	
 	@Override
-	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
 		List<Container> possibleContainersOfHoldable = whereObject.findWhere(s, fullCommand, currentPlayer);
 		List<Holdable> possibleHoldables = whatObject.findWhat(s, fullCommand, currentPlayer, possibleContainersOfHoldable);
 		List<Container> possibleEndContainers = whereContainer.findWhere(s, fullCommand, currentPlayer);

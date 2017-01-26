@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import processes.Location;
-import processes.Skill;
-import processes.Skill.Syntax;
+import processes.Skills;
+import processes.Skills.Syntax;
 
 public class WhereStrategyOneAway implements WhereStrategyInterface {
 
@@ -16,7 +16,7 @@ public class WhereStrategyOneAway implements WhereStrategyInterface {
 	// Assumes currentPlayer is in a LOCATION
 	// Assumes Skill s has defined a Syntax.DIRECTION.
 	@Override
-	public List<Container> findWhere(Skill s, String fullCommand, Mobile currentPlayer) {
+	public List<Container> findWhere(Skills s, String fullCommand, Mobile currentPlayer) {
 		List<Container> loc = new ArrayList<Container>();
 		String dir = s.getStringInfo(Syntax.DIRECTION, fullCommand);
 		if (!dir.equals("")) {

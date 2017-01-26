@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import processes.Skill.Syntax;
+import skills.*;
+import processes.Skills.Syntax;
 import TargettingStrategies.*;
 import actions.*;
 import items.StdItem;
@@ -26,7 +26,8 @@ public class CreateWorld {
 	//Hardcoded skill list
 	public static void makeSkills() {
 		WorldServer.gameState.addBook(1, generalSkills);
-		kickSkill();
+		generalSkills.addSkill(new Punch());
+	/*	kickSkill();
 		addPunchSkill();
 		addGodCreateSkill();
 		addMoveSkill();
@@ -42,7 +43,7 @@ public class CreateWorld {
 		addExitsSkill(); 
 		addTellSkill();
 		addEmotesSkill();
-		addMakeDaggerSkill();
+		addMakeDaggerSkill();*/
 	}
 	
 	public static void makeItems() {
@@ -163,7 +164,7 @@ public class CreateWorld {
 		makeDaggerBuilder.addAction(new makeDagger());
 		makeDaggerBuilder.addBook(generalSkills);
 		makeDaggerBuilder.setName("makedagger");
-		makeDaggerBuilder.addSyntax(Skill.Syntax.SKILL);
+		makeDaggerBuilder.addSyntax(Skills.Syntax.SKILL);
 		makeDaggerBuilder.setId(29);
 		makeDaggerBuilder.complete();
 	}
@@ -178,8 +179,8 @@ public class CreateWorld {
 		getBuilder.addBook(generalSkills);
 		getBuilder.setName("get");
 		getBuilder.setFailMsg(new Message("There is no \"%s\" here.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM)))); 
-		getBuilder.addSyntax(Skill.Syntax.SKILL);
-		getBuilder.addSyntax(Skill.Syntax.ITEM);
+		getBuilder.addSyntax(Skills.Syntax.SKILL);
+		getBuilder.addSyntax(Skills.Syntax.ITEM);
 		getBuilder.setId(11);
 		getBuilder.complete();
 	}
@@ -192,7 +193,7 @@ public class CreateWorld {
 		kickBuilder.addBook(generalSkills);
 		kickBuilder.setId(9);
 		kickBuilder.setName("kick");
-		kickBuilder.addSyntax(Skill.Syntax.SKILL);
+		kickBuilder.addSyntax(Skills.Syntax.SKILL);
 		kickBuilder.complete();
 	}
 	
@@ -207,8 +208,8 @@ public class CreateWorld {
 		punchBuilder.addBook(generalSkills);
 		punchBuilder.setId(20);
 		punchBuilder.setName("punch");
-		punchBuilder.addSyntax(Skill.Syntax.SKILL);
-		punchBuilder.addSyntax(Skill.Syntax.TARGET);
+		punchBuilder.addSyntax(Skills.Syntax.SKILL);
+		punchBuilder.addSyntax(Skills.Syntax.TARGET);
 		punchBuilder.complete();
 	}
 	
@@ -218,7 +219,7 @@ public class CreateWorld {
 		godCreateBuilder.addAction(new Godcreate());
 		godCreateBuilder.addBook(generalSkills);
 		godCreateBuilder.setName("godcreate");
-		godCreateBuilder.addSyntax(Skill.Syntax.SKILL);
+		godCreateBuilder.addSyntax(Skills.Syntax.SKILL);
 		godCreateBuilder.setId(8);
 		godCreateBuilder.complete();
 	}
@@ -234,8 +235,8 @@ public class CreateWorld {
 		moveBuilder.setName("move");
 		moveBuilder.setFailMsg(new Message("You can't go %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.DIRECTION))));
 		moveBuilder.addAction(new Message("%s enters.", new WhatStrategySelf(), new WhereStrategyOneAway(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF))));
-		moveBuilder.addSyntax(Skill.Syntax.SKILL);
-		moveBuilder.addSyntax(Skill.Syntax.DIRECTION);
+		moveBuilder.addSyntax(Skills.Syntax.SKILL);
+		moveBuilder.addSyntax(Skills.Syntax.DIRECTION);
 		moveBuilder.setId(12);
 		moveBuilder.complete();
 	}
@@ -246,8 +247,8 @@ public class CreateWorld {
 		lookBuilder.addAction(new Look(new WhereStrategyHere())); //need both Here & OneLocAway
 		lookBuilder.addBook(generalSkills);
 		lookBuilder.setName("look");
-		lookBuilder.addSyntax(Skill.Syntax.SKILL);
-		lookBuilder.addSyntax(Skill.Syntax.DIRECTION);
+		lookBuilder.addSyntax(Skills.Syntax.SKILL);
+		lookBuilder.addSyntax(Skills.Syntax.DIRECTION);
 		lookBuilder.setId(13);
 		lookBuilder.complete();
 	}
@@ -261,8 +262,8 @@ public class CreateWorld {
 		dropBuilder.addBook(generalSkills);
 		dropBuilder.setName("drop");
 		dropBuilder.setFailMsg(new Message("You failed to drop \"%s\".", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM))));
-		dropBuilder.addSyntax(Skill.Syntax.SKILL);
-		dropBuilder.addSyntax(Skill.Syntax.ITEM);
+		dropBuilder.addSyntax(Skills.Syntax.SKILL);
+		dropBuilder.addSyntax(Skills.Syntax.ITEM);
 		dropBuilder.setId(14);
 		dropBuilder.complete();	
 	}
@@ -274,8 +275,8 @@ public class CreateWorld {
 		examineBuilder.addBook(generalSkills);
 		examineBuilder.setName("examine");
 		examineBuilder.setFailMsg(new Message("You don't see \"%s\".", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM)))); 
-		examineBuilder.addSyntax(Skill.Syntax.SKILL);
-		examineBuilder.addSyntax(Skill.Syntax.ITEM);
+		examineBuilder.addSyntax(Skills.Syntax.SKILL);
+		examineBuilder.addSyntax(Skills.Syntax.ITEM);
 		examineBuilder.setId(15);
 		examineBuilder.complete();		
 	}
@@ -301,10 +302,10 @@ public class CreateWorld {
 				new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM)))); //multiple fail messages?
 		throwBuilder.addBook(generalSkills);
 		throwBuilder.setName("throw");
-		throwBuilder.addSyntax(Skill.Syntax.SKILL);
-		throwBuilder.addSyntax(Skill.Syntax.ITEM);
-		throwBuilder.addSyntax(Skill.Syntax.TARGET); //how to syntax throw (item) at (target)?
-		throwBuilder.addSyntax(Skill.Syntax.DIRECTION);
+		throwBuilder.addSyntax(Skills.Syntax.SKILL);
+		throwBuilder.addSyntax(Skills.Syntax.ITEM);
+		throwBuilder.addSyntax(Skills.Syntax.TARGET); //how to syntax throw (item) at (target)?
+		throwBuilder.addSyntax(Skills.Syntax.DIRECTION);
 		throwBuilder.setId(17);
 		throwBuilder.complete();	
 	}
@@ -323,9 +324,9 @@ public class CreateWorld {
 				new ArrayList<Syntax>())); //need multiple fail messages - don't have item, can't find target, (later: can't give away)
 		giveBuilder.addBook(generalSkills);
 		giveBuilder.setName("give");
-		giveBuilder.addSyntax(Skill.Syntax.SKILL);
-		giveBuilder.addSyntax(Skill.Syntax.ITEM);
-		giveBuilder.addSyntax(Skill.Syntax.TARGET);
+		giveBuilder.addSyntax(Skills.Syntax.SKILL);
+		giveBuilder.addSyntax(Skills.Syntax.ITEM);
+		giveBuilder.addSyntax(Skills.Syntax.TARGET);
 		giveBuilder.setId(18);
 		giveBuilder.complete();	
 	}
@@ -337,8 +338,8 @@ public class CreateWorld {
 				new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.SELF,Syntax.LIST))))); 
 		msgWorldBuilder.addBook(generalSkills);
 		msgWorldBuilder.setName("msg");
-		msgWorldBuilder.addSyntax(Skill.Syntax.SKILL);
-		msgWorldBuilder.addSyntax(Skill.Syntax.LIST);
+		msgWorldBuilder.addSyntax(Skills.Syntax.SKILL);
+		msgWorldBuilder.addSyntax(Skills.Syntax.LIST);
 		msgWorldBuilder.setId(19);
 		msgWorldBuilder.complete();	
 	}
@@ -350,8 +351,8 @@ public class CreateWorld {
 				new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.SELF,Syntax.LIST))))); 
 		sayBuilder.addBook(generalSkills);
 		sayBuilder.setName("say");
-		sayBuilder.addSyntax(Skill.Syntax.SKILL);
-		sayBuilder.addSyntax(Skill.Syntax.LIST);
+		sayBuilder.addSyntax(Skills.Syntax.SKILL);
+		sayBuilder.addSyntax(Skills.Syntax.LIST);
 		sayBuilder.setId(22);
 		sayBuilder.complete();	
 	}
@@ -363,9 +364,9 @@ public class CreateWorld {
 				new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.SELF,Syntax.LIST))))); 
 		tellBuilder.addBook(generalSkills);
 		tellBuilder.setName("tell");
-		tellBuilder.addSyntax(Skill.Syntax.SKILL);
-		tellBuilder.addSyntax(Skill.Syntax.TARGET);
-		tellBuilder.addSyntax(Skill.Syntax.LIST);
+		tellBuilder.addSyntax(Skills.Syntax.SKILL);
+		tellBuilder.addSyntax(Skills.Syntax.TARGET);
+		tellBuilder.addSyntax(Skills.Syntax.LIST);
 		tellBuilder.setId(27);
 		tellBuilder.complete();	
 	}
@@ -377,8 +378,8 @@ public class CreateWorld {
 				new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.SELF)))));
 		selfInvBuilder.addBook(generalSkills);
 		selfInvBuilder.setName("inv");
-		selfInvBuilder.addSyntax(Skill.Syntax.SKILL);
-		selfInvBuilder.addSyntax(Skill.Syntax.SELF);
+		selfInvBuilder.addSyntax(Skills.Syntax.SKILL);
+		selfInvBuilder.addSyntax(Skills.Syntax.SELF);
 		selfInvBuilder.setId(21);
 		selfInvBuilder.complete();	
 	}
@@ -389,7 +390,7 @@ public class CreateWorld {
 		whoBuilder.addAction(new Message("Online: \n%s", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(new ArrayList<Syntax>())));
 		whoBuilder.addBook(generalSkills);
 		whoBuilder.setName("who");
-		whoBuilder.addSyntax(Skill.Syntax.SKILL);
+		whoBuilder.addSyntax(Skills.Syntax.SKILL);
 		whoBuilder.setId(25);
 		whoBuilder.complete();
 	}
@@ -400,7 +401,7 @@ public class CreateWorld {
 		//need location.getExits() to display
 		exitsBuilder.addBook(generalSkills);
 		exitsBuilder.setName("exits"); //should include "ex"
-		exitsBuilder.addSyntax(Skill.Syntax.SKILL);
+		exitsBuilder.addSyntax(Skills.Syntax.SKILL);
 		exitsBuilder.setId(26);
 		exitsBuilder.complete();
 	}
@@ -412,8 +413,8 @@ public class CreateWorld {
 		emotesBuilder.addAction(new Message("%s %s", new WhatStrategyNotSelf(), new WhereStrategyHere(), new ArrayList<Syntax>(new ArrayList<Syntax>(Arrays.asList(Syntax.SELF, Syntax.LIST)))));
 		emotesBuilder.addBook(generalSkills);
 		emotesBuilder.setName("emote"); //should include "em"
-		emotesBuilder.addSyntax(Skill.Syntax.SKILL);
-		emotesBuilder.addSyntax(Skill.Syntax.LIST);
+		emotesBuilder.addSyntax(Skills.Syntax.SKILL);
+		emotesBuilder.addSyntax(Skills.Syntax.LIST);
 		emotesBuilder.setId(28);
 		emotesBuilder.complete();
 	}

@@ -4,7 +4,7 @@ package tests;
 import interfaces.Container;
 import interfaces.Mobile;
 import static org.mockito.Mockito.*;
-import processes.Skill;
+import processes.Skills;
 import processes.SkillBuilder;
 import processes.StdMob;
 import processes.WorldServer;
@@ -17,14 +17,14 @@ import actions.Damage;
 
 public class DamageTest {
 	
-	public class SkillStub extends Skill {
+	public class SkillStub extends Skills {
 		
 		public SkillStub(SkillBuilder build) {
 			super(build);
 		}		
 	}
 	
-	Skill testSkill;
+	Skills testSkill;
 	
 	@Before
 	public void initialize() {

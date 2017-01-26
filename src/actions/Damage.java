@@ -29,7 +29,7 @@ public class Damage extends Action {
 	}	
 	
 	@Override
-	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
 		List<Container> loc = where.findWhere(s, fullCommand, currentPlayer);
 		List<Holdable> target = what.findWhat(s, fullCommand, currentPlayer, loc);
 		if (target.isEmpty()) {

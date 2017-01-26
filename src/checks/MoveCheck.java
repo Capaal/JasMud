@@ -28,7 +28,7 @@ public class MoveCheck extends Action {
 	}
 
 	@Override
-	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
 		for (Holdable m : who.findWhat(s, fullCommand, currentPlayer,  where.findWhere(s, fullCommand, currentPlayer))) {
 			for (Container c : finalLoc.findWhere(s, fullCommand, currentPlayer)) {
 				if (c == null) { 

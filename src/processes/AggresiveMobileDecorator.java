@@ -33,7 +33,7 @@ public class AggresiveMobileDecorator extends MobileDecorator {
 	// Should hold onto AITask, to consider clearing it?
 	public void makeDecision() {
 		if (lastAggressor != null && lastAggressor.getContainer().equals(decoratedMobile.getContainer())) {
-			Skill basicSkill = getCommand("punch");
+			Skills basicSkill = getCommand("punch");
 			StringBuilder sb = new StringBuilder();
 			sb.append("punch ");
 			sb.append(lastAggressor.getName());

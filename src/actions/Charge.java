@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import processes.Skill;
+import processes.Skills;
 import processes.WorldServer;
 import interfaces.Action;
 import interfaces.Mobile;
@@ -27,7 +27,7 @@ public class Charge extends Action {
 	}
 
 	@Override
-	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
 		// TODO Auto-generated method stub
 		return false;
 	}

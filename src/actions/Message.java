@@ -9,10 +9,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import processes.Skill.Syntax;
+import processes.Skills.Syntax;
 import TargettingStrategies.*;
 import processes.Location.Direction;
-import processes.Skill;
+import processes.Skills;
 import processes.WorldServer;
 
 // Used to display messages to controlled mobs. What/Where strategies obtains who should see the message, msg and syntaxList controls what is displayed.
@@ -40,7 +40,7 @@ public class Message extends Action {
 	}
 	
 	@Override
-	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
 		ArrayList<String> substituteWords = new ArrayList<String>();
 		for (Syntax msg : syntaxList) {
 			if (msg.equals(Syntax.SELF)) { // Special Syntax to display currentPlayer's name.

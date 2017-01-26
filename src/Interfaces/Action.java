@@ -2,13 +2,13 @@ package interfaces;
 
 import java.util.HashMap;
 
-import processes.Skill;
+import processes.Skills;
 
 public abstract class Action {
 	
 	protected int id;
 
-	public abstract boolean activate(Skill s, String fullCommand, Mobile currentPlayer);
+	public abstract boolean activate(Skills s, String fullCommand, Mobile currentPlayer);
 	
 	public boolean save(int position) {	
 		HashMap<String, Object> blockView = selectOneself(position);

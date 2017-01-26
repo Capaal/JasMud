@@ -8,7 +8,7 @@ import java.util.List;
 import TargettingStrategies.*;
 import actions.Godcreate;
 import processes.SQLInterface;
-import processes.Skill;
+import processes.Skills;
 import processes.WorldServer;
 import effects.Bleed;
 import interfaces.*;
@@ -32,7 +32,7 @@ public class BleedEffect extends Action {
 	}
 
 	@Override
-	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
 		List<Holdable> mobs = what.findWhat(s, fullCommand, currentPlayer,  where.findWhere(s, fullCommand, currentPlayer));
 		if (mobs.isEmpty()) {
 			return false;

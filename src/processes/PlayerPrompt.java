@@ -122,7 +122,7 @@ public class PlayerPrompt implements Runnable {
 						String command = st.nextToken();
 						command = command.toLowerCase();
 						Boolean commandFound = false;
-						Skill com;
+						Skills com;
 						Direction posDir = Direction.getDirectionName(command);
 						if (posDir != null) {
 							com = currentPlayer.getCommand("move");

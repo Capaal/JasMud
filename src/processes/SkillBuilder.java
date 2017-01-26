@@ -6,7 +6,7 @@ import java.util.*;
 
 import TargettingStrategies.WhatStrategyInterface;
 import actions.Message;
-import processes.Skill.Syntax;
+import processes.Skills.Syntax;
 
 public class SkillBuilder {
 	
@@ -17,7 +17,7 @@ public class SkillBuilder {
 	private Action failMsg = null;
 	private ArrayList<Syntax> syntax;
 	private Set<SkillBook> attachedBooks;
-	private Skill finishedSkill = null;
+	private Skills finishedSkill = null;
 	
 	private boolean buildCompleted = false;
 	
@@ -49,14 +49,14 @@ public class SkillBuilder {
 			} 	
 		}
 		buildCompleted = true;
-		finishedSkill = new Skill(this);
+		finishedSkill = new Skills(this);
 		for (SkillBook book : attachedBooks) {
 			book.addSkill(finishedSkill);
 		}		
 		return true;		
 	}
 	
-	public Skill getFinishedSkill() {
+	public Skills getFinishedSkill() {
 		return finishedSkill;
 	}
 	

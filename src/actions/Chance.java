@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import processes.SQLInterface;
-import processes.Skill;
+import processes.Skills;
 import processes.WorldServer;
 import interfaces.Action;
 import interfaces.Mobile;
@@ -38,7 +38,7 @@ public class Chance extends Action {
 
 	// Rolls between 0-100, if <= to given chance, activates given action and returns result of action.
 	@Override
-	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
 		if (s == null) {
 			throw new IllegalStateException("Skill is null.");
 		}

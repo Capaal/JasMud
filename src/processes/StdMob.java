@@ -101,9 +101,9 @@ public class StdMob implements Mobile, Container, Holdable {
 		return xpWorth;
 	}
 	
-	public Skill getCommand(String command) {
+	public Skills getCommand(String command) {
 		for (SkillBook sb : skillBookList.keySet()) {
-			Skill skill = sb.getSkill(command);
+			Skills skill = sb.getSkill(command);
 				return skill;		
 		}
 		return null;

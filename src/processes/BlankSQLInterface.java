@@ -18,7 +18,7 @@ import actions.*;
 //import actions.Message.msgStrings;
 import processes.Equipment.EquipmentEnum;
 import processes.Location.GroundType;
-import processes.Skill.Syntax;
+import processes.Skills.Syntax;
 
 /**
  * Handles all interaction with the database, all load and saves of any type will pass through here as well as connecting and disconnecting.

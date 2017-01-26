@@ -7,8 +7,8 @@ import interfaces.Mobile;
 import java.util.ArrayList;
 import java.util.List;
 
-import processes.Skill;
-import processes.Skill.Syntax;
+import processes.Skills;
+import processes.Skills.Syntax;
 
 public class WhatStrategyItem implements WhatStrategyInterface {
 
@@ -19,7 +19,7 @@ public class WhatStrategyItem implements WhatStrategyInterface {
 	// This strategy grabs the string located at said syntax's location, searches
 	// given containers, and returns the FIRST holdable matching said string.
 	@Override
-	public List<Holdable> findWhat(Skill s, String fullCommand, Mobile currentPlayer, List<Container> containersToSearch) {
+	public List<Holdable> findWhat(Skills s, String fullCommand, Mobile currentPlayer, List<Container> containersToSearch) {
 		List<Holdable> targ = new ArrayList<Holdable>();
 		for (Container l : containersToSearch) {
 			Holdable h = l.getHoldableFromString(s.getStringInfo(Syntax.ITEM, fullCommand));

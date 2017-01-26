@@ -21,7 +21,7 @@ public class Examine extends Action {
 	}
 	
 	@Override
-	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
 		String toExamine = UsefulCommands.returnTarget(fullCommand);		
 		boolean found = false;
 		for (Holdable i : currentPlayer.getInventory()) {

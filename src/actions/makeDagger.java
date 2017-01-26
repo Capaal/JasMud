@@ -7,7 +7,7 @@ import interfaces.Action;
 import interfaces.Mobile;
 import items.StdItem;
 import processes.ItemBuilder;
-import processes.Skill;
+import processes.Skills;
 import processes.WorldServer;
 
 public class makeDagger extends Action {
@@ -16,7 +16,7 @@ public class makeDagger extends Action {
 	}
 	
 	@Override
-	public boolean activate(Skill s, String fullCommand, Mobile currentPlayer) {
+	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
 		Set<StdItem> listItems = WorldServer.gameState.viewAllItems();
 		int i = listItems.size() + 1;
 		makeADagger(i);

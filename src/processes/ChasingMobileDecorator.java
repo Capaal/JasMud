@@ -34,7 +34,7 @@ public class ChasingMobileDecorator extends MobileDecorator {
 			if (!aggressorLocation.equals(decoratedMobile.getContainer())) {
 				Direction toAggressor = ((Location)decoratedMobile.getContainer()).getDirectionToLocation((Location)aggressorLocation);
 				if (toAggressor != null) {
-					Skill move = decoratedMobile.getCommand("move");
+					Skills move = decoratedMobile.getCommand("move");
 					StringBuilder sb = new StringBuilder();
 					sb.append("move ");
 					sb.append(toAggressor.toString());

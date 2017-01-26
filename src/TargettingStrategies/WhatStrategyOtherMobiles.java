@@ -7,7 +7,7 @@ import interfaces.Mobile;
 import java.util.ArrayList;
 import java.util.List;
 
-import processes.Skill;
+import processes.Skills;
 
 public class WhatStrategyOtherMobiles implements WhatStrategyInterface {
 	
@@ -15,7 +15,7 @@ public class WhatStrategyOtherMobiles implements WhatStrategyInterface {
 	// Used primarily in MESSAGE for 3rd parties.
 	// See WhatStrategyNotSelf for all others NOT currentPlayer.
 	@Override
-	public List<Holdable> findWhat(Skill s, String fullCommand, Mobile currentPlayer, List<Container> containersToSearch) {
+	public List<Holdable> findWhat(Skills s, String fullCommand, Mobile currentPlayer, List<Container> containersToSearch) {
 		List<Holdable> others = new ArrayList<Holdable>(); // List to add desired Mobiles to.
 		// Obtains targets used in skill (determined by Syntax.TARGET within the Skill s)
 		List<Holdable> targets = new WhatStrategyTarget().findWhat(s, fullCommand, currentPlayer, containersToSearch);		
