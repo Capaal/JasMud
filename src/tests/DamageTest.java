@@ -15,9 +15,9 @@ import org.junit.Before;
 import TargettingStrategies.*;
 import actions.Damage;
 
-public class DamageTest {
+//public class DamageTest {
 	
-	public class SkillStub extends Skills {
+/*	public class SkillStub extends Skills {
 		
 		public SkillStub(SkillBuilder build) {
 			super(build);
@@ -59,4 +59,4 @@ public class DamageTest {
 		verify(testMob).takeDamage(null,  15);
 	}
 
-}
+} */

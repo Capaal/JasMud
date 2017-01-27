@@ -49,7 +49,7 @@ public class SkillBuilder {
 			} 	
 		}
 		buildCompleted = true;
-		finishedSkill = new Skills(this);
+//		finishedSkill = new Skills(this);
 		for (SkillBook book : attachedBooks) {
 			book.addSkill(finishedSkill);
 		}		
@@ -61,7 +61,7 @@ public class SkillBuilder {
 	}
 	
 	public void save() {
-		finishedSkill.save();
+//		finishedSkill.save();
 		for (SkillBook finalSkillBooks : getAttachedBooks()) {		
 			finalSkillBooks.save();					
 		}	

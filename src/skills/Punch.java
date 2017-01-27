@@ -24,7 +24,6 @@ public class Punch extends Skills {
 	// Deals damage to a single target in currentPlayer's location
 	@Override
 	public void perform(String fullCommand, Mobile currentPlayer) {
-		Boolean continueRunning = true;
 		if (!hasBalance(currentPlayer)) {
 			return;
 		}

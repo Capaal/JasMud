@@ -32,6 +32,8 @@ public class CreateWorld {
 	public static void makeSkills() {
 		WorldServer.gameState.addBook(1, generalSkills);
 		generalSkills.addSkill(new Punch());
+		generalSkills.addSkill(new Throw());
+		generalSkills.addSkill(new Get());
 	/*	kickSkill();
 		addPunchSkill();
 		addGodCreateSkill();
@@ -153,6 +155,7 @@ public class CreateWorld {
 		newItem.setId(i);
 		newItem.setName("dagger");
 		newItem.setDescription("It's a dagger!");
+		newItem.complete();
 		itemTemplates.put("dagger", newItem);
 	}
 	
@@ -199,7 +202,7 @@ public class CreateWorld {
 	// (29) making an item, for crafting. Needs checks
 	// first assuming all items have a blueprint
 	// how to make ID a new number for all new items?
-	public static void addMakeItemSkill() {
+/*	public static void addMakeItemSkill() {
 		SkillBuilder makeItemBuilder = new SkillBuilder();
 		makeItemBuilder.addAction(new MakeItem(new WhatStrategyItem(), new WhereStrategyHere()));
 		makeItemBuilder.addAction(new Message("You made %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM))));
@@ -210,7 +213,7 @@ public class CreateWorld {
 //		makeItemBuilder.addSyntax(Skill.Syntax.ITEM);
 		makeItemBuilder.setId(29);
 		makeItemBuilder.complete();
-	}
+	} */
 	
 	
 	// hardcoded get skill 11
@@ -295,7 +298,7 @@ public class CreateWorld {
 		lookBuilder.setId(13);
 		lookBuilder.complete();
 	}
-	
+		
 	//hardcoded drop skill 14
 	public static void addDropSkill() {
 		SkillBuilder dropBuilder = new SkillBuilder();

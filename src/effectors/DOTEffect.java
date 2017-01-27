@@ -8,12 +8,12 @@ import java.util.List;
 import TargettingStrategies.*;
 import actions.Godcreate;
 import processes.SQLInterface;
-import processes.Skill;
+//import processes.Skill;
 import processes.WorldServer;
 import effects.Bleed;
 import interfaces.*;
 
-public class DOTEffect extends Action {
+/* public class DOTEffect extends Action {
 	
 	private final int duration;
 	private final int times;
@@ -87,4 +87,4 @@ public class DOTEffect extends Action {
 		player.tell("Applies a bleed effect on target of a particular duration.");
 		player.tell("Duration: " + duration + " Who: " + what.toString() + " Where: " + where.toString());
 	}
-}
+} */

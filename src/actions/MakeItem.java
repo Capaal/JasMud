@@ -11,12 +11,12 @@ import interfaces.Mobile;
 import items.StdItem;
 import processes.CreateWorld;
 import processes.ItemBuilder;
-import processes.Skill;
-import processes.Skill.Syntax;
+//import processes.Skill;
+//import processes.Skill.Syntax;
 import processes.UsefulCommands;
 import processes.WorldServer;
 
-public class MakeItem extends Action {
+/*public class MakeItem extends Action {
 	
 	private final WhatStrategyInterface what;
 	private final WhereStrategyInterface where;
@@ -74,4 +74,5 @@ public class MakeItem extends Action {
 
 	}
 
-}
+} */
+ 
