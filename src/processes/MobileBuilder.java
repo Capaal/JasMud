@@ -20,7 +20,7 @@ import processes.MobileDecorator.DecoratorType;
 
 public class MobileBuilder {	
 
-	private String name;
+	private String name = "";
 	private int id = -1;	
 	private String password = "";
 	private String description = "Generic.";
@@ -201,7 +201,7 @@ public class MobileBuilder {
 	public StdMob getFinishedMob() {return finishedMob;}
 	
 	private void setId() {
-		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
+/*		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
 				+ " LEFT JOIN mobstats ON sequencetable.sequenceid = mobstats.mobid"
 				+ " WHERE mobstats.mobid IS NULL";			
 		Object availableId = WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
@@ -215,7 +215,7 @@ public class MobileBuilder {
 			}
 		} else {
 			id = (int)availableId;
-		}	
+		}	*/
 	}
 
 	public static boolean newMobile(Mobile player, MobileBuilder mobileBuilder) {

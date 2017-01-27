@@ -24,7 +24,6 @@ public class Throw extends Skills {
 		super.syntaxList.add(Syntax.ITEM);
 		super.syntaxList.add(Syntax.TARGET);
 		super.syntaxList.add(Syntax.DIRECTION);
-		WorldServer.gameState.getBook(1).addSkill(this); //id 1 = generalskills
 	}
 	
 	// Deals damage to a single target in currentPlayer's location

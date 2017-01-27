@@ -22,6 +22,7 @@ public class Punch extends Skills {
 	}	
 	
 	// Deals damage to a single target in currentPlayer's location
+	// ADD CHECK FOR ISDEAD()
 	@Override
 	public void perform(String fullCommand, Mobile currentPlayer) {
 		if (!hasBalance(currentPlayer)) {
@@ -35,7 +36,7 @@ public class Punch extends Skills {
 		if (isBlocking(finalTarget)) {  // Probably not complete still
 			return;
 		}		
-		finalTarget.takeDamage(Type.SHARP, calculateDamage());
+		finalTarget.takeDamage(Type.BLUNT, calculateDamage());
 		currentPlayer.addEffect(new Balance(), 3000);
 		messageSelf("You punch " + finalTarget.getName(), currentPlayer);
 		messageTarget(currentPlayer.getName() + " punches you.", Arrays.asList(finalTarget));
