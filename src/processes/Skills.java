@@ -64,6 +64,11 @@ public abstract class Skills {
 			m.tell(msg);
 		}
 	}
+	
+	protected void moveHoldable(Holdable itemToMove, Container finalLocation) {
+		itemToMove.getContainer().removeItemFromLocation(itemToMove);
+		finalLocation.acceptItem(itemToMove);
+	}
 
 	public enum Syntax {
 		

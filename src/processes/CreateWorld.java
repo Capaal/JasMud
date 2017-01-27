@@ -34,6 +34,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new Punch());
 		generalSkills.addSkill(new Throw());
 		generalSkills.addSkill(new Get());
+		generalSkills.addSkill(new Move());
 		generalSkills.addSkill(new Look());
 	/*	kickSkill();
 		addPunchSkill();
@@ -277,7 +278,7 @@ public class CreateWorld {
 		SkillBuilder moveBuilder = new SkillBuilder();
 		moveBuilder.addAction(new Message("%s leaves.", new WhatStrategySelf(), new WhereStrategyOneAway(), new ArrayList<Syntax>(Arrays.asList(Syntax.SELF))));
 		moveBuilder.addAction(new MoveHoldable(new WhatStrategySelf(), new WhereStrategyHere(), new WhereStrategyOneAway()));
-///\		moveBuilder.addAction(new Look());
+	//	moveBuilder.addAction(new Look());
 		moveBuilder.addBook(generalSkills);
 		moveBuilder.setName("move");
 		moveBuilder.setFailMsg(new Message("You can't go %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.DIRECTION))));
@@ -289,7 +290,7 @@ public class CreateWorld {
 	}
 	
 	//hardcoded look skill 13
-/*	public static void addLookSkill() {
+	public static void addLookSkill() {
 		SkillBuilder lookBuilder = new SkillBuilder();
 //		lookBuilder.addAction(new Look(new WhereStrategyHere())); //need both Here & OneLocAway
 		lookBuilder.addBook(generalSkills);
@@ -298,7 +299,7 @@ public class CreateWorld {
 		lookBuilder.addSyntax(Skills.Syntax.DIRECTION);
 		lookBuilder.setId(13);
 		lookBuilder.complete();
-	} */
+	}
 		
 	//hardcoded drop skill 14
 	public static void addDropSkill() {
