@@ -12,7 +12,7 @@ import processes.Skills.Syntax;
 import processes.WorldServer;
 import interfaces.*;
 
-public class Look extends Action {
+/* public class Look extends Action {
 	
 	private WhereStrategyInterface where;
 	
@@ -75,4 +75,4 @@ public class Look extends Action {
 		player.tell("Displays the information of a location, typically used for locations, needs refactoring for bags etc.");
 		player.tell("Where: " + where.toString());
 	}
-}
+} */

@@ -26,7 +26,7 @@ public abstract class Skills {
 		if (currentPlayer.hasBalance()) {
 			return true;
 		}
-		messageSelf("You're off balance", currentPlayer);
+		messageSelf("You're off balance.", currentPlayer);
 		return false;
 	}
 	

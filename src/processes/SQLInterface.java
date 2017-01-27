@@ -549,7 +549,7 @@ public class SQLInterface implements DatabaseInterface{
 			//	case "GET":
 			//		return new Get(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")));
 				case "LOOK":
-					return new Look(whereFactory.parse(rs.getString("TARGETWHERE")));
+		//			return new Look(whereFactory.parse(rs.getString("TARGETWHERE")));
 					
 		//		case "MOVE":
 		//			return new Move(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")), whereFactory.parse(rs.getString("ENDWHERE")));

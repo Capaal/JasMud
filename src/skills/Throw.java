@@ -14,7 +14,6 @@ import processes.Skills.Syntax;
 
 public class Throw extends Skills {
 	
-	private Boolean failed;
 	private int intensity = 8;
 	
 	public Throw() {
@@ -32,29 +31,37 @@ public class Throw extends Skills {
 		if (!hasBalance(currentPlayer)) {
 			return;
 		}
-		Holdable itemToThrow = currentPlayer.getHoldableFromString(this.getStringInfo(Syntax.ITEM, fullCommand));
+		String possibleItem = getStringInfo(Syntax.ITEM, fullCommand);
+		Holdable itemToThrow = currentPlayer.getHoldableFromString(possibleItem);
 		if (itemToThrow == null) {
-			messageSelf("You do not have a \"" + this.getStringInfo(Syntax.ITEM, fullCommand) + "\" .", currentPlayer);
+			messageSelf("You do not have a \"" + possibleItem + "\" .", currentPlayer);
 			return;
 		}
-		Mobile finalTarget = getTarget(fullCommand, currentPlayer);
-		if (finalTarget == null) {
-			messageSelf("You can't find a \"" + this.getStringInfo(Syntax.TARGET, fullCommand) + "\" to attack.", currentPlayer);
-			return;
-		}	
-		if (isBlocking(finalTarget)) {  // Probably not complete still
-			return;
-		}		
-		Location targetLoc = (Location)(finalTarget.getContainer());
 		Location finalLoc = (Location)(currentPlayer.getContainer());
 		String dir = this.getStringInfo(Syntax.DIRECTION, fullCommand);
 		if (!dir.equals("")) {
-			finalLoc = getLoc(dir, fullCommand, currentPlayer);
+			Location possibleLoc = getLoc(dir, fullCommand, currentPlayer);
+			if (possibleLoc == null) {
+				messageSelf("There isn't a location that way.", currentPlayer);
+				return;
+			} else {
+				finalLoc = getLoc(dir, fullCommand, currentPlayer);
+			}
 		} 
+		Mobile finalTarget = getTarget(finalLoc, fullCommand);
+		if (finalTarget == null) {
+			messageSelf("There is no \"" + this.getStringInfo(Syntax.TARGET, fullCommand) + "\" for you to attack.", currentPlayer);
+			return;
+		}	
+		Location targetLoc = (Location)(finalTarget.getContainer());
 		if (targetLoc != finalLoc) {
 			messageSelf("You can't find a \"" + this.getStringInfo(Syntax.TARGET, fullCommand) + "\" to attack.", currentPlayer);
 			return;
 		}
+		if (isBlocking(finalTarget)) {  // Probably not complete still
+			return;
+		}		
+
 		finalTarget.takeDamage(Type.SHARP, calculateDamage());
 		moveItem(itemToThrow, finalLoc);
 		currentPlayer.addEffect(new Balance(), 3000);
@@ -74,8 +81,8 @@ public class Throw extends Skills {
 		finalLoc.acceptItem(itemToThrow);
 	}
 	
-	private Mobile getTarget(String fullCommand, Mobile currentPlayer) {
-		Holdable h = currentPlayer.getContainer().getHoldableFromString(this.getStringInfo(Syntax.TARGET, fullCommand));
+	private Mobile getTarget(Location finalLoc, String fullCommand) {
+		Holdable h = finalLoc.getHoldableFromString(this.getStringInfo(Syntax.TARGET, fullCommand));
 			if (h != null && h instanceof Mobile) {
 				return (Mobile)h;
 			}
