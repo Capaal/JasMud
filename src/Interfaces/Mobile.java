@@ -1,5 +1,7 @@
 package interfaces;
 
+import java.util.Map;
+
 import processes.Equipment.EquipmentEnum;
 import processes.InductionSkill;
 import processes.SendMessage;
@@ -55,5 +57,6 @@ public interface Mobile extends Container, Holdable {
 	public boolean isInducting();
 	public void killInduction();
 	public void setInduction(InductionSkill skill);
+	public Map<SkillBook, Integer> viewSkillBooks();
 	
 }

@@ -7,39 +7,22 @@ import java.util.Set;
 import effects.Balance;
 import interfaces.Holdable;
 import interfaces.Mobile;
-import processes.InductionSkill;
 import processes.Location;
+import processes.Skills;
 import processes.Type;
 
-public class Headshot extends InductionSkill {
+public class Shoot extends Skills {
 	
-	private int intensity = (8*3);
+	private int intensity = 8;
 	private Set<Location> allLocations;
 	private String possibleTarg;
 	private Mobile finalTarget;
 	
-	public Headshot() {
-		super.name = "headshot";
+	public Shoot() {
+		super.name = "shoot";
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 		super.syntaxList.add(Syntax.DIRECTION);
-	}
-	
-	@Override
-	public void run() {		
-		finalTarget = getTarget();
-		if (finalTarget == null) {
-			messageSelf("There is no \"" + possibleTarg + "\" for you to attack.");
-			return;
-		}	
-		if (isBlocking(finalTarget)) {  // Probably not complete still
-			return;
-		}		
-		finalTarget.takeDamage(Type.SHARP, calculateDamage());
-		currentPlayer.addEffect(new Balance(), 3000);
-		messageSelf("You headshot " + finalTarget.getName() + ".");
-		messageTarget(currentPlayer.getName() + " headshots you.", Arrays.asList(finalTarget));
-		messageOthers(currentPlayer.getName() + " headshots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));		
 	}
 	
 	// Deals damage to a single target in currentPlayer's location or One Away
@@ -64,11 +47,12 @@ public class Headshot extends InductionSkill {
 		}	
 		if (isBlocking(finalTarget)) {  // Probably not complete still
 			return;
-		}	
-		scheduleSkillRepeatNTimesOverXMilliseconds(1, 2000);
-		currentPlayer.setInduction(this);
-		messageSelf("You begin aiming at " + finalTarget.getName() + ".");
-		messageTarget(currentPlayer.getName() + " begins aiming at your head.", Arrays.asList(finalTarget));
+		}			
+		finalTarget.takeDamage(Type.SHARP, calculateDamage());
+		currentPlayer.addEffect(new Balance(), 3000);
+		messageSelf("You shoot " + finalTarget.getName() + ".");
+		messageTarget(currentPlayer.getName() + " shoots you.", Arrays.asList(finalTarget));
+		messageOthers(currentPlayer.getName() + " shoots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));	
 	}		
 		
 	private int calculateDamage() {
@@ -107,12 +91,5 @@ public class Headshot extends InductionSkill {
 				}
 		}
 		return null;
-	}
-
-	@Override
-	public void inductionKilled() {
-		messageSelf("You stop aiming at " + possibleTarg);
-	}
-
-	
+	}	
 }

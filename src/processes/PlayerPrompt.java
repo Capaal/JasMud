@@ -117,12 +117,16 @@ public class PlayerPrompt implements Runnable {
 						WorldServer.shutdownAndAwaitTermination(WorldServer.executor);
 					} else {
 						long start = System.nanoTime();
+						System.out.println("User typed:" + str);
 						
 						StringTokenizer st = new StringTokenizer(str);
-						String command = st.nextToken();
+						String command = "";
+						if (st.hasMoreTokens()) {
+							command = st.nextToken();
+						}					
 						command = command.toLowerCase();
 						Boolean commandFound = false;
-						Skills com;
+						Skills com = null;
 						Direction posDir = Direction.getDirectionName(command);
 						if (posDir != null) {
 							com = currentPlayer.getCommand("move");

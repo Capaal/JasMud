@@ -515,6 +515,10 @@ public class StdMob implements Mobile, Container, Holdable {
 		this.inductionSkill = skill;
 	}
 	
+	@Override
+	public Map<SkillBook, Integer> viewSkillBooks() {
+		return new HashMap<SkillBook, Integer>(skillBookList);
+	}
 }
 
 	

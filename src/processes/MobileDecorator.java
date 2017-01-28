@@ -2,6 +2,7 @@ package processes;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -358,5 +359,10 @@ public enum DecoratorType {
 	@Override
 	public void setInduction(InductionSkill skill) {
 		decoratedMobile.setInduction(skill);
+	}
+
+	@Override
+	public Map<SkillBook, Integer> viewSkillBooks() {
+		return decoratedMobile.viewSkillBooks();
 	}
 }

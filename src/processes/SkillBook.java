@@ -1,6 +1,5 @@
 package processes;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -54,6 +53,10 @@ public class SkillBook {
 				saveSkillBookLink(s);
 			}
 		}
+	}
+	
+	public Set<Skills> viewSkills() {
+		return new HashSet<Skills>(skillList);
 	}
 	
 	private void saveSkillBookLink(Skills s) {

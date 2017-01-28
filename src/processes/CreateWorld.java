@@ -37,7 +37,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new Move());
 		generalSkills.addSkill(new Look());
 		generalSkills.addSkill(new Say());
-		generalSkills.addSkill(new Headshot());
+		generalSkills.addSkill(new Shoot());
 		generalSkills.addSkill(new Drop());
 		
 		generalSkills.addSkill(new MakeItem());
