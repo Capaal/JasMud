@@ -22,6 +22,9 @@ public class Move extends Skills {
 	
 	@Override
 	public void perform(String fullCommand, Mobile currentPlayer) {
+		if (!hasBalance(currentPlayer)) {
+			return;
+		}
 		Container startLocation = currentPlayer.getContainer();
 		Location futureLocation = null;
 		String dir = getStringInfo(Syntax.DIRECTION, fullCommand);

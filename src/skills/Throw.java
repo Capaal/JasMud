@@ -25,23 +25,27 @@ public class Throw extends Skills {
 		super.syntaxList.add(Syntax.DIRECTION);
 	}
 	
-	// Deals damage to a single target in currentPlayer's location
+	// Deals throw damage to a single target in currentPlayer's location or designated direction
 	@Override
 	public void perform(String fullCommand, Mobile currentPlayer) {
 		if (!hasBalance(currentPlayer)) {
 			return;
 		}
+		//checks if player specified an item to throw
 		String possibleItem = getStringInfo(Syntax.ITEM, fullCommand);
 		if (possibleItem == "") {
 			messageSelf("What are you trying to throw?", currentPlayer);
-			messageSelf("Throw <ITEM> <TARGET> (direction)", currentPlayer);
+			messageSelf("Syntax: throw <ITEM> <TARGET> (direction)", currentPlayer);
 			return;
 		}
+		//checks if player has the item
 		Holdable itemToThrow = currentPlayer.getHoldableFromString(possibleItem);
 		if (itemToThrow == null) {
 			messageSelf("You do not have a \"" + possibleItem + "\".", currentPlayer);
 			return;
 		}
+		//checks for a direction. must be done before comparing if target is in the same location as intended direction. 
+		//defaults to here
 		Location finalLoc = (Location)(currentPlayer.getContainer());
 		String dir = this.getStringInfo(Syntax.DIRECTION, fullCommand);
 		if (!dir.equals("")) {
@@ -50,28 +54,27 @@ public class Throw extends Skills {
 				messageSelf("There isn't a location that way.", currentPlayer);
 				return;
 			} else {
-				finalLoc = getLoc(dir, fullCommand, currentPlayer);
+				finalLoc = possibleLoc;
 			}
 		} 
+		//checks if a target is specified
 		String possibleTarg = getStringInfo(Syntax.TARGET, fullCommand);
 		if (possibleTarg == "") {
-			messageSelf("What are you trying to the " + possibleItem + " at?", currentPlayer);
+			messageSelf("What are you trying to throw the " + possibleItem + " at?", currentPlayer);
+			messageSelf("Syntax: throw <ITEM> <TARGET> (direction)", currentPlayer);
 			return;
 		}
+		//checks if the target is in the same location as intended throw end location
 		Mobile finalTarget = getTarget(finalLoc, fullCommand, possibleTarg);
 		if (finalTarget == null) {
 			messageSelf("There is no \"" + possibleTarg + "\" for you to attack.", currentPlayer);
 			return;
 		}	
-		Location targetLoc = (Location)(finalTarget.getContainer());
-		if (targetLoc != finalLoc) {
-			messageSelf("You can't find a \"" + possibleTarg + "\" to attack.", currentPlayer);
-			return;
-		}
 		if (isBlocking(finalTarget)) {  // Probably not complete still
 			return;
 		}		
-
+		
+		//what the skill actually doeS:
 		finalTarget.takeDamage(Type.SHARP, calculateDamage());
 		moveItem(itemToThrow, finalLoc);
 		currentPlayer.addEffect(new Balance(), 3000);
