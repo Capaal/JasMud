@@ -441,7 +441,7 @@ public class SQLInterface implements DatabaseInterface{
 						currentBookId = -1;
 					}
 				} while (currentBookId == tempBook.getId());	
-				WorldServer.gameState.addBook(tempBook.getId(), tempBook.duplicate(tempBook));	
+	//			WorldServer.gameState.addBook(tempBook.getId(), tempBook.duplicate(tempBook));	
 				tempBook = null;
 			}	
 		} catch (SQLException e) {
@@ -564,7 +564,7 @@ public class SQLInterface implements DatabaseInterface{
 			//		return new Drop(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")), whereFactory.parse(rs.getString("ENDWHERE")));
 					
 				case "EQUIPCHANGE":
-					return new EquipChange(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")), checkBoolean(rs.getString("BOOLEANONE")));
+	//				return new EquipChange(whatFactory.parse(rs.getString("TARGETWHO")), whereFactory.parse(rs.getString("TARGETWHERE")), checkBoolean(rs.getString("BOOLEANONE")));
 				
 				case "GODCREATE":
 					return new Godcreate();

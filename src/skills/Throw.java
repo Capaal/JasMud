@@ -17,7 +17,6 @@ public class Throw extends Skills {
 	private int intensity = 8;
 	
 	public Throw() {
-		super.id = 2;
 		super.name = "throw";
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
@@ -27,48 +26,47 @@ public class Throw extends Skills {
 	
 	// Deals throw damage to a single target in currentPlayer's location or designated direction
 	@Override
-	public void perform(String fullCommand, Mobile currentPlayer) {
-		super.perform(fullCommand, currentPlayer);
-		if (!hasBalance(currentPlayer)) {
+	public void performSkill() {
+		if (!hasBalance()) {
 			return;
 		}
 		//checks if player specified an item to throw
-		String possibleItem = getStringInfo(Syntax.ITEM, fullCommand);
+		String possibleItem = Syntax.ITEM.getStringInfo(fullCommand, this);
 		if (possibleItem == "") {
-			messageSelf("What are you trying to throw?", currentPlayer);
-			messageSelf("Syntax: throw <ITEM> <TARGET> (direction)", currentPlayer);
+			messageSelf("What are you trying to throw?");
+			messageSelf("Syntax: throw <ITEM> <TARGET> (direction)");
 			return;
 		}
 		//checks if player has the item
 		Holdable itemToThrow = currentPlayer.getHoldableFromString(possibleItem);
 		if (itemToThrow == null) {
-			messageSelf("You do not have a \"" + possibleItem + "\".", currentPlayer);
+			messageSelf("You do not have a \"" + possibleItem + "\".");
 			return;
 		}
 		//checks for a direction. must be done before comparing if target is in the same location as intended direction. 
 		//defaults to here
 		Location finalLoc = (Location)(currentPlayer.getContainer());
-		String dir = this.getStringInfo(Syntax.DIRECTION, fullCommand);
+		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
 		if (!dir.equals("")) {
 			Location possibleLoc = getLoc(dir, fullCommand, currentPlayer);
 			if (possibleLoc == null) {
-				messageSelf("There isn't a location that way.", currentPlayer);
+				messageSelf("There isn't a location that way.");
 				return;
 			} else {
 				finalLoc = possibleLoc;
 			}
 		} 
 		//checks if a target is specified
-		String possibleTarg = getStringInfo(Syntax.TARGET, fullCommand);
+		String possibleTarg = Syntax.TARGET.getStringInfo(fullCommand, this);
 		if (possibleTarg == "") {
-			messageSelf("What are you trying to throw the " + possibleItem + " at?", currentPlayer);
-			messageSelf("Syntax: throw <ITEM> <TARGET> (direction)", currentPlayer);
+			messageSelf("What are you trying to throw the " + possibleItem + " at?");
+			messageSelf("Syntax: throw <ITEM> <TARGET> (direction)");
 			return;
 		}
 		//checks if the target is in the same location as intended throw end location
 		Mobile finalTarget = getTarget(finalLoc, fullCommand, possibleTarg);
 		if (finalTarget == null) {
-			messageSelf("There is no \"" + possibleTarg + "\" for you to attack.", currentPlayer);
+			messageSelf("There is no \"" + possibleTarg + "\" for you to attack.");
 			return;
 		}	
 		if (isBlocking(finalTarget)) {  // Probably not complete still
@@ -79,9 +77,9 @@ public class Throw extends Skills {
 		finalTarget.takeDamage(Type.SHARP, calculateDamage());
 		moveItem(itemToThrow, finalLoc);
 		currentPlayer.addEffect(new Balance(), 3000);
-		messageSelf("You throw " + itemToThrow.getName() + " at " + finalTarget.getName() + ".", currentPlayer);
+		messageSelf("You throw " + itemToThrow.getName() + " at " + finalTarget.getName() + ".");
 		messageTarget(currentPlayer.getName() + " throws " + itemToThrow.getName() + " at you.", Arrays.asList(finalTarget));
-		messageOthers(currentPlayer.getName() + " throws " + itemToThrow.getName() + " at " + finalTarget.getName(), currentPlayer, Arrays.asList(currentPlayer, finalTarget));
+		messageOthers(currentPlayer.getName() + " throws " + itemToThrow.getName() + " at " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));
 	}		
 		
 

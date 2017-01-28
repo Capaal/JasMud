@@ -4,6 +4,7 @@ import interfaces.Container;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Skills;
+import processes.Skills.Syntax;
 
 public class Drop extends Skills {
 	
@@ -14,18 +15,16 @@ public class Drop extends Skills {
 	}
 
 	@Override
-	public void perform(String fullCommand, Mobile currentPlayer) {
-		super.perform(fullCommand, currentPlayer);
-		if (!hasBalance(currentPlayer)) {
+	public void performSkill() {
+		if (!hasBalance()) {
 			return;
 		}
-		Container inventory = currentPlayer;
-		Holdable itemToMove = inventory.getHoldableFromString(this.getStringInfo(Syntax.ITEM, fullCommand));
+		Holdable itemToMove = currentPlayer.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
 		if (itemToMove == null) {
-			messageSelf("You can't find that item.", currentPlayer);
+			messageSelf("You can't find that item.");
 			return;
 		}
-		moveHoldable(itemToMove, inventory);
-		messageSelf("You drop " + itemToMove.getName() + ".", currentPlayer);
+		moveHoldable(itemToMove, currentPlayer.getContainer());
+		messageSelf("You drop " + itemToMove.getName() + ".");
 	}
 }
