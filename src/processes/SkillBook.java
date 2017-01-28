@@ -66,9 +66,17 @@ public class SkillBook {
 		}*/
 	}
 	
-	protected SkillBook duplicate(SkillBook toBeCopied) {
-		SkillBook newSkillBook = new SkillBook(toBeCopied.name, toBeCopied.id);
-		newSkillBook.skillList = toBeCopied.skillList;
+	protected SkillBook duplicate() {
+		SkillBook newSkillBook = new SkillBook(name, id);
+		newSkillBook.skillList = copySkillList();
 		return newSkillBook;
+	}
+
+	private Set<Skills> copySkillList() {
+		Set<Skills> newList = new HashSet<Skills>();
+		for (Skills s : skillList) {
+			newList.add(s);
+		}
+		return newList;
 	}
 }

@@ -20,28 +20,30 @@ public class Move extends Skills {
 		super.syntaxList.add(Syntax.DIRECTION);
 	}
 	
+	private Container startContainer;
+	private Container endContainer;
+	
 	@Override
-	public void perform(String fullCommand, Mobile currentPlayer) {
-		super.perform(fullCommand, currentPlayer);
-		if (!hasBalance(currentPlayer)) {
+	public void performSkill() {
+		if (!hasBalance()) {
 			return;
 		}
-		Container startLocation = currentPlayer.getContainer();
-		Location futureLocation = null;
-		String dir = getStringInfo(Syntax.DIRECTION, fullCommand);
+		Container startContainer = currentPlayer.getContainer();
+		Location endContainer = null;
+		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
 		if (!dir.equals("")) {
-			if (startLocation instanceof Location) {
-				futureLocation = ((Location)startLocation).getContainer(dir);
+			if (startContainer instanceof Location) {
+				endContainer = ((Location)startContainer).getContainer(dir);
 			}
 		} else {
-			messageSelf("You need to say which way you want to go!", currentPlayer);
+			messageSelf("You need to say which way you want to go!");
 			return;
 		}
-		if (futureLocation == null) {
-			messageSelf("You can't go that way!", currentPlayer);
+		if (endContainer == null) {
+			messageSelf("You can't go that way!");
 			return;
 		}
-		moveHoldable(currentPlayer, futureLocation);
+		moveHoldable(currentPlayer, endContainer);
 		currentPlayer.getContainer().look(currentPlayer);
 	}
 }

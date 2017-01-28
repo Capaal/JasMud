@@ -11,26 +11,29 @@ public abstract class Skills {
 	protected String description;
 	protected List<Syntax> syntaxList = new ArrayList<Syntax>();	
 	
+	protected Mobile currentPlayer;
+	protected String fullCommand;
+	
 	public void perform(String fullCommand, Mobile currentPlayer) {
-		testForInduction(currentPlayer);
+		this.currentPlayer = currentPlayer;
+		this.fullCommand = fullCommand;
+		testForInduction();
+		performSkill();
 	}
 	
-	private void testForInduction(Mobile currentPlayer) {
+	protected abstract void performSkill();
+	
+	private void testForInduction() {
 		if (currentPlayer.isInducting()) {
 			currentPlayer.killInduction();
 		}
 	}
 	
-	 // should be inside syntax enum?
-	public String getStringInfo(Syntax neededInfo, String fullCommand) {
-		return neededInfo.getStringInfo(neededInfo, fullCommand, this);	
-	}
-	
-	public Boolean hasBalance(Mobile currentPlayer) {
+	public Boolean hasBalance() {
 		if (currentPlayer.hasBalance()) {
 			return true;
 		}
-		messageSelf("You're off balance.", currentPlayer);
+		messageSelf("You're off balance.");
 		return false;
 	}
 	
@@ -39,11 +42,11 @@ public abstract class Skills {
 		return false;
 	}
 	
-	protected void messageSelf(String msg, Mobile currentPlayer) {
+	protected void messageSelf(String msg) {
 		currentPlayer.tell(msg);
 	}
 	
-	protected void messageOthers(String msg, Mobile currentPlayer, List<Mobile> toIgnore) {
+	protected void messageOthers(String msg, List<Mobile> toIgnore) {
 		for (Holdable h : currentPlayer.getContainer().getInventory()) {
 			if (h instanceof Mobile && ((Mobile) h).isControlled()) {
 				Boolean shouldTell = true;
@@ -95,13 +98,13 @@ public abstract class Skills {
 		
 		LIST() {
 			@Override
-			public String getStringInfo(Syntax neededInfo, String fullCommand, Skills s) {
+			public String getStringInfo(String fullCommand, Skills s) {
 				ArrayList<String> fullCommandArray = new ArrayList<String>(); // To becomes list of each word from fullCommand
 				StringTokenizer st = new StringTokenizer(fullCommand);  // Breaks fullCommand into individual characters.
 				while (st.hasMoreTokens()) {
 					fullCommandArray.add(st.nextToken()); // adds individual words to fullCommandArray
 				}
-				int syntaxPos = s.syntaxList.indexOf(neededInfo); // Queries THIS skill for the given Syntax (neededInfo) for which position that word should be.
+				int syntaxPos = s.syntaxList.indexOf(this); // Queries THIS skill for the given Syntax (neededInfo) for which position that word should be.
 				if (syntaxPos != -1) { // Would be -1 IF the neededInfo Syntax was NOT defined by this Skill.					
 					StringBuffer sb = new StringBuffer();
 					for (int i = syntaxPos; i < fullCommandArray.size(); i++) {
@@ -131,13 +134,13 @@ public abstract class Skills {
 		
 		private Syntax() {}
 		
-		public String getStringInfo(Syntax neededInfo, String fullCommand, Skills s) {
+		public String getStringInfo(String fullCommand, Skills s) {
 			ArrayList<String> fullCommandArray = new ArrayList<String>(); // To becomes list of each word from fullCommand
 			StringTokenizer st = new StringTokenizer(fullCommand);  // Breaks fullCommand into individual characters.
 			while (st.hasMoreTokens()) {
 				fullCommandArray.add(st.nextToken()); // adds individual words to fullCommandArray
 			}
-			int syntaxPos = s.syntaxList.indexOf(neededInfo); // Queries THIS skill for the given Syntax (neededInfo) for which position that word should be.
+			int syntaxPos = s.syntaxList.indexOf(this); // Queries THIS skill for the given Syntax (neededInfo) for which position that word should be.
 			if (syntaxPos != -1) { // Would be -1 IF the neededInfo Syntax was NOT defined by this Skill.				
 				if (fullCommandArray.size() > syntaxPos) { // If fullCommand has enough words.
 					return fullCommandArray.get(syntaxPos); // Return the word at the given position.

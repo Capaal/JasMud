@@ -22,7 +22,8 @@ public abstract class InductionSkill extends Skills implements Runnable {
 	}
 	
 	public void kill() {
-		wrapper.kill();		
+		wrapper.kill();	
+		currentPlayer.setInduction(null);
 	}
 	
 	@Override

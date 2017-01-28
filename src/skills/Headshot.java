@@ -8,17 +8,18 @@ import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.InductionSkill;
 import processes.Location;
-import processes.Skills;
 import processes.Type;
 
 public class Headshot extends InductionSkill {
 	
 	private int intensity = (8*3);
-	private String fullCommand;
-	private Mobile currentPlayer;
 	private Location finalLoc;
 	private String possibleTarg;
+	private Mobile finalTarget;
 	
+	
+	// THOSE THINGS ABOVE ARE SET, WHAT IF TWO PEOPLE HEADSHOT AROUND THE SAME TIME?
+	// PANIC!!! It totally is messed up.
 	public Headshot() {
 		super.name = "headshot";
 		super.syntaxList.add(Syntax.SKILL);
@@ -28,9 +29,9 @@ public class Headshot extends InductionSkill {
 	
 	@Override
 	public void run() {		
-		Mobile finalTarget = getTarget(finalLoc, fullCommand, possibleTarg);
+		finalTarget = getTarget();
 		if (finalTarget == null) {
-			messageSelf("There is no \"" + possibleTarg + "\" for you to attack.", currentPlayer);
+			messageSelf("There is no \"" + possibleTarg + "\" for you to attack.");
 			return;
 		}	
 		if (isBlocking(finalTarget)) {  // Probably not complete still
@@ -38,41 +39,36 @@ public class Headshot extends InductionSkill {
 		}		
 		finalTarget.takeDamage(Type.SHARP, calculateDamage());
 		currentPlayer.addEffect(new Balance(), 3000);
-		messageSelf("You headshot " + finalTarget.getName() + ".", currentPlayer);
+		messageSelf("You headshot " + finalTarget.getName() + ".");
 		messageTarget(currentPlayer.getName() + " headshots you.", Arrays.asList(finalTarget));
-		messageOthers(currentPlayer.getName() + " headshots " + finalTarget.getName(), currentPlayer, Arrays.asList(currentPlayer, finalTarget));		
+		messageOthers(currentPlayer.getName() + " headshots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));		
 	}
 	
 	// Deals damage to a single target in currentPlayer's location or One Away
 	// REQUIRES ranged weapon
 	// Direction is OPTIONAL
 	@Override
-	public void perform(String fullCommand, Mobile currentPlayer) {
-		super.perform(fullCommand, currentPlayer);
-		this.fullCommand = fullCommand;
-		this.currentPlayer = currentPlayer;
-		if (!hasBalance(currentPlayer)) {
+	public void performSkill() {
+		if (!hasBalance()) {
 			return;
 		}
 		finalLoc = (Location)(currentPlayer.getContainer());
-		String dir = this.getStringInfo(Syntax.DIRECTION, fullCommand);
+		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
 		if (!dir.equals("")) {
-			Location possibleLoc = getLoc(dir, fullCommand, currentPlayer);
-			if (possibleLoc == null) {
-				messageSelf("There isn't a location that way.", currentPlayer);
+			finalLoc = getLoc(dir);
+			if (finalLoc == null) {
+				messageSelf("There isn't a location that way.");
 				return;
-			} else {
-				finalLoc = possibleLoc;
 			}
 		} 
-		possibleTarg = getStringInfo(Syntax.TARGET, fullCommand);
+		possibleTarg = Syntax.TARGET.getStringInfo(fullCommand, this);
 		if (possibleTarg == "") {
-			messageSelf("What are you trying to headshot?", currentPlayer);
+			messageSelf("What are you trying to headshot?");
 			return;
 		}
-		Mobile finalTarget = getTarget(finalLoc, fullCommand, possibleTarg);
+		finalTarget = getTarget();
 		if (finalTarget == null) {
-			messageSelf("There is no \"" + possibleTarg + "\" for you to attack.", currentPlayer);
+			messageSelf("There is no \"" + possibleTarg + "\" for you to attack.");
 			return;
 		}	
 		if (isBlocking(finalTarget)) {  // Probably not complete still
@@ -80,17 +76,15 @@ public class Headshot extends InductionSkill {
 		}	
 		scheduleSkillRepeatNTimesOverXMilliseconds(1, 2000);
 		currentPlayer.setInduction(this);
-		messageSelf("You begin aiming at " + finalTarget.getName() + ".", currentPlayer);
+		messageSelf("You begin aiming at " + finalTarget.getName() + ".");
 		messageTarget(currentPlayer.getName() + " begins aiming at your head.", Arrays.asList(finalTarget));
 	}		
 		
-
-	
 	private int calculateDamage() {
 		return intensity;
 	}
 	
-	private Mobile getTarget(Location finalLoc, String fullCommand, String possibleTarg) {
+	private Mobile getTarget() {
 		Holdable h = finalLoc.getHoldableFromString(possibleTarg);
 			if (h != null && h instanceof Mobile) {
 				return (Mobile)h;
@@ -98,7 +92,7 @@ public class Headshot extends InductionSkill {
 		return null;
 	}
 	
-	private Location getLoc(String dir, String fullCommand, Mobile currentPlayer) {
+	private Location getLoc(String dir) {
 		Container mobLocation = currentPlayer.getContainer();
 		if (mobLocation instanceof Location) {
 			return ((Location)mobLocation).getContainer(dir);
@@ -108,6 +102,8 @@ public class Headshot extends InductionSkill {
 
 	@Override
 	public void inductionKilled() {
-		messageSelf("You stop aiming at " + possibleTarg, currentPlayer);
+		messageSelf("You stop aiming at " + possibleTarg);
 	}
+
+	
 }
