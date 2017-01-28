@@ -17,6 +17,7 @@ public class Look extends Skills {
 	
 	@Override
 	public void perform(String fullCommand, Mobile currentPlayer) {
+		super.perform(fullCommand, currentPlayer);
 		String dir = getStringInfo(Syntax.DIRECTION, fullCommand);
 		if (dir.equals("")) {
 			currentPlayer.getContainer().look(currentPlayer);

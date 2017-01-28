@@ -4,13 +4,11 @@ import interfaces.Container;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Skills;
-import processes.WorldServer;
 
-public class Get extends Skills {
+public class Drop extends Skills {
 	
-	public Get() {
-		super.id = 3;
-		super.name = "get";
+	public Drop() {
+		super.name = "drop";
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 	}
@@ -21,14 +19,13 @@ public class Get extends Skills {
 		if (!hasBalance(currentPlayer)) {
 			return;
 		}
-		Container here = currentPlayer.getContainer();
-		Holdable itemToMove = here.getHoldableFromString(this.getStringInfo(Syntax.ITEM, fullCommand));
+		Container inventory = currentPlayer;
+		Holdable itemToMove = inventory.getHoldableFromString(this.getStringInfo(Syntax.ITEM, fullCommand));
 		if (itemToMove == null) {
 			messageSelf("You can't find that item.", currentPlayer);
 			return;
 		}
-		moveHoldable(itemToMove, here);
-		messageSelf("You get " + itemToMove.getName() + ".", currentPlayer);
+		moveHoldable(itemToMove, inventory);
+		messageSelf("You drop " + itemToMove.getName() + ".", currentPlayer);
 	}
-
 }

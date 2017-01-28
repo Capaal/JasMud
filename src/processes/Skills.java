@@ -4,10 +4,6 @@ import interfaces.*;
 
 import java.util.*;
 
-import TargettingStrategies.WhatStrategySelf;
-import TargettingStrategies.WhereStrategyHere;
-import actions.Message;
-
 public abstract class Skills {
 	
 	protected String name;
@@ -15,7 +11,15 @@ public abstract class Skills {
 	protected String description;
 	protected List<Syntax> syntaxList = new ArrayList<Syntax>();	
 	
-	public abstract void perform(String fullCommand, Mobile currentPlayer);		
+	public void perform(String fullCommand, Mobile currentPlayer) {
+		testForInduction(currentPlayer);
+	}
+	
+	private void testForInduction(Mobile currentPlayer) {
+		if (currentPlayer.isInducting()) {
+			currentPlayer.killInduction();
+		}
+	}
 	
 	 // should be inside syntax enum?
 	public String getStringInfo(Syntax neededInfo, String fullCommand) {
@@ -69,6 +73,7 @@ public abstract class Skills {
 		itemToMove.getContainer().removeItemFromLocation(itemToMove);
 		finalLocation.acceptItem(itemToMove);
 	}
+	
 
 	public enum Syntax {
 		

@@ -26,7 +26,7 @@ import processes.Skills;
 import processes.StdMob;
 import processes.Type;
 import processes.WorldServer;
-import skills.Throw;
+import skills.Headshot;
 
 public class ThrowTest {
 	
@@ -131,7 +131,7 @@ public class ThrowTest {
 	@Before
 	public void setUp() throws Exception {
 		WorldServer.setGameState(new GameState());
-		testSkill = new Throw();
+		testSkill = new Headshot();
 		LocationBuilder lb = new LocationBuilder();
 		lb.setId(1);
 		lb.complete();
@@ -151,7 +151,7 @@ public class ThrowTest {
 		location.acceptItem(target);
 		when(target.getName()).thenReturn("target");
 		when(target.getContainer()).thenReturn(location);
-		testSkill = new Throw();
+		testSkill = new Headshot();
 	}
 
 	@After

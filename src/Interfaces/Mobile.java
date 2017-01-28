@@ -1,6 +1,7 @@
 package interfaces;
 
 import processes.Equipment.EquipmentEnum;
+import processes.InductionSkill;
 import processes.SendMessage;
 import processes.Skills;
 import processes.SkillBook;
@@ -51,5 +52,8 @@ public interface Mobile extends Container, Holdable {
 	public boolean isCreating();
 	public void startCreating();
 	public void stopCreating();
+	public boolean isInducting();
+	public void killInduction();
+	public void setInduction(InductionSkill skill);
 	
 }

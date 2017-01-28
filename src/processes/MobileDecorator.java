@@ -343,4 +343,20 @@ public enum DecoratorType {
 			mobAI.makeDecision();
 		}
 	}
+
+
+	@Override
+	public boolean isInducting() {
+		return decoratedMobile.isInducting();
+	}
+
+	@Override
+	public void killInduction() {
+		decoratedMobile.killInduction();		
+	}
+	
+	@Override
+	public void setInduction(InductionSkill skill) {
+		decoratedMobile.setInduction(skill);
+	}
 }

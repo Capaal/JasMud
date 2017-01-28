@@ -37,6 +37,8 @@ public class CreateWorld {
 		generalSkills.addSkill(new Move());
 		generalSkills.addSkill(new Look());
 		generalSkills.addSkill(new Say());
+		generalSkills.addSkill(new Headshot());
+		generalSkills.addSkill(new Drop());
 	/*	kickSkill();
 		addGodCreateSkill();
 		addDropSkill();

@@ -25,6 +25,7 @@ public class Punch extends Skills {
 	// ADD CHECK FOR ISDEAD()
 	@Override
 	public void perform(String fullCommand, Mobile currentPlayer) {
+		super.perform(fullCommand, currentPlayer);
 		if (!hasBalance(currentPlayer)) {
 			return;
 		}
@@ -36,6 +37,7 @@ public class Punch extends Skills {
 		if (isBlocking(finalTarget)) {  // Probably not complete still
 			return;
 		}		
+		finalTarget.informLastAggressor(currentPlayer);
 		finalTarget.takeDamage(Type.BLUNT, calculateDamage());
 		currentPlayer.addEffect(new Balance(), 3000);
 		messageSelf("You punch " + finalTarget.getName(), currentPlayer);

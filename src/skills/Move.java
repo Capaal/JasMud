@@ -22,6 +22,7 @@ public class Move extends Skills {
 	
 	@Override
 	public void perform(String fullCommand, Mobile currentPlayer) {
+		super.perform(fullCommand, currentPlayer);
 		if (!hasBalance(currentPlayer)) {
 			return;
 		}

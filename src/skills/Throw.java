@@ -28,6 +28,7 @@ public class Throw extends Skills {
 	// Deals throw damage to a single target in currentPlayer's location or designated direction
 	@Override
 	public void perform(String fullCommand, Mobile currentPlayer) {
+		super.perform(fullCommand, currentPlayer);
 		if (!hasBalance(currentPlayer)) {
 			return;
 		}

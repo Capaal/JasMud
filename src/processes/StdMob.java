@@ -42,6 +42,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	protected boolean isControlled = false;
 	protected boolean loadOnStartUp = false;
 	
+	protected InductionSkill inductionSkill = null;
 	protected Map<SkillBook, Integer> skillBookList = new HashMap<SkillBook, Integer>();
 	
 	protected final EffectManager effectManager;
@@ -378,6 +379,7 @@ public class StdMob implements Mobile, Container, Holdable {
 			}
 			save();
 			effectManager.shutDown();
+			inductionSkill.shutDown();
 			mobLocation.removeItemFromLocation(this);
 			WorldServer.gameState.removeMob(this.getName() + this.getId());
 		}
@@ -494,6 +496,24 @@ public class StdMob implements Mobile, Container, Holdable {
 		creating = false;
 	}
 
+	@Override
+	public boolean isInducting() {
+		if (inductionSkill == null) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public void killInduction() {
+		inductionSkill.kill();
+		inductionSkill = null;
+	}
+	
+	@Override
+	public void setInduction(InductionSkill skill) {
+		this.inductionSkill = skill;
+	}
 	
 }
 
