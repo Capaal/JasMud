@@ -1,9 +1,10 @@
 package skills;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import effects.Balance;
-import interfaces.Container;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.InductionSkill;
@@ -13,7 +14,7 @@ import processes.Type;
 public class Headshot extends InductionSkill {
 	
 	private int intensity = (8*3);
-	private Location finalLoc;
+	private Set<Location> allLocations;
 	private String possibleTarg;
 	private Mobile finalTarget;
 	
@@ -49,23 +50,16 @@ public class Headshot extends InductionSkill {
 	// Direction is OPTIONAL
 	@Override
 	public void performSkill() {
-		if (!hasBalance()) {
-			return;
-		}
-		finalLoc = (Location)(currentPlayer.getContainer());
-		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
-		if (!dir.equals("")) {
-			finalLoc = getLoc(dir);
-			if (finalLoc == null) {
-				messageSelf("There isn't a location that way.");
-				return;
-			}
-		} 
+		allLocations = new HashSet<Location>();
 		possibleTarg = Syntax.TARGET.getStringInfo(fullCommand, this);
 		if (possibleTarg == "") {
 			messageSelf("What are you trying to headshot?");
 			return;
 		}
+		if (!hasBalance()) {
+			return;
+		}	
+		findAllLocations();				
 		finalTarget = getTarget();
 		if (finalTarget == null) {
 			messageSelf("There is no \"" + possibleTarg + "\" for you to attack.");
@@ -84,18 +78,36 @@ public class Headshot extends InductionSkill {
 		return intensity;
 	}
 	
-	private Mobile getTarget() {
-		Holdable h = finalLoc.getHoldableFromString(possibleTarg);
-			if (h != null && h instanceof Mobile) {
-				return (Mobile)h;
+	private void findAllLocations() {
+		Location currentPlayerLocation = (Location)(currentPlayer.getContainer());		
+		allLocations.add(currentPlayerLocation);		
+		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
+		if (!dir.equals("")) {
+			Location nextLocation = currentPlayerLocation.getContainer(dir);
+			if (nextLocation == null) {
+				messageSelf("There isn't a location that way.");
+				return;
+			} else {
+				allLocations.add(nextLocation);
+				getNextLocation(dir, nextLocation);
 			}
-		return null;
+		}
 	}
 	
-	private Location getLoc(String dir) {
-		Container mobLocation = currentPlayer.getContainer();
-		if (mobLocation instanceof Location) {
-			return ((Location)mobLocation).getContainer(dir);
+	private void getNextLocation(String dir, Location currentLocation) {
+		Location anotherLocation = currentLocation.getContainer(dir);
+		if (anotherLocation != null && !allLocations.contains(anotherLocation)) {
+			allLocations.add(anotherLocation);
+			getNextLocation(dir, anotherLocation);
+		}
+	}
+	
+	private Mobile getTarget() {
+		for (Location l : allLocations) {		
+			Holdable t = l.getHoldableFromString(possibleTarg);
+				if (t != null && t instanceof Mobile) {
+					return (Mobile)t;
+				}
 		}
 		return null;
 	}

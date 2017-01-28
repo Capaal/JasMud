@@ -26,6 +26,10 @@ public abstract class InductionSkill extends Skills implements Runnable {
 		currentPlayer.setInduction(null);
 	}
 	
+	public void endInduction() {
+		currentPlayer.setInduction(null);
+	}
+	
 	@Override
 	public abstract void run();
 	
@@ -56,8 +60,12 @@ public abstract class InductionSkill extends Skills implements Runnable {
 			if (totalTimesRan < timesToRun) {
 				wrapperExecutor.execute(wrappedSkill);
 				totalTimesRan ++;
+				if (totalTimesRan == timesToRun) {
+					wrappedSkill.endInduction();
+				}
 			} else {
 				future.cancel(true);
+				wrappedSkill.endInduction();
 			}
 		}		
 		public void setOwnFuture(Future<?> future) {
