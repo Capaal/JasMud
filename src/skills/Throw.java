@@ -32,9 +32,14 @@ public class Throw extends Skills {
 			return;
 		}
 		String possibleItem = getStringInfo(Syntax.ITEM, fullCommand);
+		if (possibleItem == "") {
+			messageSelf("What are you trying to throw?", currentPlayer);
+			messageSelf("Throw <ITEM> <TARGET> (direction)", currentPlayer);
+			return;
+		}
 		Holdable itemToThrow = currentPlayer.getHoldableFromString(possibleItem);
 		if (itemToThrow == null) {
-			messageSelf("You do not have a \"" + possibleItem + "\" .", currentPlayer);
+			messageSelf("You do not have a \"" + possibleItem + "\".", currentPlayer);
 			return;
 		}
 		Location finalLoc = (Location)(currentPlayer.getContainer());
@@ -48,14 +53,19 @@ public class Throw extends Skills {
 				finalLoc = getLoc(dir, fullCommand, currentPlayer);
 			}
 		} 
-		Mobile finalTarget = getTarget(finalLoc, fullCommand);
+		String possibleTarg = getStringInfo(Syntax.TARGET, fullCommand);
+		if (possibleTarg == "") {
+			messageSelf("What are you trying to the " + possibleItem + " at?", currentPlayer);
+			return;
+		}
+		Mobile finalTarget = getTarget(finalLoc, fullCommand, possibleTarg);
 		if (finalTarget == null) {
-			messageSelf("There is no \"" + this.getStringInfo(Syntax.TARGET, fullCommand) + "\" for you to attack.", currentPlayer);
+			messageSelf("There is no \"" + possibleTarg + "\" for you to attack.", currentPlayer);
 			return;
 		}	
 		Location targetLoc = (Location)(finalTarget.getContainer());
 		if (targetLoc != finalLoc) {
-			messageSelf("You can't find a \"" + this.getStringInfo(Syntax.TARGET, fullCommand) + "\" to attack.", currentPlayer);
+			messageSelf("You can't find a \"" + possibleTarg + "\" to attack.", currentPlayer);
 			return;
 		}
 		if (isBlocking(finalTarget)) {  // Probably not complete still
@@ -81,8 +91,8 @@ public class Throw extends Skills {
 		finalLoc.acceptItem(itemToThrow);
 	}
 	
-	private Mobile getTarget(Location finalLoc, String fullCommand) {
-		Holdable h = finalLoc.getHoldableFromString(this.getStringInfo(Syntax.TARGET, fullCommand));
+	private Mobile getTarget(Location finalLoc, String fullCommand, String possibleTarg) {
+		Holdable h = finalLoc.getHoldableFromString(possibleTarg);
 			if (h != null && h instanceof Mobile) {
 				return (Mobile)h;
 			}

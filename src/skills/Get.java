@@ -28,7 +28,7 @@ public class Get extends Skills {
 		}
 		itemToMove.getContainer().removeItemFromLocation(itemToMove);
 		currentPlayer.acceptItem(itemToMove);
-		messageSelf("You get " + itemToMove.getName() + " .", currentPlayer);
+		messageSelf("You get " + itemToMove.getName() + ".", currentPlayer);
 	}
 
 }
