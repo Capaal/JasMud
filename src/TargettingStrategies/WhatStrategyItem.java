@@ -22,7 +22,7 @@ public class WhatStrategyItem implements WhatStrategyInterface {
 	public List<Holdable> findWhat(Skills s, String fullCommand, Mobile currentPlayer, List<Container> containersToSearch) {
 		List<Holdable> targ = new ArrayList<Holdable>();
 		for (Container l : containersToSearch) {
-			Holdable h = l.getHoldableFromString(s.getStringInfo(Syntax.ITEM, fullCommand));
+			Holdable h = l.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, s));
 			if (h != null) {
 				targ.add(h);
 				return targ;

@@ -15,9 +15,18 @@ public class Say extends Skills {
 	}
 
 	@Override
-	public void perform(String fullCommand, Mobile currentPlayer) {
-		messageSelf("You say: " + getStringInfo(Syntax.LIST, fullCommand) + ".", currentPlayer);
-		messageOthers(currentPlayer.getName() + " says, " + getStringInfo(Syntax.LIST, fullCommand) + ".", currentPlayer, Arrays.asList(currentPlayer));
+	public void performSkill() {
+		if (canTalk()) {
+			messageSelf("You say: " + Syntax.LIST.getStringInfo(fullCommand, this) + ".");
+			messageOthers(currentPlayer.getName() + " says, " + Syntax.LIST.getStringInfo(fullCommand, this) + ".", Arrays.asList(currentPlayer));
+		} else {
+			messageSelf("You can't talk.");
+		}
+	}
+	
+	//checks for dumb, silence, etc
+	public boolean canTalk() {
+		return true;
 	}
 
 }

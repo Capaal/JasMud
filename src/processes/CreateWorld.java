@@ -39,18 +39,17 @@ public class CreateWorld {
 		generalSkills.addSkill(new Say());
 		generalSkills.addSkill(new Headshot());
 		generalSkills.addSkill(new Drop());
+		
+		generalSkills.addSkill(new MakeItem());
 	/*	kickSkill();
 		addGodCreateSkill();
-		addDropSkill();
 		addExamineSkill();
 		addGiveSkill();
 		addMsgWorldSkill();
-		addSaySkill();
 		addSelfInvSkill();
 		addExitsSkill(); 
 		addTellSkill();
-		addEmotesSkill();
-		addMakeItemSkill(); */
+		addEmotesSkill(); */
 	}
 	
 	public static void makeItems() {

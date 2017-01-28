@@ -19,7 +19,7 @@ import interfaces.Container;
 import interfaces.Holdable;
 import interfaces.Mobile;
 
-public class EquipChange extends Action {
+/* public class EquipChange extends Action {
 
 	private final WhatStrategyInterface what;
 	private final WhereStrategyInterface where;
@@ -27,13 +27,13 @@ public class EquipChange extends Action {
 	
 	public EquipChange() {
 		this(new WhatStrategySelf(), new WhereStrategyHere(), true);
-	}
+	} */
 
-	public EquipChange(WhatStrategyInterface what, WhereStrategyInterface where, boolean equip) {
+/*	public EquipChange(WhatStrategyInterface what, WhereStrategyInterface where, boolean equip) {
 		this.what = what;
 		this.where = where;
 		this.equip = equip;
-	}
+	} */
 	/*
 	 * So far, the options I see for handling wielding:
 	 * I can do it the obvious route, have a variable for each slot I expect to need. Head, left arm, right arm, chest etc.
@@ -86,8 +86,8 @@ public class EquipChange extends Action {
 	 */
 	
 	
-	@Override
-	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
+//	@Override
+/*	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
 		List<Container> loc = where.findWhere(s, fullCommand, currentPlayer);
 		List<Holdable> target = what.findWhat(s, fullCommand, currentPlayer, loc);
 		String slotString = s.getStringInfo(Syntax.SLOT, fullCommand);
@@ -170,4 +170,4 @@ public class EquipChange extends Action {
 		player.tell("Used to equip and unequip a Mobile.");
 		player.tell("True means equip: " + equip + " WhatTargettingStrategy: " + what.toString() + "WhereTargettingStrategy: " + where.toString());
 	}
-}
+} */

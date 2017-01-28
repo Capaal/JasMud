@@ -190,7 +190,7 @@ public class Godcreate extends Action {
 		actionMap = new HashMap<String, Action>();	
 		actionMap.put("damage", new Damage());
 		actionMap.put("chance", new Chance());
-		actionMap.put("equipchange", new EquipChange());
+	//	actionMap.put("equipchange", new EquipChange());
 		actionMap.put("examine", new Examine());
 	//	actionMap.put("get", new Get());
 	//	actionMap.put("look", new Look());

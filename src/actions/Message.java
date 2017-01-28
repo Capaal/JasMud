@@ -46,7 +46,7 @@ public class Message extends Action {
 			if (msg.equals(Syntax.SELF)) { // Special Syntax to display currentPlayer's name.
 				substituteWords.add(currentPlayer.getName());
 			} else {
-				substituteWords.add(s.getStringInfo(msg, fullCommand));
+	//			substituteWords.add(s.getStringInfo(msg, fullCommand));
 			}			
 		}		
 		List<Holdable> targs = what.findWhat(s, fullCommand, currentPlayer, where.findWhere(s, fullCommand, currentPlayer));

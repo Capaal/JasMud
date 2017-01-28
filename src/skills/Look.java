@@ -6,19 +6,18 @@ import processes.Location;
 import processes.Skills;
 import processes.Skills.Syntax;
 
+
 public class Look extends Skills {
 
 	public Look() {
-		super.id = 4;
 		super.name = "look";
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.DIRECTION);
 	}
 	
 	@Override
-	public void perform(String fullCommand, Mobile currentPlayer) {
-		super.perform(fullCommand, currentPlayer);
-		String dir = getStringInfo(Syntax.DIRECTION, fullCommand);
+	protected void performSkill() {
+		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
 		if (dir.equals("")) {
 			currentPlayer.getContainer().look(currentPlayer);
 			return;
@@ -26,7 +25,7 @@ public class Look extends Skills {
 		Container mobLocation = currentPlayer.getContainer();
 		Location futureLocation = ((Location)mobLocation).getContainer(dir);
 		if (futureLocation == null) {
-			messageSelf("There is no location that way.", currentPlayer);
+			messageSelf("There is no location that way.");
 			return;
 		}
 		futureLocation.look(currentPlayer);

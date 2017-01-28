@@ -18,7 +18,7 @@ public class WhereStrategyOneAway implements WhereStrategyInterface {
 	@Override
 	public List<Container> findWhere(Skills s, String fullCommand, Mobile currentPlayer) {
 		List<Container> loc = new ArrayList<Container>();
-		String dir = s.getStringInfo(Syntax.DIRECTION, fullCommand);
+		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, s);
 		if (!dir.equals("")) {
 			Container mobLocation = currentPlayer.getContainer();
 			if (mobLocation instanceof Location) {
