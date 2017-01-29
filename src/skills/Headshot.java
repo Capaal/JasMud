@@ -3,7 +3,6 @@ package skills;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
 import effects.Balance;
 import interfaces.Holdable;
 import interfaces.Mobile;
@@ -42,9 +41,10 @@ public class Headshot extends InductionSkill {
 		messageOthers(currentPlayer.getName() + " headshots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));		
 	}
 	
-	// Deals damage to a single target in currentPlayer's location or One Away
+	// Deals damage to a single target in currentPlayer's location or infinitately away in one direction.
+	// Target MUST be targettable BOTH at the START and at the END of induction.
 	// REQUIRES ranged weapon (eventually)
-	// Direction is OPTIONAL
+	// Direction is OPTIONAL, defaults to currentPlayer's location
 	@Override
 	public void performSkill() {
 		allLocations = new HashSet<Location>();
@@ -65,7 +65,7 @@ public class Headshot extends InductionSkill {
 		if (isBlocking(finalTarget)) {  // Probably not complete still
 			return;
 		}	
-		scheduleSkillRepeatNTimesOverXMilliseconds(1, 2000);
+		scheduleSkillRepeatNTimesOverXMilliseconds(1, 2000); // Triggers this skill's "run()" in 2 seconds. Interruptable.
 		currentPlayer.setInduction(this);
 		messageSelf("You begin aiming at " + finalTarget.getName() + ".");
 		messageTarget(currentPlayer.getName() + " begins aiming at your head.", Arrays.asList(finalTarget));
@@ -112,7 +112,5 @@ public class Headshot extends InductionSkill {
 	@Override
 	public void inductionKilled() {
 		messageSelf("You stop aiming at " + possibleTarg);
-	}
-
-	
+	}	
 }

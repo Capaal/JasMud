@@ -1,13 +1,11 @@
 package skills;
 
 import java.util.Arrays;
-
 import effects.Balance;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Skills;
 import processes.Type;
-import processes.WorldServer;
 
 public class Punch extends Skills {
 	

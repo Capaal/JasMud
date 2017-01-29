@@ -1,10 +1,7 @@
 package skills;
 
 import java.util.Arrays;
-
-import interfaces.Mobile;
 import processes.Skills;
-import processes.Skills.Syntax;
 
 public class Say extends Skills {
 	

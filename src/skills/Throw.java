@@ -9,8 +9,6 @@ import interfaces.Mobile;
 import processes.Location;
 import processes.Skills;
 import processes.Type;
-import processes.WorldServer;
-import processes.Skills.Syntax;
 
 public class Throw extends Skills {
 	
@@ -48,12 +46,10 @@ public class Throw extends Skills {
 		Location finalLoc = (Location)(currentPlayer.getContainer());
 		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
 		if (!dir.equals("")) {
-			Location possibleLoc = getLoc(dir, fullCommand, currentPlayer);
-			if (possibleLoc == null) {
+			finalLoc = getLoc(dir, fullCommand, currentPlayer);
+			if (finalLoc == null) {
 				messageSelf("There isn't a location that way.");
 				return;
-			} else {
-				finalLoc = possibleLoc;
 			}
 		} 
 		//checks if a target is specified
@@ -73,7 +69,7 @@ public class Throw extends Skills {
 			return;
 		}		
 		
-		//what the skill actually doeS:
+		//what the skill actually does:
 		finalTarget.takeDamage(Type.SHARP, calculateDamage());
 		moveItem(itemToThrow, finalLoc);
 		currentPlayer.addEffect(new Balance(), 3000);

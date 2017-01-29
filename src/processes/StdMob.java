@@ -379,7 +379,9 @@ public class StdMob implements Mobile, Container, Holdable {
 			}
 			save();
 			effectManager.shutDown();
-			inductionSkill.shutDown();
+			if (isInducting()) {
+				inductionSkill.shutDown();
+			}
 			mobLocation.removeItemFromLocation(this);
 			WorldServer.gameState.removeMob(this.getName() + this.getId());
 		}

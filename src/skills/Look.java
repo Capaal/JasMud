@@ -1,11 +1,8 @@
 package skills;
 
 import interfaces.Container;
-import interfaces.Mobile;
 import processes.Location;
 import processes.Skills;
-import processes.Skills.Syntax;
-
 
 public class Look extends Skills {
 
@@ -17,12 +14,12 @@ public class Look extends Skills {
 	
 	@Override
 	protected void performSkill() {
+		Container mobLocation = currentPlayer.getContainer();
 		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
 		if (dir.equals("")) {
-			currentPlayer.getContainer().look(currentPlayer);
+			mobLocation.look(currentPlayer);
 			return;
 		}
-		Container mobLocation = currentPlayer.getContainer();
 		Location futureLocation = ((Location)mobLocation).getContainer(dir);
 		if (futureLocation == null) {
 			messageSelf("There is no location that way.");
@@ -30,5 +27,4 @@ public class Look extends Skills {
 		}
 		futureLocation.look(currentPlayer);
 	}
-
 }

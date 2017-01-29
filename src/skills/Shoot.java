@@ -3,7 +3,6 @@ package skills;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
 import effects.Balance;
 import interfaces.Holdable;
 import interfaces.Mobile;
@@ -25,7 +24,7 @@ public class Shoot extends Skills {
 		super.syntaxList.add(Syntax.DIRECTION);
 	}
 	
-	// Deals damage to a single target in currentPlayer's location or One Away
+	// Deals damage to a single target in currentPlayer's location or infinitely away in one direction
 	// REQUIRES ranged weapon (eventually)
 	// Direction is OPTIONAL
 	@Override

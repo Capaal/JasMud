@@ -1,11 +1,10 @@
 package skills;
 
+import java.util.Arrays;
+
 import interfaces.Container;
 import interfaces.Holdable;
-import interfaces.Mobile;
 import processes.Skills;
-import processes.WorldServer;
-import processes.Skills.Syntax;
 
 public class Get extends Skills {
 	
@@ -15,6 +14,8 @@ public class Get extends Skills {
 		super.syntaxList.add(Syntax.ITEM);
 	}
 
+	// Moves a HOLDABLE from the LOCATION of the CURRENTPLAYER into their INVENTORY.
+	// Requires Balance, Syntax = "get sword" or "get dagger1234"
 	@Override
 	public void performSkill() {
 		if (!hasBalance()) {
@@ -25,10 +26,9 @@ public class Get extends Skills {
 		if (itemToMove == null) {
 			messageSelf("You can't find that item.");
 			return;
-		}
-		
+		}		
 		moveHoldable(itemToMove, currentPlayer);
 		messageSelf("You get " + itemToMove.getName() + ".");
+		messageOthers(currentPlayer.getName() + " picks up " + itemToMove.getName() + ".", Arrays.asList(currentPlayer));
 	}
-
 }

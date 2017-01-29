@@ -1,10 +1,9 @@
 package skills;
 
-import interfaces.Container;
+import java.util.Arrays;
+
 import interfaces.Holdable;
-import interfaces.Mobile;
 import processes.Skills;
-import processes.Skills.Syntax;
 
 public class Drop extends Skills {
 	
@@ -13,7 +12,9 @@ public class Drop extends Skills {
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 	}
-
+	
+	// Moves a HOLDABLE from the CURRENTPLAYER's INVENTORY to the LOCATION they are in.
+	// Requires balance, syntax = "drop dagger" or "drop sword1532"
 	@Override
 	public void performSkill() {
 		if (!hasBalance()) {
@@ -26,5 +27,6 @@ public class Drop extends Skills {
 		}
 		moveHoldable(itemToMove, currentPlayer.getContainer());
 		messageSelf("You drop " + itemToMove.getName() + ".");
+		messageOthers(currentPlayer.getName() + " drops " + itemToMove.getName() + ".", Arrays.asList(currentPlayer));
 	}
 }

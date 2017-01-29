@@ -39,7 +39,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new Say());
 		generalSkills.addSkill(new Shoot());
 		generalSkills.addSkill(new Drop());
-		
+		generalSkills.addSkill(new Headshot());
 		generalSkills.addSkill(new MakeItem());
 	/*	kickSkill();
 		addGodCreateSkill();
