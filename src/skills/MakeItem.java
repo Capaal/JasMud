@@ -1,8 +1,11 @@
 package skills;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import interfaces.Holdable;
 import items.StdItem;
 import processes.CreateWorld;
 import processes.ItemBuilder;
@@ -23,15 +26,28 @@ public class MakeItem extends Skills {
 	protected void performSkill() {
 		String itemToMake = Syntax.ITEM.getStringInfo(fullCommand, this);
 		if (itemToMake == "") {
-			messageSelf("What are you trying to make?");
+			messageSelf("What are you trying to make?"); //fail from no item specified
 			return;
 		}
-		Map<String, ItemBuilder> allItemTemplates = CreateWorld.viewItemTemplates();
+		Map<String, ItemBuilder> allItemTemplates = CreateWorld.viewItemTemplates(); //maybe list of only craftable items?
 		ItemBuilder copyThis = allItemTemplates.get(itemToMake);
 		if (copyThis == null) {
-			messageSelf("That is not an item you are able to make.");
+			messageSelf("That is not an item you are able to make."); //fail from no template for item specified
 			return;
 		}
+		//finds components need to make the item, if any. Should return empty list if no components.
+		List<Holdable> componentsOnHand = new ArrayList<Holdable> ();
+		List<String> componentsNeeded = copyThis.getComponents(); 
+		for (String i : componentsNeeded) {
+			Holdable playerItem = currentPlayer.getHoldableFromString(i);
+			if (playerItem == null) {
+				messageSelf("You don't have the correct components to make that item.");
+				return;
+			}
+			componentsOnHand.add(playerItem);
+		}		
+		//what the skill actually does:
+		for (Holdable d : componentsOnHand) {d.removeFromWorld(); } //removes the components from the world
 		Set<StdItem> allItems = WorldServer.gameState.viewAllItems(); //need better way to determine a good ID
 		ItemBuilder newItem = new ItemBuilder();
 		newItem.setId(allItems.size()+1);

@@ -18,6 +18,7 @@ public class StdItem implements Holdable {
 	private int currentDurability;
 	private final List<Type> types;
 	private final List<ItemType> itemTags;
+	private final List<String> components;
 	
 	private final Set<EquipmentEnum> allowedEquipSlots;
 
@@ -33,6 +34,7 @@ public class StdItem implements Holdable {
 		this.types = build.getTypes();
 		this.itemTags = build.getItemTags();
 		this.allowedEquipSlots = build.getAllowedSlots();
+		this.components = build.getComponents();
 		WorldServer.gameState.addItem(name + id, this);
 		itemLocation.acceptItem(this);
 	}
@@ -60,6 +62,7 @@ public class StdItem implements Holdable {
 	public Set<EquipmentEnum> getAllowedEquipSlots() {return allowedEquipSlots;}
 	public List<Type> getTypes() {return types;}
 	public List<ItemType> getItemTags() {return itemTags;}
+	public List<String> getComponents() {return components;}
 	
 	@Override
 	public boolean containsType(Type type) {

@@ -41,6 +41,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new Drop());
 		generalSkills.addSkill(new Headshot());
 		generalSkills.addSkill(new MakeItem());
+		generalSkills.addSkill(new SkillList());
 	/*	kickSkill();
 		addGodCreateSkill();
 		addExamineSkill();
@@ -56,6 +57,7 @@ public class CreateWorld {
 		makeADagger(1);
 		makeASword(2);
 		makeAStick(3);
+		makeAPike(4);
 		makeGoblin();
 	}
 	
@@ -171,7 +173,17 @@ public class CreateWorld {
 		newItem.setId(i);
 		newItem.setName("stick");
 		newItem.setDescription("It's a stick!");
+		newItem.complete();
 		itemTemplates.put("stick", newItem);
+	}
+	
+	public static void makeAPike(int i) {
+		ItemBuilder newItem = new ItemBuilder();	
+		newItem.setId(i);
+		newItem.setName("pike");
+		newItem.setDescription("It's a pike!");
+		newItem.setComponents(Arrays.asList("dagger","stick"));
+		itemTemplates.put("pike", newItem);
 	}
 	
 	public static void makeGoblin() {

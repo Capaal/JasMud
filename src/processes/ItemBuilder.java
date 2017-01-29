@@ -26,6 +26,7 @@ public class ItemBuilder {
 	private ArrayList<ItemType> itemTags = new ArrayList<ItemType>();
 	private Container itemContainer = WorldServer.gameState.viewLocations().get(1);		
 	private EnumSet<EquipmentEnum> allowedSlots = EnumSet.noneOf(EquipmentEnum.class);
+	private List<String> components = new ArrayList<String>();
 	
 	private StdItem finishedItem;
 	private boolean buildComplete;
@@ -127,6 +128,14 @@ public class ItemBuilder {
 	
 	public Set<EquipmentEnum> getAllowedSlots() {
 		return EnumSet.copyOf(allowedSlots);
+	}
+	
+	public void setComponents(List<String> allComponent) {
+		this.components = allComponent;
+	}
+	
+	public List<String> getComponents() {
+		return components;
 	}
 	
 	public boolean complete() {
