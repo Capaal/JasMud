@@ -40,8 +40,9 @@ public class CreateWorld {
 		generalSkills.addSkill(new Shoot());
 		generalSkills.addSkill(new Drop());
 		generalSkills.addSkill(new Headshot());
-		generalSkills.addSkill(new MakeItem());
+		generalSkills.addSkill(new CraftItem());
 		generalSkills.addSkill(new SkillList());
+		generalSkills.addSkill(new Salvage());
 	/*	kickSkill();
 		addGodCreateSkill();
 		addExamineSkill();

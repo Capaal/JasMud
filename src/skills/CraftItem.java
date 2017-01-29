@@ -15,10 +15,10 @@ import processes.WorldServer;
 
 
 
-public class MakeItem extends Skills {
+public class CraftItem extends Skills {
 
-	public MakeItem() {
-		super.name = "make";
+	public CraftItem() {
+		super.name = "craft";
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 	}
@@ -35,7 +35,7 @@ public class MakeItem extends Skills {
 			messageSelf("That is not an item you are able to make."); //fail from no template for item specified
 			return;
 		}
-		//finds components need to make the item, if any. Should return empty list if no components.
+		//finds components needed to make the item, if any. Should return empty list if no components.
 		List<Holdable> componentsOnHand = new ArrayList<Holdable> ();
 		List<String> componentsNeeded = copyThis.getComponents(); 
 		for (String i : componentsNeeded) {
