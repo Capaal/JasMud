@@ -36,6 +36,10 @@ public class Salvage extends Skills {
 			messageSelf("This item can't be salvaged."); //fail from no template for item specified
 			return;
 		}
+		if(!salvageThis.getSalvageable()) {
+			messageSelf("This item is not salvageable."); //fail from salvageable = false, not a salvageable item (potions)
+			return;
+		}
 		//makes sure the player has the item
 		Holdable deleteThis = currentPlayer.getHoldableFromString(itemToSalvage); //removes the salvaged item
 		if (deleteThis == null) {

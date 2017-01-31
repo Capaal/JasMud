@@ -43,6 +43,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new CraftItem());
 		generalSkills.addSkill(new SkillList());
 		generalSkills.addSkill(new Salvage());
+		generalSkills.addSkill(new Heal());
 	/*	kickSkill();
 		addGodCreateSkill();
 		addExamineSkill();
@@ -59,6 +60,10 @@ public class CreateWorld {
 		makeASword(2);
 		makeAStick(3);
 		makeAPike(4);
+		makeIngot(5);
+		addOre(7);
+		addOre(8);
+		addIronPotion(9);
 		makeGoblin();
 	}
 	
@@ -76,7 +81,7 @@ public class CreateWorld {
 		LocationBuilder firstLoc = new LocationBuilder();
 		firstLoc.setId(1);
 		firstLoc.setName("Start.");
-		firstLoc.setDescription("You have to start somewhere");
+		firstLoc.setDescription("You have to start somewhere.");
 		firstLoc.complete();	
 
 		//2nd location, south exit to 1, north exit to 3
@@ -92,6 +97,7 @@ public class CreateWorld {
 		LocationBuilder newLoc3 = new LocationBuilder();
 		newLoc3.setId(loc3);
 		newLoc3.setName("Road.");
+		newLoc3.setDescription("It's a road.");
 		newLoc3.south(2, "north");
 		newLoc3.complete();	
 		
@@ -108,6 +114,7 @@ public class CreateWorld {
 		LocationBuilder newLoc5 = new LocationBuilder();
 		newLoc5.setId(loc5);
 		newLoc5.setName("On a bridge.");
+		newLoc5.setDescription("It's a bridge over a dried creek.");
 		newLoc5.south(4, "north");
 		newLoc5.complete();	
 		
@@ -116,6 +123,7 @@ public class CreateWorld {
 		LocationBuilder newLoc6 = new LocationBuilder();
 		newLoc6.setId(loc6);
 		newLoc6.setName("Forest trail.");
+		newLoc6.setDescription("You shouldn't wander off the path.");
 		newLoc6.west(5, "east");
 		newLoc6.complete();	
 		
@@ -124,6 +132,7 @@ public class CreateWorld {
 		LocationBuilder newLoc7 = new LocationBuilder();
 		newLoc7.setId(loc7);
 		newLoc7.setName("End of trail.");
+		newLoc7.setDescription("Can't go forward now.");
 		newLoc7.west(6, "east");
 		newLoc7.in(2,"east");
 		newLoc7.complete();	
@@ -133,6 +142,7 @@ public class CreateWorld {
 		LocationBuilder newLoc8 = new LocationBuilder();
 		newLoc8.setId(loc8);
 		newLoc8.setName("Loop.");
+		newLoc8.setDescription("Going in circles.");
 		newLoc8.south(5, "north");
 		newLoc8.north(5, "north");
 		newLoc8.complete();	
@@ -157,6 +167,8 @@ public class CreateWorld {
 		newItem.setId(i);
 		newItem.setName("dagger");
 		newItem.setDescription("It's a dagger!");
+		newItem.setComponents(Arrays.asList("ingot"));
+		newItem.setSalvageable(true);
 		newItem.complete();
 		itemTemplates.put("dagger", newItem);
 	}
@@ -166,6 +178,10 @@ public class CreateWorld {
 		newItem.setId(i);
 		newItem.setName("sword");
 		newItem.setDescription("It's a sword!");
+		newItem.setComponents(Arrays.asList("ingot","ingot"));
+		newItem.setSalvageable(true);
+		newItem.setPhysicalMult(1.5);
+		newItem.setBalanceMult(1.2);
 		itemTemplates.put("sword", newItem);
 	}
 	
@@ -174,6 +190,7 @@ public class CreateWorld {
 		newItem.setId(i);
 		newItem.setName("stick");
 		newItem.setDescription("It's a stick!");
+		newItem.setPhysicalMult(0.5);
 		newItem.complete();
 		itemTemplates.put("stick", newItem);
 	}
@@ -184,7 +201,41 @@ public class CreateWorld {
 		newItem.setName("pike");
 		newItem.setDescription("It's a pike!");
 		newItem.setComponents(Arrays.asList("dagger","stick"));
+		newItem.setPhysicalMult(1.8);
+		newItem.setBalanceMult(1.5);
+		newItem.setSalvageable(true);
 		itemTemplates.put("pike", newItem);
+	}
+	
+	public static void makeIngot(int i) {
+		ItemBuilder newItem = new ItemBuilder();	
+		newItem.setId(i);
+		newItem.setName("ingot");
+		newItem.setDescription("An iron ingot.");
+		newItem.setComponents(Arrays.asList("ore","ore"));
+		newItem.setPhysicalMult(0.4);
+		newItem.setSalvageable(true);
+		itemTemplates.put("ingot", newItem);
+	}
+	
+	public static void addOre(int i) {
+		ItemBuilder newItem = new ItemBuilder();	
+		newItem.setId(i);
+		newItem.setName("ore");
+		newItem.setDescription("A piece of iron ore.");
+		newItem.setPhysicalMult(0.2);
+		newItem.complete();
+		WorldServer.gameState.addItem("ore", newItem.getFinishedItem()); //added here instead of templates, not a craftable item
+	}
+	
+	public static void addIronPotion(int i) {
+		ItemBuilder newItem = new ItemBuilder();	
+		newItem.setId(i);
+		newItem.setName("ironpotion");
+		newItem.setDescription("A potion made from iron.");
+		newItem.setComponents(Arrays.asList("ore"));
+		newItem.setPhysicalMult(0.2);
+		itemTemplates.put("ironpotion", newItem);
 	}
 	
 	public static void makeGoblin() {
@@ -209,27 +260,10 @@ public class CreateWorld {
 		newGoblin.setDescription("A horse stands here.");
 		newGoblin.setLoadOnStartUp(true);
 		newGoblin.complete();
-	}
-	
-	// (29) making an item, for crafting. Needs checks
-	// first assuming all items have a blueprint
-	// how to make ID a new number for all new items?
-/*	public static void addMakeItemSkill() {
-		SkillBuilder makeItemBuilder = new SkillBuilder();
-		makeItemBuilder.addAction(new MakeItem(new WhatStrategyItem(), new WhereStrategyHere()));
-		makeItemBuilder.addAction(new Message("You made %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM))));
-		makeItemBuilder.setFailMsg(new Message("You cannot make \"%s\".", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM))));
-		makeItemBuilder.addBook(generalSkills);
-		makeItemBuilder.setName("make");
-//		makeItemBuilder.addSyntax(Skill.Syntax.SKILL);
-//		makeItemBuilder.addSyntax(Skill.Syntax.ITEM);
-		makeItemBuilder.setId(29);
-		makeItemBuilder.complete();
-	} */
-	
+	}	
 	
 	// hardcoded get skill 11
-	public static void addGetSkill() {
+/*	public static void addGetSkill() {
 		SkillBuilder getBuilder = new SkillBuilder();
 		getBuilder.addAction(new MoveHoldable(new WhatStrategyItem(), new WhereStrategyHere(), new WhereStrategySelfInventory()));
 		getBuilder.addAction(new Message("You get %s.", new WhatStrategySelf(), new WhereStrategyHere(), new ArrayList<Syntax>(Arrays.asList(Syntax.ITEM))));
@@ -487,6 +521,6 @@ public class CreateWorld {
 //		infoBuilder.addSyntax(Skill.Syntax.TARGET);		
 		infoBuilder.setId(26);
 		infoBuilder.complete();
-	}
+	} */
 	
 }

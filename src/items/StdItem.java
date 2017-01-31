@@ -19,6 +19,7 @@ public class StdItem implements Holdable {
 	private final List<Type> types;
 	private final List<ItemType> itemTags;
 	private final List<String> components;
+	private final boolean salvageable;
 	
 	private final Set<EquipmentEnum> allowedEquipSlots;
 
@@ -35,6 +36,7 @@ public class StdItem implements Holdable {
 		this.itemTags = build.getItemTags();
 		this.allowedEquipSlots = build.getAllowedSlots();
 		this.components = build.getComponents();
+		this.salvageable=false;
 		WorldServer.gameState.addItem(name + id, this);
 		itemLocation.acceptItem(this);
 	}

@@ -165,6 +165,8 @@ public class StdMob implements Mobile, Container, Holdable {
 		if (currentHp <= 0 && !isDead) {
 			tell("You collapse to the ground, unable to fight on.");
 			isDead = true;
+		} else if (currentHp > getMaxHp()) {
+			currentHp = maxHp;
 		}
 	}	
 	

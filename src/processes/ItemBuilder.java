@@ -27,6 +27,7 @@ public class ItemBuilder {
 	private Container itemContainer = WorldServer.gameState.viewLocations().get(1);		
 	private EnumSet<EquipmentEnum> allowedSlots = EnumSet.noneOf(EquipmentEnum.class);
 	private List<String> components = new ArrayList<String>();
+	private boolean salvageable = false;
 	
 	private StdItem finishedItem;
 	private boolean buildComplete;
@@ -133,9 +134,18 @@ public class ItemBuilder {
 	public void setComponents(List<String> allComponent) {
 		this.components = allComponent;
 	}
+
 	
 	public List<String> getComponents() {
 		return components;
+	}
+	
+	public void setSalvageable(boolean setSalvage) {
+		this.salvageable = setSalvage;
+	}
+	
+	public boolean getSalvageable() {
+		return salvageable;
 	}
 	
 	public boolean complete() {

@@ -1,6 +1,7 @@
 package skills;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,16 +37,25 @@ public class CraftItem extends Skills {
 			return;
 		}
 		//finds components needed to make the item, if any. Should return empty list if no components.
-		List<Holdable> componentsOnHand = new ArrayList<Holdable> ();
+		Set<Holdable> componentsOnHand = new HashSet<Holdable> ();
 		List<String> componentsNeeded = copyThis.getComponents(); 
-		for (String i : componentsNeeded) {
-			Holdable playerItem = currentPlayer.getHoldableFromString(i);
-			if (playerItem == null) {
-				messageSelf("You don't have the correct components to make that item.");
+		Set<Holdable> copyPlayerInv = currentPlayer.getInventory();
+		for (String i : componentsNeeded) {   //adds all items needed from playerInv to compOnHand
+			Holdable remove = null;
+			for (Holdable h : copyPlayerInv) {
+				if (h.getName().equals(i)) {
+					componentsOnHand.add(h);
+					remove = h;  
+					break;
+				} 
+			}
+			if (remove != null) {			   //removing so the same item isn't added back in (needs two ores, prevents counting same ore twice)
+				copyPlayerInv.remove(remove);  //can't remove while iterating through inventory
+			} else {
+				messageSelf("You are missing components.");
 				return;
 			}
-			componentsOnHand.add(playerItem);
-		}		
+		}
 		//what the skill actually does:
 		for (Holdable d : componentsOnHand) {d.removeFromWorld(); } //removes the components from the world
 		Set<StdItem> allItems = WorldServer.gameState.viewAllItems(); //need better way to determine a good ID
@@ -53,7 +63,7 @@ public class CraftItem extends Skills {
 		newItem.setId(allItems.size()+1);
 		newItem.setName(copyThis.getName());
 		newItem.setDescription(copyThis.getDescription());
-		newItem.setItemContainer(currentPlayer.getContainer()); //may not always create the item in the same place
+		newItem.setItemContainer(currentPlayer); //may not always create the item in the same place
 		newItem.complete();
 		messageSelf("You have created: " + copyThis.getName() + ".");	
 	}

@@ -70,7 +70,7 @@ public class Throw extends Skills {
 		}		
 		
 		//what the skill actually does:
-		finalTarget.takeDamage(Type.SHARP, calculateDamage());
+		finalTarget.takeDamage(Type.SHARP, calculateDamage(itemToThrow.getDamageMult()));
 		moveItem(itemToThrow, finalLoc);
 		currentPlayer.addEffect(new Balance(), 3000);
 		messageSelf("You throw " + itemToThrow.getName() + " at " + finalTarget.getName() + ".");
@@ -80,8 +80,8 @@ public class Throw extends Skills {
 		
 
 	
-	private int calculateDamage() {
-		return intensity;
+	private int calculateDamage(double dmgMult) {
+		return (int) (dmgMult*intensity);
 	}
 	
 	private void moveItem(Holdable itemToThrow, Location finalLoc) {
