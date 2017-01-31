@@ -3,11 +3,10 @@ package processes;
 import interfaces.*;
 import items.StdItem;
 
-import java.sql.SQLException;
 import java.util.*;
 
 import Quests.Quest.Trigger;
-import effects.Balance;
+import effects.*;
 import processes.Equipment.EquipmentEnum;
 import processes.Location.GroundType;
 import processes.MobileDecorator.DecoratorType;
@@ -27,7 +26,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	protected final int id;
 	protected int maxHp;
 	protected int currentHp; 
-	protected Container mobLocation;
+	protected Location mobLocation;
 	protected boolean isDead;
 	
 	protected Set<Holdable> inventory; // Make this be combined with equipment as its own class? TODO
@@ -72,7 +71,8 @@ public class StdMob implements Mobile, Container, Holdable {
 		
 		
 		Mobile decoratedMob = decorate(build, this);
-				
+		build.setFinishedMob(decoratedMob);
+		
 		WorldServer.gameState.addMob(decoratedMob.getName() + decoratedMob.getId(), decoratedMob);
 		decoratedMob.getContainer().acceptItem(decoratedMob);
 	}
@@ -86,26 +86,26 @@ public class StdMob implements Mobile, Container, Holdable {
 		return m;
 	}
 	
-	public String getName() {return name;}	
-	public boolean isDead() {return isDead;}	
+	@Override public String getName() {return name;}	
+	@Override public boolean isDead() {return isDead;}	
 	
-	public boolean hasBalance() {
+	@Override public boolean hasBalance() {
 		return !hasEffect(new Balance());
 	}
 	
-	public String getDescription() {
+	@Override public String getDescription() {
 		return description;
 	}
 	
-	public String getShortDescription() {
+	@Override public String getShortDescription() {
 		return shortDescription;
 	}
 	
-	public int getXpWorth() {
+	@Override public int getXpWorth() {
 		return xpWorth;
 	}
 	
-	public Skills getCommand(String command) {
+	@Override public Skills getCommand(String command) {
 		for (SkillBook sb : skillBookList.keySet()) {
 			Skills skill = sb.getSkill(command);
 				return skill;		
@@ -117,11 +117,16 @@ public class StdMob implements Mobile, Container, Holdable {
 	public void acceptItem(Holdable item) {
 		inventory.add(item);
 		item.setContainer(this);
+		// dropsOnDeath.add(item.newBuilder());  Not a good method of this, drop on death is for spawning new items.
 	}
 	
 	@Override
 	public synchronized void setContainer(Container futureLocation) {
-		this.mobLocation = futureLocation;
+		if (futureLocation instanceof Location) {	
+			System.out.println("CRITICAL ERROR, MOBILE ATTEMPTED TO BE MOVED TO A NON-LOCATION");
+		} else {
+			this.mobLocation = (Location)futureLocation;
+		}
 	}
 	
 	@Override
@@ -130,13 +135,14 @@ public class StdMob implements Mobile, Container, Holdable {
 	}
 	
 	@Override
-	public void takeDamage(Type type, int damage) {
+	public synchronized void takeDamage(Type type, int damage) {
 		damage = checkEffectsAgainstIncomingDamage(type, damage);
 		if (currentHp < damage) {
 			damage = currentHp;
 		} 
 		this.currentHp = currentHp - damage;
 		checkHp();
+		displayPrompt();
 	}
 	
 	@Override
@@ -177,6 +183,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		}
 	}	
 	
+	// Triggers only on death, used to spawn NEW items, not to drop held items.
 	@Override
 	public void dropItemsOnDeath() {
 		if (dropsOnDeath != null) {
@@ -187,20 +194,22 @@ public class StdMob implements Mobile, Container, Holdable {
 		}
 	}
 	
+	@Override
 	public void tell(String msg) {
 		// NPCs will not have a sendBack object.
 		if (this.sendBack != null) {
 			sendBack.printMessage(msg);
 		} 
 	}
-
+	@Override
 	public void tellLine(String msg) {
 		// NPCs will not have a sendback object.
 		if (this.sendBack != null) {
-			sendBack.printMessageLine(msg);
+			sendBack.printMessageLine(msg); // Prints msg on SAME line, does not create newLine.
 		}	
 	}
 	
+	@Override
 	public synchronized void removeItem(Holdable item) {
 		if (inventory.contains(item)) {
 			inventory.remove(item);
@@ -209,11 +218,13 @@ public class StdMob implements Mobile, Container, Holdable {
 		// DOES NOT DO ANYTHING IF IT DOESN"T CONTAIN? 
 	}	
 
+	// Returns view of Inventory, allows editing of objects within (which should be limited) but not to the inventory list.
 	@Override
 	public Set<Holdable> getInventory() {
 		return new HashSet<Holdable>(this.inventory);
 	}
 	
+	// TODO make Inventory a tree sorted by alphabetical order.
 	@Override
 	public Holdable getHoldableFromString(String holdableString) {
 		for (Holdable h : inventory) {
@@ -222,6 +233,7 @@ public class StdMob implements Mobile, Container, Holdable {
 				return h;
 			}
 		}
+		// Below related to Equipment, which is a TODO item.
 		Collection<Holdable> items =  equipment.values();
 		for (Holdable item : items) {
 			if (item != null) {
@@ -255,6 +267,8 @@ public class StdMob implements Mobile, Container, Holdable {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	// Put in Container AND remove from Container is complicated, but should be GUARANTEED in ONE LINE TODO
 	@Override
 	public void removeItemFromLocation(Holdable oldItem) {
 		if (inventory.contains(oldItem)) {
@@ -287,6 +301,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		return effectManager.hasInstanceOf(effect);
 	}
 
+	// TODO equipment is work in progress
 	@Override
 	public void equip(EquipmentEnum slot, Holdable item) {
 		if (inventory.remove(item)) {
@@ -296,6 +311,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		}
 	}
 	
+	// TODO
 	@Override
 	public void unequip(Holdable item) {
 		equipment.unequipItem(item);
@@ -307,6 +323,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		return equipment.getValue(slot);
 	}
 	
+	//TODO
 	@Override
 	public EquipmentEnum findEquipment(String itemName) {
 		Collection<Holdable> items =  equipment.values();
@@ -389,8 +406,9 @@ public class StdMob implements Mobile, Container, Holdable {
 		loadOnStartUp = b;		
 	}	
 
+	@Override
 	public void removeFromWorld() {	
-		if (!loadOnStartUp) {
+		if (!loadOnStartUp) { // WHY THIS?
 			for (Holdable inventoryItem : inventory) {
 				inventoryItem.removeFromWorld();
 			}
@@ -409,6 +427,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		}
 	}
 	
+	@Override
 	public void displayPrompt() {
 		String balance = "b";
 		if (!hasBalance()) {
@@ -470,6 +489,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		return currentHp;
 	}
 
+	// TODO Should we even allow this?
 	@Override
 	public SendMessage getSendBack() {
 		return sendBack;
@@ -505,16 +525,19 @@ public class StdMob implements Mobile, Container, Holdable {
 		return false;
 	}
 	
+	// TODO Leftover from GOdCreate
 	@Override
 	public boolean isCreating() {
 		return creating;
 	}
 	
+	// TODO Left over from god create
 	@Override
 	public void startCreating() {
 		creating = true;
 	}
 	
+	// TODO Left over from god create
 	@Override
 	public void stopCreating() {
 		creating = false;
@@ -543,11 +566,18 @@ public class StdMob implements Mobile, Container, Holdable {
 	public Map<SkillBook, Integer> viewSkillBooks() {
 		return new HashMap<SkillBook, Integer>(skillBookList);
 	}
-
+	
+	// SHOULD NOT ACTUALLY RETURN AN ITEMBUILDER
 	@Override
-	public void notifyQuest(Trigger trigger) {
+	public ItemBuilder newBuilder() {
 		// TODO Auto-generated method stub
-		
+		return null;
+	}
+	
+	@Override
+	public void moveHoldable(Container finalLocation) {
+		getContainer().removeItemFromLocation(this);
+		finalLocation.acceptItem(this);
 	}
 }
 

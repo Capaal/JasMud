@@ -4,6 +4,7 @@ import java.util.EnumSet;
 import java.util.Set;
 
 import processes.Equipment.EquipmentEnum;
+import processes.ItemBuilder;
 import processes.Type;
 
 public interface Holdable {
@@ -20,4 +21,6 @@ public interface Holdable {
 	public Set<EquipmentEnum> getAllowedEquipSlots();
 	public boolean containsType(Type type);
 	public double getDamageMult();
+	public ItemBuilder newBuilder();
+	public void moveHoldable(Container finalLocation);
 }

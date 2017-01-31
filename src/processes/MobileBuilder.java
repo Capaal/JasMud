@@ -27,7 +27,7 @@ public class MobileBuilder {
 	private String shortDescription = "Short and Generic.";
 	private int maxHp = 100;
 	private int currentHp = 100;
-	private Container location = WorldServer.gameState.viewLocations().get(1);
+	private Location location = WorldServer.gameState.viewLocations().get(1);
 	private boolean isDead = false;
 	private int xpWorth = 1;
 	private int experience = 1;
@@ -41,7 +41,7 @@ public class MobileBuilder {
 	private Map<SkillBook, Integer> skillBookList = new HashMap<SkillBook, Integer>();
 	private List<ItemBuilder> dropsOnDeath = new ArrayList<ItemBuilder>();
 	private boolean buildComplete = false;
-	private StdMob finishedMob;
+	private Mobile finishedMob;
 	
 	public MobileBuilder() {
 		// might change based on implementation.
@@ -120,11 +120,11 @@ public class MobileBuilder {
 		this.currentHp = currentHp;
 	}
 
-	public Container getLocation() {
+	public Location getLocation() {
 		return location;
 	}
 
-	public void setLocation(Container location) {
+	public void setLocation(Location location) {
 		this.location = location;
 	}
 
@@ -197,8 +197,8 @@ public class MobileBuilder {
 		finishedMob = new StdMob(this);		
 		return true;
 	}
-	@Deprecated
-	public StdMob getFinishedMob() {return finishedMob;} // DOES NOT WORK WITH DECORATORS
+	
+	public Mobile getFinishedMob() {return finishedMob;}
 	
 	private void setId() {
 /*		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
@@ -349,5 +349,9 @@ public class MobileBuilder {
 
 	public List<ItemBuilder> getDropsOnDeath() {
 		return dropsOnDeath;
+	}
+
+	public void setFinishedMob(Mobile decoratedMob) {
+		finishedMob = decoratedMob;
 	}	
 }

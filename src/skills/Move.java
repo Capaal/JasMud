@@ -39,7 +39,7 @@ public class Move extends Skills {
 			return;
 		}
 		messageOthers(currentPlayer.getName() + " leaves to the " + dir + ".", Arrays.asList(currentPlayer));
-		moveHoldable(currentPlayer, endContainer);
+		currentPlayer.moveHoldable(endContainer);
 		messageOthers(currentPlayer.getName() + " arrives from the " + Location.Direction.getDirectionName(dir).getOpp() + ".", Arrays.asList(currentPlayer));
 		currentPlayer.getContainer().look(currentPlayer);
 	}

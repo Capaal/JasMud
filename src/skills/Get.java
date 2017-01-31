@@ -27,7 +27,7 @@ public class Get extends Skills {
 			messageSelf("You can't find that item.");
 			return;
 		}		
-		moveHoldable(itemToMove, currentPlayer);
+		itemToMove.moveHoldable(currentPlayer);
 		messageSelf("You get " + itemToMove.getName() + ".");
 		messageOthers(currentPlayer.getName() + " picks up " + itemToMove.getName() + ".", Arrays.asList(currentPlayer));
 	}

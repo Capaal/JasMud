@@ -17,6 +17,10 @@ public abstract class Skills {
 	public void perform(String fullCommand, Mobile currentPlayer) {
 		this.currentPlayer = currentPlayer;
 		this.fullCommand = fullCommand;
+		if (currentPlayer.isDead()) {
+			messageSelf("You are dead, you may be better off praying.");
+			return;
+		}
 		testForInduction();
 		performSkill();
 	}
@@ -71,12 +75,6 @@ public abstract class Skills {
 			m.tell(msg);
 		}
 	}
-	
-	protected void moveHoldable(Holdable itemToMove, Container finalLocation) {
-		itemToMove.getContainer().removeItemFromLocation(itemToMove);
-		finalLocation.acceptItem(itemToMove);
-	}
-	
 
 	public enum Syntax {
 		

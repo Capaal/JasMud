@@ -6,6 +6,7 @@ import interfaces.Mobile;
 import java.util.Arrays;
 
 import Quests.Quest;
+import processes.Location;
 import processes.Skills;
 
 public class Nod extends Skills {
@@ -27,7 +28,7 @@ public class Nod extends Skills {
 		messageSelf("You nod to " + target.getName() + " in agreement.");
 		messageOthers(currentPlayer.getName() + " nods to " + target.getName() + " .", Arrays.asList(currentPlayer, target));
 		messageTarget(currentPlayer.getName() + " nods to you in agreement.", Arrays.asList(target));
-		currentPlayer.getContainer().notifyQuest(Quest.Trigger.NODS);	
+		((Location)currentPlayer.getContainer()).notifyQuest(Quest.Trigger.NODS);	
 	}
 	
 	private boolean setTarget() {

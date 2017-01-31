@@ -2,26 +2,25 @@ package processes;
 
 import java.util.*;
 import java.util.Map.Entry;
-
 import Quests.Quest;
 import Quests.Quest.Trigger;
 import interfaces.*;
-
 
 /*
  *  Contains all information relating to each "room" a player may visit.
  *  Should be initiated safely using LocationBuilder
  */
+
 public class Location implements Container {
 		
-	private int id;
-	private String name;
-	private String description;
-	private GroundType groundType;
+	private final int id;
+	private final String name;
+	private final String description;
+	private final GroundType groundType;
 	private Map<Direction, Location> locationMap;
 	private Set<Holdable> inventory = new HashSet<Holdable>();
 	
-	private Quest bondedQuest = null;
+	private final Quest bondedQuest;
 	
 	public Location(LocationBuilder builder) {
 		if (!builder.isCompleted()) {
@@ -32,23 +31,25 @@ public class Location implements Container {
 		this.description = builder.getDescription();
 		this.groundType = builder.getGroundType();
 		this.bondedQuest = builder.getQuest();
-		this.locationMap = builder.locationMap;
+		this.locationMap = builder.getlocationMap();
 		WorldServer.gameState.addLocation(this.id, this);		
 		for (int s : builder.locationConnections.keySet()){
 			Location futureLoc = WorldServer.gameState.viewLocations().get(s);
 			if (futureLoc != null) {
 				Direction currentDirection = builder.locationConnections.get(s);
 				futureLoc.setLocation(this, currentDirection);
+			} else {
+				System.out.println("Location: " + s + " does not exist to connect to." + this);
 			}
 		}
 	}
 	
 	private void setLocation(Location futureLoc, Direction currentDirection) {
-		if (futureLoc != null) {
+//		if (futureLoc != null) {
 			this.locationMap.put(currentDirection, futureLoc);
-		} else {
-			System.out.println("setLocation just tried to set a null, normal?");
-		}		
+//		} else {
+//			System.out.println("setLocation just tried to set a null, normal?");
+//		}		
 	}		
 	// This most likely does not belong here.
 	public String displayExits() {
@@ -433,10 +434,7 @@ public class Location implements Container {
 		private GroundType() {}
 		
 	}
-
-
-
-	@Override
+	
 	public void notifyQuest(Trigger trigger) {
 		if (bondedQuest != null) {
 			bondedQuest.triggered(trigger);

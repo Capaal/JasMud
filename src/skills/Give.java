@@ -35,7 +35,7 @@ public class Give extends Skills {
 			messageSelf("You can't find that person to give " + itemToMove.getName() + ".");
 			return;
 		}
-		moveHoldable(itemToMove, (Mobile)mobileToGive);
+		itemToMove.moveHoldable((Mobile)mobileToGive);
 		messageSelf("You give " + itemToMove.getName() + " to " + mobileToGive.getName() + ".");
 		messageTarget(currentPlayer.getName() + " gives you " + itemToMove + ".", Arrays.asList((Mobile)mobileToGive));
 		messageOthers(currentPlayer.getName() + " gives " + itemToMove.getName() + " to " + (Mobile)mobileToGive + ".", Arrays.asList(currentPlayer));

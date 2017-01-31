@@ -1,12 +1,10 @@
 package tests;
 
 import static org.junit.Assert.*;
-
+import interfaces.Mobile;
 import org.junit.Before;
 import org.junit.Test;
-
 import processes.MobileBuilder;
-import processes.StdMob;
 
 public class StdMobBuilderTest {
 	
@@ -23,7 +21,7 @@ public class StdMobBuilderTest {
 	
 		mob.setName("m");
 		mob.complete();
-		StdMob newMob = mob.getFinishedMob();
+		Mobile newMob = mob.getFinishedMob();
 		assertTrue("get name should return m", "m".equals(newMob.getName()));
 	}
 	
@@ -32,7 +30,7 @@ public class StdMobBuilderTest {
 	
 		mob.setName("M");
 		mob.complete();
-		StdMob newMob = mob.getFinishedMob();
+		Mobile newMob = mob.getFinishedMob();
 		assertTrue("get name should return M", "M".equals(newMob.getName()));
 	}
 	@Test
@@ -40,7 +38,7 @@ public class StdMobBuilderTest {
 	
 		mob.setName("meMeE");
 		mob.complete();
-		StdMob newMob = mob.getFinishedMob();
+		Mobile newMob = mob.getFinishedMob();
 		assertTrue("get name should return meMeE", "meMeE".equals(newMob.getName()));
 	}
 	@Test(expected=IllegalArgumentException.class)

@@ -273,5 +273,9 @@ public class LocationBuilder {
 		return bondedQuest;
 	}
 
+	public Map<Direction, Location> getlocationMap() {
+		return new HashMap<Direction, Location>(locationMap);
+	}
+
 	
 }

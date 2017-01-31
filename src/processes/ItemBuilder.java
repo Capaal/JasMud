@@ -148,6 +148,8 @@ public class ItemBuilder {
 		return salvageable;
 	}
 	
+	// Attempts to obtain valid ID (and should check validity if given one)
+	// Then creates a new item using builder's settings.
 	public boolean complete() {
 		if (id == -1) {
 			try {
@@ -170,6 +172,7 @@ public class ItemBuilder {
 		return buildComplete;
 	}
 	
+	// BAD!!! Needs to be re-done to obtain valid IDs TODO
 	private void setId() throws IllegalStateException {
 		// Need to generate valid IDs based on what currently exists
 		id = 10; // But instead, only 1 item can exist

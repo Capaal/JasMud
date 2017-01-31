@@ -368,12 +368,18 @@ public enum DecoratorType {
 	}
 
 	@Override
-	public void notifyQuest(Trigger trigger) {
-		decoratedMobile.notifyQuest(trigger);
+	public void dropItemsOnDeath() {
+		decoratedMobile.dropItemsOnDeath();
 	}
 
 	@Override
-	public void dropItemsOnDeath() {
-		decoratedMobile.dropItemsOnDeath();
+	public ItemBuilder newBuilder() {
+		return decoratedMobile.newBuilder();
+	}
+
+	@Override
+	public void moveHoldable(Container finalLocation) {
+		decoratedMobile.moveHoldable(finalLocation);
+		
 	}
 }

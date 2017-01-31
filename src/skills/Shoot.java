@@ -46,12 +46,13 @@ public class Shoot extends Skills {
 		}	
 		if (isBlocking(finalTarget)) {  // Probably not complete still
 			return;
-		}			
-		finalTarget.takeDamage(Type.SHARP, calculateDamage());
-		currentPlayer.addEffect(new Balance(), 3000);
+		}
 		messageSelf("You shoot " + finalTarget.getName() + ".");
 		messageTarget(currentPlayer.getName() + " shoots you.", Arrays.asList(finalTarget));
-		messageOthers(currentPlayer.getName() + " shoots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));	
+		messageOthers(currentPlayer.getName() + " shoots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));
+		finalTarget.informLastAggressor(currentPlayer);
+		finalTarget.takeDamage(Type.SHARP, calculateDamage());
+		currentPlayer.addEffect(new Balance(), 3000);
 	}		
 		
 	private int calculateDamage() {

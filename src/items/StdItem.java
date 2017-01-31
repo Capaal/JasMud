@@ -1,7 +1,7 @@
 package items;
 
-import java.sql.SQLException;
 import java.util.*;
+
 import interfaces.*;
 import processes.*;
 import processes.Equipment.EquipmentEnum;
@@ -36,7 +36,8 @@ public class StdItem implements Holdable {
 		this.itemTags = build.getItemTags();
 		this.allowedEquipSlots = build.getAllowedSlots();
 		this.components = build.getComponents();
-		this.salvageable=false;
+		this.salvageable = build.getSalvageable();
+		
 		WorldServer.gameState.addItem(name + id, this);
 		itemLocation.acceptItem(this);
 	}
@@ -85,6 +86,12 @@ public class StdItem implements Holdable {
 	}
 	
 	@Override
+	public void moveHoldable(Container finalLocation) {
+		getContainer().removeItemFromLocation(this);
+		finalLocation.acceptItem(this);
+	}
+	
+	@Override
 	public boolean firstTimeSave() { 
 		DatabaseInterface databaseInterface = WorldServer.getInterface();		
 		databaseInterface.saveAction("Insert into ITEMSTATS (ITEMID, ITEMNAME, ITEMPHYS, ITEMBAL, ITEMDESC, ITEMMAXDUR, ITEMCURDUR, ITEMLOC, EQUIPSLOTS)"
@@ -106,6 +113,7 @@ public class StdItem implements Holdable {
 		WorldServer.gameState.removeItem(this.getName() + this.getId());
 	}
 	
+	// Unused and unimplemented, should probably be re-worked or removed.
 	public enum ItemType {
 		
 		MATERIAL() {
@@ -130,5 +138,11 @@ public class StdItem implements Holdable {
 		
 		private ItemType() {};
 				
+	}
+
+	@Override
+	public ItemBuilder newBuilder() {
+		// TODO Auto-generated method stub
+		return null;
 	}	
 }

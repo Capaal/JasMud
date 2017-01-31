@@ -25,7 +25,7 @@ public class Drop extends Skills {
 			messageSelf("You can't find that item.");
 			return;
 		}
-		moveHoldable(itemToMove, currentPlayer.getContainer());
+		itemToMove.moveHoldable(currentPlayer.getContainer());
 		messageSelf("You drop " + itemToMove.getName() + ".");
 		messageOthers(currentPlayer.getName() + " drops " + itemToMove.getName() + ".", Arrays.asList(currentPlayer));
 	}

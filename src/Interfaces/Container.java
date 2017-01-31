@@ -22,5 +22,4 @@ public interface Container {
 	public Container getContainer();
 	public GroundType getGroundType();
 	public Holdable getHoldableFromString(String holdableString);
-	public void notifyQuest(Trigger trigger);
 }

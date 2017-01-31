@@ -2,7 +2,7 @@ package skills;
 
 import interfaces.Holdable;
 import interfaces.Mobile;
-
+import processes.Location;
 import java.util.Arrays;
 
 import Quests.Quest;
@@ -28,7 +28,7 @@ public class Greet extends Skills {
 			messageSelf("You greet " + target.getName() + " in a friendly manner.");
 			messageOthers(currentPlayer.getName() + " greets " + target.getName() + " in a friendly manner.", Arrays.asList(currentPlayer, target));
 			messageTarget(currentPlayer.getName() + " greets you in a friendly manner.", Arrays.asList(target));
-			currentPlayer.getContainer().notifyQuest(Quest.Trigger.GREETS);
+			((Location)currentPlayer.getContainer()).notifyQuest(Quest.Trigger.GREETS);
 		} else {
 			messageSelf("You can't talk.");
 		}

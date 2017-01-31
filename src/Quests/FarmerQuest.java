@@ -3,7 +3,6 @@ package Quests;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.ItemBuilder;
-import processes.Location;
 import processes.MobileBuilder;
 import processes.MobileDecorator;
 import processes.Type;
@@ -17,8 +16,7 @@ public class FarmerQuest extends Quest {
 	
 	public FarmerQuest() {
 		beginningState = new stateOne(this);
-		currentState = beginningState;
-		
+		currentState = beginningState;		
 	}
 	
 	@Override

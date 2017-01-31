@@ -165,7 +165,6 @@ public class PlayerPrompt implements Runnable {
 			System.out.println("Failed to close socket connection");
 			e.printStackTrace();
 		}
-	//	WorldServer.gameState.activeClients.remove(this);
 		WorldServer.gameState.removeClient(this);
 	}
 }
