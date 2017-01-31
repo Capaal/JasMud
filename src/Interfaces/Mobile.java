@@ -58,5 +58,5 @@ public interface Mobile extends Container, Holdable {
 	public void killInduction();
 	public void setInduction(InductionSkill skill);
 	public Map<SkillBook, Integer> viewSkillBooks();
-	
+	public void dropItemsOnDeath();
 }

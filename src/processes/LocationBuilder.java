@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import Quests.Quest;
 import actions.Godcreate;
 import processes.Location.Direction;
 import processes.Location.GroundType;
@@ -34,6 +35,7 @@ public class LocationBuilder {
 	public Map<Integer, Direction> locationConnections;	
 	private Location finishedLocation;	
 	private boolean buildComplete = false;
+	private Quest bondedQuest = null;
 	
 	public LocationBuilder() {
 		id = -1;
@@ -257,6 +259,18 @@ public class LocationBuilder {
 			player.tell("That is not a valid option.");
 			return newConnection(player, builderLocation);
 		}
+	}
+	
+	public void setQuest(Quest quest) {
+		bondedQuest = quest;
+	}
+	
+	public void removeQuest() {
+		bondedQuest = null;
+	}
+
+	public Quest getQuest() {
+		return bondedQuest;
 	}
 
 	

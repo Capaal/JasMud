@@ -12,7 +12,7 @@ import processes.Type;
 
 public class Shoot extends Skills {
 	
-	private int intensity = 8;
+	private int intensity = 80;
 	private Set<Location> allLocations;
 	private String possibleTarg;
 	private Mobile finalTarget;

@@ -29,6 +29,10 @@ public class ChasingMobileDecorator extends MobileDecorator {
 	}
 	
 	public void makeDecision() {
+		if (decoratedMobile.isDead()) {
+			hasTask = false;
+			return;
+		}
 		if (lastAggressor != null && decoratedMobile.getContainer() instanceof Location && lastAggressor.getContainer() instanceof Location) {
 			Container aggressorLocation = lastAggressor.getContainer();
 			if (!aggressorLocation.equals(decoratedMobile.getContainer())) {

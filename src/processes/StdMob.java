@@ -6,6 +6,7 @@ import items.StdItem;
 import java.sql.SQLException;
 import java.util.*;
 
+import Quests.Quest.Trigger;
 import effects.Balance;
 import processes.Equipment.EquipmentEnum;
 import processes.Location.GroundType;
@@ -44,6 +45,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	
 	protected InductionSkill inductionSkill = null;
 	protected Map<SkillBook, Integer> skillBookList = new HashMap<SkillBook, Integer>();
+	protected List<ItemBuilder> dropsOnDeath;
 	
 	protected final EffectManager effectManager;
 	protected Mobile lastAggressor;
@@ -62,6 +64,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		this.shortDescription = build.getShortDescription();
 		this.inventory = build.getInventory();
 		this.equipment = build.getEquipment();
+		this.dropsOnDeath = build.getDropsOnDeath();
 		this.experience = build.getExperience();
 		equipment.setOwner(this);
 		effectManager = new EffectManager();
@@ -165,10 +168,24 @@ public class StdMob implements Mobile, Container, Holdable {
 		if (currentHp <= 0 && !isDead) {
 			tell("You collapse to the ground, unable to fight on.");
 			isDead = true;
-		} else if (currentHp > getMaxHp()) {
-			currentHp = maxHp;
+			for (Holdable m : getContainer().getInventory()) {
+				if (m instanceof Mobile && ((Mobile)m).isControlled() && !m.equals(this)) {
+					((Mobile)m).tell(getName() + " drops to the floor, dead.");
+				}
+			}
+			dropItemsOnDeath();
 		}
 	}	
+	
+	@Override
+	public void dropItemsOnDeath() {
+		if (dropsOnDeath != null) {
+			for (ItemBuilder ib : dropsOnDeath) {
+				ib.setItemContainer(getContainer());
+				ib.complete();
+			}
+		}
+	}
 	
 	public void tell(String msg) {
 		// NPCs will not have a sendBack object.
@@ -223,7 +240,10 @@ public class StdMob implements Mobile, Container, Holdable {
 	}
 	@Override
 	public void look(Mobile currentPlayer) {
-		currentPlayer.tell("You see the player's inventory.");		
+		currentPlayer.tell("You see the player's inventory.");	
+		for (Holdable h : inventory) {
+			currentPlayer.tell(h.getName() + h.getId());
+		}
 	}
 	@Override
 	public void glance(Mobile currentPlayer) {
@@ -522,6 +542,12 @@ public class StdMob implements Mobile, Container, Holdable {
 	@Override
 	public Map<SkillBook, Integer> viewSkillBooks() {
 		return new HashMap<SkillBook, Integer>(skillBookList);
+	}
+
+	@Override
+	public void notifyQuest(Trigger trigger) {
+		// TODO Auto-generated method stub
+		
 	}
 }
 

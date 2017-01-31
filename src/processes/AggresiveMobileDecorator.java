@@ -32,12 +32,16 @@ public class AggresiveMobileDecorator extends MobileDecorator {
 	// If player QUITS, will still keep trying to punch (but block returns false).
 	// Should hold onto AITask, to consider clearing it?
 	public void makeDecision() {
-		if (lastAggressor != null && lastAggressor.getContainer().equals(decoratedMobile.getContainer())) {
+		if (decoratedMobile.isDead()) {
+			hasTask = false;
+			return;
+		}
+		if (lastAggressor != null && lastAggressor.getContainer().equals(decoratedMobile.getContainer() ) && !lastAggressor.isDead()) {
 			Skills basicSkill = getCommand("punch");
 			StringBuilder sb = new StringBuilder();
 			sb.append("punch ");
 			sb.append(lastAggressor.getName());
-			basicSkill.perform(sb.toString(), this);
+			basicSkill.perform(sb.toString().trim().toLowerCase(), this);
 			executor.schedule(new AITask(this), 900, TimeUnit.MILLISECONDS);
 		} else {
 			hasTask = false;

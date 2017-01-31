@@ -3,6 +3,7 @@
 import java.util.HashSet;
 import java.util.Set;
 
+import Quests.Quest.Trigger;
 import processes.Location.GroundType;
 
 public interface Container {
@@ -21,4 +22,5 @@ public interface Container {
 	public Container getContainer();
 	public GroundType getGroundType();
 	public Holdable getHoldableFromString(String holdableString);
+	public void notifyQuest(Trigger trigger);
 }

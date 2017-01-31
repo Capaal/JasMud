@@ -39,7 +39,7 @@ public class MobileBuilder {
 	private ArrayList<Effect> effectList = new ArrayList<Effect>();	
 	private Stack<DecoratorType> decorators = new Stack<DecoratorType>();
 	private Map<SkillBook, Integer> skillBookList = new HashMap<SkillBook, Integer>();
-	
+	private List<ItemBuilder> dropsOnDeath = new ArrayList<ItemBuilder>();
 	private boolean buildComplete = false;
 	private StdMob finishedMob;
 	
@@ -197,8 +197,8 @@ public class MobileBuilder {
 		finishedMob = new StdMob(this);		
 		return true;
 	}
-	
-	public StdMob getFinishedMob() {return finishedMob;}
+	@Deprecated
+	public StdMob getFinishedMob() {return finishedMob;} // DOES NOT WORK WITH DECORATORS
 	
 	private void setId() {
 /*		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
@@ -342,5 +342,12 @@ public class MobileBuilder {
 	public void addSkillBook(SkillBook book) {
 		skillBookList.put(book, 100);		
 	}
-	
+
+	public void dropOnDeath(ItemBuilder skeletonBody) {
+		dropsOnDeath.add(skeletonBody);		
+	}
+
+	public List<ItemBuilder> getDropsOnDeath() {
+		return dropsOnDeath;
+	}	
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import Quests.Quest.Trigger;
 import processes.Equipment.EquipmentEnum;
 import processes.Location.GroundType;
 import processes.Skills.Syntax;
@@ -364,5 +365,15 @@ public enum DecoratorType {
 	@Override
 	public Map<SkillBook, Integer> viewSkillBooks() {
 		return decoratedMobile.viewSkillBooks();
+	}
+
+	@Override
+	public void notifyQuest(Trigger trigger) {
+		decoratedMobile.notifyQuest(trigger);
+	}
+
+	@Override
+	public void dropItemsOnDeath() {
+		decoratedMobile.dropItemsOnDeath();
 	}
 }

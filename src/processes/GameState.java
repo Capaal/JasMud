@@ -20,7 +20,7 @@ public class GameState {
 	// List of all items name + id
 	private Map<String, StdItem> allItems = new TreeMap<String, StdItem>();
 	
-	// Collection of all skill books, Mobs then load a copy of each skill book.
+	// Collection of all skill books, Mobs then load a copy of each skill book. id/book
 	private HashMap<Integer, SkillBook> AllSkillBooks = new HashMap<Integer, SkillBook>();
 	
 	public boolean addClient(PlayerPrompt pp) {

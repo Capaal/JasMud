@@ -3,6 +3,8 @@ package processes;
 import java.util.*;
 import java.util.Map.Entry;
 
+import Quests.Quest;
+import Quests.Quest.Trigger;
 import interfaces.*;
 
 
@@ -19,6 +21,8 @@ public class Location implements Container {
 	private Map<Direction, Location> locationMap;
 	private Set<Holdable> inventory = new HashSet<Holdable>();
 	
+	private Quest bondedQuest = null;
+	
 	public Location(LocationBuilder builder) {
 		if (!builder.isCompleted()) {
 			throw new IllegalArgumentException("Builder is not in a valid state, Location not built.");
@@ -27,6 +31,7 @@ public class Location implements Container {
 		this.name = builder.getName();
 		this.description = builder.getDescription();
 		this.groundType = builder.getGroundType();
+		this.bondedQuest = builder.getQuest();
 		this.locationMap = builder.locationMap;
 		WorldServer.gameState.addLocation(this.id, this);		
 		for (int s : builder.locationConnections.keySet()){
@@ -427,5 +432,18 @@ public class Location implements Container {
 		
 		private GroundType() {}
 		
+	}
+
+
+
+	@Override
+	public void notifyQuest(Trigger trigger) {
+		if (bondedQuest != null) {
+			bondedQuest.triggered(trigger);
+		}
+	}
+
+	public Quest getQuest() {
+		return bondedQuest;
 	}	
 }
