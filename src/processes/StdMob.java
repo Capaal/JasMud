@@ -119,7 +119,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		// dropsOnDeath.add(item.newBuilder());  Not a good method of this, drop on death is for spawning new items.
 	}
 	
-/*	@Override OUTDATE, use moveHoldable();
+/*	@Override OUTDATEd, use moveHoldable();
 	public synchronized void setContainer(Container futureLocation) {
 		if (futureLocation instanceof Location) {	
 			System.out.println("CRITICAL ERROR, MOBILE ATTEMPTED TO BE MOVED TO A NON-LOCATION");
@@ -131,16 +131,16 @@ public class StdMob implements Mobile, Container, Holdable {
 	@Override
 	public synchronized void moveHoldable(Container finalLocation) {
 		if (finalLocation instanceof Location) {	
-			System.out.println("CRITICAL ERROR, MOBILE ATTEMPTED TO BE MOVED TO A NON-LOCATION");
-		} else {
 			getContainer().removeItemFromLocation(this);
 			finalLocation.acceptItem(this);
 			this.mobLocation = (Location) finalLocation;
+		} else {
+			System.out.println("CRITICAL ERROR, MOBILE ATTEMPTED TO BE MOVED TO A NON-LOCATION");
 		}		
 	}
 	
 	@Override
-	public synchronized Container getContainer() {
+	public synchronized Location getContainer() {
 		return mobLocation;
 	}
 	
@@ -179,8 +179,8 @@ public class StdMob implements Mobile, Container, Holdable {
 		return 1.0;
 	}*/
 	
-	@Override
-	public void checkHp() {
+
+	private void checkHp() {
 		if (currentHp <= 0 && !isDead) {
 			tell("You collapse to the ground, unable to fight on.");
 			isDead = true;
@@ -269,10 +269,10 @@ public class StdMob implements Mobile, Container, Holdable {
 		return null;		
 	}
 	
-	@Override
+/*	@Override
 	public String displayExits() {
 		return "You are being held by a person!";
-	}
+	}*/
 	@Override
 	public void look(Mobile currentPlayer) {
 		currentPlayer.tell("You see the player's inventory.");	
@@ -280,7 +280,7 @@ public class StdMob implements Mobile, Container, Holdable {
 			currentPlayer.tell(h.getName() + h.getId());
 		}
 	}
-	@Override
+	/*@Override
 	public void glance(Mobile currentPlayer) {
 		// TODO Auto-generated method stub
 		
@@ -289,7 +289,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	public void displayAll(Mobile currentPlayer) {
 		// TODO Auto-generated method stub
 		
-	}
+	}*/
 	
 	
 	@Override
@@ -472,11 +472,11 @@ public class StdMob implements Mobile, Container, Holdable {
 		WorldServer.databaseInterface.saveAction(insertBook);
 	}
 
-	@Override
+/*	@Override
 	public GroundType getGroundType() {
 		// TODO Auto-generated method stub
 		return GroundType.GROUND;
-	}
+	}*/
 
 	@Override
 	public int getId() {
@@ -501,10 +501,10 @@ public class StdMob implements Mobile, Container, Holdable {
 	}
 
 	// TODO Should we even allow this?
-	@Override
-	public SendMessage getSendBack() {
-		return sendBack;
-	}
+//	@Override
+//	public SendMessage getSendBack() {
+//		return sendBack;
+//	}
 
 	@Override
 	public void informLastAggressor(Mobile aggressor) {
@@ -536,7 +536,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		return false;
 	}
 	
-	// TODO Leftover from GOdCreate
+/*	// TODO Leftover from GOdCreate
 	@Override
 	public boolean isCreating() {
 		return creating;
@@ -552,7 +552,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	@Override
 	public void stopCreating() {
 		creating = false;
-	}
+	}*/
 
 	@Override
 	public boolean isInducting() {

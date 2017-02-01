@@ -6,27 +6,28 @@ import interfaces.*;
 import processes.*;
 import processes.Equipment.EquipmentEnum;
 
-public class StdItem implements Holdable {
+public class StdItem implements Holdable, Weapon {
 	
 	private final String name;
 	private final int id;	
 	private final String description;
 	private final double physicalMult;
-	private final double balanceMult;
+	private final double balanceMult; // Currently unused
+	
 	private Container itemLocation;	
 	private final int maxDurability;
 	private int currentDurability;
-	private final List<Type> types;
-	private final List<ItemType> itemTags;
-	private final List<String> components;
-	private final boolean salvageable;
+	private final List<Type> types; // Add to WEAPON interface?
+	private final List<ItemType> itemTags; // add to Weapon interface? or delete?
+	private final List<String> components; // Add to weapon interface? Make a craftable interface?
+	private final boolean salvageable; // same as components?
 	
 	private final Set<EquipmentEnum> allowedEquipSlots;
 
 	public StdItem(ItemBuilder build) {
 		this.id = build.getId();
 		this.name = build.getName();
-		this.physicalMult = build.getPhysicalMult();
+		this.physicalMult = build.getDamageMult();
 		this.description = build.getDescription();
 		this.balanceMult = build.getBalanceMult();
 		this.itemLocation = build.getItemContainer();		

@@ -4,6 +4,7 @@ import java.util.Map;
 
 import processes.Equipment.EquipmentEnum;
 import processes.InductionSkill;
+import processes.Location;
 import processes.SendMessage;
 import processes.Skills;
 import processes.SkillBook;
@@ -16,7 +17,7 @@ public interface Mobile extends Container, Holdable {
 	public String getPassword();
 	public int getMaxHp();
 	public int getCurrentHp();
-	public Container getContainer();
+	@Override public Location getContainer();
 	public boolean hasBalance();
 	public boolean isDead();
 	public String getDescription();
@@ -39,7 +40,6 @@ public interface Mobile extends Container, Holdable {
 	public boolean isControlled();
 	public void controlStatus(boolean statusChange);
 	public boolean save();
-	public void checkHp();
 	public void setStartup(boolean b);
 	public void equip(EquipmentEnum slot, Holdable item);
 	public void unequip(Holdable item);
@@ -49,11 +49,11 @@ public interface Mobile extends Container, Holdable {
 	public void removeFromWorld();
 	public void displayPrompt();
 	public void setSendBack(SendMessage sendBack);
-	public SendMessage getSendBack();
+//	public SendMessage getSendBack(); probably should not be freely available
 	public void informLastAggressor(Mobile currentPlayer);
-	public boolean isCreating();
-	public void startCreating();
-	public void stopCreating();
+//	public boolean isCreating(); All creating stuff is probably being scrapped
+//	public void startCreating();
+//	public void stopCreating();
 	public boolean isInducting();
 	public void killInduction();
 	public void setInduction(InductionSkill skill);

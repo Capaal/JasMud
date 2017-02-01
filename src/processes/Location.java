@@ -256,10 +256,10 @@ public class Location implements Container {
 	
 	
 	
-	@Override
+/*	@Override
 	public Container getContainer() {
 		return null;
-	}
+	}*/
 	
 	public enum Direction {
 		

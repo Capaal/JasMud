@@ -30,37 +30,14 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public String displayExits() {
-		return decoratedMobile.displayExits();
-	}
-
-	@Override
 	public void look(Mobile currentPlayer) {
 		decoratedMobile.look(currentPlayer);
-
-	}
-
-	@Override
-	public void glance(Mobile currentPlayer) {
-		decoratedMobile.glance(currentPlayer);
-
-	}
-
-	@Override
-	public void displayAll(Mobile currentPlayer) {
-		decoratedMobile.displayAll(currentPlayer);
-
 	}
 
 	@Override
 	public void removeItemFromLocation(Holdable oldItem) {
 		decoratedMobile.removeItemFromLocation(oldItem);
 
-	}
-
-	@Override
-	public GroundType getGroundType() {
-		return decoratedMobile.getGroundType();
 	}
 
 	@Override
@@ -109,7 +86,7 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public Container getContainer() {
+	public Location getContainer() {
 		return decoratedMobile.getContainer();
 	}
 
@@ -211,11 +188,6 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public void checkHp() {
-		decoratedMobile.checkHp();
-	}
-
-	@Override
 	public void setStartup(boolean b) {
 		decoratedMobile.setStartup(b);
 	}
@@ -261,11 +233,6 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public SendMessage getSendBack() {
-		return decoratedMobile.getSendBack();
-	}
-
-	@Override
 	public void informLastAggressor(Mobile aggressor) {
 		decoratedMobile.informLastAggressor(aggressor);
 		
@@ -274,23 +241,6 @@ public class MobileDecorator implements Mobile {
 	@Override
 	public boolean firstTimeSave() {
 		return decoratedMobile.firstTimeSave();
-	}
-
-	@Override
-	public boolean isCreating() {
-		return decoratedMobile.isCreating();
-	}
-
-	@Override
-	public void startCreating() {
-		decoratedMobile.startCreating();
-		
-	}
-
-	@Override
-	public void stopCreating() {
-		decoratedMobile.stopCreating();
-		
 	}
 	
 	public void makeDecision() {}

@@ -92,7 +92,7 @@ public class PlayerPrompt implements Runnable {
 		// The following is the User's infinite loop they play inside.	
 		boolean stayInsideLoop = true;
 		while (stayInsideLoop) {
-			if (!currentPlayer.isCreating()) {
+//			if (!currentPlayer.isCreating()) {
 				currentPlayer.displayPrompt();
 				String str = sendBack.getMessage();
 				if (str == null) {
@@ -147,7 +147,7 @@ public class PlayerPrompt implements Runnable {
 						System.out.println(elapsedTime*(10E-7) + " milliseconds.");				
 					}
 				}
-			}
+			//}
 		}
 		destroyConnection();			
 	}

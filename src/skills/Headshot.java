@@ -24,9 +24,10 @@ public class Headshot extends InductionSkill {
 		super.syntaxList.add(Syntax.DIRECTION);
 	}
 	
+	// Runs POST INDUCTION.
 	@Override
 	public void run() {		
-		finalTarget = getTarget();
+		finalTarget = getTarget(); // Performs finding target again to ensure target is valid.
 		if (finalTarget == null) {
 			messageSelf("There is no \"" + possibleTarg + "\" for you to attack.");
 			return;
@@ -35,7 +36,7 @@ public class Headshot extends InductionSkill {
 			return;
 		}		
 		finalTarget.takeDamage(Type.SHARP, calculateDamage());
-		currentPlayer.addEffect(new Balance(), 3000);
+		currentPlayer.addEffect(new Balance(), calculateBalance());
 		messageSelf("You headshot " + finalTarget.getName() + ".");
 		messageTarget(currentPlayer.getName() + " headshots you.", Arrays.asList(finalTarget));
 		messageOthers(currentPlayer.getName() + " headshots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));		
@@ -48,24 +49,10 @@ public class Headshot extends InductionSkill {
 	@Override
 	public void performSkill() {
 		allLocations = new HashSet<Location>();
-		possibleTarg = Syntax.TARGET.getStringInfo(fullCommand, this);
-		if (possibleTarg == "") {
-			messageSelf("What are you trying to headshot?");
-			return;
-		}
-		if (!hasBalance()) {
-			return;
-		}	
-		findAllLocations();				
-		finalTarget = getTarget();
-		if (finalTarget == null) {
-			messageSelf("There is no \"" + possibleTarg + "\" for you to attack.");
-			return;
-		}	
-		if (isBlocking(finalTarget)) {  // Probably not complete still
-			return;
-		}	
-		scheduleSkillRepeatNTimesOverXMilliseconds(1, 2000); // Triggers this skill's "run()" in 2 seconds. Interruptable.
+		if (!hasBalance()) {return;}
+		if (!findAllLocations()) {return;}		
+		if (!findTarget()) {return;}	
+		scheduleSkillRepeatNTimesOverXMilliseconds(1, 2000); // Triggers this skill's "run()" in 2 seconds. Interruptible.
 		currentPlayer.setInduction(this);
 		messageSelf("You begin aiming at " + finalTarget.getName() + ".");
 		messageTarget(currentPlayer.getName() + " begins aiming at your head.", Arrays.asList(finalTarget));
@@ -75,20 +62,21 @@ public class Headshot extends InductionSkill {
 		return intensity;
 	}
 	
-	private void findAllLocations() {
-		Location currentPlayerLocation = (Location)(currentPlayer.getContainer());		
+	private boolean findAllLocations() {
+		Location currentPlayerLocation = currentPlayer.getContainer();		
 		allLocations.add(currentPlayerLocation);		
 		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
 		if (!dir.equals("")) {
 			Location nextLocation = currentPlayerLocation.getContainer(dir);
 			if (nextLocation == null) {
 				messageSelf("There isn't a location that way.");
-				return;
+				return false;
 			} else {
 				allLocations.add(nextLocation);
 				getNextLocation(dir, nextLocation);
 			}
 		}
+		return true;
 	}
 	
 	private void getNextLocation(String dir, Location currentLocation) {
@@ -99,12 +87,29 @@ public class Headshot extends InductionSkill {
 		}
 	}
 	
+	private boolean findTarget() {
+		possibleTarg = Syntax.TARGET.getStringInfo(fullCommand, this);
+		if (possibleTarg == "") {
+			messageSelf("Who are you trying to headshot?");
+			return false;
+		}							
+		finalTarget = getTarget();
+		if (finalTarget == null) {
+			messageSelf("There is no \"" + possibleTarg + "\" for you to attack.");
+			return false;
+		}	
+		if (isBlocking(finalTarget)) {  // Probably not complete still
+			return false;
+		}
+		return true;
+	}
+	
 	private Mobile getTarget() {
 		for (Location l : allLocations) {		
 			Holdable t = l.getHoldableFromString(possibleTarg);
-				if (t != null && t instanceof Mobile) {
-					return (Mobile)t;
-				}
+			if (t != null && t instanceof Mobile) {
+				return (Mobile)t;
+			}
 		}
 		return null;
 	}
@@ -113,4 +118,10 @@ public class Headshot extends InductionSkill {
 	public void inductionKilled() {
 		messageSelf("You stop aiming at " + possibleTarg);
 	}	
+	
+	private int calculateBalance() {
+	//	double damageMult = item.getBalanceMult();  Item not required yet.
+	//	return (int) (damageMult * intensity);
+		return 3000;
+	}
 }

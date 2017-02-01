@@ -171,7 +171,7 @@ public class SQLInterface implements DatabaseInterface{
 	private void setItemStats(ResultSet itemInfo, ItemBuilder newItem) throws SQLException {
 		newItem.setId(itemInfo.getInt("ITEMID"));
 		newItem.setName(itemInfo.getString("ITEMNAME"));
-		newItem.setPhysicalMult(itemInfo.getDouble("ITEMPHYS"));
+		newItem.setDamageMult(itemInfo.getDouble("ITEMPHYS"));
 		newItem.setBalanceMult(itemInfo.getDouble("ITEMBAL"));
 		newItem.setDescription(itemInfo.getString("ITEMDESC"));
 		newItem.setMaxDurability(itemInfo.getInt("ITEMMAXDUR"));

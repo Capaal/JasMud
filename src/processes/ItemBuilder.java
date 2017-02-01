@@ -15,7 +15,7 @@ import processes.Equipment.EquipmentEnum;
 
 public class ItemBuilder {
 	
-	private double physicalMult = 1.0;
+	private double damageMult = 1.0;
 	private int id = -1;
 	private String name = "";
 	private String description = "default";
@@ -34,12 +34,12 @@ public class ItemBuilder {
 	
 	
 	
-	public void setPhysicalMult(double physicalMult) {
-		this.physicalMult = physicalMult;
+	public void setDamageMult(double physicalMult) {
+		this.damageMult = physicalMult;
 	}
 	
-	public double getPhysicalMult() {
-		return physicalMult;
+	public double getDamageMult() {
+		return damageMult;
 	}
 	
 	public void setId(int id) {
@@ -209,7 +209,7 @@ public class ItemBuilder {
 		case "3":
 		case "physicalmult":
 			try {
-				builderItem.setPhysicalMult(Double.parseDouble(Godcreate.askQuestion("What is the physical multiplier for this item? 1.0 is normal.", player)));
+				builderItem.setDamageMult(Double.parseDouble(Godcreate.askQuestion("What is the physical multiplier for this item? 1.0 is normal.", player)));
 			} catch(NumberFormatException e) {
 				player.tell("That was not a valid number, be sure you use only doubles i.e. 1.0");
 			}
@@ -285,7 +285,7 @@ public class ItemBuilder {
 			player.tell("Id: " + builderItem.id);
 			player.tell("Location: " + builderItem.itemContainer.getName());
 			player.tell("Long Description: " + builderItem.description);
-			player.tell("Physical Multiplier: " + builderItem.physicalMult);
+			player.tell("Physical Multiplier: " + builderItem.damageMult);
 			player.tell("Balance Multiplier: " + builderItem.balanceMult);
 			player.tell("Max Durability: " + builderItem.maxDurability);
 			player.tell("Current Durability: " + builderItem.currentDurability);

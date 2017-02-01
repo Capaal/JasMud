@@ -162,6 +162,8 @@ public class CreateWorld {
 		ItemBuilder newItem = new ItemBuilder();	
 		newItem.setId(i);
 		newItem.setName("dagger");
+		newItem.setBalanceMult(.8);
+		newItem.setDamageMult(1.0);
 		newItem.setDescription("It's a dagger!");
 		newItem.complete();
 		itemTemplates.put("dagger", newItem);
