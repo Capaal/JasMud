@@ -50,7 +50,7 @@ public class Equipment implements Container {
 		equipmentToItemMap.put(k, v);
 		itemToEquipmentMap.put(v, k);	
 		if (v != null) {
-			v.setContainer(this);
+//			v.setContainer(this);
 		}
 	}
 	

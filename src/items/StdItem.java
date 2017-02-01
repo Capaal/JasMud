@@ -42,14 +42,12 @@ public class StdItem implements Holdable {
 		itemLocation.acceptItem(this);
 	}
 	
-	public String getName() {return name;}
-	public int getId() {return id;}
-	public String getDescription() {return description;}	
+	@Override public String getName() {return name;}
+	@Override public int getId() {return id;}
+	@Override public String getDescription() {return description;}	
 	public double getPhysicalMult() {return physicalMult;}
 	public double getBalanceMult() {return balanceMult;}
-	
-	public synchronized void setContainer(Container con) {this.itemLocation = con;}	
-	public synchronized Container getContainer() {return itemLocation;}	
+	@Override public synchronized Container getContainer() {return itemLocation;}	
 	
 	public int getMaxDurability() {return maxDurability;}
 	
@@ -61,7 +59,6 @@ public class StdItem implements Holdable {
 		this.currentDurability = newDurability;
 	}
 	
-	@Override
 	public Set<EquipmentEnum> getAllowedEquipSlots() {return allowedEquipSlots;}
 	public List<Type> getTypes() {return types;}
 	public List<ItemType> getItemTags() {return itemTags;}
@@ -72,7 +69,6 @@ public class StdItem implements Holdable {
 		return types.contains(type);
 	}
 	
-	@Override
 	public double getDamageMult() {
 		return physicalMult;
 	}
@@ -89,6 +85,7 @@ public class StdItem implements Holdable {
 	public void moveHoldable(Container finalLocation) {
 		getContainer().removeItemFromLocation(this);
 		finalLocation.acceptItem(this);
+		this.itemLocation = finalLocation;
 	}
 	
 	@Override

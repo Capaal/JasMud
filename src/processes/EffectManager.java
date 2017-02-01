@@ -2,7 +2,9 @@ package processes;
 
 import interfaces.DamageEffect;
 import interfaces.Effect;
+import interfaces.Mobile;
 import interfaces.TickingEffect;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -17,8 +19,10 @@ public class EffectManager {
 	private ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(4);
 	private ExecutorService wrapperExecutor = Executors.newCachedThreadPool();
 	private List<Effect> effectList;
+	private Mobile bondedMobile;
 	
-	public EffectManager() {
+	public EffectManager(Mobile currentPlayer) {
+		bondedMobile = currentPlayer;
 		effectList = new ArrayList<Effect>();
 	}
 	
@@ -109,6 +113,7 @@ public class EffectManager {
 
 		public void run() {
 			unRegisterEffect(effectToBeRemoved);
+			bondedMobile.displayPrompt();
 		}
 	}
 	

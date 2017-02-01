@@ -106,9 +106,10 @@ public class Location implements Container {
 			
 	public int getId() {return id;}
 	public GroundType getGroundType() {return groundType;}	
+	
+	// The HOLDABLE being moved is EXPECTED to handle adding/removing itself properly.
 	public void acceptItem(Holdable newItem) {
 		inventory.add(newItem);
-		newItem.setContainer(this);
 	}	
 
 	

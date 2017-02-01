@@ -13,4 +13,9 @@ public class Balance implements Effect {
 		}
 		return false;
 	}
+	
+	@Override
+	public void onEnd() {
+		
+	}
 }

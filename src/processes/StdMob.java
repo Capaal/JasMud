@@ -66,7 +66,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		this.dropsOnDeath = build.getDropsOnDeath();
 		this.experience = build.getExperience();
 		equipment.setOwner(this);
-		effectManager = new EffectManager();
+		effectManager = new EffectManager(this);
 		this.skillBookList = build.getSkillBookList();
 		
 		
@@ -116,17 +116,27 @@ public class StdMob implements Mobile, Container, Holdable {
 	@Override
 	public void acceptItem(Holdable item) {
 		inventory.add(item);
-		item.setContainer(this);
 		// dropsOnDeath.add(item.newBuilder());  Not a good method of this, drop on death is for spawning new items.
 	}
 	
-	@Override
+/*	@Override OUTDATE, use moveHoldable();
 	public synchronized void setContainer(Container futureLocation) {
 		if (futureLocation instanceof Location) {	
 			System.out.println("CRITICAL ERROR, MOBILE ATTEMPTED TO BE MOVED TO A NON-LOCATION");
 		} else {
 			this.mobLocation = (Location)futureLocation;
 		}
+	}*/ 
+	
+	@Override
+	public synchronized void moveHoldable(Container finalLocation) {
+		if (finalLocation instanceof Location) {	
+			System.out.println("CRITICAL ERROR, MOBILE ATTEMPTED TO BE MOVED TO A NON-LOCATION");
+		} else {
+			getContainer().removeItemFromLocation(this);
+			finalLocation.acceptItem(this);
+			this.mobLocation = (Location) finalLocation;
+		}		
 	}
 	
 	@Override
@@ -150,7 +160,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		return effectManager.checkEffectsAgainstIncomingDamage(incomingType, damage);
 	}
 	
-	@Override
+/*	@Override TODO
 	public double getWeaponMultiplier() {
 		Holdable weapon = getEquipmentInSlot(EquipmentEnum.RIGHTHAND);
 		if (weapon != null) {
@@ -162,12 +172,12 @@ public class StdMob implements Mobile, Container, Holdable {
 			}
 		}
 		return 1.0;
-	}
+	}*/
 	
-	@Override
+/*	@Override TODO
 	public double getDamageMult() {
 		return 1.0;
-	}
+	}*/
 	
 	@Override
 	public void checkHp() {
@@ -209,14 +219,27 @@ public class StdMob implements Mobile, Container, Holdable {
 		}	
 	}
 	
-	@Override
+	/*@Override OUTDATED use removeItemFromLocation();
 	public synchronized void removeItem(Holdable item) {
 		if (inventory.contains(item)) {
 			inventory.remove(item);
 		}
-		// TODO
 		// DOES NOT DO ANYTHING IF IT DOESN"T CONTAIN? 
-	}	
+	}	*/
+	
+	// Put in Container AND remove from Container is complicated, but should be GUARANTEED in ONE LINE TODO
+	@Override
+	public void removeItemFromLocation(Holdable oldItem) {
+		if (inventory.contains(oldItem)) {
+			inventory.remove(oldItem);
+		} else if (equipment.values().contains(oldItem)) {
+			equipment.unequipItem((StdItem)oldItem);
+			removeItemFromLocation(oldItem);
+		} else {
+			System.out.println("An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
+		}
+		
+	}
 
 	// Returns view of Inventory, allows editing of objects within (which should be limited) but not to the inventory list.
 	@Override
@@ -268,19 +291,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		
 	}
 	
-	// Put in Container AND remove from Container is complicated, but should be GUARANTEED in ONE LINE TODO
-	@Override
-	public void removeItemFromLocation(Holdable oldItem) {
-		if (inventory.contains(oldItem)) {
-			inventory.remove(oldItem);
-		} else if (equipment.values().contains(oldItem)) {
-			equipment.unequipItem((StdItem)oldItem);
-			removeItemFromLocation(oldItem);
-		} else {
-			System.out.println("An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
-		}
-		
-	}
+	
 	@Override
 	public void addEffect(Effect newEffect, int duration) {
 		effectManager.registerEffectDestroyAfterXMilliseconds(newEffect, duration);
@@ -442,10 +453,10 @@ public class StdMob implements Mobile, Container, Holdable {
 		
 	}
 	
-	@Override
-	public EnumSet<EquipmentEnum> getAllowedEquipSlots() {
-		return EnumSet.noneOf(EquipmentEnum.class);
-	}
+//	@Override TODO
+//	public EnumSet<EquipmentEnum> getAllowedEquipSlots() {
+//		return EnumSet.noneOf(EquipmentEnum.class);
+//	}
 	
 	@Override
 	public boolean containsType(Type type) {
@@ -574,11 +585,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		return null;
 	}
 	
-	@Override
-	public void moveHoldable(Container finalLocation) {
-		getContainer().removeItemFromLocation(this);
-		finalLocation.acceptItem(this);
-	}
+	
 }
 
 	

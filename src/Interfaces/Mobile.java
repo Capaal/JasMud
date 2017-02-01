@@ -25,16 +25,16 @@ public interface Mobile extends Container, Holdable {
 	public void takeDamage(Type types, int d);
 	public void tell(String msg);
 	public void tellLine(String msg);
-	public void setContainer(Container newLoc);
+//	public void setContainer(Container newLoc);  SHOULD be handled by moveHoldable(finalLocation);
 	public Skills getCommand(String command);
 	public void acceptItem(Holdable item);
 	public void addEffect(Effect newEffect, int duration);
 	public void addTickingEffect(TickingEffect newEffect, int duration, int times);
 	public int checkEffectsAgainstIncomingDamage(Type incomingType, int damage);
-	public double getWeaponMultiplier();
+//	public double getWeaponMultiplier(); TODO
 	public boolean hasEffect(Effect effect);
 	public void removeEffect(Effect effect);
-	public void removeItem(Holdable item);
+//	public void removeItem(Holdable item); Handled by Container
 	public void addBook(SkillBook skillBook, int progress);
 	public boolean isControlled();
 	public void controlStatus(boolean statusChange);

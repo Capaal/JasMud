@@ -68,20 +68,20 @@ public class MobileDecorator implements Mobile {
 		return decoratedMobile.getHoldableFromString(holdableString);
 	}
 
-	@Override
-	public Set<EquipmentEnum> getAllowedEquipSlots() {
-		return decoratedMobile.getAllowedEquipSlots();
-	}
+//	@Override
+//	public Set<EquipmentEnum> getAllowedEquipSlots() {
+//		return decoratedMobile.getAllowedEquipSlots();
+//	}
 
 	@Override
 	public boolean containsType(Type type) {
 		return decoratedMobile.containsType(type);
 	}
 
-	@Override
-	public double getDamageMult() {
-		return decoratedMobile.getDamageMult();
-	}
+//	@Override
+//	public double getDamageMult() {
+//		return decoratedMobile.getDamageMult();
+//	}
 
 	@Override
 	public String getName() {
@@ -154,11 +154,6 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public void setContainer(Container newLoc) {
-		decoratedMobile.setContainer(newLoc);
-	}
-
-	@Override
 	public Skills getCommand(String command) {
 		return decoratedMobile.getCommand(command);
 	}
@@ -186,11 +181,6 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public double getWeaponMultiplier() {
-		return decoratedMobile.getWeaponMultiplier();
-	}
-
-	@Override
 	public boolean hasEffect(Effect effect) {
 		return decoratedMobile.hasEffect(effect);
 	}
@@ -198,11 +188,6 @@ public class MobileDecorator implements Mobile {
 	@Override
 	public void removeEffect(Effect effect) {
 		decoratedMobile.removeEffect(effect);
-	}
-
-	@Override
-	public void removeItem(Holdable item) {
-		decoratedMobile.removeItem(item);
 	}
 
 	@Override
