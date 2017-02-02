@@ -1,13 +1,13 @@
  package interfaces;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
+import java.util.TreeMap;
 
 public interface Container {
 	
-	public Set<Holdable> inventory = new HashSet<Holdable>();
+//	public Set<Holdable> inventory = Collections.synchronizedSortedSet(new TreeSet<Holdable>());
 
-	public Set<Holdable> getInventory();
+	public TreeMap<String, Holdable> getInventory();
 //	public String displayExits();// Should LOCATION be an interface, with this required method? But you can LOOK INSIDE containers?
 	public void look(Mobile currentPlayer); // Should LOCATION be an interface, with this required method? This is when you look inside?
 //	public void glance(Mobile currentPlayer);// Should LOCATION be an interface, with this required method?

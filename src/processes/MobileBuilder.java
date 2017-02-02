@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import actions.Godcreate;
 import processes.Equipment.EquipmentEnum;
@@ -34,7 +36,7 @@ public class MobileBuilder {
 	private int level = 1;
 	private int age = 1;
 	private boolean loadOnStartUp = false;
-	private Set<Holdable> inventory = new HashSet<Holdable>();
+	private Map<String, Holdable> inventory = new TreeMap<String, Holdable>();
 	private Equipment equipment = new Equipment();	
 	private ArrayList<Effect> effectList = new ArrayList<Effect>();	
 	private Stack<DecoratorType> decorators = new Stack<DecoratorType>();
@@ -164,9 +166,9 @@ public class MobileBuilder {
 
 	public void setLoadOnStartUp(boolean loadOnStartUp) {this.loadOnStartUp = loadOnStartUp;}
 
-	public Set<Holdable> getInventory() {return new HashSet<Holdable>(inventory);	}
+	public Map<String, Holdable> getInventory() {return new TreeMap<String, Holdable>(inventory);	}
 
-	public void setInventory(Set<Holdable> inventory) {this.inventory = inventory;	}
+	public void setInventory(TreeMap<String, Holdable> inventory) {this.inventory = inventory;	}
 
 	public List<Effect> getEffectList() {return new ArrayList<Effect>(effectList);	}
 

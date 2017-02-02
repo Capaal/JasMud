@@ -2,6 +2,7 @@ package processes;
 
 import java.util.*;
 import java.util.Map.Entry;
+
 import Quests.Quest;
 import Quests.Quest.Trigger;
 import interfaces.*;
@@ -10,7 +11,6 @@ import interfaces.*;
  *  Contains all information relating to each "room" a player may visit.
  *  Should be initiated safely using LocationBuilder
  */
-
 public class Location implements Container {
 		
 	private final int id;
@@ -18,7 +18,7 @@ public class Location implements Container {
 	private final String description;
 	private final GroundType groundType;
 	private Map<Direction, Location> locationMap;
-	private Set<Holdable> inventory = new HashSet<Holdable>();
+	protected TreeMap<String, Holdable> inventory = new TreeMap<String, Holdable>();
 	
 	private final Quest bondedQuest;
 	
@@ -91,7 +91,7 @@ public class Location implements Container {
 		boolean anItem = false;
 		StringBuilder sb = new StringBuilder();
 		sb.append("Looking around you see: ");
-		for (Holdable h : inventory) {
+		for (Holdable h : inventory.values()) {
 			sb.append(UsefulCommands.ANSI.YELLOW + h.getName() + ". " + UsefulCommands.ANSI.SANE);
 			anItem = true;
 		}
@@ -109,7 +109,7 @@ public class Location implements Container {
 	
 	// The HOLDABLE being moved is EXPECTED to handle adding/removing itself properly.
 	public void acceptItem(Holdable newItem) {
-		inventory.add(newItem);
+		inventory.put(newItem.getName() + newItem.getId(), newItem);
 	}	
 
 	
@@ -128,22 +128,83 @@ public class Location implements Container {
 	}
 	
 	public void removeItemFromLocation(Holdable oldItem) {
-		inventory.remove(oldItem);	
+		inventory.remove(oldItem.getName() + oldItem.getId());
+//		inventory.remove(oldItem);	
 	}
 	
-	public Set<Holdable> getInventory() {
-		return new HashSet<Holdable>(this.inventory);
+	public TreeMap<String, Holdable> getInventory() {
+		return new TreeMap<String, Holdable>(this.inventory);
 	}
 	
 	@Override
-	public Holdable getHoldableFromString(String holdableString) {
+	public Holdable getHoldableFromString(String holdableString) {		
+		
+	// INVENTORY	TreeMap<Long,Object> map = new TreeMap<Long,Object>();
+	// holdableString	Long key = 42;
+	/*	Map.Entry<String,Holdable> low = inventory.floorEntry(holdableString);
+		Map.Entry<String,Holdable> high = inventory.ceilingEntry(holdableString);
+		Object res = null;
+		if (low != null && high != null) {
+		    res = Math.abs(holdableString-low.getKey()) < Math.abs(holdableString-high.getKey())
+		    ?   low.getValue()
+		    :   high.getValue();
+		} else if (low != null || high != null) {
+		    res = low != null ? low.getValue() : high.getValue();
+		}
+		return res;		
+		
+		*/
+		
+	//	NavigableSet<String> prefixes = new TreeSet<String>(inventory.keySet());		
+	//	String answer = prefixes.ceiling(holdableString);	
+	//	Holdable answerItem = inventory.get(answer);
+	//	System.out.println(inventory.floorEntry(holdableString));
+	//	System.out.println(inventory.ceilingEntry(holdableString));
+		
+		Map.Entry<String,Holdable> answer = inventory.ceilingEntry(holdableString);
+		if (answer != null && (answer.getKey().equals(holdableString) || answer.getValue().getName().equals(holdableString))) {
+			return answer.getValue();
+		}
+		return null;
+		
+	/*	
+		if (tempItemName.equals(holdableString) || (tempItemName + h.getId()).equals(holdableString)) {
+			return h;
+		}
+		
+		
+		if (answer.startsWith(holdableString)) {
+			return inventory.get(prefixes.ceiling(holdableString));
+		}
+		return null;
+		
+		ORRRR
+		
+		Try to get based on string exactly
+		if not then
+		
+		ORRRR
+		
+		string = whatever
+		if map.get(whatever) is not null, then great
+		else 
+		
+		
+		
+		
+		Holdable holdable = inventory.values().contains(arg0)
+		if (inventory.ceiling(holdableString))
+		
+		
+		
+		
 		for (Holdable h : inventory) {
 			String tempItemName = h.getName().toLowerCase();
 			if (tempItemName.equals(holdableString) || (tempItemName + h.getId()).equals(holdableString)) {
 				return h;
 			}
 		}
-		return null;			
+		return null;		*/	
 	}
 
 	@Override

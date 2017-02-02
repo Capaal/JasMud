@@ -139,8 +139,28 @@ public class StdItem implements Holdable, Weapon {
 	}
 
 	@Override
-	public ItemBuilder newBuilder() {
-		// TODO Auto-generated method stub
-		return null;
-	}	
+	public int compareTo(Holdable other) {
+		String thisItem = this.getName()+this.getId();
+		String otherItem = other.getName()+other.getId();
+		System.out.println(thisItem.compareToIgnoreCase(otherItem));
+		return thisItem.compareToIgnoreCase(otherItem);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if (obj == null) {
+	        return false;
+	    }
+	    if (!(obj instanceof StdItem)) {
+	    	return false;
+	    }
+	    final Holdable other = (Holdable) obj;
+	    String thisHoldable = this.getName() + this.getId();
+	    String otherHoldable = other.getName() + other.getId();
+	    return thisHoldable.equals(otherHoldable);
+	 //   if ((thisHoldable.compareToIgnoreCase(otherHoldable)) >= 0) {
+	  //  	return true;
+	   // }
+	//    return false;
+	}
 }

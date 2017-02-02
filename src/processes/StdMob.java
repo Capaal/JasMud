@@ -28,8 +28,6 @@ public class StdMob implements Mobile, Container, Holdable {
 	protected int currentHp; 
 	protected Location mobLocation;
 	protected boolean isDead;
-	
-	protected Set<Holdable> inventory; // Make this be combined with equipment as its own class? TODO
 	protected Equipment equipment;	
 	
 	protected String description;
@@ -41,7 +39,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	protected SendMessage sendBack;
 	protected boolean isControlled = false;
 	protected boolean loadOnStartUp = false;
-	
+	protected TreeMap<String, Holdable> inventory = new TreeMap<String, Holdable>();
 	protected InductionSkill inductionSkill = null;
 	protected Map<SkillBook, Integer> skillBookList = new HashMap<SkillBook, Integer>();
 	protected List<ItemBuilder> dropsOnDeath;
@@ -49,7 +47,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	protected final EffectManager effectManager;
 	protected Mobile lastAggressor;
 	
-	private boolean creating = false;
+//	private boolean creating = false;
 	
 	public StdMob(MobileBuilder build) {
 		this.id = build.getId();
@@ -60,15 +58,14 @@ public class StdMob implements Mobile, Container, Holdable {
 		this.mobLocation = build.getLocation();
 		this.isDead = build.isDead();
 		this.description = build.getDescription();
-		this.shortDescription = build.getShortDescription();
-		this.inventory = build.getInventory();
+		this.shortDescription = build.getShortDescription();	
+		this.inventory.putAll(build.getInventory())	;
 		this.equipment = build.getEquipment();
 		this.dropsOnDeath = build.getDropsOnDeath();
 		this.experience = build.getExperience();
 		equipment.setOwner(this);
 		effectManager = new EffectManager(this);
-		this.skillBookList = build.getSkillBookList();
-		
+		this.skillBookList = build.getSkillBookList();		
 		
 		Mobile decoratedMob = decorate(build, this);
 		build.setFinishedMob(decoratedMob);
@@ -115,7 +112,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	
 	@Override
 	public void acceptItem(Holdable item) {
-		inventory.add(item);
+		inventory.put(item.getName() + item.getId(), item);
 		// dropsOnDeath.add(item.newBuilder());  Not a good method of this, drop on death is for spawning new items.
 	}
 	
@@ -184,7 +181,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		if (currentHp <= 0 && !isDead) {
 			tell("You collapse to the ground, unable to fight on.");
 			isDead = true;
-			for (Holdable m : getContainer().getInventory()) {
+			for (Holdable m : getContainer().getInventory().values()) {
 				if (m instanceof Mobile && ((Mobile)m).isControlled() && !m.equals(this)) {
 					((Mobile)m).tell(getName() + " drops to the floor, dead.");
 				}
@@ -230,8 +227,10 @@ public class StdMob implements Mobile, Container, Holdable {
 	// Put in Container AND remove from Container is complicated, but should be GUARANTEED in ONE LINE TODO
 	@Override
 	public void removeItemFromLocation(Holdable oldItem) {
-		if (inventory.contains(oldItem)) {
-			inventory.remove(oldItem);
+		if (inventory.containsValue(oldItem)) {
+	//		inventory.remove(oldItem);
+			String key = oldItem.getName() + oldItem.getId();
+			inventory.remove(key);
 		} else if (equipment.values().contains(oldItem)) {
 			equipment.unequipItem((StdItem)oldItem);
 			removeItemFromLocation(oldItem);
@@ -243,13 +242,23 @@ public class StdMob implements Mobile, Container, Holdable {
 
 	// Returns view of Inventory, allows editing of objects within (which should be limited) but not to the inventory list.
 	@Override
-	public Set<Holdable> getInventory() {
-		return new HashSet<Holdable>(this.inventory);
+	public TreeMap<String, Holdable> getInventory() {
+		return new TreeMap<String, Holdable>(this.inventory);
 	}
 	
 	// TODO make Inventory a tree sorted by alphabetical order.
 	@Override
 	public Holdable getHoldableFromString(String holdableString) {
+	//	System.out.println(inventory.containsValue(holdableString));
+		
+		
+		Map.Entry<String,Holdable> answer = inventory.ceilingEntry(holdableString);
+		if (answer != null && (answer.getKey().equals(holdableString) || answer.getValue().getName().equals(holdableString))) {
+			return answer.getValue();
+		}
+		return null;
+		
+	/*	
 		for (Holdable h : inventory) {
 			String tempItemName = h.getName().toLowerCase();
 			if (tempItemName.equals(holdableString) || (tempItemName + h.getId()).equals(holdableString)) {
@@ -266,7 +275,7 @@ public class StdMob implements Mobile, Container, Holdable {
 				}
 			}
 		}
-		return null;		
+		return null;	*/	
 	}
 	
 /*	@Override
@@ -276,7 +285,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	@Override
 	public void look(Mobile currentPlayer) {
 		currentPlayer.tell("You see the player's inventory.");	
-		for (Holdable h : inventory) {
+		for (Holdable h : inventory.values()) {
 			currentPlayer.tell(h.getName() + h.getId());
 		}
 	}
@@ -315,18 +324,18 @@ public class StdMob implements Mobile, Container, Holdable {
 	// TODO equipment is work in progress
 	@Override
 	public void equip(EquipmentEnum slot, Holdable item) {
-		if (inventory.remove(item)) {
+/*		if (inventory.remove(item)) {
 			equipment.equip(slot, item);
 		} else {
 			System.out.println("Attempt to equip illegal item " + item.toString() + " into slot " + slot.toString());
-		}
+		}*/
 	}
 	
 	// TODO
 	@Override
 	public void unequip(Holdable item) {
 		equipment.unequipItem(item);
-		inventory.add(item);
+	//	inventory.add(item);
 	}
 	
 	@Override
@@ -353,7 +362,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	public void unequipFromSlot(EquipmentEnum slot) {
 		Holdable item = equipment.getValue(slot);
 		equipment.unequipSlot(slot);		
-		inventory.add(item);
+//		inventory.add(item);
 	}
 	
 	@Override
@@ -398,11 +407,11 @@ public class StdMob implements Mobile, Container, Holdable {
 	}	
 	
 	private boolean saveItems() {
-		for (Holdable saveInventoryItem : inventory) {
-			if (!saveInventoryItem.save()) {
-				return false;
-			}
-		}
+//		for (Holdable saveInventoryItem : inventory) {
+//			if (!saveInventoryItem.save()) {
+//				return false;
+//			}
+//		}
 		for (Holdable saveEquipmentItem : equipment.values()) {
 			if (saveEquipmentItem != null) {
 				if (!saveEquipmentItem.save()) {
@@ -420,9 +429,9 @@ public class StdMob implements Mobile, Container, Holdable {
 	@Override
 	public void removeFromWorld() {	
 		if (!loadOnStartUp) { // WHY THIS?
-			for (Holdable inventoryItem : inventory) {
-				inventoryItem.removeFromWorld();
-			}
+//			for (Holdable inventoryItem : inventory) {
+//				inventoryItem.removeFromWorld();
+//			}
 			for (Holdable equipmentItem : equipment.values()) {
 				if (equipmentItem != null) {
 					equipmentItem.removeFromWorld();
@@ -577,15 +586,31 @@ public class StdMob implements Mobile, Container, Holdable {
 	public Map<SkillBook, Integer> viewSkillBooks() {
 		return new HashMap<SkillBook, Integer>(skillBookList);
 	}
-	
-	// SHOULD NOT ACTUALLY RETURN AN ITEMBUILDER
+
 	@Override
-	public ItemBuilder newBuilder() {
-		// TODO Auto-generated method stub
-		return null;
+	public int compareTo(Holdable other) {
+		String thisItem = this.getName()+this.getId();
+		String otherItem = other.getName()+other.getId();
+		return thisItem.compareToIgnoreCase(otherItem);
+	}	
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if (obj == null) {
+	        return false;
+	    }
+	    if (!(obj instanceof StdMob)) {
+	    	return false;
+	    }
+	    final Holdable other = (Holdable) obj;
+	    String thisHoldable = this.getName() + this.getId();
+	    String otherHoldable = other.getName() + other.getId();
+	    return thisHoldable.equals(otherHoldable);
+	 //   if ((thisHoldable.compareToIgnoreCase(otherHoldable)) >= 0) {
+	  //  	return true;
+	   // }
+	//    return false;
 	}
-	
-	
 }
 
 	

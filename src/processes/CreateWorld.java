@@ -47,7 +47,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new Salvage());
 		generalSkills.addSkill(new Heal());
 		generalSkills.addSkill(new SkillList());
-		
+		generalSkills.addSkill(new Drop());
 	/*	kickSkill();
 		addGodCreateSkill();
 		addExamineSkill();
@@ -63,6 +63,11 @@ public class CreateWorld {
 		makeADagger(1);
 		makeASword(2);
 		makeAStick(3);
+		makeAPike(4);
+		makeIngot(5);
+		addOre(7);
+		addOre(8);
+		addIronPotion(9);
 		makeGoblin();
 		makeFarmerJames();
 	}
@@ -158,13 +163,14 @@ public class CreateWorld {
 	}
 	
 	//template items should be stored as builders, not actually existing items
+	//template items should be stored as builders, not actually existing items
 	public static void makeADagger(int i) {
 		ItemBuilder newItem = new ItemBuilder();	
 		newItem.setId(i);
 		newItem.setName("dagger");
-		newItem.setBalanceMult(.8);
-		newItem.setDamageMult(1.0);
 		newItem.setDescription("It's a dagger!");
+		newItem.setComponents(Arrays.asList("ingot"));
+		newItem.setSalvageable(true);
 		newItem.complete();
 		itemTemplates.put("dagger", newItem);
 	}
@@ -174,6 +180,10 @@ public class CreateWorld {
 		newItem.setId(i);
 		newItem.setName("sword");
 		newItem.setDescription("It's a sword!");
+		newItem.setComponents(Arrays.asList("ingot","ingot"));
+		newItem.setSalvageable(true);
+		newItem.setDamageMult(1.5);
+		newItem.setBalanceMult(1.2);
 		itemTemplates.put("sword", newItem);
 	}
 	
@@ -182,7 +192,52 @@ public class CreateWorld {
 		newItem.setId(i);
 		newItem.setName("stick");
 		newItem.setDescription("It's a stick!");
+		newItem.setDamageMult(0.5);
+		newItem.complete();
 		itemTemplates.put("stick", newItem);
+	}
+	
+	public static void makeAPike(int i) {
+		ItemBuilder newItem = new ItemBuilder();	
+		newItem.setId(i);
+		newItem.setName("pike");
+		newItem.setDescription("It's a pike!");
+		newItem.setComponents(Arrays.asList("dagger","stick"));
+		newItem.setDamageMult(1.8);
+		newItem.setBalanceMult(1.5);
+		newItem.setSalvageable(true);
+		itemTemplates.put("pike", newItem);
+	}
+	
+	public static void makeIngot(int i) {
+		ItemBuilder newItem = new ItemBuilder();	
+		newItem.setId(i);
+		newItem.setName("ingot");
+		newItem.setDescription("An iron ingot.");
+		newItem.setComponents(Arrays.asList("ore","ore"));
+		newItem.setDamageMult(0.4);
+		newItem.setSalvageable(true);
+		itemTemplates.put("ingot", newItem);
+	}
+	
+	public static void addOre(int i) {
+		ItemBuilder newItem = new ItemBuilder();	
+		newItem.setId(i);
+		newItem.setName("ore");
+		newItem.setDescription("A piece of iron ore.");
+		newItem.setDamageMult(0.2);
+		newItem.complete();
+		WorldServer.gameState.addItem("ore", newItem.getFinishedItem()); //added here instead of templates, not a craftable item
+	}
+	
+	public static void addIronPotion(int i) {
+		ItemBuilder newItem = new ItemBuilder();	
+		newItem.setId(i);
+		newItem.setName("ironpotion");
+		newItem.setDescription("A potion made from iron.");
+		newItem.setComponents(Arrays.asList("ore"));
+		newItem.setDamageMult(0.2);
+		itemTemplates.put("ironpotion", newItem);
 	}
 	
 	public static void makeGoblin() {

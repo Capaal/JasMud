@@ -1,10 +1,8 @@
 package skills;
 
 import java.util.Map;
-
 import processes.SkillBook;
 import processes.Skills;
-import processes.Skills.Syntax;
 
 public class SkillList extends Skills {
 

@@ -1,11 +1,16 @@
 package processes;
 
+import interfaces.Holdable;
 import interfaces.Mobile;
 import items.StdItem;
 
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+
+// Collections.synchronizedSortedSet(new TreeSet<Holdable>());
+// Might need to synchronize some of these.
+
 
 public class GameState {
 	// Contains transient sockets of each connected Player.

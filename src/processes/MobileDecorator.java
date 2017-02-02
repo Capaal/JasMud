@@ -5,6 +5,7 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 
 import Quests.Quest.Trigger;
 import processes.Equipment.EquipmentEnum;
@@ -25,7 +26,7 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public Set<Holdable> getInventory() {
+	public TreeMap<String, Holdable> getInventory() {
 		return decoratedMobile.getInventory();
 	}
 
@@ -308,13 +309,13 @@ public enum DecoratorType {
 	}
 
 	@Override
-	public ItemBuilder newBuilder() {
-		return decoratedMobile.newBuilder();
-	}
-
-	@Override
 	public void moveHoldable(Container finalLocation) {
 		decoratedMobile.moveHoldable(finalLocation);
 		
+	}
+
+	@Override
+	public int compareTo(Holdable arg0) {
+		return decoratedMobile.compareTo(arg0);
 	}
 }
