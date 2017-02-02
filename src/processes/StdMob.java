@@ -46,6 +46,8 @@ public class StdMob implements Mobile, Container, Holdable {
 	
 	protected final EffectManager effectManager;
 	protected Mobile lastAggressor;
+
+	protected ArrayList<String> messages;
 	
 //	private boolean creating = false;
 	
@@ -507,6 +509,10 @@ public class StdMob implements Mobile, Container, Holdable {
 	public int getCurrentHp() {
 		// TODO Auto-generated method stub
 		return currentHp;
+	}
+	
+	public ArrayList<String> getMessages() {
+		return messages;
 	}
 
 	// TODO Should we even allow this?

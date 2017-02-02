@@ -29,13 +29,13 @@ public class Godcreate extends Action {
 	@Override
 	public boolean activate(Skills s, String fullCommand, Mobile currentPlayer) {
 		Mobile player = currentPlayer;
-		currentPlayer.startCreating();
+//		currentPlayer.startCreating();
 		createActionMap();
 		player.tell("Welcome to the creation Menu.");
 		player.tell("Here you can create an enormous variety of skills, items, locations, and mobiles");
 		player.tell("But remember that this is an out of game menu and to exit you must type \"exit\".");
 		boolean finishedCreating = processCreateType(player);
-		currentPlayer.stopCreating();
+//		currentPlayer.stopCreating();
 		return finishedCreating;
 	}
 	
@@ -276,13 +276,14 @@ public class Godcreate extends Action {
 	
 	private static String askQuestionActual(String question, Mobile player) {
 		player.tell(question);
-		String answer = player.getSendBack().getMessage();
-		if (answer.equals("")) {
-			player.tell("Typing nothing will not create something.");
-			answer = askQuestion(question, player);
-		}
-		String finalAnswer = correctAnswerForDatabase(answer);
-		return finalAnswer;
+//		String answer = player.getSendBack().getMessage();
+//		if (answer.equals("")) {
+//			player.tell("Typing nothing will not create something.");
+//			answer = askQuestion(question, player);
+//		}
+//		String finalAnswer = correctAnswerForDatabase(answer);
+//		return finalAnswer;
+		return "";
 	}
 	
 	private static String correctAnswerForDatabase(String answer) {

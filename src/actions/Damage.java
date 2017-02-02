@@ -47,8 +47,8 @@ public class Damage extends Action {
 	
 	private int determineFinalIntensity(Mobile currentPlayer) {
 		if (doesWeaponMatter) {
-			double weaponMultiplier = currentPlayer.getWeaponMultiplier();
-			return (int) (intensity * weaponMultiplier);
+//			double weaponMultiplier = currentPlayer.getWeaponMultiplier();
+//			return (int) (intensity * weaponMultiplier);
 		}
 		return intensity;
 	}

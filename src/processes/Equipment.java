@@ -6,6 +6,7 @@ import interfaces.Mobile;
 
 import java.util.*;
 
+import Quests.Quest.Trigger;
 import processes.Location.GroundType;
 
 // EQUIPMENT SHOULD USE HOLDABLE not equipable, all StdItems can be wielded in hands, so this should be able to take anything.
@@ -120,11 +121,11 @@ public class Equipment implements Container {
 		return new HashSet<Holdable>(values());
 	}
 
-	@Override
-	public String displayExits() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public String displayExits() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	@Override
 	public void look(Mobile currentPlayer) {
@@ -132,17 +133,17 @@ public class Equipment implements Container {
 		
 	}
 
-	@Override
-	public void glance(Mobile currentPlayer) {
-		// TODO Auto-generated method stub
+//	@Override
+//	public void glance(Mobile currentPlayer) {
+//		// TODO Auto-generated method stub
 		
-	}
+//	}
 
-	@Override
-	public void displayAll(Mobile currentPlayer) {
-		// TODO Auto-generated method stub
+//	@Override
+//	public void displayAll(Mobile currentPlayer) {
+//		// TODO Auto-generated method stub
 		
-	}
+//	}
 
 	@Override
 	public String getName() {
@@ -167,11 +168,11 @@ public class Equipment implements Container {
 		
 	}
 
-	@Override
-	public GroundType getGroundType() {
+//	@Override
+//	public GroundType getGroundType() {
 		// TODO Auto-generated method stub
-		return null;
-	}
+//		return null;
+//	}
 
 	@Override
 	public Holdable getHoldableFromString(String holdableString) {
@@ -179,10 +180,16 @@ public class Equipment implements Container {
 		return null;
 	}
 
-	@Override
-	public Container getContainer() {
-		return currentPlayer;
-	}
+//	@Override
+//	public Container getContainer() {
+//		return currentPlayer;
+//	}
+
+//	@Override
+//	public void notifyQuest(Trigger trigger) {
+//		// TODO Auto-generated method stub
+//		
+//	} 
 }
 	
 

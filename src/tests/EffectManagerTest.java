@@ -38,7 +38,7 @@ public class EffectManagerTest {
 	}
 	@Before
 	public void initialize() {
-		manager = new EffectManager();
+//		manager = new EffectManager();
 	}
 	
 	@Test

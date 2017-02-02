@@ -33,6 +33,7 @@ public class CreateWorld {
 	public static void makeSkills() {
 		WorldServer.gameState.addBook(1, generalSkills);
 		generalSkills.addSkill(new Punch());
+		//cry
 		generalSkills.addSkill(new Throw());
 		generalSkills.addSkill(new Get());
 		generalSkills.addSkill(new Move());

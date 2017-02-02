@@ -34,12 +34,12 @@ public class MoveCheck extends Action {
 				if (c == null) { 
 					return false;
 				}
-				if ((m.getContainer().getGroundType() != moveType && c.getGroundType() != moveType)) {
-					return false;
-				}
-				if (moveType == GroundType.GROUND && m.getContainer().getGroundType() != c.getGroundType()) {
-					return false;
-				}
+		//		if ((m.getContainer().getGroundType() != moveType && c.getGroundType() != moveType)) {
+		//			return false;
+		//		}
+		//		if (moveType == GroundType.GROUND && m.getContainer().getGroundType() != c.getGroundType()) {
+		//			return false;
+		//		}
 			}
 		}		
 		return true;
