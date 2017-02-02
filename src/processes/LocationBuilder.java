@@ -1,13 +1,10 @@
 package processes;
 
 import interfaces.Mobile;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import Quests.Quest;
-import actions.Godcreate;
 import processes.Location.Direction;
 import processes.Location.GroundType;
 
@@ -163,7 +160,7 @@ public class LocationBuilder {
 		return buildComplete;
 	}
 	
-
+/*
 	public static boolean newLocation(Mobile player, LocationBuilder builderLocation) {
 		String nextTask = Godcreate.askQuestion("What next? 1:name 2:description 3:groundtype 4:connections 5:preview 6:complete 7:exit", player).toLowerCase();
 		switch(nextTask) {
@@ -259,7 +256,7 @@ public class LocationBuilder {
 			player.tell("That is not a valid option.");
 			return newConnection(player, builderLocation);
 		}
-	}
+	}*/
 	
 	public void setQuest(Quest quest) {
 		bondedQuest = quest;

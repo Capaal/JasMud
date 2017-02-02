@@ -5,7 +5,6 @@ import interfaces.Effect;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import items.StdItem;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,8 +14,6 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
 import java.util.TreeSet;
-
-import actions.Godcreate;
 import processes.Equipment.EquipmentEnum;
 import processes.MobileDecorator.DecoratorType;
 
@@ -219,7 +216,7 @@ public class MobileBuilder {
 			id = (int)availableId;
 		}	*/
 	}
-
+/*
 	public static boolean newMobile(Mobile player, MobileBuilder mobileBuilder) {
 		String nextTask = Godcreate.askQuestion("What next? 1:name 2:password 3:longdescrption 4:shortdescription"
 				+ " 5:level 6:currentHp 7:isdead 8:location 9:inventory 10:equipment 11:xpworth 12:loadonstartup"
@@ -320,7 +317,7 @@ public class MobileBuilder {
 			player.tell("That wasn't a valid option, remember, you can use the word, or the number.");
 			return newMobile(player, mobileBuilder);
 		}
-	}
+	}*/
 
 	public void addDecorator(DecoratorType aggresiveMobileDecorator) {
 		this.decorators.push(aggresiveMobileDecorator);		

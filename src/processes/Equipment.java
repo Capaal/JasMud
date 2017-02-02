@@ -117,8 +117,9 @@ public class Equipment implements Container {
 
 
 	@Override
-	public Set<Holdable> getInventory() {
-		return new HashSet<Holdable>(values());
+	public TreeMap<String, Holdable> getInventory() {
+		return null;
+//		return new HashSet<Holdable>(values());
 	}
 
 //	@Override
