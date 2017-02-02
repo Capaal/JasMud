@@ -51,7 +51,7 @@ public abstract class Skills {
 	}
 	
 	protected void messageOthers(String msg, List<Mobile> toIgnore) {
-		for (Holdable h : currentPlayer.getContainer().getInventory()) {
+		for (Holdable h : currentPlayer.getContainer().getInventory().values()) {
 			if (h instanceof Mobile && ((Mobile) h).isControlled()) {
 				Boolean shouldTell = true;
 				if (h.equals(currentPlayer)) {

@@ -38,7 +38,7 @@ public abstract class Quest {
 	}
 	
 	protected void sayHere(String msg) {
-		for (Holdable m : questLocation.getInventory()) {
+		for (Holdable m : questLocation.getInventory().values()) {
 			if (m instanceof Mobile && ((Mobile)m).isControlled()) {
 				((Mobile)m).tell(msg);
 			}

@@ -213,7 +213,7 @@ public class UsefulCommands {
 		}
 		return false;
 	}
-	
+	/*
 	public static void tellAllInRoom(String canSeeDesc, Container loc) {
 		for (Holdable i : loc.getInventory()) {
 			if (i instanceof Mobile) {
@@ -221,7 +221,7 @@ public class UsefulCommands {
 			}
 		}
 		
-	}
+	}*/
 	
 	public static boolean checkIfValidCharacters(String testString) {
 		Pattern pattern = Pattern.compile("[;'~#@*+%{}<>\\[\\]|\"\\_^]");
