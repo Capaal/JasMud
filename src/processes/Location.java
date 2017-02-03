@@ -50,7 +50,8 @@ public class Location implements Container {
 //		} else {
 //			System.out.println("setLocation just tried to set a null, normal?");
 //		}		
-	}		
+	}	
+	
 	// This most likely does not belong here.
 	public String displayExits() {
 		boolean atLeastOne = false;
@@ -111,7 +112,6 @@ public class Location implements Container {
 	public void acceptItem(Holdable newItem) {
 		inventory.put(newItem.getName() + newItem.getId(), newItem);
 	}	
-
 	
 	//TODO implement a null location object?
 	public Location getLocation(String dir) {
@@ -129,7 +129,6 @@ public class Location implements Container {
 	
 	public void removeItemFromLocation(Holdable oldItem) {
 		inventory.remove(oldItem.getName() + oldItem.getId());
-//		inventory.remove(oldItem);	
 	}
 	
 	public TreeMap<String, Holdable> getInventory() {
@@ -137,80 +136,17 @@ public class Location implements Container {
 	}
 	
 	@Override
-	public Holdable getHoldableFromString(String holdableString) {		
-		
-	// INVENTORY	TreeMap<Long,Object> map = new TreeMap<Long,Object>();
-	// holdableString	Long key = 42;
-	/*	Map.Entry<String,Holdable> low = inventory.floorEntry(holdableString);
-		Map.Entry<String,Holdable> high = inventory.ceilingEntry(holdableString);
-		Object res = null;
-		if (low != null && high != null) {
-		    res = Math.abs(holdableString-low.getKey()) < Math.abs(holdableString-high.getKey())
-		    ?   low.getValue()
-		    :   high.getValue();
-		} else if (low != null || high != null) {
-		    res = low != null ? low.getValue() : high.getValue();
-		}
-		return res;		
-		
-		*/
-		
-	//	NavigableSet<String> prefixes = new TreeSet<String>(inventory.keySet());		
-	//	String answer = prefixes.ceiling(holdableString);	
-	//	Holdable answerItem = inventory.get(answer);
-	//	System.out.println(inventory.floorEntry(holdableString));
-	//	System.out.println(inventory.ceilingEntry(holdableString));
-		
+	public Holdable getHoldableFromString(String holdableString) {	
 		Map.Entry<String,Holdable> answer = inventory.ceilingEntry(holdableString);
 		if (answer != null && (answer.getKey().equals(holdableString) || answer.getValue().getName().equals(holdableString))) {
 			return answer.getValue();
 		}
 		return null;
-		
-	/*	
-		if (tempItemName.equals(holdableString) || (tempItemName + h.getId()).equals(holdableString)) {
-			return h;
-		}
-		
-		
-		if (answer.startsWith(holdableString)) {
-			return inventory.get(prefixes.ceiling(holdableString));
-		}
-		return null;
-		
-		ORRRR
-		
-		Try to get based on string exactly
-		if not then
-		
-		ORRRR
-		
-		string = whatever
-		if map.get(whatever) is not null, then great
-		else 
-		
-		
-		
-		
-		Holdable holdable = inventory.values().contains(arg0)
-		if (inventory.ceiling(holdableString))
-		
-		
-		
-		
-		for (Holdable h : inventory) {
-			String tempItemName = h.getName().toLowerCase();
-			if (tempItemName.equals(holdableString) || (tempItemName + h.getId()).equals(holdableString)) {
-				return h;
-			}
-		}
-		return null;		*/	
 	}
 
 	@Override
 	public String getName() {
 		return name;
-
 	}
 
 	public Location getContainer(String dir) {

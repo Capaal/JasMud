@@ -39,15 +39,6 @@ public class CreateWorld {
 		generalSkills.addSkill(new Heal());
 		generalSkills.addSkill(new SkillList());
 		generalSkills.addSkill(new Drop());
-	/*	kickSkill();
-		addGodCreateSkill();
-		addExamineSkill();
-		addGiveSkill();
-		addMsgWorldSkill();
-		addSelfInvSkill();
-		addExitsSkill(); 
-		addTellSkill();
-		addEmotesSkill(); */
 	}
 	
 	public static void makeItems() {
@@ -153,7 +144,6 @@ public class CreateWorld {
 		return new HashMap<String, ItemBuilder>(itemTemplates);
 	}
 	
-	//template items should be stored as builders, not actually existing items
 	//template items should be stored as builders, not actually existing items
 	public static void makeADagger(int i) {
 		ItemBuilder newItem = new ItemBuilder();	

@@ -2,13 +2,9 @@ package processes;
 
 import interfaces.*;
 import items.StdItem;
-
 import java.util.*;
-
-import Quests.Quest.Trigger;
 import effects.*;
 import processes.Equipment.EquipmentEnum;
-import processes.Location.GroundType;
 import processes.MobileDecorator.DecoratorType;
 
 /**
@@ -28,8 +24,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	protected int currentHp; 
 	protected Location mobLocation;
 	protected boolean isDead;
-	protected Equipment equipment;	
-	
+	protected Equipment equipment;		
 	protected String description;
 	protected int xpWorth;
 	protected String shortDescription;
@@ -42,14 +37,10 @@ public class StdMob implements Mobile, Container, Holdable {
 	protected TreeMap<String, Holdable> inventory = new TreeMap<String, Holdable>();
 	protected InductionSkill inductionSkill = null;
 	protected Map<SkillBook, Integer> skillBookList = new HashMap<SkillBook, Integer>();
-	protected List<ItemBuilder> dropsOnDeath;
-	
+	protected List<ItemBuilder> dropsOnDeath;	
 	protected final EffectManager effectManager;
 	protected Mobile lastAggressor;
-
 	protected ArrayList<String> messages;
-	
-//	private boolean creating = false;
 	
 	public StdMob(MobileBuilder build) {
 		this.id = build.getId();
@@ -118,15 +109,6 @@ public class StdMob implements Mobile, Container, Holdable {
 		// dropsOnDeath.add(item.newBuilder());  Not a good method of this, drop on death is for spawning new items.
 	}
 	
-/*	@Override OUTDATEd, use moveHoldable();
-	public synchronized void setContainer(Container futureLocation) {
-		if (futureLocation instanceof Location) {	
-			System.out.println("CRITICAL ERROR, MOBILE ATTEMPTED TO BE MOVED TO A NON-LOCATION");
-		} else {
-			this.mobLocation = (Location)futureLocation;
-		}
-	}*/ 
-	
 	@Override
 	public synchronized void moveHoldable(Container finalLocation) {
 		if (finalLocation instanceof Location) {	
@@ -157,27 +139,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	@Override
 	public int checkEffectsAgainstIncomingDamage(Type incomingType, int damage) {
 		return effectManager.checkEffectsAgainstIncomingDamage(incomingType, damage);
-	}
-	
-/*	@Override TODO
-	public double getWeaponMultiplier() {
-		Holdable weapon = getEquipmentInSlot(EquipmentEnum.RIGHTHAND);
-		if (weapon != null) {
-			return weapon.getDamageMult();
-		} else {
-			weapon = getEquipmentInSlot(EquipmentEnum.LEFTHAND);
-			if (weapon != null) {
-				return weapon.getDamageMult();
-			}
-		}
-		return 1.0;
-	}*/
-	
-/*	@Override TODO
-	public double getDamageMult() {
-		return 1.0;
-	}*/
-	
+	}	
 
 	private void checkHp() {
 		if (currentHp <= 0 && !isDead) {
@@ -217,14 +179,6 @@ public class StdMob implements Mobile, Container, Holdable {
 			sendBack.printMessageLine(msg); // Prints msg on SAME line, does not create newLine.
 		}	
 	}
-	
-	/*@Override OUTDATED use removeItemFromLocation();
-	public synchronized void removeItem(Holdable item) {
-		if (inventory.contains(item)) {
-			inventory.remove(item);
-		}
-		// DOES NOT DO ANYTHING IF IT DOESN"T CONTAIN? 
-	}	*/
 	
 	// Put in Container AND remove from Container is complicated, but should be GUARANTEED in ONE LINE TODO
 	@Override
@@ -404,7 +358,7 @@ public class StdMob implements Mobile, Container, Holdable {
 				+ "', MOBLOC=" + mobLocation.getId() + ", MOBCURRENTHP=" + currentHp + ", MOBDEAD='" + (isDead ? 1 : 0) + "', "
 						+ "MOBCURRENTXP=" + experience + ", MOBCURRENTLEVEL=" + level + ", MOBAGE=" + age
 						+ ", LOADONSTARTUP=" + (loadOnStartUp ? 1 : 0) + " WHERE MOBID=" + id + ";";
-		WorldServer.databaseInterface.saveAction(updateStats);
+	//	WorldServer.databaseInterface.saveAction(updateStats);
 		return true;
 	}	
 	
@@ -477,10 +431,10 @@ public class StdMob implements Mobile, Container, Holdable {
 	public static void insertNewBlankMob(String newName, String newPassword) throws IllegalStateException {
 		int newId = findNewId(newName);
 		String sql = "insert into mobstats (MOBID, MOBNAME, MOBPASS) values (" + newId + ", '" + newName + "', '" + newPassword + "');";
-		WorldServer.databaseInterface.saveAction(sql);
+	//	WorldServer.databaseInterface.saveAction(sql);
 		String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values((SELECT MOBID FROM MOBSTATS"
 				+ " WHERE MOBNAME='" + newName + "'), 1, 1) ON DUPLICATE KEY UPDATE MOBPROGRESS=1;";
-		WorldServer.databaseInterface.saveAction(insertBook);
+//		WorldServer.databaseInterface.saveAction(insertBook);
 	}
 
 /*	@Override
@@ -502,12 +456,10 @@ public class StdMob implements Mobile, Container, Holdable {
 	@Override
 	public int getMaxHp() {
 		return maxHp;
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public int getCurrentHp() {
-		// TODO Auto-generated method stub
 		return currentHp;
 	}
 	
@@ -551,24 +503,6 @@ public class StdMob implements Mobile, Container, Holdable {
 		return false;
 	}
 	
-/*	// TODO Leftover from GOdCreate
-	@Override
-	public boolean isCreating() {
-		return creating;
-	}
-	
-	// TODO Left over from god create
-	@Override
-	public void startCreating() {
-		creating = true;
-	}
-	
-	// TODO Left over from god create
-	@Override
-	public void stopCreating() {
-		creating = false;
-	}*/
-
 	@Override
 	public boolean isInducting() {
 		if (inductionSkill == null) {
