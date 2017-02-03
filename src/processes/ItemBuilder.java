@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+
 import processes.Equipment.EquipmentEnum;
 
 public class ItemBuilder {
@@ -190,7 +191,7 @@ public class ItemBuilder {
 		}	*/	
 	}
 /*	
-	public static boolean newItem(Mobile player, ItemBuilder builderItem) {
+/*	public static boolean newItem(Mobile player, ItemBuilder builderItem) {
 		String nextTask = Godcreate.askQuestion("What next? 1:name 2:longdescription 3:physicalmult"
 				+ " 4:balancemult 5:location 6:maxdurability 7:currentdurability 8:types 9:tags 10:slots 11:preview"
 				+ " 12:complete 13:quit", player);
@@ -320,5 +321,5 @@ public class ItemBuilder {
 			player.tell("That wasn't a valid option.");
 			return newItem(player, builderItem);
 		}
-	}*/
+	} */
 }

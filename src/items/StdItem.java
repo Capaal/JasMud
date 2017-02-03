@@ -106,7 +106,7 @@ public class StdItem implements Holdable, Weapon {
 	
 	@Override
 	public void removeFromWorld() {
-		save();
+	//	save();
 		this.getContainer().removeItemFromLocation(this);
 		WorldServer.gameState.removeItem(this.getName() + this.getId());
 	}

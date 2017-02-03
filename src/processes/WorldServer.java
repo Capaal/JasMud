@@ -35,6 +35,7 @@ public class WorldServer {
 	
 	public static void main(String[] args) {
 		setGameState(new GameState());
+	//	setInterface(new BlankSQLInterface());
 		SkillExecutor skillExecutor = new SkillExecutor();
 		skillExecutor.start();		
 		CreateWorld.createWorld();

@@ -47,9 +47,12 @@ public class CreateWorld {
 		makeAStick(3);
 		makeAPike(4);
 		makeIngot(5);
-		addOre(7);
-		addOre(8);
-		addIronPotion(9);
+		int quantity = 27;
+		while (quantity > 7) {
+			addOre(quantity);
+			quantity=quantity-1;
+		}
+		addIronPotion(29);
 		makeGoblin();
 		makeFarmerJames();
 	}
@@ -130,13 +133,21 @@ public class CreateWorld {
 		newLoc8.north(5, "north");
 		newLoc8.complete();	
 		
+		//9th location, east exit to 1
+		int loc9 = 9;
+		LocationBuilder newLoc9 = new LocationBuilder();
+		newLoc9.setId(loc9);
+		newLoc9.setName("Bank.");
+		newLoc9.east(1, "west");
+		newLoc9.complete();	
+		
 		// map: 
 		//   [8](loops 5)
 		//   [5] - [6] - [7]
 		//   [4]
 		//   [3]
 		//   [2] - [7]
-		//   [1]
+	// [9] - [1]
 		
 	}
 	

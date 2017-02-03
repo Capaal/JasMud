@@ -217,6 +217,7 @@ public class MobileBuilder {
 		}	*/
 	}
 /*
+	/*
 	public static boolean newMobile(Mobile player, MobileBuilder mobileBuilder) {
 		String nextTask = Godcreate.askQuestion("What next? 1:name 2:password 3:longdescrption 4:shortdescription"
 				+ " 5:level 6:currentHp 7:isdead 8:location 9:inventory 10:equipment 11:xpworth 12:loadonstartup"
@@ -319,6 +320,7 @@ public class MobileBuilder {
 		}
 	}*/
 
+	
 	public void addDecorator(DecoratorType aggresiveMobileDecorator) {
 		this.decorators.push(aggresiveMobileDecorator);		
 	}
