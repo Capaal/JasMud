@@ -47,7 +47,7 @@ public class Headshot extends InductionSkill {
 	// REQUIRES ranged weapon (eventually)
 	// Direction is OPTIONAL, defaults to currentPlayer's location
 	@Override
-	public void performSkill() {
+	protected void performSkill() {
 		allLocations = new HashSet<Location>();
 		if (!hasBalance()) {return;}
 		if (!findAllLocations()) {return;}		

@@ -1,6 +1,8 @@
 package skills;
 
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import interfaces.Container;
@@ -20,17 +22,17 @@ public class Inventory extends Skills {
 	protected void performSkill() {
 		StringBuilder inventoryMsg = new StringBuilder();
 		inventoryMsg.append("You are holding: ");
-		Set <String> inv = currentPlayer.getInventory().keySet();
-		Iterator <String> i = inv.iterator();
+		Collection<Holdable> inv = currentPlayer.getInventory().values();
+		Iterator<Holdable> i = inv.iterator();
 		if (!i.hasNext()) {
 			inventoryMsg.append("nothing!");
 			messageSelf(inventoryMsg.toString());
 			return;
 		}
-		String firstItem = i.next();
-		inventoryMsg.append(UsefulCommands.getOnlyStrings(firstItem));
+		Holdable firstItem = i.next();
+		inventoryMsg.append(firstItem.getName());
 		while (i.hasNext()) {
-			inventoryMsg.append(", " + UsefulCommands.getOnlyStrings(i.next()));
+			inventoryMsg.append(", " + i.next().getName());
 		}
 		inventoryMsg.append(".");
 		messageSelf(inventoryMsg.toString());

@@ -32,7 +32,7 @@ public class Look extends Skills {
 	private void doLook (Location lookHere) {
 		messageSelf(UsefulCommands.ANSI.MAGENTA + lookHere.getName() + UsefulCommands.ANSI.SANE);
 		messageSelf(UsefulCommands.ANSI.GREEN + lookHere.getDescription() + UsefulCommands.ANSI.SANE);
-		lookHere.displayAll(currentPlayer);				
+		lookHere.displayAll(currentPlayer);	//need to expand this so location doesn't do it anymore			
 		messageSelf(UsefulCommands.ANSI.CYAN + lookHere.displayExits() + UsefulCommands.ANSI.SANE);
 		messageSelf("(God sight) Location number: " + id + ". Ground type: " + lookHere.getGroundType() + ".");  // GOD SIGHT
 	}

@@ -20,7 +20,7 @@ public class Nod extends Skills {
 	private Mobile target;
 
 	@Override
-	public void performSkill() {
+	protected void performSkill() {
 		if (!setTarget()) {
 			messageSelf("Whom do you wish to nod to?");
 			return;

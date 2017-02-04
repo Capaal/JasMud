@@ -16,7 +16,7 @@ public class Drop extends Skills {
 	// Moves a HOLDABLE from the CURRENTPLAYER's INVENTORY to the LOCATION they are in.
 	// Requires balance, syntax = "drop dagger" or "drop sword1532"
 	@Override
-	public void performSkill() {
+	protected void performSkill() {
 		if (!hasBalance()) {
 			return;
 		}

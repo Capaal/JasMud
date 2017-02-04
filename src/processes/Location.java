@@ -73,13 +73,13 @@ public class Location implements Container {
 		return toSay;
 	}
 	// Should probably be a skill that access fields like description and name TODO
-	public void look(Mobile currentPlayer) {
+/*	public void look(Mobile currentPlayer) {
 		currentPlayer.tell(UsefulCommands.ANSI.MAGENTA + name + UsefulCommands.ANSI.SANE);
 		currentPlayer.tell(UsefulCommands.ANSI.GREEN + description + UsefulCommands.ANSI.SANE);
 		displayAll(currentPlayer);				
 		currentPlayer.tell(UsefulCommands.ANSI.CYAN + displayExits() + UsefulCommands.ANSI.SANE);
 		currentPlayer.tell("(God sight) Location number: " + id + ". Ground type: " + groundType.name() + ".");  // GOD SIGHT
-	}
+	} */
 	// Should probably not be here, but just a skill that accesses name and such.
 	public void glance(Mobile currentPlayer) {
 		currentPlayer.tell(UsefulCommands.ANSI.MAGENTA + name + UsefulCommands.ANSI.SANE);

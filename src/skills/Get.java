@@ -17,7 +17,7 @@ public class Get extends Skills {
 	// Moves a HOLDABLE from the LOCATION of the CURRENTPLAYER into their INVENTORY.
 	// Requires Balance, Syntax = "get sword" or "get dagger1234"
 	@Override
-	public void performSkill() {
+	protected void performSkill() {
 		if (!hasBalance()) {
 			return;
 		}

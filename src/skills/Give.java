@@ -21,7 +21,7 @@ public class Give extends Skills {
 	// Moves a HOLDABLE from the CURRENTPLAYER's INVENTORY to the MOBILE who is in currentPlayer's LOCATION.
 	// Requires balance, syntax = "give goblin2334 dagger " or "give andrew sword1532 "
 	@Override
-	public void performSkill() {
+	protected void performSkill() {
 		if (!hasBalance()) {
 			return;
 		}

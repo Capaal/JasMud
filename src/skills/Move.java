@@ -19,7 +19,7 @@ public class Move extends Skills {
 	private Container endContainer;
 	
 	@Override
-	public void performSkill() {
+	protected void performSkill() {
 		if (!hasBalance()) {
 			return;
 		}
@@ -41,6 +41,7 @@ public class Move extends Skills {
 		messageOthers(currentPlayer.getName() + " leaves to the " + dir + ".", Arrays.asList(currentPlayer));
 		currentPlayer.moveHoldable(endContainer);
 		messageOthers(currentPlayer.getName() + " arrives from the " + Location.Direction.getDirectionName(dir).getOpp() + ".", Arrays.asList(currentPlayer));
-		currentPlayer.getContainer().look(currentPlayer);
+		Look look = new Look();
+		look.perform("", currentPlayer);
 	}
 }

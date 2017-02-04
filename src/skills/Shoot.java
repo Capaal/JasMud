@@ -28,7 +28,7 @@ public class Shoot extends Skills {
 	// REQUIRES ranged weapon (eventually)
 	// Direction is OPTIONAL
 	@Override
-	public void performSkill() {
+	protected void performSkill() {
 		allLocations = new HashSet<Location>();
 		possibleTarg = Syntax.TARGET.getStringInfo(fullCommand, this);
 		if (possibleTarg == "") {

@@ -12,7 +12,7 @@ public class Say extends Skills {
 	}
 
 	@Override
-	public void performSkill() {
+	protected void performSkill() {
 		if (canTalk()) {
 			messageSelf("You say: " + Syntax.LIST.getStringInfo(fullCommand, this) + ".");
 			messageOthers(currentPlayer.getName() + " says, " + Syntax.LIST.getStringInfo(fullCommand, this) + ".", Arrays.asList(currentPlayer));

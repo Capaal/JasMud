@@ -8,6 +8,7 @@ import java.io.*; // Needed for PrintWriter and BufferReader.
 import java.util.*; // Needed for keySet();
 
 import processes.Location.Direction;
+import skills.Look;
 
 // Represents a users connection to the game. They will connect, then choose what hero to play. It handles interaction with the system.
 public class PlayerPrompt implements Runnable {
@@ -86,8 +87,10 @@ public class PlayerPrompt implements Runnable {
 			} else {				
 				destroyConnection();				
 			}
-		}
-		currentPlayer.getContainer().look(currentPlayer);
+		}		
+		
+		Look look = new Look();
+		look.perform("", currentPlayer);
 		
 		// The following is the User's infinite loop they play inside.	
 		boolean stayInsideLoop = true;

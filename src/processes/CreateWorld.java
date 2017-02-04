@@ -79,7 +79,7 @@ public class CreateWorld {
 		LocationBuilder newLoc2 = new LocationBuilder();
 		newLoc2.setId(2);
 		newLoc2.setName("North of Start.");
-		newLoc2.setDescription("Slightly north");
+		newLoc2.setDescription("Slightly north.");
 		newLoc2.south(1, "north");
 		newLoc2.complete();	
 	
@@ -88,6 +88,7 @@ public class CreateWorld {
 		LocationBuilder newLoc3 = new LocationBuilder();
 		newLoc3.setId(loc3);
 		newLoc3.setName("Road.");
+		newLoc3.setDescription("On the road to nowhere.");
 		newLoc3.south(2, "north");
 		newLoc3.complete();	
 		
@@ -96,6 +97,7 @@ public class CreateWorld {
 		LocationBuilder newLoc4 = new LocationBuilder();
 		newLoc4.setId(loc4);
 		newLoc4.setName("Along the road.");
+		newLoc4.setDescription("A road passing by some farmlands.");
 		newLoc4.setQuest(new FarmerQuest());
 		newLoc4.south(3, "north");
 		newLoc4.complete();	
@@ -105,6 +107,7 @@ public class CreateWorld {
 		LocationBuilder newLoc5 = new LocationBuilder();
 		newLoc5.setId(loc5);
 		newLoc5.setName("On a bridge.");
+		newLoc5.setDescription("A bridge over a dried creek.");
 		newLoc5.south(4, "north");
 		newLoc5.complete();	
 		
@@ -113,6 +116,7 @@ public class CreateWorld {
 		LocationBuilder newLoc6 = new LocationBuilder();
 		newLoc6.setId(loc6);
 		newLoc6.setName("Forest trail.");
+		newLoc6.setDescription("Off the main path.");
 		newLoc6.west(5, "east");
 		newLoc6.complete();	
 		
@@ -121,6 +125,7 @@ public class CreateWorld {
 		LocationBuilder newLoc7 = new LocationBuilder();
 		newLoc7.setId(loc7);
 		newLoc7.setName("End of trail.");
+		newLoc7.setDescription("Oh no, it's a dead end.");
 		newLoc7.west(6, "east");
 		newLoc7.in(2,"east");
 		newLoc7.complete();	
@@ -139,6 +144,7 @@ public class CreateWorld {
 		LocationBuilder newLoc9 = new LocationBuilder();
 		newLoc9.setId(loc9);
 		newLoc9.setName("Bank.");
+		newLoc9.setDescription("Not the watery type.");
 		newLoc9.east(1, "west");
 		newLoc9.complete();	
 		
