@@ -128,11 +128,11 @@ public class Equipment implements Container {
 //		return null;
 //	}
 
-	@Override
-	public void look(Mobile currentPlayer) {
-		// TODO Auto-generated method stub
+//	@Override
+//	public void look(Mobile currentPlayer) {
+//		// TODO Auto-generated method stub
 		
-	}
+//	}
 
 //	@Override
 //	public void glance(Mobile currentPlayer) {

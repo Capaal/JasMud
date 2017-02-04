@@ -51,9 +51,9 @@ public class UsefulCommands {
 		return getFirstWord(returnTarget(returnTarget(fullCommand)));
 	}
 	
-	public static String getForthWord(String fullCommand) {
-		return getFirstWord(returnTarget(returnTarget(returnTarget(fullCommand))));
-	}
+//	public static String getForthWord(String fullCommand) {
+//		return getFirstWord(returnTarget(returnTarget(returnTarget(fullCommand))));
+//	}
 	
 	// Converts incoming word so that numbers are stripped out and only letters are returned.
 	public static String getOnlyStrings(String str) {

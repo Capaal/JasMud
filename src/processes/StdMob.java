@@ -238,13 +238,13 @@ public class StdMob implements Mobile, Container, Holdable {
 	public String displayExits() {
 		return "You are being held by a person!";
 	}*/
-	@Override
+/*	@Override
 	public void look(Mobile currentPlayer) {
 		currentPlayer.tell("You see the player's inventory.");	
 		for (Holdable h : inventory.values()) {
 			currentPlayer.tell(h.getName() + h.getId());
 		}
-	}
+	} */
 	/*@Override
 	public void glance(Mobile currentPlayer) {
 		// TODO Auto-generated method stub

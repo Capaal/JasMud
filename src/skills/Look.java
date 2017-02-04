@@ -17,7 +17,7 @@ public class Look extends Skills {
 		Container mobLocation = currentPlayer.getContainer();
 		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
 		if (dir.equals("")) {
-			mobLocation.look(currentPlayer);
+//			mobLocation.look(currentPlayer);
 			return;
 		}
 		Location futureLocation = ((Location)mobLocation).getContainer(dir);

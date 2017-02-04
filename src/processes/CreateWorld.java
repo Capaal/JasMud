@@ -39,6 +39,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new Heal());
 		generalSkills.addSkill(new SkillList());
 		generalSkills.addSkill(new Drop());
+		generalSkills.addSkill(new Info());
 	}
 	
 	public static void makeItems() {

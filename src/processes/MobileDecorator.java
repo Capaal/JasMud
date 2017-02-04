@@ -30,10 +30,10 @@ public class MobileDecorator implements Mobile {
 		return decoratedMobile.getInventory();
 	}
 
-	@Override
-	public void look(Mobile currentPlayer) {
-		decoratedMobile.look(currentPlayer);
-	}
+//	@Override
+//	public void look(Mobile currentPlayer) {
+//		decoratedMobile.look(currentPlayer);
+//	}
 
 	@Override
 	public void removeItemFromLocation(Holdable oldItem) {
