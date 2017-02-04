@@ -3,26 +3,24 @@ package items;
 import java.util.*;
 
 import interfaces.*;
+import items.ItemBuilder.ItemType;
 import processes.*;
 import processes.Equipment.EquipmentEnum;
 
 public class StdItem implements Holdable, Weapon {
 	
-	private final String name;
-	private final int id;	
-	private final String description;
-	private final double physicalMult;
-	private final double balanceMult; // Currently unused
+	protected final String name;
+	protected final int id;	
+	protected final String description;
+	protected final double physicalMult;
+	protected final double balanceMult; 	
+	protected Container itemLocation;	
+//	protected final int maxDurability;
+//  protected int currentDurability;
+	protected final List<String> components; // Add to weapon interface? Make a craftable interface?
+	protected final boolean salvageable; // same as components?
 	
-	private Container itemLocation;	
-	private final int maxDurability;
-	private int currentDurability;
-	private final List<Type> types; // Add to WEAPON interface?
-	private final List<ItemType> itemTags; // add to Weapon interface? or delete?
-	private final List<String> components; // Add to weapon interface? Make a craftable interface?
-	private final boolean salvageable; // same as components?
-	
-	private final Set<EquipmentEnum> allowedEquipSlots;
+	protected final Set<EquipmentEnum> allowedEquipSlots;
 
 	public StdItem(ItemBuilder build) {
 		this.id = build.getId();
@@ -31,10 +29,8 @@ public class StdItem implements Holdable, Weapon {
 		this.description = build.getDescription();
 		this.balanceMult = build.getBalanceMult();
 		this.itemLocation = build.getItemContainer();		
-		this.maxDurability = build.getMaxDurability();
-		this.currentDurability = build.getCurrentDurability();
-		this.types = build.getTypes();
-		this.itemTags = build.getItemTags();
+//		this.maxDurability = build.getMaxDurability();
+//		this.currentDurability = build.getCurrentDurability();
 		this.allowedEquipSlots = build.getAllowedSlots();
 		this.components = build.getComponents();
 		this.salvageable = build.getSalvageable();
@@ -50,25 +46,18 @@ public class StdItem implements Holdable, Weapon {
 	public double getBalanceMult() {return balanceMult;}
 	@Override public synchronized Container getContainer() {return itemLocation;}	
 	
-	public int getMaxDurability() {return maxDurability;}
+//	public int getMaxDurability() {return maxDurability;}
 	
-	public synchronized int getCurrentDurability() {return currentDurability;}
-	public synchronized void setDurability(int newDurability) {
-		if (newDurability > maxDurability) {
-			newDurability = maxDurability;
-		}
-		this.currentDurability = newDurability;
-	}
+//	public synchronized int getCurrentDurability() {return currentDurability;}
+//	public synchronized void setDurability(int newDurability) {
+//		if (newDurability > maxDurability) {
+//			newDurability = maxDurability;
+//		}
+//		this.currentDurability = newDurability;
+//	}
 	
 	public Set<EquipmentEnum> getAllowedEquipSlots() {return allowedEquipSlots;}
-	public List<Type> getTypes() {return types;}
-	public List<ItemType> getItemTags() {return itemTags;}
 	public List<String> getComponents() {return components;}
-	
-	@Override
-	public boolean containsType(Type type) {
-		return types.contains(type);
-	}
 	
 	public double getDamageMult() {
 		return physicalMult;
@@ -77,8 +66,8 @@ public class StdItem implements Holdable, Weapon {
 	// not sure how packs will work yet...
 	@Override
 	public boolean save() {			
-		String updateItem = "UPDATE ITEMSTATS SET ITEMCURDUR=" + currentDurability + ", WHERE ITEMID=" + getId() + ";";
-		WorldServer.databaseInterface.saveAction(updateItem);
+//		String updateItem = "UPDATE ITEMSTATS SET ITEMCURDUR=" + currentDurability + ", WHERE ITEMID=" + getId() + ";";
+//		WorldServer.databaseInterface.saveAction(updateItem);
 		return true;
 	}
 	
@@ -92,15 +81,15 @@ public class StdItem implements Holdable, Weapon {
 	@Override
 	public boolean firstTimeSave() { 
 		DatabaseInterface databaseInterface = WorldServer.getInterface();		
-		databaseInterface.saveAction("Insert into ITEMSTATS (ITEMID, ITEMNAME, ITEMPHYS, ITEMBAL, ITEMDESC, ITEMMAXDUR, ITEMCURDUR, ITEMLOC, EQUIPSLOTS)"
+/*		databaseInterface.saveAction("Insert into ITEMSTATS (ITEMID, ITEMNAME, ITEMPHYS, ITEMBAL, ITEMDESC, ITEMMAXDUR, ITEMCURDUR, ITEMLOC, EQUIPSLOTS)"
 				+ " values ("
 				+ "'" + id + "', "
 				+ "'" + name + "', "
 				+ "'" + physicalMult + "', "
 				+ "'" + balanceMult + "', "
 				+ "'" + description + "', "
-				+ "'" + maxDurability + "', "
-				+ currentDurability + ");"); 
+//				+ "'" + maxDurability + "', "
+				+ currentDurability + ");"); */
 		return true;
 	}
 	
@@ -109,33 +98,6 @@ public class StdItem implements Holdable, Weapon {
 	//	save();
 		this.getContainer().removeItemFromLocation(this);
 		WorldServer.gameState.removeItem(this.getName() + this.getId());
-	}
-	
-	// Unused and unimplemented, should probably be re-worked or removed.
-	public enum ItemType {
-		
-		MATERIAL() {
-			
-		},
-		
-		PLANT() {
-			
-		},
-		
-		WOODWORKING() {
-			
-		},
-		
-		ENCHANTABLE() {
-			
-		},
-		
-		METALWORKING() {
-			
-		};
-		
-		private ItemType() {};
-				
 	}
 
 	@Override
@@ -162,5 +124,20 @@ public class StdItem implements Holdable, Weapon {
 	  //  	return true;
 	   // }
 	//    return false;
+	}
+	
+	public ItemBuilder newBuilder() {
+		ItemBuilder newBuilder = new ItemBuilder();
+		newBuilder.setId(this.id + 1);  // THIS IS REALLY BAD, need way of getting new ids
+		newBuilder.setName(name);
+		newBuilder.setDamageMult(physicalMult);
+		newBuilder.setDescription(description);
+		newBuilder.setBalanceMult(balanceMult);
+		newBuilder.setItemContainer(itemLocation);
+		newBuilder.setItemType(ItemType.STDITEM);
+	//	newBuilder.setAllowedSlots(allowedEquipSlots);
+		newBuilder.setComponents(components);
+		newBuilder.setSalvageable(salvageable);		
+		return newBuilder;
 	}
 }

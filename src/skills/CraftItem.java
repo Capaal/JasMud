@@ -8,9 +8,9 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import interfaces.Holdable;
+import items.ItemBuilder;
 import items.StdItem;
 import processes.CreateWorld;
-import processes.ItemBuilder;
 import processes.Skills;
 import processes.WorldServer;
 

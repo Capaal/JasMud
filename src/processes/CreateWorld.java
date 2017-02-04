@@ -1,9 +1,13 @@
 package processes;
 
+import items.ItemBuilder;
+import items.ItemBuilder.ItemType;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+
 import skills.*;
 import Quests.FarmerQuest;
 
@@ -223,7 +227,9 @@ public class CreateWorld {
 		ItemBuilder newItem = new ItemBuilder();	
 		newItem.setId(i);
 		newItem.setName("ore");
-		newItem.setDescription("A piece of iron ore.");
+		newItem.setDescription("A pile of iron ore chunks.");
+		newItem.setDescriptionSingle("A piece of iron ore.");
+		newItem.setItemType(ItemType.STACKABLEITEM);
 		newItem.setDamageMult(0.2);
 		newItem.complete();
 		WorldServer.gameState.addItem("ore", newItem.getFinishedItem()); //added here instead of templates, not a craftable item

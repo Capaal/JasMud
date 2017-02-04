@@ -1,16 +1,8 @@
 package processes;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.TreeMap;
-
-import Quests.Quest.Trigger;
 import processes.Equipment.EquipmentEnum;
-import processes.Location.GroundType;
-import processes.Skills.Syntax;
 import interfaces.Container;
 import interfaces.Effect;
 import interfaces.Holdable;
@@ -45,21 +37,6 @@ public class MobileDecorator implements Mobile {
 	public Holdable getHoldableFromString(String holdableString) {
 		return decoratedMobile.getHoldableFromString(holdableString);
 	}
-
-//	@Override
-//	public Set<EquipmentEnum> getAllowedEquipSlots() {
-//		return decoratedMobile.getAllowedEquipSlots();
-//	}
-
-	@Override
-	public boolean containsType(Type type) {
-		return decoratedMobile.containsType(type);
-	}
-
-//	@Override
-//	public double getDamageMult() {
-//		return decoratedMobile.getDamageMult();
-//	}
 
 	@Override
 	public String getName() {

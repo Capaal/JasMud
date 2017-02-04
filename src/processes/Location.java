@@ -163,15 +163,6 @@ public class Location implements Container {
 		System.out.println(insertNewLocation);
 		WorldServer.databaseInterface.saveAction(insertNewLocation);		
 	}
-	// DUPLICATE OF BELOW?
-	public Direction getHowOtherLocationConnectsToThis(Location askingLocation) {
-		for (Entry<Direction, Location> entry : locationMap.entrySet()) {
-			if (entry.getValue() == askingLocation) {
-				return entry.getKey();
-			}
-		}
-		return null;
-	}
 	
 	public Direction getDirectionToLocation(Location askingLocation) {
 		for (Entry<Direction, Location> entry : locationMap.entrySet()) {
@@ -206,7 +197,7 @@ public class Location implements Container {
 		for (Location loc : locationMap.values()) {
 			sb.append(", ");
 			sb.append(loc.getId());
-			Direction howOtherLocationConnectsHere = loc.getHowOtherLocationConnectsToThis(this);
+			Direction howOtherLocationConnectsHere = loc.getDirectionToLocation(this);
 			if (howOtherLocationConnectsHere == null) {
 				sb.append(", null");
 			} else {
@@ -250,13 +241,6 @@ public class Location implements Container {
 		}
 		return null;
 	}
-	
-	
-	
-/*	@Override
-	public Container getContainer() {
-		return null;
-	}*/
 	
 	public enum Direction {
 		
@@ -405,11 +389,8 @@ public class Location implements Container {
 				}
 			}
 			return null;
-		}
-		
-	}
-	
-	
+		}		
+	}	
 	
 	public enum GroundType {		
 		// GROUND might get broken up into many types of ground? rock, sand, dirt and so on?

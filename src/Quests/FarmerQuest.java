@@ -2,7 +2,7 @@ package Quests;
 
 import interfaces.Holdable;
 import interfaces.Mobile;
-import processes.ItemBuilder;
+import items.ItemBuilder;
 import processes.MobileBuilder;
 import processes.MobileDecorator;
 import processes.Type;

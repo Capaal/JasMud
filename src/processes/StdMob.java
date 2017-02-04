@@ -1,8 +1,11 @@
 package processes;
 
 import interfaces.*;
+import items.ItemBuilder;
 import items.StdItem;
+
 import java.util.*;
+
 import effects.*;
 import processes.Equipment.EquipmentEnum;
 import processes.MobileDecorator.DecoratorType;
@@ -239,6 +242,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		return "You are being held by a person!";
 	}*/
 /*	@Override
+	// Should display what the item WANTS to show, not just name + id
 	public void look(Mobile currentPlayer) {
 		currentPlayer.tell("You see the player's inventory.");	
 		for (Holdable h : inventory.values()) {
@@ -416,16 +420,6 @@ public class StdMob implements Mobile, Container, Holdable {
 	public void setSendBack(SendMessage sendBack) {
 		this.sendBack = sendBack;
 		
-	}
-	
-//	@Override TODO
-//	public EnumSet<EquipmentEnum> getAllowedEquipSlots() {
-//		return EnumSet.noneOf(EquipmentEnum.class);
-//	}
-	
-	@Override
-	public boolean containsType(Type type) {
-		return false;
 	}
 	
 	public static void insertNewBlankMob(String newName, String newPassword) throws IllegalStateException {

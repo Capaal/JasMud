@@ -21,16 +21,16 @@ public class UsefulCommands {
 	}
 	// Converts incoming word so that only numbers are returned.
 	public static String getOnlyNumerics(String str) {
-   	if (str == null) {
-   		return null;
-   	}
+	   	if (str == null) {
+	   		return null;
+	   	}
 		StringBuffer strBuff = new StringBuffer();
-	   char c;
-	   for (int i = 0; i < str.length() ; i++) {
-		   c = str.charAt(i);
+	    char c;
+	    for (int i = 0; i < str.length() ; i++) {
+	    	c = str.charAt(i);
  			if (Character.isDigit(c)) {
-   			strBuff.append(c);
-   		}
+ 				strBuff.append(c);
+ 			}
   		}
   		return strBuff.toString();
 	}

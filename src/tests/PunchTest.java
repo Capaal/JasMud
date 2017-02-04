@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import interfaces.Container;
 import interfaces.Holdable;
 import interfaces.Mobile;
+import items.ItemBuilder;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -18,7 +19,6 @@ import org.mockito.Mockito;
 
 import effects.Balance;
 import processes.GameState;
-import processes.ItemBuilder;
 import processes.Location;
 import processes.LocationBuilder;
 import processes.MobileBuilder;

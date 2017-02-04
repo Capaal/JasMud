@@ -7,9 +7,9 @@ import java.util.Random;
 import java.util.Set;
 
 import interfaces.Holdable;
+import items.ItemBuilder;
 import items.StdItem;
 import processes.CreateWorld;
-import processes.ItemBuilder;
 import processes.Skills;
 import processes.Skills.Syntax;
 import processes.WorldServer;

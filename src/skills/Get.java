@@ -4,7 +4,9 @@ import java.util.Arrays;
 
 import interfaces.Container;
 import interfaces.Holdable;
+import items.StackableItem;
 import processes.Skills;
+import processes.UsefulCommands;
 
 public class Get extends Skills {
 	
@@ -12,21 +14,43 @@ public class Get extends Skills {
 		super.name = "get";
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
+		super.syntaxList.add(Syntax.QUANTITY);
 	}
 
 	// Moves a HOLDABLE from the LOCATION of the CURRENTPLAYER into their INVENTORY.
-	// Requires Balance, Syntax = "get sword" or "get dagger1234"
+	// Requires Balance, Syntax = "get sword" or "get dagger1234" or "get gold 26"
 	@Override
 	protected void performSkill() {
-		if (!hasBalance()) {
-			return;
-		}
+		if (!hasBalance()) {return;}
 		Container here = currentPlayer.getContainer();
 		Holdable itemToMove = here.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
 		if (itemToMove == null) {
 			messageSelf("You can't find that item.");
 			return;
 		}		
+		if (itemToMove instanceof StackableItem) {	
+			moveStackableItem((StackableItem)itemToMove);			
+		} else {
+			standardGetItem(itemToMove);
+		}
+	}
+	
+	private void moveStackableItem(StackableItem itemToMove) {
+		String quantityToMove = Syntax.QUANTITY.getStringInfo(fullCommand, this);
+		if (!quantityToMove.isEmpty()) {
+			int quantity = Integer.parseInt(quantityToMove);
+			if (quantity > itemToMove.getQuantity()) {
+				quantity = itemToMove.getQuantity();
+			}
+			((StackableItem)itemToMove).moveHoldable(currentPlayer, quantity);
+			messageSelf("You get " + quantity + " " + itemToMove.getName() + ".");
+			messageOthers(currentPlayer.getName() + " picks up " + quantity + " " + itemToMove.getName() + ".", Arrays.asList(currentPlayer));
+		} else {
+			standardGetItem(itemToMove);
+		}
+	}
+	
+	private void standardGetItem(Holdable itemToMove) {
 		itemToMove.moveHoldable(currentPlayer);
 		messageSelf("You get " + itemToMove.getName() + ".");
 		messageOthers(currentPlayer.getName() + " picks up " + itemToMove.getName() + ".", Arrays.asList(currentPlayer));

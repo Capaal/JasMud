@@ -125,6 +125,28 @@ public abstract class Skills {
 		FILLER() {			
 		},
 		
+		QUANTITY() {		
+			@Override
+			public String getStringInfo(String fullCommand, Skills s) {
+				ArrayList<String> fullCommandArray = new ArrayList<String>(); // To becomes list of each word from fullCommand
+				StringTokenizer st = new StringTokenizer(fullCommand);  // Breaks fullCommand into individual characters.
+				while (st.hasMoreTokens()) {
+					fullCommandArray.add(st.nextToken()); // adds individual words to fullCommandArray
+				}
+				int syntaxPos = s.syntaxList.indexOf(this); // Queries THIS skill for the given Syntax (neededInfo) for which position that word should be.
+				if (syntaxPos != -1) { // Would be -1 IF the neededInfo Syntax was NOT defined by this Skill.				
+					if (fullCommandArray.size() > syntaxPos) { // If fullCommand has enough words.
+						String numerics = fullCommandArray.get(syntaxPos);					
+						if (numerics.matches("[0-9]+")) {
+							return fullCommandArray.get(syntaxPos);
+						}
+						return "";
+					}
+				}
+				return "";		
+			}
+		},
+		
 		TIMES() {
 			
 		};
