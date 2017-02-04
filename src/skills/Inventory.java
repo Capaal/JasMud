@@ -20,12 +20,17 @@ public class Inventory extends Skills {
 	protected void performSkill() {
 		StringBuilder inventoryMsg = new StringBuilder();
 		inventoryMsg.append("You are holding: ");
-		Set inv = currentPlayer.getInventory().keySet();
-		Iterator i = inv.iterator();
-		String firstItem = (String)i.next();
-		inventoryMsg.append(firstItem);
+		Set <String> inv = currentPlayer.getInventory().keySet();
+		Iterator <String> i = inv.iterator();
+		if (!i.hasNext()) {
+			inventoryMsg.append("nothing!");
+			messageSelf(inventoryMsg.toString());
+			return;
+		}
+		String firstItem = i.next();
+		inventoryMsg.append(UsefulCommands.getOnlyStrings(firstItem));
 		while (i.hasNext()) {
-			inventoryMsg.append(", " + (String)i.next());
+			inventoryMsg.append(", " + UsefulCommands.getOnlyStrings(i.next()));
 		}
 		inventoryMsg.append(".");
 		messageSelf(inventoryMsg.toString());

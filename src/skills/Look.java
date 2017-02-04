@@ -3,6 +3,7 @@ package skills;
 import interfaces.Container;
 import processes.Location;
 import processes.Skills;
+import processes.UsefulCommands;
 
 public class Look extends Skills {
 
@@ -14,17 +15,27 @@ public class Look extends Skills {
 	
 	@Override
 	protected void performSkill() {
-		Container mobLocation = currentPlayer.getContainer();
+		Location mobLocation = currentPlayer.getContainer();
 		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
 		if (dir.equals("")) {
-//			mobLocation.look(currentPlayer);
+			doLook(mobLocation);
 			return;
 		}
-		Location futureLocation = ((Location)mobLocation).getContainer(dir);
+		Location futureLocation = mobLocation.getContainer(dir);
 		if (futureLocation == null) {
 			messageSelf("There is no location that way.");
 			return;
 		}
-		futureLocation.look(currentPlayer);
+		doLook(futureLocation);
 	}
+	
+	private void doLook (Location lookHere) {
+		messageSelf(UsefulCommands.ANSI.MAGENTA + lookHere.getName() + UsefulCommands.ANSI.SANE);
+		messageSelf(UsefulCommands.ANSI.GREEN + lookHere.getDescription() + UsefulCommands.ANSI.SANE);
+		lookHere.displayAll(currentPlayer);				
+		messageSelf(UsefulCommands.ANSI.CYAN + lookHere.displayExits() + UsefulCommands.ANSI.SANE);
+		messageSelf("(God sight) Location number: " + id + ". Ground type: " + lookHere.getGroundType() + ".");  // GOD SIGHT
+	}
+	
 }
+
