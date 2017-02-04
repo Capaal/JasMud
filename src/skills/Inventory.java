@@ -1,5 +1,8 @@
 package skills;
 
+import java.util.Iterator;
+import java.util.Set;
+
 import interfaces.Container;
 import interfaces.Holdable;
 import processes.Location;
@@ -15,12 +18,18 @@ public class Inventory extends Skills {
 	
 	@Override
 	protected void performSkill() {
-		StringBuilder inventory = new StringBuilder();
-		inventory.append("You are holding: ");
-
-		for (String i : currentPlayer.getInventory().keySet()) {
-			inventory.append(UsefulCommands.getOnlyStrings(i) + ", ");
+		StringBuilder inventoryMsg = new StringBuilder();
+		inventoryMsg.append("You are holding: ");
+		Set inv = currentPlayer.getInventory().keySet();
+		Iterator i = inv.iterator();
+		String firstItem = (String)i.next();
+		inventoryMsg.append(firstItem);
+		while (i.hasNext()) {
+			inventoryMsg.append(", " + (String)i.next());
 		}
-		messageSelf(inventory.toString());
+		inventoryMsg.append(".");
+		messageSelf(inventoryMsg.toString());
+		
+		//should do short descriptions
 	}
 }
