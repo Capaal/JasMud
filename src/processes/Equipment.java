@@ -119,7 +119,7 @@ public class Equipment implements Container {
 		public static EquipmentEnum fromString(String text) {
 		    if (text != null) {
 		    	for (EquipmentEnum b : EquipmentEnum.values()) {
-		    		if (text.equalsIgnoreCase(b.name())) {
+		    		if (text.equalsIgnoreCase(b.toString())) {
 		    			return b;
 		    		}
 		    	}
