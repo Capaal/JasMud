@@ -27,7 +27,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	protected int currentHp; 
 	protected Location mobLocation;
 	protected boolean isDead;
-	protected Equipment equipment;		
+	protected final Equipment equipment;		
 	protected String description;
 	protected int xpWorth;
 	protected String shortDescription;
@@ -36,7 +36,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	protected int age; 
 	protected SendMessage sendBack;
 	protected boolean isControlled = false;
-	protected boolean loadOnStartUp = false;
+//	protected boolean loadOnStartUp = false;
 	protected TreeMap<String, Holdable> inventory = new TreeMap<String, Holdable>();
 	protected InductionSkill inductionSkill = null;
 	protected Map<SkillBook, Integer> skillBookList = new HashMap<SkillBook, Integer>();
@@ -127,18 +127,12 @@ public class StdMob implements Mobile, Container, Holdable {
 	
 	@Override
 	public synchronized void takeDamage(Type type, int damage) {
-		damage = checkEffectsAgainstIncomingDamage(type, damage);
 		if (currentHp < damage) {
 			damage = currentHp;
 		} 
 		this.currentHp = currentHp - damage;
 		checkHp();
 		displayPrompt();
-	}
-	
-	@Override
-	public int checkEffectsAgainstIncomingDamage(Type incomingType, int damage) {
-		return effectManager.checkEffectsAgainstIncomingDamage(incomingType, damage);
 	}	
 
 	private void checkHp() {
@@ -256,12 +250,12 @@ public class StdMob implements Mobile, Container, Holdable {
 		item.equip(this);
 		equipment.equip(slot, item);
 	}
+	
 	@Override
-	public Container getEquipment() {
+	public Equipment getEquipment() {
 		return equipment;
 	}
 	
-	// TODO SHOULD BE CALLED AFTER SOMETHING IN STDITEM
 	@Override
 	public void unEquip(Holdable item) {
 		equipment.unEquip(item);
@@ -325,10 +319,10 @@ public class StdMob implements Mobile, Container, Holdable {
 	private boolean saveStats() {
 		// Should update everything that we expect to change A LOT, like location and hp. Things like description would
 		// probably be best somewhere else that get updated right when the change occurs.
-		String updateStats = "UPDATE MOBSTATS SET MOBDESC='" + description + "', MOBSHORTD='" + shortDescription 
-				+ "', MOBLOC=" + mobLocation.getId() + ", MOBCURRENTHP=" + currentHp + ", MOBDEAD='" + (isDead ? 1 : 0) + "', "
-						+ "MOBCURRENTXP=" + experience + ", MOBCURRENTLEVEL=" + level + ", MOBAGE=" + age
-						+ ", LOADONSTARTUP=" + (loadOnStartUp ? 1 : 0) + " WHERE MOBID=" + id + ";";
+	//	String updateStats = "UPDATE MOBSTATS SET MOBDESC='" + description + "', MOBSHORTD='" + shortDescription 
+	//			+ "', MOBLOC=" + mobLocation.getId() + ", MOBCURRENTHP=" + currentHp + ", MOBDEAD='" + (isDead ? 1 : 0) + "', "
+//					+ "MOBCURRENTXP=" + experience + ", MOBCURRENTLEVEL=" + level + ", MOBAGE=" + age
+//						+ ", LOADONSTARTUP=" + (loadOnStartUp ? 1 : 0) + " WHERE MOBID=" + id + ";";
 	//	WorldServer.databaseInterface.saveAction(updateStats);
 		return true;
 	}	
@@ -348,17 +342,17 @@ public class StdMob implements Mobile, Container, Holdable {
 		}
 		return true;
 	}
-	@Override
-	public void setStartup(boolean b) {
-		loadOnStartUp = b;		
-	}	
+//	@Override
+//	public void setStartup(boolean b) {
+//		loadOnStartUp = b;		
+//	}	
 
-	@Override
+	@Override // TODO
 	public void removeFromWorld() {	
-		if (!loadOnStartUp) { // WHY THIS?
-//			for (Holdable inventoryItem : inventory) {
-//				inventoryItem.removeFromWorld();
-//			}
+//		if (!loadOnStartUp) { // WHY THIS?
+			for (Holdable inventoryItem : inventory.values()) {
+				inventoryItem.removeFromWorld();
+			}
 			for (Holdable equipmentItem : equipment.values()) {
 				if (equipmentItem != null) {
 					equipmentItem.removeFromWorld();
@@ -371,7 +365,7 @@ public class StdMob implements Mobile, Container, Holdable {
 			}
 			mobLocation.removeItemFromLocation(this);
 			WorldServer.gameState.removeMob(this.getName() + this.getId());
-		}
+	//	}
 	}
 	
 	@Override

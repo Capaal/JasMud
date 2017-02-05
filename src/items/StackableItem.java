@@ -35,6 +35,10 @@ public class StackableItem extends StdItem {
 		moveHoldable(finalLocation, 1);
 	}
 	
+	public void moveAllHoldable(Container finalLocation) {
+		moveHoldable(finalLocation, this.quantity);
+	}
+	
 	public int getQuantity() {
 		return quantity;
 	}

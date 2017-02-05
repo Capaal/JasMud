@@ -1,21 +1,12 @@
 package processes;
 
-import interfaces.Container;
 import interfaces.Holdable;
 import interfaces.Mobile;
-
+import items.StackableItem;
 import java.util.*;
 
-import Quests.Quest.Trigger;
-import processes.Location.GroundType;
-
-// EQUIPMENT SHOULD USE HOLDABLE not equipable, all StdItems can be wielded in hands, so this should be able to take anything.
-// Most items won't qualify for slots.
-// Should an interface exist for each slot. all items can be held in hands, chest in chest legs on legs
-// And so on, and then I will extend StdItems to each of these new classes, the big difference being where they can be worn.
-// Flaw might be, can anything be worn in multiple places?
-// Two-handed weapons? shit
-public class Equipment implements Container {
+// Two-handed weapons? shit Will probably need to check, and fill other hand, or have a special enum
+public class Equipment {
 
 	private Map<EquipmentEnum, Holdable> equipmentToItemMap;
 	private Map<Holdable, EquipmentEnum> itemToEquipmentMap;
@@ -60,7 +51,11 @@ public class Equipment implements Container {
 	private void handleOutgoingItem(EquipmentEnum slot) {
 		Holdable outgoing = equipmentToItemMap.get(slot);
 		if (outgoing != null) {
-			outgoing.moveHoldable(currentPlayer);
+			if (outgoing instanceof StackableItem) {
+				((StackableItem)outgoing).moveAllHoldable(currentPlayer);
+			} else {
+				outgoing.moveHoldable(currentPlayer);
+			}
 			itemToEquipmentMap.remove(outgoing);	
 		}
 		equipmentToItemMap.put(slot, null);
@@ -126,45 +121,6 @@ public class Equipment implements Container {
 		    }
 		    return null;
 		}
-	}
-	
-	
-
-
-	@Override // TODO
-	public TreeMap<String, Holdable> getInventory() {
-//		return new TreeMap<String, Holdable>(values());
-		return null;
-	}
-
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getId() {
-	//	return currentPlayer.getId();
-		return -1;
-	}
-
-	@Override
-	public void acceptItem(Holdable newItem) {
-		System.out.println("Something just called accept item on equipment.");
-		
-	}
-
-	@Override
-	public void removeItemFromLocation(Holdable oldItem) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Holdable getHoldableFromString(String holdableString) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	@Override

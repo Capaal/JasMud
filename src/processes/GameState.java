@@ -111,7 +111,6 @@ public class GameState {
 		try {
 			SkillQueue.put(new QueueInformation(skill, fullCommand, currentPlayer));
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -120,10 +119,8 @@ public class GameState {
 		try {
 			return SkillQueue.take();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
-	}
-	
+	}	
 }

@@ -19,7 +19,7 @@ public class ItemBuilder {
 	private int currentDurability = 1;
 	private ArrayList<ItemType> itemTags = new ArrayList<ItemType>();
 	private Container itemContainer = WorldServer.gameState.viewLocations().get(1);		
-	private EnumSet<EquipmentEnum> allowedSlots = EnumSet.noneOf(EquipmentEnum.class);
+	private EnumSet<EquipmentEnum> allowedSlots = EnumSet.of(EquipmentEnum.RIGHTHAND, EquipmentEnum.LEFTHAND);// EnumSet.noneOf(EquipmentEnum.class);
 	private List<String> components = new ArrayList<String>();
 	private boolean salvageable = false;
 	
@@ -34,6 +34,8 @@ public class ItemBuilder {
 	 */
 	private int quantity = 1;
 	private String descriptionSingle = "";
+	
+	// Done with StackableItem
 	
 	public void setItemType (ItemType type) {
 		this.typeToProduce = type;

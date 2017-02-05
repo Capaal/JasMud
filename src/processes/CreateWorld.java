@@ -185,6 +185,7 @@ public class CreateWorld {
 	public static void makeASword(int i) {
 		ItemBuilder newItem = new ItemBuilder();	
 		newItem.setId(i);
+		
 		newItem.setName("sword");
 		newItem.setDescription("It's a sword!");
 		newItem.setComponents(Arrays.asList("ingot","ingot"));

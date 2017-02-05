@@ -77,15 +77,18 @@ public class StdItem implements Holdable, Weapon {
 		finalLocation.acceptItem(this);
 		this.itemLocation = finalLocation;
 	}
-	// OR SHOULD THIS BE ON STDMOB??? TODO
+	
+	// Most of equiping is handled by StdMob
+	@Override
 	public void equip(Mobile player) {
 		getContainer().removeItemFromLocation(this);
-		this.itemLocation = player.getEquipment();
+		this.itemLocation = player;
 	}
 	
+	// NOT CURRENTLY WORKING TODO
 	@Override
 	public boolean firstTimeSave() { 
-		DatabaseInterface databaseInterface = WorldServer.getInterface();		
+//		DatabaseInterface databaseInterface = WorldServer.getInterface();		
 /*		databaseInterface.saveAction("Insert into ITEMSTATS (ITEMID, ITEMNAME, ITEMPHYS, ITEMBAL, ITEMDESC, ITEMMAXDUR, ITEMCURDUR, ITEMLOC, EQUIPSLOTS)"
 				+ " values ("
 				+ "'" + id + "', "

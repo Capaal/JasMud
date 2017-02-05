@@ -4,6 +4,7 @@ import items.StdItem;
 
 import java.util.Map;
 
+import processes.Equipment;
 import processes.Equipment.EquipmentEnum;
 import processes.InductionSkill;
 import processes.Location;
@@ -33,7 +34,6 @@ public interface Mobile extends Container, Holdable {
 	public void acceptItem(Holdable item);
 	public void addEffect(Effect newEffect, int duration);
 	public void addTickingEffect(TickingEffect newEffect, int duration, int times);
-	public int checkEffectsAgainstIncomingDamage(Type incomingType, int damage);
 //	public double getWeaponMultiplier(); TODO
 	public boolean hasEffect(Effect effect);
 	public void removeEffect(Effect effect);
@@ -42,7 +42,7 @@ public interface Mobile extends Container, Holdable {
 	public boolean isControlled();
 	public void controlStatus(boolean statusChange);
 	public boolean save();
-	public void setStartup(boolean b);
+//	public void setStartup(boolean b);
 	public void equip(EquipmentEnum slot, StdItem item);
 	public void unEquip(EquipmentEnum slot);
 	public void unEquip(Holdable item);
@@ -61,6 +61,6 @@ public interface Mobile extends Container, Holdable {
 	public void setInduction(InductionSkill skill);
 	public Map<SkillBook, Integer> viewSkillBooks();
 	public void dropItemsOnDeath();
-	public Container getEquipment();
+	public Equipment getEquipment();
 	
 }

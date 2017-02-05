@@ -1,10 +1,8 @@
 package processes;
 
-import interfaces.DamageEffect;
 import interfaces.Effect;
 import interfaces.Mobile;
 import interfaces.TickingEffect;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -67,16 +65,6 @@ public class EffectManager {
 			}
 		}
 		effectList.remove(effectToBeRemoved);
-	}
-	
-	public int checkEffectsAgainstIncomingDamage(Type incomingType, int damage) {
-		double finalDamage = damage;
-		for (Effect effect : effectList) {
-			if (effect instanceof DamageEffect) {
-				finalDamage = ((DamageEffect) effect).checkAgainstIncomingDamage(incomingType, finalDamage);
-			}
-		}
-		return (int)finalDamage;
 	}
 	
 	public void shutDown() {

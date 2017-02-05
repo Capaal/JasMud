@@ -82,10 +82,6 @@ public abstract class Skills {
 			
 		},
 		
-		SELF() {  // Special case for message. Should not be used in skill syntax.
-			
-		},
-		
 		TARGET() {
 			
 		},
@@ -98,7 +94,7 @@ public abstract class Skills {
 			@Override
 			public String getStringInfo(String fullCommand, Skills s) {
 				ArrayList<String> fullCommandArray = new ArrayList<String>(); // To becomes list of each word from fullCommand
-				StringTokenizer st = new StringTokenizer(fullCommand);  // Breaks fullCommand into individual characters.
+				StringTokenizer st = new StringTokenizer(fullCommand);  // Breaks fullCommand into individual Words.
 				while (st.hasMoreTokens()) {
 					fullCommandArray.add(st.nextToken()); // adds individual words to fullCommandArray
 				}
@@ -129,7 +125,7 @@ public abstract class Skills {
 			@Override
 			public String getStringInfo(String fullCommand, Skills s) {
 				ArrayList<String> fullCommandArray = new ArrayList<String>(); // To becomes list of each word from fullCommand
-				StringTokenizer st = new StringTokenizer(fullCommand);  // Breaks fullCommand into individual characters.
+				StringTokenizer st = new StringTokenizer(fullCommand);  // Breaks fullCommand into individual words.
 				while (st.hasMoreTokens()) {
 					fullCommandArray.add(st.nextToken()); // adds individual words to fullCommandArray
 				}
@@ -156,7 +152,7 @@ public abstract class Skills {
 		
 		public String getStringInfo(String fullCommand, Skills s) {
 			ArrayList<String> fullCommandArray = new ArrayList<String>(); // To becomes list of each word from fullCommand
-			StringTokenizer st = new StringTokenizer(fullCommand);  // Breaks fullCommand into individual characters.
+			StringTokenizer st = new StringTokenizer(fullCommand);  // Breaks fullCommand into individual words.
 			while (st.hasMoreTokens()) {
 				fullCommandArray.add(st.nextToken()); // adds individual words to fullCommandArray
 			}

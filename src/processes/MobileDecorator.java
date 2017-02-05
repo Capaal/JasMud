@@ -168,11 +168,6 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public void setStartup(boolean b) {
-		decoratedMobile.setStartup(b);
-	}
-
-	@Override
 	public void equip(EquipmentEnum slot, StdItem item) {
 		decoratedMobile.equip(slot, item);
 	}
@@ -299,8 +294,7 @@ public enum DecoratorType {
 	}
 
 	@Override
-	public Container getEquipment() {
-		// TODO Auto-generated method stub
-		return null;
+	public Equipment getEquipment() {
+		return decoratedMobile.getEquipment();
 	}
 }

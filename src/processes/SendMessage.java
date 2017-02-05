@@ -25,23 +25,7 @@ public class SendMessage {
 	
 	// Prints any message sent to it.
 	public void printMessage(String msg) {
-/*		int currentWidth = 0;
-		StringTokenizer st = new StringTokenizer(msg);
-		while (st.hasMoreTokens()) {
-			String token = st.nextToken();
-			if (currentWidth + token.length() >= width) {
-				out.println();
-				currentWidth = 0;
-			}
-			out.print(token + " ");
-			currentWidth += token.length();			
-		}
-		out.println();*/
-	//	long start = System.nanoTime();
 		out.println(msg);
-	//		long end = System.nanoTime();
-	//		long elapsedTime = end - start;
-	//		System.out.println(elapsedTime*(10E-7) + " milliseconds.");
 		out.flush();
 		if (out.checkError()) {
 			System.out.println("Sendback error");
@@ -55,6 +39,7 @@ public class SendMessage {
 			return msg;
 		}
 		catch (IOException e) {
+			System.out.println("Sendback error: BufferedReader.");
 		}
 		return null;
 	}

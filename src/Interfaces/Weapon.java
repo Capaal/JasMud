@@ -6,4 +6,5 @@ public interface Weapon {
 	public double getBalanceMult();
 //	public int getMaxDurability();
 // int getCurrentDurability();
+	public void equip(Mobile player);
 }

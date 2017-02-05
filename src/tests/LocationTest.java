@@ -47,7 +47,7 @@ public class LocationTest {
 	@Test
 	public void testTwoLocationsMutualDirections() {
 		WorldServer.setGameState(new GameState());
-		WorldServer.setInterface(new StubDatabaseInterface());
+	//	WorldServer.setInterface(new StubDatabaseInterface());
 		LocationBuilder buildSouth = new LocationBuilder();
 		buildSouth.setId(1);
 		buildSouth.complete();
@@ -64,7 +64,7 @@ public class LocationTest {
 	@Test
 	public void testTwoLocationsConnectInDifferentWays() {
 		WorldServer.setGameState(new GameState());
-		WorldServer.setInterface(new StubDatabaseInterface());
+//		WorldServer.setInterface(new StubDatabaseInterface());
 		LocationBuilder buildSouth = new LocationBuilder();
 		buildSouth.setId(1);
 		buildSouth.complete();
@@ -81,7 +81,7 @@ public class LocationTest {
 	@Test
 	public void testTwoLocationsOnlyOneConnects() {
 		WorldServer.setGameState(new GameState());
-		WorldServer.setInterface(new StubDatabaseInterface());
+//		WorldServer.setInterface(new StubDatabaseInterface());
 		LocationBuilder buildSouth = new LocationBuilder();
 		buildSouth.setId(1);
 		buildSouth.complete();

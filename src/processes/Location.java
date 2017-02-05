@@ -153,15 +153,16 @@ public class Location implements Container {
 		return getLocation(dir);
 	}
 	
+	// NOT WORKING CURRENTLY
 	public void save() {
-		String directionKeyInformation = makeKeyInformation();
+/*		String directionKeyInformation = makeKeyInformation();
 		String directionValueInformation = makeValueInformation();
 		String insertNewLocation = "insert into locationstats (LOCID, LOCNAME, LOCDES, LOCTYPE"
 				+ directionKeyInformation
 				+ ") values (" + id + ", '" + name + "', '" + description + "', '" + groundType.toString() + "'"
 				+ directionValueInformation + ") ON DUPLICATE KEY UPDATE LOCID=" + id + ";";	
 		System.out.println(insertNewLocation);
-		WorldServer.databaseInterface.saveAction(insertNewLocation);		
+		WorldServer.databaseInterface.saveAction(insertNewLocation);	*/	
 	}
 	
 	public Direction getDirectionToLocation(Location askingLocation) {

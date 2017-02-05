@@ -16,12 +16,25 @@ public class PlayerPrompt implements Runnable {
 	protected Socket incoming;
 	protected SendMessage sendBack;	
 	protected Mobile currentPlayer;
+	
+	public static final String[] failMessages = new String[] {
+		"You stumble around uselessly.", 
+		"You stare blankly into the distance.",
+		"Unfortunatly, comprehension fails to dawn.", 
+		"Luckly, your non-sensical action goes unnoticed.", 
+		"Your body fails to enact your command.",
+		"You have no idea how to perform such an action.", 
+		"You blink, realizing that you have no idea what that action implies.", 
+		"You stop, wondering what you should actually be doing.",
+		"Your body halts, questioning your mind's desires.", 
+		"You question your sanity for desiring such an action, but realize that questioning your sanity clearly means you are sane... right?",
+		"You look at yourself expectantly."};
 	 	
 	public PlayerPrompt(Socket incoming) throws IOException {	
 		this.incoming = incoming;
 		this.sendBack = new SendMessage(incoming);	
 	}
-	//TODO
+
 	public void run() {	
 		sendBack.printMessage("Hello, and welcome!");
 		sendBack.printMessage("Your name? ");
@@ -30,8 +43,10 @@ public class PlayerPrompt implements Runnable {
 		String enteredPass = sendBack.getMessage(); // NOT SAFE
 		sendBack.printSpace();
 		boolean oldPlayer = false;
-		if (enteredName != null) {
-			Mobile possiblePlayer = null;
+		if (enteredName == null) {
+			destroyConnection();
+	//		oldPlayer = loadExistingMob();
+	//		Mobile possiblePlayer = null;
 	//		possiblePlayer = WorldServer.databaseInterface.loadPlayer(enteredName, enteredPass);	
 	//		if (possiblePlayer != null) {
 	//			currentPlayer = possiblePlayer;
@@ -39,8 +54,8 @@ public class PlayerPrompt implements Runnable {
 	//			currentPlayer.controlStatus(true);
 	//			oldPlayer = true;
 	//		}
-	//	}
-		// Creates a new player with selected Name.
+		}
+		// Creates a new player with selected Name if load failed.
 		if (oldPlayer == false && enteredName != null) {
 			sendBack.printMessage("Would you like to create a new character? Y/N ");
 			String create = sendBack.getMessage();
@@ -48,118 +63,66 @@ public class PlayerPrompt implements Runnable {
 			if (create != null) {
 				createPlayer = create;
 			}
-			if (createPlayer.toLowerCase().equals("y")) {
-				//ASSUMES STDMOB right now.
-				try {
-					StdMob.insertNewBlankMob(enteredName, enteredPass);
-				} catch (IllegalStateException e1) {
-					e1.printStackTrace();
-					sendBack.printMessage("Critical error building new character, disconnecting.");
-					System.out.println("New character creation failed to save to database.");
-					destroyConnection();
-				}			
-		//		this.currentPlayer = WorldServer.databaseInterface.loadPlayer(enteredName, enteredPass);
-				MobileBuilder loadedPlayer = new MobileBuilder();
-				
-				loadedPlayer.setId(WorldServer.gameState.viewActiveClients().size()+1);
-				loadedPlayer.setName(enteredName);		
-					
-					loadedPlayer.setPassword(enteredPass);
-					
-					loadedPlayer.setLocation(WorldServer.gameState.viewLocations().get(1));
-					
-					
-						loadedPlayer.setLoadOnStartUp(false);
-						loadedPlayer.complete();
-						this.currentPlayer = loadedPlayer.getFinishedMob();
-					}
-									
-					WorldServer.gameState.addMob(currentPlayer.getName() + currentPlayer.getId(), currentPlayer);
-					currentPlayer.getContainer().acceptItem(currentPlayer);
-				//adding hardcoded skillbook
-				currentPlayer.addBook(CreateWorld.generalSkills.duplicate(),100); //TODO
-			
-				
-				currentPlayer.setSendBack(sendBack);
-				currentPlayer.controlStatus(true);
-				currentPlayer.setStartup(false);
-				currentPlayer.save();			
+			if (createPlayer.equalsIgnoreCase("y")) {
+				createNewPlayer(enteredName, enteredPass);									
 			} else {				
-				destroyConnection();				
+				destroyConnection();		// OMG THEY DIDN"T HIT y!!!!		
 			}
 		}		
-		
-		Look look = new Look();
-		look.perform("", currentPlayer);
-		
+		new Look().perform("",  currentPlayer);		
 		// The following is the User's infinite loop they play inside.	
 		boolean stayInsideLoop = true;
 		while (stayInsideLoop) {
-//			if (!currentPlayer.isCreating()) {
-				currentPlayer.displayPrompt();
-				String str = sendBack.getMessage();
-				if (str == null) {
+			currentPlayer.displayPrompt();
+			String str = sendBack.getMessage();
+			if (str != null) {
+				// This is what breaks the infinite loop and kills connection.
+				if (str.trim().equalsIgnoreCase("quit")) {
+					stayInsideLoop = false;
+					currentPlayer.tell("Leaving the World...");
+					currentPlayer.removeFromWorld();
+					destroyConnection();
 					break;
-				} else {
-					// This is what breaks the infinite loop and kills connection.
-					if (str.trim().toLowerCase().equals("quit")) {
-						stayInsideLoop = false;
-						currentPlayer.tell("Leaving the World...");
-						currentPlayer.removeFromWorld();
-						destroyConnection();
-						break;
-					} else if (str.trim().toLowerCase().equals("shutdown")) {
-						stayInsideLoop = false;
-						for (PlayerPrompt player : WorldServer.gameState.viewActiveClients()) {
-							player.currentPlayer.removeFromWorld();
-						}
-						for (StdItem item : WorldServer.gameState.viewAllItems()) {
-							item.removeFromWorld();
-						}
-						destroyConnection();
-						WorldServer.shutdownAndAwaitTermination(WorldServer.executor);
-					} else {
-						long start = System.nanoTime();
-						System.out.println("User typed:" + str);
-						
-						StringTokenizer st = new StringTokenizer(str);
-						String command = "";
-						if (st.hasMoreTokens()) {
-							command = st.nextToken();
-						}					
-						command = command.toLowerCase();
-						Boolean commandFound = false;
-						Skills com = null;
-						Direction posDir = Direction.getDirectionName(command);
-						if (posDir != null) {
-							com = currentPlayer.getCommand("move");
-							str = "move " + posDir.toString();
-						} else {
-							com = currentPlayer.getCommand(command);
-						}
-						if (com != null) {		
-							WorldServer.gameState.addToQueue(com, str, currentPlayer);
-					//		com.perform(str, currentPlayer);
-							commandFound = true;
-						}			
-						if (commandFound == false) {
-							printFailMessages();
-						}
-						long end = System.nanoTime();
-						long elapsedTime = end - start;
-						System.out.println(elapsedTime*(10E-7) + " milliseconds.");		
-						System.out.println("Equipment: " + currentPlayer.getEquipment().toString());
+				} else if (str.trim().equalsIgnoreCase("shutdown")) { // Starts FULL game shutdown. Probably doesn't work right.
+					stayInsideLoop = false;
+					for (PlayerPrompt player : WorldServer.gameState.viewActiveClients()) {
+						player.currentPlayer.removeFromWorld();
 					}
+					for (StdItem item : WorldServer.gameState.viewAllItems()) {
+						item.removeFromWorld();
+					}
+					destroyConnection();
+					WorldServer.shutdownAndAwaitTermination(WorldServer.executor);
+				} else {						
+					StringTokenizer st = new StringTokenizer(str);
+					String command = "";
+					if (st.hasMoreTokens()) {
+						command = st.nextToken();
+					}					
+					command = command.toLowerCase();
+					Skills com = null;
+					Direction posDir = Direction.getDirectionName(command);
+					if (posDir != null) {
+						com = currentPlayer.getCommand("move");
+						str = "move " + posDir.toString();
+					} else {
+						com = currentPlayer.getCommand(command);
+					}
+					if (com != null) {		
+						WorldServer.gameState.addToQueue(com, str, currentPlayer);
+					} else {		
+						printFailMessages();
+					}	
 				}
-			//}
+			}
 		}
-		destroyConnection();			
+		destroyConnection();	// If we somehow exit the loop and haven't broken the connection.		
 	}
 	
-	public void printFailMessages() {
+	private void printFailMessages() {
 		Random rand = new Random();
-		int selection = rand.nextInt(WorldServer.failMessages.length);
-		sendBack.printMessage(WorldServer.failMessages[selection]);
+		int selection = rand.nextInt(failMessages.length);
+		sendBack.printMessage(failMessages[selection]);
 	}
 	
 	private void destroyConnection() {
@@ -170,6 +133,25 @@ public class PlayerPrompt implements Runnable {
 			e.printStackTrace();
 		}
 		WorldServer.gameState.removeClient(this);
+	}
+	
+	private void createNewPlayer(String enteredName, String enteredPass) {
+		MobileBuilder newPlayer = new MobileBuilder();		
+		newPlayer.setId(WorldServer.gameState.viewActiveClients().size()+1); // VERY VERY DANGEROUS
+		newPlayer.setName(enteredName);					
+		newPlayer.setPassword(enteredPass);		
+		newPlayer.setLocation(WorldServer.gameState.viewLocations().get(1));  // Default starting location.			
+//			newPlayer.setLoadOnStartUp(false);  Outdated.
+		newPlayer.complete();
+		this.currentPlayer = newPlayer.getFinishedMob();						
+		WorldServer.gameState.addMob(currentPlayer.getName() + currentPlayer.getId(), currentPlayer);
+		
+		//adding hardcoded skillbook TEMP
+		currentPlayer.addBook(CreateWorld.generalSkills.duplicate(),100);		
+		currentPlayer.setSendBack(sendBack);
+		currentPlayer.controlStatus(true);
+	//	currentPlayer.setStartup(false);
+	//	currentPlayer.save(); SAVING not ready yet.
 	}
 }
 
