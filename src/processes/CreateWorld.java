@@ -2,6 +2,7 @@ package processes;
 
 import items.ItemBuilder;
 import items.ItemBuilder.ItemType;
+import processes.Equipment.EquipmentEnum;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -44,6 +45,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new SkillList());
 		generalSkills.addSkill(new Drop());
 		generalSkills.addSkill(new Info());
+		generalSkills.addSkill(new Wield());
 	}
 	
 	public static void makeItems() {
@@ -174,6 +176,8 @@ public class CreateWorld {
 		newItem.setDescription("It's a dagger!");
 		newItem.setComponents(Arrays.asList("ingot"));
 		newItem.setSalvageable(true);
+		newItem.setAllowedSlots(EquipmentEnum.LEFTHAND);
+		newItem.setAllowedSlots(EquipmentEnum.RIGHTHAND);
 		newItem.complete();
 		itemTemplates.put("dagger", newItem);
 	}

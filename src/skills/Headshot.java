@@ -6,6 +6,7 @@ import java.util.Set;
 import effects.Balance;
 import interfaces.Holdable;
 import interfaces.Mobile;
+import processes.Equipment;
 import processes.InductionSkill;
 import processes.Location;
 import processes.Type;
@@ -50,6 +51,7 @@ public class Headshot extends InductionSkill {
 	protected void performSkill() {
 		allLocations = new HashSet<Location>();
 		if (!hasBalance()) {return;}
+		if (!weaponWielded()) {return;}
 		if (!findAllLocations()) {return;}		
 		if (!findTarget()) {return;}	
 		scheduleSkillRepeatNTimesOverXMilliseconds(1, 2000); // Triggers this skill's "run()" in 2 seconds. Interruptible.
@@ -60,6 +62,14 @@ public class Headshot extends InductionSkill {
 		
 	private int calculateDamage() {
 		return intensity;
+	}
+	
+	private boolean weaponWielded() {
+		if (currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.LEFTHAND) == null && currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND) == null) {
+			messageSelf("You are not wielding a weapon.");
+			return false;
+		}
+		return true;
 	}
 	
 	private boolean findAllLocations() {
