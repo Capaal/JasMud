@@ -77,6 +77,11 @@ public class StdItem implements Holdable, Weapon {
 		finalLocation.acceptItem(this);
 		this.itemLocation = finalLocation;
 	}
+	// OR SHOULD THIS BE ON STDMOB??? TODO
+	public void equip(Mobile player) {
+		getContainer().removeItemFromLocation(this);
+		this.itemLocation = player.getEquipment();
+	}
 	
 	@Override
 	public boolean firstTimeSave() { 

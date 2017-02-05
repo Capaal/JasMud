@@ -36,7 +36,7 @@ public class MobileBuilder {
 	private int age = 1;
 	private boolean loadOnStartUp = false;
 	private Map<String, Holdable> inventory = new TreeMap<String, Holdable>();
-	private Equipment equipment = new Equipment();	
+	private Equipment equipment = new Equipment(null);	
 	private ArrayList<Effect> effectList = new ArrayList<Effect>();	
 	private Stack<DecoratorType> decorators = new Stack<DecoratorType>();
 	private Map<SkillBook, Integer> skillBookList = new HashMap<SkillBook, Integer>();
@@ -74,7 +74,10 @@ public class MobileBuilder {
 	}
 	
 	public Equipment getEquipment() {
-		return new Equipment(equipment);
+		if (finishedMob == null) {
+			throw new IllegalStateException();
+		}
+		return new Equipment(equipment, finishedMob);
 	}
 	
 	public void setEquipment(EquipmentEnum slot, StdItem item) {

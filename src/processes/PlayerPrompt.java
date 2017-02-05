@@ -147,7 +147,8 @@ public class PlayerPrompt implements Runnable {
 						}
 						long end = System.nanoTime();
 						long elapsedTime = end - start;
-						System.out.println(elapsedTime*(10E-7) + " milliseconds.");				
+						System.out.println(elapsedTime*(10E-7) + " milliseconds.");		
+						System.out.println("Equipment: " + currentPlayer.getEquipment().toString());
 					}
 				}
 			//}

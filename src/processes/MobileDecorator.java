@@ -2,12 +2,14 @@ package processes;
 
 import java.util.Map;
 import java.util.TreeMap;
+
 import processes.Equipment.EquipmentEnum;
 import interfaces.Container;
 import interfaces.Effect;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import interfaces.TickingEffect;
+import items.StdItem;
 
 public class MobileDecorator implements Mobile {
 
@@ -171,18 +173,18 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public void equip(EquipmentEnum slot, Holdable item) {
+	public void equip(EquipmentEnum slot, StdItem item) {
 		decoratedMobile.equip(slot, item);
 	}
 
 	@Override
-	public void unequip(Holdable item) {
-		decoratedMobile.unequip(item);
+	public void unEquip(Holdable item) {
+		decoratedMobile.unEquip(item);
 	}
-
+	
 	@Override
-	public void unequipFromSlot(EquipmentEnum slot) {
-		decoratedMobile.unequipFromSlot(slot);
+	public void unEquip(EquipmentEnum slot) {
+		decoratedMobile.unEquip(slot);
 	}
 
 	@Override
@@ -294,5 +296,11 @@ public enum DecoratorType {
 	@Override
 	public int compareTo(Holdable arg0) {
 		return decoratedMobile.compareTo(arg0);
+	}
+
+	@Override
+	public Container getEquipment() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

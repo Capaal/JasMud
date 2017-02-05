@@ -1,10 +1,13 @@
-package processes;
+package skills;
 
 import java.util.Set;
 
 import interfaces.Container;
 import interfaces.Holdable;
 import items.StdItem;
+import processes.Equipment;
+import processes.Skills;
+import processes.Equipment.EquipmentEnum;
 import processes.Skills.Syntax;
 
 public class Wield extends Skills {

@@ -19,14 +19,16 @@ public class Equipment implements Container {
 
 	private Map<EquipmentEnum, Holdable> equipmentToItemMap;
 	private Map<Holdable, EquipmentEnum> itemToEquipmentMap;
-	private Mobile currentPlayer;
+	private final Mobile currentPlayer;
 		
-	public Equipment() {
+	public Equipment(Mobile currentPlayer) {
+		this.currentPlayer = currentPlayer;
 		equipmentToItemMap = new EnumMap<EquipmentEnum, Holdable>(EquipmentEnum.class);
 		itemToEquipmentMap = new HashMap<Holdable, EquipmentEnum>();		
 	}
 		
-	public Equipment(Map<EquipmentEnum, Holdable> set) {	
+	public Equipment(Map<EquipmentEnum, Holdable> set, Mobile currentPlayer) {
+		this.currentPlayer = currentPlayer;
 		equipmentToItemMap = new EnumMap<EquipmentEnum, Holdable>(EquipmentEnum.class);
 		itemToEquipmentMap = new HashMap<Holdable, EquipmentEnum>();
 
@@ -35,31 +37,45 @@ public class Equipment implements Container {
 		}
 	}
 	
-	public Equipment(Equipment toCopy) {
+	public Equipment(Equipment toCopy, Mobile currentPlayer) {
+		this.currentPlayer = currentPlayer;
 		this.equipmentToItemMap = new EnumMap<EquipmentEnum, Holdable>(toCopy.equipmentToItemMap);
 		this.itemToEquipmentMap = new HashMap<Holdable, EquipmentEnum>(toCopy.itemToEquipmentMap);
 	}
 		
 	// This allows gear switching, rather than unequiping then equiping.
 	public void equip(EquipmentEnum k, Holdable v) {
-		if (equipmentToItemMap.containsKey(k)) {
+		if (equipmentToItemMap.containsKey(k)) { // Is that a slot this mobile has available?
 			forceEquip(k, v);
 		}
 	}
 		
-	public void forceEquip(EquipmentEnum k, Holdable v) {
-		equipmentToItemMap.put(k, v);
-		itemToEquipmentMap.put(v, k);	
-		if (v != null) {
-//			v.setContainer(this);
-		}
+	// Replaces whatever was in slot with new Holdable.
+	// MAJOR METHOD. Is the ACTUAL do-er of this object!
+	public void forceEquip(EquipmentEnum slot, Holdable item) {
+		handleOutgoingItem(slot);
+		handleIncomingItem(slot, item);
 	}
 	
-	public void unequipSlot(EquipmentEnum slot) {
+	private void handleOutgoingItem(EquipmentEnum slot) {
+		Holdable outgoing = equipmentToItemMap.get(slot);
+		if (outgoing != null) {
+			outgoing.moveHoldable(currentPlayer);
+			itemToEquipmentMap.remove(outgoing);	
+		}
+		equipmentToItemMap.put(slot, null);
+	}
+	
+	private void handleIncomingItem(EquipmentEnum slot, Holdable item) {
+		equipmentToItemMap.put(slot, item);
+		itemToEquipmentMap.put(item, slot);	
+	}
+	
+	public void unEquip(EquipmentEnum slot) {
 		equip(slot, null);
 	}
 	
-	public void unequipItem(Holdable item) {
+	public void unEquip(Holdable item) {
 		EquipmentEnum key = itemToEquipmentMap.get(item);
 		equip(key, null);
 	}
@@ -84,67 +100,42 @@ public class Equipment implements Container {
 		return equipmentToItemMap;
 	}
 	
-	public void setOwner(Mobile currentPlayer) {
-		this.currentPlayer = currentPlayer;
-	}
-	
 	public static enum EquipmentEnum {
-		HEAD(EquipmentType.WEAR),
-		LEFTEAR(EquipmentType.WEAR),
-		RIGHTEAR(EquipmentType.WEAR),
-		NECK(EquipmentType.WEAR),
-		CHEST(EquipmentType.WEAR),
-		LEFTHAND(EquipmentType.WIELD),
-		RIGHTHAND(EquipmentType.WIELD),
-		LEFTFINGER(EquipmentType.WEAR),
-		RIGHTFINGER(EquipmentType.WEAR),
-		LEGS(EquipmentType.WEAR),
-		FEET(EquipmentType.WEAR);
-
-		@SuppressWarnings("unused")
-		private EquipmentType equipmentType;
+		HEAD(),
+		LEFTEAR(),
+		RIGHTEAR(),
+		NECK(),
+		CHEST(),
+		LEFTHAND(),
+		RIGHTHAND(),
+		LEFTFINGER(),
+		RIGHTFINGER(),
+		LEGS(),
+		FEET();
 		
-		private EquipmentEnum(EquipmentType eType) {
-			this.equipmentType = eType;
-		}		
+		private EquipmentEnum() {			
+		}	
 		
-		private static enum EquipmentType {
-			WIELD(),
-			WEAR();			
-			private EquipmentType() {}
+		public static EquipmentEnum fromString(String text) {
+		    if (text != null) {
+		    	for (EquipmentEnum b : EquipmentEnum.values()) {
+		    		if (text.equalsIgnoreCase(b.name())) {
+		    			return b;
+		    		}
+		    	}
+		    }
+		    return null;
 		}
 	}
+	
+	
 
 
-	@Override
+	@Override // TODO
 	public TreeMap<String, Holdable> getInventory() {
+//		return new TreeMap<String, Holdable>(values());
 		return null;
-//		return new HashSet<Holdable>(values());
 	}
-
-//	@Override
-//	public String displayExits() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-
-//	@Override
-//	public void look(Mobile currentPlayer) {
-//		// TODO Auto-generated method stub
-		
-//	}
-
-//	@Override
-//	public void glance(Mobile currentPlayer) {
-//		// TODO Auto-generated method stub
-		
-//	}
-
-//	@Override
-//	public void displayAll(Mobile currentPlayer) {
-//		// TODO Auto-generated method stub
-		
-//	}
 
 	@Override
 	public String getName() {
@@ -154,7 +145,8 @@ public class Equipment implements Container {
 
 	@Override
 	public int getId() {
-		return currentPlayer.getId();
+	//	return currentPlayer.getId();
+		return -1;
 	}
 
 	@Override
@@ -169,28 +161,28 @@ public class Equipment implements Container {
 		
 	}
 
-//	@Override
-//	public GroundType getGroundType() {
-		// TODO Auto-generated method stub
-//		return null;
-//	}
-
 	@Override
 	public Holdable getHoldableFromString(String holdableString) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-//	@Override
-//	public Container getContainer() {
-//		return currentPlayer;
-//	}
-
-//	@Override
-//	public void notifyQuest(Trigger trigger) {
-//		// TODO Auto-generated method stub
-//		
-//	} 
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(currentPlayer.getName() + "'s equipment: ");
+		for (Map.Entry<EquipmentEnum, Holdable> entry : equipmentToItemMap.entrySet()) {
+			if (entry.getValue() != null) {
+				sb.append(entry.getKey().toString());
+				sb.append(entry.getValue().getName());
+			}
+		}
+		return sb.toString();
+	}
+	
+	public boolean hasItem(Holdable item) {
+		return itemToEquipmentMap.containsKey(item);
+	}
 }
 	
 

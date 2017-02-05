@@ -1,5 +1,7 @@
 package interfaces;
 
+import items.StdItem;
+
 import java.util.Map;
 
 import processes.Equipment.EquipmentEnum;
@@ -41,9 +43,9 @@ public interface Mobile extends Container, Holdable {
 	public void controlStatus(boolean statusChange);
 	public boolean save();
 	public void setStartup(boolean b);
-	public void equip(EquipmentEnum slot, Holdable item);
-	public void unequip(Holdable item);
-	public void unequipFromSlot(EquipmentEnum slot);
+	public void equip(EquipmentEnum slot, StdItem item);
+	public void unEquip(EquipmentEnum slot);
+	public void unEquip(Holdable item);
 	public EquipmentEnum findEquipment(String itemName);
 	public Holdable getEquipmentInSlot(EquipmentEnum slot);
 	public void removeFromWorld();
@@ -59,4 +61,6 @@ public interface Mobile extends Container, Holdable {
 	public void setInduction(InductionSkill skill);
 	public Map<SkillBook, Integer> viewSkillBooks();
 	public void dropItemsOnDeath();
+	public Container getEquipment();
+	
 }

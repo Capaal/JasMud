@@ -46,6 +46,8 @@ public class StdMob implements Mobile, Container, Holdable {
 	protected ArrayList<String> messages;
 	
 	public StdMob(MobileBuilder build) {
+		Mobile decoratedMob = decorate(build, this);
+		build.setFinishedMob(decoratedMob);
 		this.id = build.getId();
 		this.name = build.getName();		
 		this.password = build.getPassword();
@@ -56,15 +58,11 @@ public class StdMob implements Mobile, Container, Holdable {
 		this.description = build.getDescription();
 		this.shortDescription = build.getShortDescription();	
 		this.inventory.putAll(build.getInventory())	;
-		this.equipment = build.getEquipment();
 		this.dropsOnDeath = build.getDropsOnDeath();
 		this.experience = build.getExperience();
-		equipment.setOwner(this);
 		effectManager = new EffectManager(this);
 		this.skillBookList = build.getSkillBookList();		
-		
-		Mobile decoratedMob = decorate(build, this);
-		build.setFinishedMob(decoratedMob);
+		this.equipment = build.getEquipment();
 		
 		WorldServer.gameState.addMob(decoratedMob.getName() + decoratedMob.getId(), decoratedMob);
 		decoratedMob.getContainer().acceptItem(decoratedMob);
@@ -109,7 +107,6 @@ public class StdMob implements Mobile, Container, Holdable {
 	@Override
 	public void acceptItem(Holdable item) {
 		inventory.put(item.getName() + item.getId(), item);
-		// dropsOnDeath.add(item.newBuilder());  Not a good method of this, drop on death is for spawning new items.
 	}
 	
 	@Override
@@ -187,11 +184,10 @@ public class StdMob implements Mobile, Container, Holdable {
 	@Override
 	public void removeItemFromLocation(Holdable oldItem) {
 		if (inventory.containsValue(oldItem)) {
-	//		inventory.remove(oldItem);
 			String key = oldItem.getName() + oldItem.getId();
 			inventory.remove(key);
-		} else if (equipment.values().contains(oldItem)) {
-			equipment.unequipItem((StdItem)oldItem);
+		} else if (equipment.hasItem(oldItem)){
+			equipment.unEquip((StdItem)oldItem);
 			removeItemFromLocation(oldItem);
 		} else {
 			System.out.println("An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
@@ -205,12 +201,9 @@ public class StdMob implements Mobile, Container, Holdable {
 		return new TreeMap<String, Holdable>(this.inventory);
 	}
 	
-	// TODO make Inventory a tree sorted by alphabetical order.
+	// TODO
 	@Override
-	public Holdable getHoldableFromString(String holdableString) {
-	//	System.out.println(inventory.containsValue(holdableString));
-		
-		
+	public Holdable getHoldableFromString(String holdableString) {		
 		Map.Entry<String,Holdable> answer = inventory.ceilingEntry(holdableString);
 		if (answer != null && (answer.getKey().equals(holdableString) || answer.getValue().getName().equals(holdableString))) {
 			return answer.getValue();
@@ -237,29 +230,6 @@ public class StdMob implements Mobile, Container, Holdable {
 		return null;	*/	
 	}
 	
-/*	@Override
-	public String displayExits() {
-		return "You are being held by a person!";
-	}*/
-/*	@Override
-	// Should display what the item WANTS to show, not just name + id
-	public void look(Mobile currentPlayer) {
-		currentPlayer.tell("You see the player's inventory.");	
-		for (Holdable h : inventory.values()) {
-			currentPlayer.tell(h.getName() + h.getId());
-		}
-	} */
-	/*@Override
-	public void glance(Mobile currentPlayer) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void displayAll(Mobile currentPlayer) {
-		// TODO Auto-generated method stub
-		
-	}*/
-	
 	
 	@Override
 	public void addEffect(Effect newEffect, int duration) {
@@ -281,21 +251,25 @@ public class StdMob implements Mobile, Container, Holdable {
 		return effectManager.hasInstanceOf(effect);
 	}
 
-	// TODO equipment is work in progress
+	@Override 
+	public void equip(EquipmentEnum slot, StdItem item) {		
+		item.equip(this);
+		equipment.equip(slot, item);
+	}
 	@Override
-	public void equip(EquipmentEnum slot, Holdable item) {
-/*		if (inventory.remove(item)) {
-			equipment.equip(slot, item);
-		} else {
-			System.out.println("Attempt to equip illegal item " + item.toString() + " into slot " + slot.toString());
-		}*/
+	public Container getEquipment() {
+		return equipment;
 	}
 	
-	// TODO
+	// TODO SHOULD BE CALLED AFTER SOMETHING IN STDITEM
 	@Override
-	public void unequip(Holdable item) {
-		equipment.unequipItem(item);
-	//	inventory.add(item);
+	public void unEquip(Holdable item) {
+		equipment.unEquip(item);
+	}
+	
+	@Override
+	public void unEquip(EquipmentEnum slot) {
+		equipment.unEquip(slot);
 	}
 	
 	@Override
@@ -316,13 +290,6 @@ public class StdMob implements Mobile, Container, Holdable {
 			}
 		}
 		return null;
-	}
-	
-	@Override
-	public void unequipFromSlot(EquipmentEnum slot) {
-		Holdable item = equipment.getValue(slot);
-		equipment.unequipSlot(slot);		
-//		inventory.add(item);
 	}
 	
 	@Override
