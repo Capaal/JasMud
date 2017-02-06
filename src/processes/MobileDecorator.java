@@ -24,11 +24,6 @@ public class MobileDecorator implements Mobile {
 		return decoratedMobile.getInventory();
 	}
 
-//	@Override
-//	public void look(Mobile currentPlayer) {
-//		decoratedMobile.look(currentPlayer);
-//	}
-
 	@Override
 	public void removeItemFromLocation(Holdable oldItem) {
 		decoratedMobile.removeItemFromLocation(oldItem);
@@ -130,11 +125,6 @@ public class MobileDecorator implements Mobile {
 	public void addTickingEffect(TickingEffect newEffect, int duration,
 			int times) {
 		decoratedMobile.addTickingEffect(newEffect, duration, times);
-	}
-
-	@Override
-	public int checkEffectsAgainstIncomingDamage(Type incomingType, int damage) {
-		return decoratedMobile.checkEffectsAgainstIncomingDamage(incomingType, damage);
 	}
 
 	@Override
