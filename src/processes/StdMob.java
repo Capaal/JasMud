@@ -27,7 +27,8 @@ public class StdMob implements Mobile, Container, Holdable {
 	protected int currentHp; 
 	protected Location mobLocation;
 	protected boolean isDead;
-	protected final Equipment equipment;		
+	protected final Equipment equipment;	
+	protected int defense;
 	protected String description;
 	protected int xpWorth;
 	protected String shortDescription;
@@ -53,6 +54,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		this.password = build.getPassword();
 		this.maxHp = build.getMaxHp();
 		this.currentHp = getMaxHp();
+		this.defense = build.getDefense();
 		this.mobLocation = build.getLocation();
 		this.isDead = build.isDead();
 		this.description = build.getDescription();
@@ -92,6 +94,15 @@ public class StdMob implements Mobile, Container, Holdable {
 		return shortDescription;
 	}
 	
+	public void addDefense(int i) {
+		//should calculate from equipment, effectors?, decorators, potions, herbs, etc
+		this.defense = this.defense + i;
+	}
+	
+	@Override public int getDefense() {
+		return defense;
+	}
+	
 	@Override public int getXpWorth() {
 		return xpWorth;
 	}
@@ -127,10 +138,17 @@ public class StdMob implements Mobile, Container, Holdable {
 	
 	@Override
 	public synchronized void takeDamage(Type type, int damage) {
+		if(!(damage < 0)) {  //healing ignores defense
+			damage = damage - defense;
+		}
 		if (currentHp < damage) {
 			damage = currentHp;
 		} 
-		this.currentHp = currentHp - damage;
+		if ((currentHp - damage) > maxHp) {
+			currentHp = maxHp;
+		} else {
+			this.currentHp = currentHp - damage;
+		}
 		checkHp();
 		displayPrompt();
 	}	

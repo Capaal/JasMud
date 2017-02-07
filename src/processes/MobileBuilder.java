@@ -27,7 +27,8 @@ public class MobileBuilder {
 	private String description = "Generic.";
 	private String shortDescription = "Short and Generic.";
 	private int maxHp = 100;
-	private int currentHp = 100;
+	private int currentHp = 100; //probably don't need this
+	private int defense = 0;
 	private Location location = WorldServer.gameState.viewLocations().get(1);
 	private boolean isDead = false;
 	private int xpWorth = 1;
@@ -82,6 +83,10 @@ public class MobileBuilder {
 	
 	public void setEquipment(EquipmentEnum slot, StdItem item) {
 		equipment.forceEquip(slot, item);
+	}
+	
+	public int getDefense() {
+		return defense;
 	}
 	
 	public String getPassword() {

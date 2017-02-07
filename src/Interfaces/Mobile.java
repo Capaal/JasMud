@@ -20,6 +20,8 @@ public interface Mobile extends Container, Holdable {
 	public String getPassword();
 	public int getMaxHp();
 	public int getCurrentHp();
+	public int getDefense();
+	public void addDefense(int i);
 	@Override public Location getContainer();
 	public boolean hasBalance();
 	public boolean isDead();

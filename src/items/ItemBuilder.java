@@ -1,6 +1,8 @@
 package items;
 
 import interfaces.Container;
+import items.Drinkable.DrinkType;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -15,9 +17,9 @@ public class ItemBuilder {
 	private String name = "";
 	private String description = "default";
 	private double balanceMult = 1.0;
+	private double defenseMult = 0;
 	private int maxDurability = 1;
 	private int currentDurability = 1;
-	private ArrayList<ItemType> itemTags = new ArrayList<ItemType>();
 	private Container itemContainer = WorldServer.gameState.viewLocations().get(1);		
 	private EnumSet<EquipmentEnum> allowedSlots = EnumSet.of(EquipmentEnum.RIGHTHAND, EquipmentEnum.LEFTHAND);// EnumSet.noneOf(EquipmentEnum.class);
 	private List<String> components = new ArrayList<String>();
@@ -36,6 +38,15 @@ public class ItemBuilder {
 	private String descriptionSingle = "";
 	
 	// Done with StackableItem
+	
+	//potion stuff
+	private int maxSips = 0;
+	private DrinkType drinkType;
+	public int getMaxSips() {return maxSips;}
+	public void setMaxSips(int sips) {this.maxSips = sips;}
+	public DrinkType getDrinkType() {return drinkType;}
+	public void setDrinkType(DrinkType drinkType) {this.drinkType = drinkType;}
+	//end potions stuff
 	
 	public void setItemType (ItemType type) {
 		this.typeToProduce = type;
@@ -95,6 +106,14 @@ public class ItemBuilder {
 	
 	public double getBalanceMult() {
 		return balanceMult;
+	}
+	
+	public void setDefenseMult(double defenseMult) {
+		this.defenseMult = defenseMult;
+	}
+	
+	public double getDefenseMult() {
+		return defenseMult;
 	}
 	
 	public void setMaxDurability(int maxDurability) {
@@ -339,6 +358,12 @@ public class ItemBuilder {
 		STACKABLEITEM() {
 			@Override public StdItem produceType(ItemBuilder build) {
 				return new StackableItem(build);
+			}
+		},
+			
+		DRINKABLE() {
+			@Override public StdItem produceType(ItemBuilder build) {
+				return new Drinkable(build);
 			}
 			
 		};

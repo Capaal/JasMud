@@ -13,7 +13,8 @@ public class StdItem implements Holdable, Weapon {
 	protected final int id;	
 	protected final String description;
 	protected final double physicalMult;
-	protected final double balanceMult; 	
+	protected final double balanceMult; 
+	protected final double defenseMult; //for my iron potion
 	protected Container itemLocation;	
 //	protected final int maxDurability;
 //  protected int currentDurability;
@@ -28,6 +29,7 @@ public class StdItem implements Holdable, Weapon {
 		this.physicalMult = build.getDamageMult();
 		this.description = build.getDescription();
 		this.balanceMult = build.getBalanceMult();
+		this.defenseMult = build.getDefenseMult();
 		this.itemLocation = build.getItemContainer();		
 //		this.maxDurability = build.getMaxDurability();
 //		this.currentDurability = build.getCurrentDurability();
@@ -44,6 +46,7 @@ public class StdItem implements Holdable, Weapon {
 	@Override public String getDescription() {return description;}	
 	public double getPhysicalMult() {return physicalMult;}
 	public double getBalanceMult() {return balanceMult;}
+	public double getDefenseMult() {return defenseMult;}
 	@Override public synchronized Container getContainer() {return itemLocation;}	
 	
 //	public int getMaxDurability() {return maxDurability;}
@@ -141,6 +144,7 @@ public class StdItem implements Holdable, Weapon {
 		newBuilder.setDamageMult(physicalMult);
 		newBuilder.setDescription(description);
 		newBuilder.setBalanceMult(balanceMult);
+		newBuilder.setDefenseMult(defenseMult);
 		newBuilder.setItemContainer(itemLocation);
 		newBuilder.setItemType(ItemType.STDITEM);
 	//	newBuilder.setAllowedSlots(allowedEquipSlots);

@@ -133,11 +133,6 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public int checkEffectsAgainstIncomingDamage(Type incomingType, int damage) {
-		return decoratedMobile.checkEffectsAgainstIncomingDamage(incomingType, damage);
-	}
-
-	@Override
 	public boolean hasEffect(Effect effect) {
 		return decoratedMobile.hasEffect(effect);
 	}
@@ -296,5 +291,17 @@ public enum DecoratorType {
 	@Override
 	public Equipment getEquipment() {
 		return decoratedMobile.getEquipment();
+	}
+
+	@Override
+	public int getDefense() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void addDefense(int i) {
+		// TODO Auto-generated method stub
+		
 	}
 }

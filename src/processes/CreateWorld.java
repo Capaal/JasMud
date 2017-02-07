@@ -1,5 +1,6 @@
 package processes;
 
+import items.Drinkable.DrinkType;
 import items.ItemBuilder;
 import items.ItemBuilder.ItemType;
 import processes.Equipment.EquipmentEnum;
@@ -47,6 +48,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new Info());
 		generalSkills.addSkill(new Wield());
 		generalSkills.addSkill(new BreakLimb());
+		generalSkills.addSkill(new Drink());
 	}
 	
 	public static void makeItems() {
@@ -63,6 +65,7 @@ public class CreateWorld {
 		addIronPotion(29);
 		makeGoblin();
 		makeFarmerJames();
+		addHealPotion(30);
 	}
 	
 	public static void makeWorldFromDatabase() {
@@ -248,7 +251,24 @@ public class CreateWorld {
 		newItem.setDescription("A potion made from iron.");
 		newItem.setComponents(Arrays.asList("ore"));
 		newItem.setDamageMult(0.2);
+		newItem.setMaxSips(2);
+		newItem.setDefenseMult(10); //wtf is this for?
+		newItem.setItemType(ItemType.DRINKABLE);
+		newItem.setDrinkType(DrinkType.DEFENSE);
 		itemTemplates.put("ironpotion", newItem);
+	}
+	
+	public static void addHealPotion(int i) {
+		ItemBuilder newItem = new ItemBuilder();	
+		newItem.setId(i);
+		newItem.setName("healpotion");
+		newItem.setDescription("A potion made from sticks.");
+		newItem.setComponents(Arrays.asList("stick"));
+		newItem.setDamageMult(0.2);
+		newItem.setMaxSips(2);
+		newItem.setItemType(ItemType.DRINKABLE);
+		newItem.setDrinkType(DrinkType.HEALTH);
+		itemTemplates.put("healpotion", newItem);
 	}
 	
 	public static void makeGoblin() {
