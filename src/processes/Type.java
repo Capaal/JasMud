@@ -30,7 +30,12 @@ public enum Type {
 	},
 	
 	HEAL() {
-	};
+	}, 
+	
+	REGEN() {
+		
+	},
+	;
 	
 	private Type() {};
 	

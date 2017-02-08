@@ -3,6 +3,9 @@ package items;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
+
+import effects.Bleed;
+import effects.Regen;
 import interfaces.Container;
 import interfaces.Holdable;
 import interfaces.Mobile;
@@ -70,12 +73,44 @@ public class Drinkable extends StdItem {
 		
 		DEFENSE() {
 			@Override public String drink(Mobile currentPlayer) {
-				currentPlayer.addDefense(10);
+				currentPlayer.addDefense(10); //should be an effect
 				return "The potion makes you feel tougher.";
 			}
+		},
+
+		BLEED() {
+			@Override public String drink(Mobile currentPlayer) {
+				currentPlayer.addTickingEffect(new Bleed(currentPlayer), 10000, 5);
+				return "The caustic liquid starts opening bloody wounds.";
+			}
+		},
+			
+		ANTIDOTE() {
+			@Override public String drink(Mobile currentPlayer) {
+				if (currentPlayer.hasEffect(new Bleed(currentPlayer))) {
+					currentPlayer.removeEffect(new Bleed(currentPlayer));
+					return "The soothing liquid closes your wounds.";
+				}
+				return failedSip();
+			}
+		},
+		
+		REGEN() {
+			@Override public String drink(Mobile currentPlayer) {
+				if (currentPlayer.hasEffect(new Regen(currentPlayer))) {
+					return failedSip();
+				} 
+				currentPlayer.addTickingEffect(new Regen(currentPlayer), 20000, 5);
+				return "The potion gives you a warm, healthy glow.";
+			}
+			
 		};
 	
 		private DrinkType() {}
+		
+		public String failedSip() {
+			return "The potion doesn't seem to have an effect.";
+		}
 		
 		public String drink(Mobile currentPlayer) {
 			return "Wrong method, tells the coders they screwed up.";

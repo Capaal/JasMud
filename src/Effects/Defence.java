@@ -1,4 +1,37 @@
 package effects;
+
+import processes.Type;
+import interfaces.*;
+
+public class Defence implements Effect {
+	
+	private final Mobile currentPlayer;
+	private final Type type;
+
+	public Defence(Mobile currentPlayer, Type type) {
+		this.currentPlayer = currentPlayer;
+		this.type = type;
+	}
+	@Override
+	public boolean isInstanceOf(Effect otherEffect) {
+		if (otherEffect.getClass() == Defence.class) {
+			return true;
+		}
+		return false;
+	}
+
+	public int doRunEffect(int damage) {
+		return damage-10;
+	}
+}
+
+
+
+
+
+//Old version:
+
+
 /*
 import java.util.Set;
 import processes.Type;

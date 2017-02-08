@@ -66,6 +66,8 @@ public class CreateWorld {
 		makeGoblin();
 		makeFarmerJames();
 		addHealPotion(30);
+		addBleedPotion(31);
+		addRegenPotion(32);
 	}
 	
 	public static void makeWorldFromDatabase() {
@@ -269,6 +271,31 @@ public class CreateWorld {
 		newItem.setItemType(ItemType.DRINKABLE);
 		newItem.setDrinkType(DrinkType.HEALTH);
 		itemTemplates.put("healpotion", newItem);
+	}
+	
+	public static void addBleedPotion(int i) {
+		ItemBuilder newItem = new ItemBuilder();	
+		newItem.setId(i);
+		newItem.setName("bleedpotion");
+		newItem.setDescription("Don't drink this.");
+		newItem.setDamageMult(0.2);
+		newItem.setMaxSips(2);
+		newItem.setItemType(ItemType.DRINKABLE);
+		newItem.setDrinkType(DrinkType.BLEED);
+		newItem.complete();
+		itemTemplates.put("bleedpotion", newItem);
+	}
+	
+	public static void addRegenPotion(int i) {
+		ItemBuilder newItem = new ItemBuilder();	
+		newItem.setId(i);
+		newItem.setName("regenpotion");
+		newItem.setDamageMult(0.2);
+		newItem.setMaxSips(2);
+		newItem.setItemType(ItemType.DRINKABLE);
+		newItem.setDrinkType(DrinkType.REGEN);
+		newItem.complete();
+		itemTemplates.put("regenpotion", newItem);
 	}
 	
 	public static void makeGoblin() {
