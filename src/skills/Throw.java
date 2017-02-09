@@ -102,7 +102,7 @@ public class Throw extends Skills {
 	}
 	
 	private int calculateDamage() {
-		double damageMult = ((Weapon)itemToThrow).getBalanceMult();
+		double damageMult = ((Weapon)itemToThrow).getBalanceMult(); //balanceMult probably not right here?
 		return (int) (damageMult * intensity);
 	}
 	
