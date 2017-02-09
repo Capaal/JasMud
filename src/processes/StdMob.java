@@ -244,8 +244,16 @@ public class StdMob implements Mobile, Container, Holdable {
 	
 	
 	@Override
-	public void addEffect(Effect newEffect, int duration) {
+	public boolean addEffect(Effect newEffect, int duration) {
+		if (effectManager.hasEffect(newEffect)) {
+			return false;
+		}
+		if (duration == -1) {
+			effectManager.registerPermanentEffect(newEffect);
+			return true;
+		}
 		effectManager.registerEffectDestroyAfterXMilliseconds(newEffect, duration);
+		return true;
 	}
 	
 	@Override

@@ -23,4 +23,14 @@ public class Bleed implements TickingEffect {
 	public void run() {
 		currentPlayer.takeDamage(type, currentPlayer.getMaxHp() / 20);		
 	}
+	@Override
+	public void doOnCreation() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void doOnDestruction() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -122,8 +122,9 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public void addEffect(Effect newEffect, int duration) {
+	public boolean addEffect(Effect newEffect, int duration) {
 		decoratedMobile.addEffect(newEffect, duration);
+		return true;
 	}
 
 	@Override

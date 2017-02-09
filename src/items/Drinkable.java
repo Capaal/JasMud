@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import effects.Bleed;
+import effects.Defence;
 import effects.Regen;
 import interfaces.Container;
 import interfaces.Holdable;
@@ -73,7 +74,7 @@ public class Drinkable extends StdItem {
 		
 		DEFENSE() {
 			@Override public String drink(Mobile currentPlayer) {
-				currentPlayer.addDefense(10); //should be an effect
+				currentPlayer.addEffect(new Defence(currentPlayer), -1); //should be an effect
 				return "The potion makes you feel tougher.";
 			}
 		},
@@ -100,7 +101,7 @@ public class Drinkable extends StdItem {
 				if (currentPlayer.hasEffect(new Regen(currentPlayer))) {
 					return failedSip();
 				} 
-				currentPlayer.addTickingEffect(new Regen(currentPlayer), 20000, 5);
+				currentPlayer.addTickingEffect(new Regen(currentPlayer), 10000, 5);
 				return "The potion gives you a warm, healthy glow.";
 			}
 			

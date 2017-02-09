@@ -34,6 +34,18 @@ public class EffectManagerTest {
 				return true;
 			}
 			return false;
+		}
+
+		@Override
+		public void doOnCreation() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void doOnDestruction() {
+			// TODO Auto-generated method stub
+			
 		}	
 	}
 	@Before

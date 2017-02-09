@@ -6,11 +6,9 @@ import interfaces.*;
 public class Defence implements Effect {
 	
 	private final Mobile currentPlayer;
-	private final Type type;
 
-	public Defence(Mobile currentPlayer, Type type) {
+	public Defence(Mobile currentPlayer) {
 		this.currentPlayer = currentPlayer;
-		this.type = type;
 	}
 	@Override
 	public boolean isInstanceOf(Effect otherEffect) {
@@ -20,8 +18,14 @@ public class Defence implements Effect {
 		return false;
 	}
 
-	public int doRunEffect(int damage) {
-		return damage-10;
+	@Override
+	public void doOnCreation() {
+		currentPlayer.addDefense(10);
+	}
+	@Override
+	public void doOnDestruction() {
+		currentPlayer.addDefense(-10);
+		
 	}
 }
 

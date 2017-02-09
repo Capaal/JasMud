@@ -26,4 +26,14 @@ public class Regen implements TickingEffect {
 		}
 		currentPlayer.takeDamage(type, -10);		
 	}
+	@Override
+	public void doOnCreation() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void doOnDestruction() {
+		// TODO Auto-generated method stub
+		
+	}
 }

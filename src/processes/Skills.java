@@ -50,7 +50,7 @@ public abstract class Skills {
 		currentPlayer.tell(msg);
 	}
 	
-	protected void messageOthers(String msg, List<Mobile> toIgnore) {
+	public void messageOthers(String msg, List<Mobile> toIgnore) {
 		for (Holdable h : currentPlayer.getContainer().getInventory().values()) {
 			if (h instanceof Mobile && ((Mobile) h).isControlled()) {
 				Boolean shouldTell = true;
@@ -70,7 +70,7 @@ public abstract class Skills {
 		}
 	}
 
-	protected void messageTarget(String msg, List<Mobile> targets) {
+	public void messageTarget(String msg, List<Mobile> targets) {
 		for (Mobile m : targets) {
 			m.tell(msg);
 		}

@@ -42,10 +42,15 @@ public class EffectManager {
 		scheduleDestroyAfterXMilliseconds(newEffect, duration);
 	}
 	
+	public void registerPermanentEffect(Effect newEffect) {
+		registerEffect(newEffect);
+	}
+	
 	public boolean hasEffect(Effect checkedEffect) {
 		return effectList.contains(checkedEffect);
 	}
 	
+	//should be same as above, add comparableness
 	public boolean hasInstanceOf(Effect effectType) {
 		for (Effect possibleEffect : effectList) {
 			if (possibleEffect.isInstanceOf(effectType)) {
@@ -57,6 +62,7 @@ public class EffectManager {
 	
 	public void removeInstanceOf(Effect effectType) {
 		Effect effectToBeRemoved = null;
+		
 		for (Effect possibleEffect : effectList) {
 			
 			if (possibleEffect.isInstanceOf(effectType)) {
@@ -74,6 +80,7 @@ public class EffectManager {
 	
 	private void registerEffect(Effect newEffect) {
 		effectList.add(newEffect);
+		newEffect.doOnCreation();
 	}
 	
 	private void scheduleEffectRepeatNTimesOverXMilliseconds(TickingEffect newEffect, int times, int duration) {
@@ -89,6 +96,7 @@ public class EffectManager {
 	
 	private void unRegisterEffect(Effect oldEffect) {
 		effectList.remove(oldEffect);
+		oldEffect.doOnDestruction();
 	}	
 	
 	private class removeTask implements Runnable {

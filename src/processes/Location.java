@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import Quests.Quest;
 import Quests.Quest.Trigger;
 import interfaces.*;
+import processes.Location.Direction;
 
 /*
  *  Contains all information relating to each "room" a player may visit.
@@ -72,6 +73,11 @@ public class Location implements Container {
 		} 
 		return toSay;
 	}
+	
+	public Map<Direction, Location> getLocationMap() {
+		return new HashMap<Direction, Location>(locationMap);
+	}
+	
 	// Should probably be a skill that access fields like description and name TODO
 /*	public void look(Mobile currentPlayer) {
 		currentPlayer.tell(UsefulCommands.ANSI.MAGENTA + name + UsefulCommands.ANSI.SANE);

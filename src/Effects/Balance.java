@@ -13,4 +13,14 @@ public class Balance implements Effect {
 		}
 		return false;
 	}
+	@Override
+	public void doOnCreation() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void doOnDestruction() {
+		// TODO Auto-generated method stub
+		
+	}
 }
