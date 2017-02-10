@@ -4,6 +4,9 @@ import java.util.Arrays;
 import effects.Balance;
 import interfaces.Holdable;
 import interfaces.Mobile;
+import items.StdItem;
+import processes.Location;
+import processes.Equipment;
 import processes.Skills;
 import processes.Type;
 
@@ -46,10 +49,10 @@ public class Attack extends Skills {
             return false;
         }
         Location here = currentPlayer.getContainer();
-        Holdable possTarg = finalLoc.getHoldableFromString(possibleTarg);
-        if (possTarg != null && possTarg instanceof Mobile) {finalTarget = (mobile)possTarg};
+        Holdable possTarg = here.getHoldableFromString(possibleTarg);
+        if (possTarg != null && possTarg instanceof Mobile) {finalTarget = (Mobile)possTarg;}
         if (finalTarget == null) {
-            messageSelf("Target not here.");
+            messageSelf("Can't find target.");
             return false;
         }
         if (isBlocking(finalTarget)) {  // Probably not complete still
@@ -63,17 +66,20 @@ public class Attack extends Skills {
             messageSelf("You are not wielding a weapon.");
             return false;
         }
+        //players are all righthanded for now
+        weapon = currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND);
         return true;
     }
     
     private int calculateDamage() {
-		double damageMult = ((Weapon)weapon).getBalanceMult();
+		double damageMult = ((StdItem)weapon).getDamageMult();
 		return (int) (damageMult * intensity);
 	}
     
     private int calculateBalance() {
-		return (int) (3000 * ((Weapon)weapon).getBalanceMult());
+		return (int) (3000 * ((StdItem)weapon).getBalanceMult());
 	}
+}
 
 //get the item and the method associated with the item
 //does item or skill hold the method?

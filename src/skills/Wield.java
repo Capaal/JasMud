@@ -35,6 +35,7 @@ public class Wield extends Skills {
 		}
 		
 		//find if item can be wielded in slot specified
+		//add if bodypart is broken
 		Set<Equipment.EquipmentEnum> equippableSlots = itemToWield.getAllowedEquipSlots();
 		if (equippableSlots == null) {
 			messageSelf("You can't wield that. Failed step 3.");

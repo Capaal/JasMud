@@ -15,6 +15,7 @@ import processes.Type;
 import processes.Location.Direction;
 import processes.Skills.Syntax;
 import skills.Look;
+import processes.StdMob;
 
 public class Fear implements TickingEffect {
 	
@@ -37,6 +38,10 @@ public class Fear implements TickingEffect {
 	public void run() {
 		if (!currentPlayer.hasBalance()) {
 			currentPlayer.tell("Off balance.");
+			return;
+		}
+		if (!((StdMob)currentPlayer).isBodyPartOK("legs")) {
+			currentPlayer.tell("You try to flee, but your legs are broken.");
 			return;
 		}
 		Location startContainer;

@@ -1,4 +1,4 @@
-package interfaces;
+/*package interfaces;
 
 public interface Weapon {
 	
@@ -7,4 +7,4 @@ public interface Weapon {
 //	public int getMaxDurability();
 // int getCurrentDurability();
 	public void equip(Mobile player);
-}
+} */

@@ -44,6 +44,7 @@ public class MobileBuilder {
 	private List<ItemBuilder> dropsOnDeath = new ArrayList<ItemBuilder>();
 	private boolean buildComplete = false;
 	private Mobile finishedMob;
+	private Map<String, Boolean> bodyParts = new HashMap<String, Boolean>();
 	
 	public MobileBuilder() {
 		// might change based on implementation.
@@ -58,6 +59,13 @@ public class MobileBuilder {
 		setEquipment(EquipmentEnum.FEET,  null);
 		setEquipment(EquipmentEnum.LEFTFINGER,  null);
 		setEquipment(EquipmentEnum.RIGHTFINGER,  null);
+		//this is fugly
+		bodyParts.put("head", true);
+		bodyParts.put("neck", true);
+		bodyParts.put("righthand", true);
+		bodyParts.put("lefthand", true);
+		bodyParts.put("chest", true);
+		bodyParts.put("legs", true);
 	}	
 	
 	public boolean buildCompleted() {
@@ -364,5 +372,9 @@ public class MobileBuilder {
 
 	public void setFinishedMob(Mobile decoratedMob) {
 		finishedMob = decoratedMob;
+	}
+
+	public Map<String, Boolean> getBodyParts() {
+		return this.bodyParts;
 	}	
 }

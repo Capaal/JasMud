@@ -11,6 +11,7 @@ import processes.Skills;
 import processes.Type;
 import processes.Equipment.EquipmentEnum;
 import processes.Skills.Syntax;
+import processes.StdMob;
 
 public class BreakLimb extends Skills {
 
@@ -44,8 +45,13 @@ public class BreakLimb extends Skills {
 			messageSelf("Syntax: BREAK <TARGET> <LEFTHAND/RIGHTHAND/LEG>");
 			return;
 		}
+		if (slot.equals(EquipmentEnum.LEFTHAND) || slot.equals(EquipmentEnum.RIGHTHAND)) {
 			finalTarget.unEquip(slot);
 			messageTarget("Your arm breaks and you can no longer wield a weapon.", Arrays.asList(finalTarget));
+		} else if (slot.equals(EquipmentEnum.LEGS)) {
+			((StdMob)currentPlayer).setBodyPart(slot.toString().toLowerCase(), false);
+			messageTarget("Your legs are broken.", Arrays.asList(finalTarget));
+		}
 			//make slot unwieldable - later
 		
 		finalTarget.informLastAggressor(currentPlayer);
@@ -70,10 +76,9 @@ public class BreakLimb extends Skills {
 		if (slot == null) {
 			return false;
 		}
-		if (!slot.equals(EquipmentEnum.LEFTHAND) && !slot.equals(EquipmentEnum.RIGHTHAND)) {
+		if (!slot.equals(EquipmentEnum.LEFTHAND) && !slot.equals(EquipmentEnum.RIGHTHAND) && !slot.equals(EquipmentEnum.LEGS)) {
 			return false;
-		}
-				
+		}				
 		return true;
 	}
 	

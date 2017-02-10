@@ -1,7 +1,6 @@
 package skills;
 
 import interfaces.Holdable;
-import interfaces.Weapon;
 import processes.Skills;
 import processes.Skills.Syntax;
 import processes.StdMob;

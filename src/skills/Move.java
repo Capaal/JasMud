@@ -5,6 +5,7 @@ import java.util.Arrays;
 import interfaces.Container;
 import processes.Location;
 import processes.Skills;
+import processes.StdMob;
 
 public class Move extends Skills {
 	
@@ -21,6 +22,9 @@ public class Move extends Skills {
 	@Override
 	protected void performSkill() {
 		if (!hasBalance()) {
+			return;
+		}
+		if (!canMove()) {
 			return;
 		}
 		startContainer = currentPlayer.getContainer();
@@ -43,5 +47,13 @@ public class Move extends Skills {
 		messageOthers(currentPlayer.getName() + " arrives from the " + Location.Direction.getDirectionName(dir).getOpp() + ".", Arrays.asList(currentPlayer));
 		Look look = new Look();
 		look.perform("", currentPlayer);
+	}
+	
+	private boolean canMove() {
+		if(!((StdMob)currentPlayer).isBodyPartOK("legs")) {
+			messageSelf("Oh no your legs are broken.");
+			return false;
+		}
+		return true;
 	}
 }

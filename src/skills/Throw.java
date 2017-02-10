@@ -4,7 +4,7 @@ import java.util.Arrays;
 import effects.Balance;
 import interfaces.Holdable;
 import interfaces.Mobile;
-import interfaces.Weapon;
+import items.StdItem;
 import processes.Location;
 import processes.Skills;
 import processes.Type;
@@ -57,7 +57,7 @@ public class Throw extends Skills {
 			messageSelf("You do not have a \"" + possibleItem + "\".");
 			return false;
 		}
-		if (!(itemToThrow instanceof Weapon)) {
+		if (!(itemToThrow instanceof StdItem)) {
 			messageSelf("You cannot throw " + possibleItem + ".");
 			return false;
 		}
@@ -98,11 +98,11 @@ public class Throw extends Skills {
 	}
 	
 	private int calculateBalance() {
-		return (int) (3000 * ((Weapon)itemToThrow).getBalanceMult());
+		return (int) (3000 * ((StdItem)itemToThrow).getBalanceMult());
 	}
 	
 	private int calculateDamage() {
-		double damageMult = ((Weapon)itemToThrow).getBalanceMult(); //balanceMult probably not right here?
+		double damageMult = ((StdItem)itemToThrow).getDamageMult(); 
 		return (int) (damageMult * intensity);
 	}
 	

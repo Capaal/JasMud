@@ -45,6 +45,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	protected final EffectManager effectManager;
 	protected Mobile lastAggressor;
 	protected ArrayList<String> messages;
+	protected Map<String, Boolean> bodyParts;
 	
 	public StdMob(MobileBuilder build) {
 		Mobile decoratedMob = decorate(build, this);
@@ -65,6 +66,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		effectManager = new EffectManager(this);
 		this.skillBookList = build.getSkillBookList();		
 		this.equipment = build.getEquipment();
+		this.bodyParts = build.getBodyParts();
 		
 		WorldServer.gameState.addMob(decoratedMob.getName() + decoratedMob.getId(), decoratedMob);
 		decoratedMob.getContainer().acceptItem(decoratedMob);
@@ -113,6 +115,14 @@ public class StdMob implements Mobile, Container, Holdable {
 				return skill;		
 		}
 		return null;
+	}
+	
+	public boolean isBodyPartOK(String part) {
+		return bodyParts.get(part);
+	}
+	
+	public void setBodyPart(String part, boolean value) {
+		bodyParts.put(part, value);
 	}
 	
 	@Override

@@ -11,6 +11,8 @@ import processes.Skills.Syntax;
 
 public class Intimidate extends Skills {
 	
+	Mobile mobileToFear;
+	
 	public Intimidate() {
 		super.name = "intimidate";
 		super.syntaxList.add(Syntax.SKILL);
@@ -22,7 +24,18 @@ public class Intimidate extends Skills {
 		if (!hasBalance()) {
 			return;
 		}
-		Mobile mobileToFear = (Mobile)(currentPlayer.getContainer().getHoldableFromString(Syntax.TARGET.getStringInfo(fullCommand, this)));
+		String mobName = Syntax.TARGET.getStringInfo(fullCommand, this);
+		if (mobName.equals("")) {
+			messageSelf("Specify a target.");
+			return;
+		}
+		Holdable possibleMobile = (currentPlayer.getContainer().getHoldableFromString(mobName));
+		if (possibleMobile instanceof Mobile) {
+			mobileToFear = (Mobile)possibleMobile;
+		} else {
+			messageSelf("The " +  mobName + " does not find you intimidating.");
+			return;
+		}
 		if (mobileToFear == null || !(mobileToFear instanceof Mobile)) {
 			messageSelf("You can't find a person called " + mobileToFear.getName() + ".");
 			return;

@@ -7,7 +7,7 @@ import items.ItemBuilder.ItemType;
 import processes.*;
 import processes.Equipment.EquipmentEnum;
 
-public class StdItem implements Holdable, Weapon {
+public class StdItem implements Holdable {
 	
 	protected final String name;
 	protected final int id;	
@@ -48,6 +48,7 @@ public class StdItem implements Holdable, Weapon {
 	public double getBalanceMult() {return balanceMult;}
 	public double getDefenseMult() {return defenseMult;}
 	@Override public synchronized Container getContainer() {return itemLocation;}	
+	public void doOnAttack() {}; //for my mercenary attack skill
 	
 //	public int getMaxDurability() {return maxDurability;}
 	
@@ -82,7 +83,6 @@ public class StdItem implements Holdable, Weapon {
 	}
 	
 	// Most of equiping is handled by StdMob
-	@Override
 	public void equip(Mobile player) {
 		getContainer().removeItemFromLocation(this);
 		this.itemLocation = player;
