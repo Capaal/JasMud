@@ -56,8 +56,8 @@ public class LocationBuilder {
 	}
 	
 	private synchronized void handleId() {
-		this.id = maxId + 1;
 		maxId ++;
+		this.id = maxId;		
 	}
 	
 	// If an instance of LocationBuilder has been completed via "complete()" then returns the generated Location.

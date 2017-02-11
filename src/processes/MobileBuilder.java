@@ -208,8 +208,8 @@ public class MobileBuilder {
 	
 	private synchronized void handleId() {
 		if (idMap.containsKey(this.name)) {
-			this.id = idMap.get(this.name);
-			idMap.put(this.name, this.id++);			
+			this.id = idMap.get(this.name) + 1;
+			idMap.put(this.name, this.id);			
 		} else {
 			this.id = 1;
 			idMap.put(this.name,  this.id);

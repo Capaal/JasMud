@@ -31,10 +31,6 @@ public class Drinkable extends StdItem {
 		this.type = build.getDrinkType();
 	}
 	
-	@Override public boolean save() {
-		return true;
-	}
-	
 	public int getSips() {
 		return currentSips;
 	}

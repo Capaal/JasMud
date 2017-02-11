@@ -29,7 +29,6 @@ public class ItemBuilder {
 	private boolean salvageable = false;
 	private static Map<String, Integer> idMap = new HashMap<String, Integer>();
 	private StdItem finishedItem =  null;
-	private boolean buildComplete = false;;
 	
 	// Declares which specific item type to produce.
 	private ItemType typeToProduce = ItemType.STDITEM;
@@ -173,17 +172,15 @@ public class ItemBuilder {
 	
 	// Attempts to obtain valid ID (and should check validity if given one)
 	// Then creates a new item using builder's settings.
-	public boolean complete() {
+	public void complete() {
 		handleId();
-		buildComplete = true;
 		finishedItem = typeToProduce.produceType(this);
-		return true;
 	}
 	
 	private synchronized void handleId() {
 		if (idMap.containsKey(this.name)) {
-			this.id = idMap.get(this.name);
-			idMap.put(this.name, this.id++);			
+			this.id = idMap.get(this.name) + 1; 
+			idMap.put(this.name, this.id);					
 		} else {
 			this.id = 1;
 			idMap.put(this.name,  this.id);
@@ -192,10 +189,6 @@ public class ItemBuilder {
 	
 	public StdItem getFinishedItem() {
 		return finishedItem;
-	}
-	
-	public boolean buildCompleted() {
-		return buildComplete;
 	}
 	
 	// BAD!!! Needs to be re-done to obtain valid IDs TODO
