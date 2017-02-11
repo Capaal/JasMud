@@ -1,11 +1,15 @@
 package processes;
 
+import interfaces.Holdable;
 import interfaces.Mobile;
+import items.StackableItem;
 import items.StdItem;
 
 import java.net.*; // Needed for Socket.
 import java.io.*; // Needed for PrintWriter and BufferReader.
 import java.util.*; // Needed for keySet();
+
+import com.thoughtworks.xstream.XStream;
 
 import processes.Location.Direction;
 import skills.Look;
@@ -45,16 +49,10 @@ public class PlayerPrompt implements Runnable {
 		boolean oldPlayer = false;
 		if (enteredName == null) {
 			destroyConnection();
-	//		oldPlayer = loadExistingMob();
-	//		Mobile possiblePlayer = null;
-	//		possiblePlayer = WorldServer.databaseInterface.loadPlayer(enteredName, enteredPass);	
-	//		if (possiblePlayer != null) {
-	//			currentPlayer = possiblePlayer;
-	//			currentPlayer.setSendBack(sendBack);
-	//			currentPlayer.controlStatus(true);
-	//			oldPlayer = true;
-	//		}
+		} else {
+			oldPlayer = lookForExistingPlayer(enteredName, enteredPass);
 		}
+		
 		// Creates a new player with selected Name if load failed.
 		if (oldPlayer == false && enteredName != null) {
 			sendBack.printMessage("Would you like to create a new character? Y/N ");
@@ -88,7 +86,11 @@ public class PlayerPrompt implements Runnable {
 					for (PlayerPrompt player : WorldServer.gameState.viewActiveClients()) {
 						player.currentPlayer.removeFromWorld();
 					}
+				//	for (Location loc : WorldServer.gameState.viewLocations().values()) {
+				//		loc.removeFromWorld();
+				//	}
 					for (StdItem item : WorldServer.gameState.viewAllItems()) {
+						item.save();
 						item.removeFromWorld();
 					}
 					destroyConnection();
@@ -133,11 +135,33 @@ public class PlayerPrompt implements Runnable {
 			e.printStackTrace();
 		}
 		WorldServer.gameState.removeClient(this);
+	}	
+	
+	private boolean lookForExistingPlayer(String enteredName, String enteredPass) {
+		StdMob person = null;
+		    try{		    	
+		        File xmlFile = new File("./Players/" + enteredName + enteredPass + ".xml");
+		        if (!xmlFile.exists()) {
+		        	return false;
+		        }
+		        person = (StdMob) WorldServer.xstream.fromXML(xmlFile);       
+		    }catch(Exception e){
+		        System.err.println("Error in XML Read: " + e.getMessage());
+		    }
+	    if (person != null) {
+	    	currentPlayer = person;   	
+	    	currentPlayer.setSendBack(sendBack);
+	    	for (Holdable h : currentPlayer.getInventory().values()) {
+	    		h.setContainer(currentPlayer);
+	    	}
+	    	return true;
+	    }
+	    return false;
 	}
 	
 	private void createNewPlayer(String enteredName, String enteredPass) {
 		MobileBuilder newPlayer = new MobileBuilder();		
-		newPlayer.setId(WorldServer.gameState.viewActiveClients().size()+1); // VERY VERY DANGEROUS
+//		newPlayer.setId(WorldServer.gameState.viewActiveClients().size()+1); // VERY VERY DANGEROUS
 		newPlayer.setName(enteredName);					
 		newPlayer.setPassword(enteredPass);		
 		newPlayer.setLocation(WorldServer.gameState.viewLocations().get(1));  // Default starting location.			
@@ -151,7 +175,7 @@ public class PlayerPrompt implements Runnable {
 		currentPlayer.setSendBack(sendBack);
 		currentPlayer.controlStatus(true);
 	//	currentPlayer.setStartup(false);
-	//	currentPlayer.save(); SAVING not ready yet.
+		currentPlayer.save(); 
 	}
 }
 

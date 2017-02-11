@@ -2,11 +2,16 @@ package items;
 
 import java.util.*;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 import interfaces.*;
 import items.ItemBuilder.ItemType;
 import processes.*;
 import processes.Equipment.EquipmentEnum;
 
+@XStreamAlias("StdItem")
 public class StdItem implements Holdable {
 	
 	protected final String name;
@@ -15,6 +20,7 @@ public class StdItem implements Holdable {
 	protected final double physicalMult;
 	protected final double balanceMult; 
 	protected final double defenseMult; //for my iron potion
+//	@XStreamOmitField
 	protected Container itemLocation;	
 //	protected final int maxDurability;
 //  protected int currentDurability;
@@ -67,13 +73,7 @@ public class StdItem implements Holdable {
 		return physicalMult;
 	}
 	
-	// not sure how packs will work yet...
-	@Override
-	public boolean save() {			
-//		String updateItem = "UPDATE ITEMSTATS SET ITEMCURDUR=" + currentDurability + ", WHERE ITEMID=" + getId() + ";";
-//		WorldServer.databaseInterface.saveAction(updateItem);
-		return true;
-	}
+	
 	
 	@Override
 	public void moveHoldable(Container finalLocation) {
@@ -88,27 +88,28 @@ public class StdItem implements Holdable {
 		this.itemLocation = player;
 	}
 	
-	// NOT CURRENTLY WORKING TODO
-	@Override
-	public boolean firstTimeSave() { 
-//		DatabaseInterface databaseInterface = WorldServer.getInterface();		
-/*		databaseInterface.saveAction("Insert into ITEMSTATS (ITEMID, ITEMNAME, ITEMPHYS, ITEMBAL, ITEMDESC, ITEMMAXDUR, ITEMCURDUR, ITEMLOC, EQUIPSLOTS)"
-				+ " values ("
-				+ "'" + id + "', "
-				+ "'" + name + "', "
-				+ "'" + physicalMult + "', "
-				+ "'" + balanceMult + "', "
-				+ "'" + description + "', "
-//				+ "'" + maxDurability + "', "
-				+ currentDurability + ");"); */
-		return true;
-	}
 	
 	@Override
 	public void removeFromWorld() {
 	//	save();
 		this.getContainer().removeItemFromLocation(this);
-		WorldServer.gameState.removeItem(this.getName() + this.getId());
+		// Below triggered when I picked up a single ore??? TODO
+		if (!WorldServer.gameState.removeItem(this.getName() + this.getId())) {
+			System.out.println("Item tried to be removed that cannot be: " + this.getName() + this.getId());
+		}
+		this.itemLocation = null;
+	}
+	
+	// not sure how packs will work yet...
+	@Override
+	public void save() {
+		WorldServer.saveItem(this);		
+	}
+	
+	private Object readResolve() {
+		WorldServer.gameState.addItem(name + id, this);
+	//	getContainer().acceptItem(this);
+		return this;
 	}
 
 	@Override
@@ -152,4 +153,10 @@ public class StdItem implements Holdable {
 		newBuilder.setSalvageable(salvageable);		
 		return newBuilder;
 	}
+	
+	// Not game safe, but required for save/load
+	public void setContainer(Container container) {
+		this.itemLocation = container;
+	}
+
 }

@@ -44,6 +44,7 @@ public class MobileBuilder {
 	private List<ItemBuilder> dropsOnDeath = new ArrayList<ItemBuilder>();
 	private boolean buildComplete = false;
 	private Mobile finishedMob;
+	private static Map<String, Integer> idMap = new HashMap<String, Integer>();
 	private Map<String, Boolean> bodyParts = new HashMap<String, Boolean>();
 	
 	public MobileBuilder() {
@@ -72,7 +73,7 @@ public class MobileBuilder {
 		return buildComplete;
 	}
 	
-	public void setId(int val) {id = val;}
+	//public void setId(int val) {id = val;}
 	
 	public void setName(String val) throws IllegalArgumentException {
 		if (val != null && UsefulCommands.checkIfValidCharacters(val)) {
@@ -201,15 +202,8 @@ public class MobileBuilder {
 	}
 	
 	public boolean complete() {
-		setMaxHp();
-		if (id == -1) {
-			try {
-				setId();
-			} catch (IllegalStateException e) {
-				System.out.println("New mobile failed to obtain unique id, it was not created.");
-				return false;
-			} 	
-		}
+		setMaxHp();	
+		handleId();
 		buildComplete = true;
 		finishedMob = new StdMob(this);		
 		return true;
@@ -217,23 +211,16 @@ public class MobileBuilder {
 	
 	public Mobile getFinishedMob() {return finishedMob;}
 	
-	private void setId() {
-/*		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
-				+ " LEFT JOIN mobstats ON sequencetable.sequenceid = mobstats.mobid"
-				+ " WHERE mobstats.mobid IS NULL";			
-		Object availableId = WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
-		if (availableId == null || !(availableId instanceof Integer)) {
-			WorldServer.databaseInterface.increaseSequencer();
-			availableId = WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
-			if (availableId == null || !(availableId instanceof Integer)) {
-				throw new IllegalStateException("The mobile could not determine a valid id, it is invalid.");				
-			} else {
-				id = (int)availableId;
-			}
+	private synchronized void handleId() {
+		if (idMap.containsKey(this.name)) {
+			this.id = idMap.get(this.name);
+			idMap.put(this.name, this.id++);			
 		} else {
-			id = (int)availableId;
-		}	*/
+			this.id = 1;
+			idMap.put(this.name,  this.id);
+		}
 	}
+	
 /*
 	/*
 	public static boolean newMobile(Mobile player, MobileBuilder mobileBuilder) {

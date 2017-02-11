@@ -7,8 +7,9 @@ public interface Holdable extends Comparable<Holdable> {
 	public int getId();
 	public String getDescription();
 	public Container getContainer();
-	public boolean save(); // should be pulled out to its own interface
-	public boolean firstTimeSave(); // should be pulled out to its own interface
+	public void save(); // should be pulled out to its own interface
+//	public String firstTimeSave(XStream xstream); // should be pulled out to its own interface
 	public void removeFromWorld();  // NOT the same as DELETE
 	public void moveHoldable(Container finalLocation);
+	public void setContainer(Container container);// Used for save/load. Not good to use otherwise?
 }

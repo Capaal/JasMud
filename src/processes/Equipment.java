@@ -3,8 +3,12 @@ package processes;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import items.StackableItem;
+
 import java.util.*;
 
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
+// NEEDS A CONVERTER for SAVE/LOAD for the currentPlayer pointer
 // Two-handed weapons? shit Will probably need to check, and fill other hand, or have a special enum
 public class Equipment {
 
@@ -64,6 +68,12 @@ public class Equipment {
 	private void handleIncomingItem(EquipmentEnum slot, Holdable item) {
 		equipmentToItemMap.put(slot, item);
 		itemToEquipmentMap.put(item, slot);	
+	}
+	
+	public void remove(Holdable item) {
+		EquipmentEnum slot = getKey(item);
+		itemToEquipmentMap.remove(item);	
+		equipmentToItemMap.put(slot, null);
 	}
 	
 	public void unEquip(EquipmentEnum slot) {

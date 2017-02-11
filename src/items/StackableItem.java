@@ -1,11 +1,15 @@
 package items;
 
+import java.io.File;
 import java.util.Map;
 import java.util.TreeMap;
+import processes.WorldServer;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import interfaces.Container;
 import interfaces.Holdable;
 import items.ItemBuilder.ItemType;
 
+@XStreamAlias("StackableItem")
 public class StackableItem extends StdItem {
 	
 	// Probably handle recovering IDs at some point
@@ -27,10 +31,6 @@ public class StackableItem extends StdItem {
 		return descriptionMany;
 	}
 	
-	@Override public boolean save() {
-		return true;
-	}
-	
 	@Override public void moveHoldable(Container finalLocation) {
 		moveHoldable(finalLocation, 1);
 	}
@@ -39,31 +39,35 @@ public class StackableItem extends StdItem {
 		moveHoldable(finalLocation, this.quantity);
 	}
 	
-	public int getQuantity() {
-		return quantity;
-	}
+	public int getQuantity() {return quantity;}
 	
 	public void moveHoldable(Container finalLocation, int number) {		
 		TreeMap<String, Holdable> inventoryView = finalLocation.getInventory();
 		Map.Entry<String,Holdable> possibleStack = inventoryView.ceilingEntry(this.name);
+		// If moving the entire stack
 		if (number >= this.quantity) {
-			this.removeFromWorld(); // Should probably be a full fledged DELETE method
-		} else {
-			this.quantity -= number;
-		}
-		if (possibleStack != null && possibleStack.getValue() instanceof StackableItem && possibleStack.getValue().getName().equals(this.name)) {
-			((StackableItem)possibleStack.getValue()).addToStack(number);			
-		} else {
-			if (number >= this.quantity) {
+			// if a stack of the same item is in final location
+			if (possibleStack != null && possibleStack.getValue() instanceof StackableItem && possibleStack.getValue().getName().equals(this.name)) {
+				((StackableItem)possibleStack.getValue()).addToStack(number);	
+				this.removeFromWorld(); 
+				this.delete();
+			} else { // No stack in final location, so move THIS there.		
+				getContainer().removeItemFromLocation(this);
 				finalLocation.acceptItem(this);
-				this.itemLocation = finalLocation;
-			} else {
+				this.itemLocation = finalLocation;						
+			}			
+		} else { // Else split
+			this.quantity -= number;
+			// If a possible stack is found in Final location, give number.
+			if (possibleStack != null && possibleStack.getValue() instanceof StackableItem && possibleStack.getValue().getName().equals(this.name)) {
+				((StackableItem)possibleStack.getValue()).addToStack(number);					
+			} else { // Else create new instance of this type in final location and split				
 				ItemBuilder newStack = this.newBuilder();
 				newStack.setQuantity(number);
 				newStack.setItemContainer(finalLocation);	
-				newStack.complete();
-			}			
-		}
+				newStack.complete();				
+			}
+		}	
 	}
 	
 	protected void addToStack(int quantity) {
@@ -77,5 +81,15 @@ public class StackableItem extends StdItem {
 		newBuild.setDescriptionSingle(this.descriptionSingle);
 		newBuild.setItemType(ItemType.STACKABLEITEM);
 		return newBuild;
+	}
+	
+	private Object readResolve() {
+		WorldServer.gameState.addItem(name + id, this);
+		return this;
+	}
+	
+	private void delete() {
+		File file = new File(this.getName() + this.getId());
+		file.delete();		
 	}
 }

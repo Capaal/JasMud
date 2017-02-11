@@ -66,8 +66,6 @@ public class CraftItem extends Skills {
 		//what the skill actually does:
 		for (Holdable d : componentsOnHand) {d.removeFromWorld();} //wrong method, needs a new delete method. Needs to work with stackable.
 		for (int i=1; i<=quantity; i++) {
-			Set<StdItem> allItems = WorldServer.gameState.viewAllItems(); //need better way to determine a good ID
-			copyThis.setId(allItems.size()+1);
 			copyThis.setDescription(copyThis.getDescription());
 			copyThis.setItemContainer(currentPlayer); //may not always create the item in the same place
 			copyThis.complete(); //should make a copy with new stats since template is Builders

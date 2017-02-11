@@ -24,11 +24,6 @@ public class MobileDecorator implements Mobile {
 		return decoratedMobile.getInventory();
 	}
 
-//	@Override
-//	public void look(Mobile currentPlayer) {
-//		decoratedMobile.look(currentPlayer);
-//	}
-
 	@Override
 	public void removeItemFromLocation(Holdable oldItem) {
 		decoratedMobile.removeItemFromLocation(oldItem);
@@ -159,8 +154,8 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public boolean save() {
-		return decoratedMobile.save();
+	public void save() {
+		decoratedMobile.save();
 	}
 
 	@Override
@@ -208,11 +203,6 @@ public class MobileDecorator implements Mobile {
 		decoratedMobile.informLastAggressor(aggressor);
 		
 	}
-
-	@Override
-	public boolean firstTimeSave() {
-		return decoratedMobile.firstTimeSave();
-	}
 	
 	public void makeDecision() {}
 	
@@ -251,7 +241,6 @@ public enum DecoratorType {
 			mobAI.makeDecision();
 		}
 	}
-
 
 	@Override
 	public boolean isInducting() {
@@ -295,12 +284,19 @@ public enum DecoratorType {
 	}
 
 	@Override
+	public void setContainer(Container container) {
+		decoratedMobile.setContainer(container);
+		
+		}
 	public int getDefense() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
+	public void createNewEffectManager() {
+		decoratedMobile.createNewEffectManager();
+		}		
 	public void addDefense(int i) {
 		// TODO Auto-generated method stub
 		

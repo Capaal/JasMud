@@ -3,6 +3,9 @@ package processes;
 import java.util.*;
 import java.util.Map.Entry;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 import Quests.Quest;
 import Quests.Quest.Trigger;
 import interfaces.*;
@@ -12,6 +15,8 @@ import processes.Location.Direction;
  *  Contains all information relating to each "room" a player may visit.
  *  Should be initiated safely using LocationBuilder
  */
+
+@XStreamAlias("Location")
 public class Location implements Container {
 		
 	private final int id;
@@ -19,6 +24,7 @@ public class Location implements Container {
 	private final String description;
 	private final GroundType groundType;
 	private Map<Direction, Location> locationMap;
+	@XStreamOmitField
 	protected TreeMap<String, Holdable> inventory = new TreeMap<String, Holdable>();
 	
 	private final Quest bondedQuest;
@@ -134,7 +140,9 @@ public class Location implements Container {
 	}
 	
 	public void removeItemFromLocation(Holdable oldItem) {
-		inventory.remove(oldItem.getName() + oldItem.getId());
+		if ((inventory.remove(oldItem.getName() + oldItem.getId()) == null)) {
+			System.out.println("Failed to remove item from location: " + oldItem);
+		}
 	}
 	
 	public TreeMap<String, Holdable> getInventory() {
@@ -159,17 +167,7 @@ public class Location implements Container {
 		return getLocation(dir);
 	}
 	
-	// NOT WORKING CURRENTLY
-	public void save() {
-/*		String directionKeyInformation = makeKeyInformation();
-		String directionValueInformation = makeValueInformation();
-		String insertNewLocation = "insert into locationstats (LOCID, LOCNAME, LOCDES, LOCTYPE"
-				+ directionKeyInformation
-				+ ") values (" + id + ", '" + name + "', '" + description + "', '" + groundType.toString() + "'"
-				+ directionValueInformation + ") ON DUPLICATE KEY UPDATE LOCID=" + id + ";";	
-		System.out.println(insertNewLocation);
-		WorldServer.databaseInterface.saveAction(insertNewLocation);	*/	
-	}
+	
 	
 	public Direction getDirectionToLocation(Location askingLocation) {
 		for (Entry<Direction, Location> entry : locationMap.entrySet()) {
@@ -429,5 +427,9 @@ public class Location implements Container {
 
 	public Quest getQuest() {
 		return bondedQuest;
-	}	
+	}
+
+//	public void removeFromWorld() {
+//		WorldServer.saveLocation(this);
+//	}	
 }
