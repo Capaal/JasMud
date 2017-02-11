@@ -3,6 +3,7 @@ package skills;
 import java.util.Arrays;
 
 import effects.Balance;
+import effects.ConditionsEnum;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import items.StdItem;
@@ -20,6 +21,7 @@ public class BreakLimb extends Skills {
 	private EquipmentEnum slot;
 	private final int intensity = 8;
 	
+	//check for: limb already broken, is item wielded, unwield item
 	public BreakLimb() {
 		super.name = "break";
 		super.description = "Break an arm or leg.";
@@ -45,15 +47,17 @@ public class BreakLimb extends Skills {
 			messageSelf("Syntax: BREAK <TARGET> <LEFTHAND/RIGHTHAND/LEG>");
 			return;
 		}
-		if (slot.equals(EquipmentEnum.LEFTHAND) || slot.equals(EquipmentEnum.RIGHTHAND)) {
-			finalTarget.unEquip(slot);
-			messageTarget("Your arm breaks and you can no longer wield a weapon.", Arrays.asList(finalTarget));
+		//checks if slot specified is a hand, then checks if hand is already broken
+		//sets limb to broken, unwield if hand
+		if (slot.equals(EquipmentEnum.LEFTHAND)) {
+			breakarm(ConditionsEnum.BROKENLEFTARM);
+		} else if (slot.equals(EquipmentEnum.RIGHTHAND)) {
+			breakarm(ConditionsEnum.BROKENRIGHTARM);
 		} else if (slot.equals(EquipmentEnum.LEGS)) {
-			((StdMob)currentPlayer).setBodyPart(slot.toString().toLowerCase(), false);
-			messageTarget("Your legs are broken.", Arrays.asList(finalTarget));
+		//	messageTarget("Your legs are broken.", Arrays.asList(finalTarget));
+			finalTarget.addAllConditions(ConditionsEnum.BROKENLEGS);
 		}
-			//make slot unwieldable - later
-		
+		//the regular stuff a damaging atk does
 		finalTarget.informLastAggressor(currentPlayer);
 		finalTarget.takeDamage(Type.BLUNT, calculateDamage());
 		currentPlayer.addEffect(new Balance(), 3000);
@@ -80,6 +84,17 @@ public class BreakLimb extends Skills {
 			return false;
 		}				
 		return true;
+	}
+	
+	private void breakarm(ConditionsEnum brokenHand) {
+		String hand = slot.toString().toLowerCase();
+		if (finalTarget.hasAllConditions(brokenHand)) {
+			messageSelf("That players " + hand + " is already broken.");
+		} else {
+			finalTarget.unEquip(slot);
+			messageTarget("Your arm breaks and you can no longer wield a weapon.", Arrays.asList(finalTarget));
+			finalTarget.addAllConditions(brokenHand);
+		}
 	}
 	
 	private int calculateDamage() {

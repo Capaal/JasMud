@@ -45,7 +45,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	protected final EffectManager effectManager;
 	protected Mobile lastAggressor;
 	protected ArrayList<String> messages;
-	protected Map<String, Boolean> bodyParts;
+	protected Set<ConditionsEnum> allConditions;
 	
 	public StdMob(MobileBuilder build) {
 		Mobile decoratedMob = decorate(build, this);
@@ -66,7 +66,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		effectManager = new EffectManager(this);
 		this.skillBookList = build.getSkillBookList();		
 		this.equipment = build.getEquipment();
-		this.bodyParts = build.getBodyParts();
+		this.allConditions = build.getAllConditions();
 		
 		WorldServer.gameState.addMob(decoratedMob.getName() + decoratedMob.getId(), decoratedMob);
 		decoratedMob.getContainer().acceptItem(decoratedMob);
@@ -96,6 +96,22 @@ public class StdMob implements Mobile, Container, Holdable {
 		return shortDescription;
 	}
 	
+	@Override public void addAllConditions(ConditionsEnum condition) {
+		allConditions.add(condition);
+	}
+	
+	@Override public void removeAllConditions(ConditionsEnum condition) {
+		allConditions.remove(condition);
+	}
+	
+	@Override public Set<ConditionsEnum> getAllConditions() {
+		return allConditions;
+	}
+	
+	public boolean hasAllConditions(ConditionsEnum condition) {
+		return allConditions.contains(condition);
+	}
+	
 	public void addDefense(int i) {
 		//should calculate from equipment, effectors?, decorators, potions, herbs, etc
 		this.defense = this.defense + i;
@@ -115,14 +131,6 @@ public class StdMob implements Mobile, Container, Holdable {
 				return skill;		
 		}
 		return null;
-	}
-	
-	public boolean isBodyPartOK(String part) {
-		return bodyParts.get(part);
-	}
-	
-	public void setBodyPart(String part, boolean value) {
-		bodyParts.put(part, value);
 	}
 	
 	@Override
@@ -209,7 +217,7 @@ public class StdMob implements Mobile, Container, Holdable {
 			String key = oldItem.getName() + oldItem.getId();
 			inventory.remove(key);
 		} else if (equipment.hasItem(oldItem)){
-			equipment.unEquip((StdItem)oldItem);
+			equipment.remove((StdItem)oldItem);
 			removeItemFromLocation(oldItem);
 		} else {
 			System.out.println("An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
@@ -542,6 +550,8 @@ public class StdMob implements Mobile, Container, Holdable {
 	   // }
 	//    return false;
 	}
+
+
 }
 
 	

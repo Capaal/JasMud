@@ -66,6 +66,12 @@ public class Equipment {
 		itemToEquipmentMap.put(item, slot);	
 	}
 	
+	public void remove(Holdable item) {
+		EquipmentEnum slot = getKey(item);
+		itemToEquipmentMap.remove(item);	
+		equipmentToItemMap.put(slot, null);
+	}
+	
 	public void unEquip(EquipmentEnum slot) {
 		equip(slot, null);
 	}

@@ -7,6 +7,7 @@ import interfaces.Mobile;
 import items.ItemBuilder;
 import items.StdItem;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.Stack;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import effects.ConditionsEnum;
 import processes.Equipment.EquipmentEnum;
 import processes.MobileDecorator.DecoratorType;
 
@@ -44,7 +46,7 @@ public class MobileBuilder {
 	private List<ItemBuilder> dropsOnDeath = new ArrayList<ItemBuilder>();
 	private boolean buildComplete = false;
 	private Mobile finishedMob;
-	private Map<String, Boolean> bodyParts = new HashMap<String, Boolean>();
+	public Set<ConditionsEnum> allConditions = EnumSet.noneOf(ConditionsEnum.class);
 	
 	public MobileBuilder() {
 		// might change based on implementation.
@@ -59,13 +61,6 @@ public class MobileBuilder {
 		setEquipment(EquipmentEnum.FEET,  null);
 		setEquipment(EquipmentEnum.LEFTFINGER,  null);
 		setEquipment(EquipmentEnum.RIGHTFINGER,  null);
-		//this is fugly
-		bodyParts.put("head", true);
-		bodyParts.put("neck", true);
-		bodyParts.put("righthand", true);
-		bodyParts.put("lefthand", true);
-		bodyParts.put("chest", true);
-		bodyParts.put("legs", true);
 	}	
 	
 	public boolean buildCompleted() {
@@ -374,7 +369,7 @@ public class MobileBuilder {
 		finishedMob = decoratedMob;
 	}
 
-	public Map<String, Boolean> getBodyParts() {
-		return this.bodyParts;
+	public Set<ConditionsEnum> getAllConditions() {
+		return this.allConditions;
 	}	
 }

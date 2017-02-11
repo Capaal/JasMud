@@ -40,7 +40,7 @@ public class Fear implements TickingEffect {
 			currentPlayer.tell("Off balance.");
 			return;
 		}
-		if (!((StdMob)currentPlayer).isBodyPartOK("legs")) {
+		if (currentPlayer.hasAllConditions(ConditionsEnum.BROKENLEGS)) {
 			currentPlayer.tell("You try to flee, but your legs are broken.");
 			return;
 		}
