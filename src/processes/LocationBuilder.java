@@ -33,6 +33,7 @@ public class LocationBuilder {
 	private Location finishedLocation;	
 	private boolean buildComplete = false;
 	private Quest bondedQuest = null;
+	private static int maxId;
 	
 	public LocationBuilder() {
 		id = -1;
@@ -46,17 +47,17 @@ public class LocationBuilder {
 	// Declares the Location Builder done building. Generates a new Location and finds a valid ID to assign.
 	public boolean complete() {
 		// Should check that ID is ok, if assigned manually.
-		if (getId() == -1) {
-			try {
-				setId();
-			} catch (IllegalStateException e) {
-				System.out.println(e);
-				return false;
-			}
-		}
+		
+		handleId();
+		
 		buildComplete = true;
 		finishedLocation = new Location(this);
 		return true;
+	}
+	
+	private synchronized void handleId() {
+		this.id = maxId + 1;
+		maxId ++;
 	}
 	
 	// If an instance of LocationBuilder has been completed via "complete()" then returns the generated Location.
@@ -74,9 +75,9 @@ public class LocationBuilder {
 	}
 	
 	// Dangerous, remove? Another Location might be assigned that ID, or add a check during Complete()
-	public void setId(int id) {
-		this.id = id;
-	}
+//	public void setId(int id) {
+//		this.id = id;
+//	}
 	
 	// UNUSED currently, but needs to search for valid ID. TODO
 	private void setId() throws IllegalStateException {

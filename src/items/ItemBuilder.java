@@ -1,10 +1,14 @@
 package items;
 
 import interfaces.Container;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
 import processes.WorldServer;
 import processes.Equipment.EquipmentEnum;
 
@@ -22,7 +26,7 @@ public class ItemBuilder {
 	private EnumSet<EquipmentEnum> allowedSlots = EnumSet.of(EquipmentEnum.RIGHTHAND, EquipmentEnum.LEFTHAND);// EnumSet.noneOf(EquipmentEnum.class);
 	private List<String> components = new ArrayList<String>();
 	private boolean salvageable = false;
-	
+	private static Map<String, Integer> idMap = new HashMap<String, Integer>();
 	private StdItem finishedItem =  null;
 	private boolean buildComplete = false;;
 	
@@ -152,17 +156,20 @@ public class ItemBuilder {
 	// Attempts to obtain valid ID (and should check validity if given one)
 	// Then creates a new item using builder's settings.
 	public boolean complete() {
-		if (id == -1) {
-			try {
-				setId();
-			} catch (IllegalStateException e) {
-				System.out.println("New skill failed to obtain unique id, it was not created.");
-				return false;
-			} 	
-		}
+		handleId();
 		buildComplete = true;
 		finishedItem = typeToProduce.produceType(this);
 		return true;
+	}
+	
+	private synchronized void handleId() {
+		if (idMap.containsKey(this.name)) {
+			this.id = idMap.get(this.name);
+			idMap.put(this.name, this.id++);			
+		} else {
+			this.id = 1;
+			idMap.put(this.name,  this.id);
+		}
 	}
 	
 	public StdItem getFinishedItem() {

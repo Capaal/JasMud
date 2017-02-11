@@ -68,7 +68,6 @@ public class CraftItem extends Skills {
 		for (int i=1; i<=quantity; i++) {
 			Set<StdItem> allItems = WorldServer.gameState.viewAllItems(); //need better way to determine a good ID
 			ItemBuilder newItem = new ItemBuilder();
-			newItem.setId(allItems.size()+1);
 			newItem.setName(copyThis.getName());
 			newItem.setDescription(copyThis.getDescription());
 			newItem.setItemContainer(currentPlayer); //may not always create the item in the same place

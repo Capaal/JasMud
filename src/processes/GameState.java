@@ -46,7 +46,7 @@ public class GameState {
 	}
 	
 	public boolean removeItem(String nameId) {
-		return allItems.remove(nameId) != null;
+		return (allItems.remove(nameId) != null);
 	}
 	
 	public Set<SkillBook> viewAllBooks() {

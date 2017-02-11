@@ -41,7 +41,7 @@ public interface Mobile extends Container, Holdable {
 	public void addBook(SkillBook skillBook, int progress);
 	public boolean isControlled();
 	public void controlStatus(boolean statusChange);
-	public boolean save();
+	public void save();
 //	public void setStartup(boolean b);
 	public void equip(EquipmentEnum slot, StdItem item);
 	public void unEquip(EquipmentEnum slot);
@@ -62,5 +62,6 @@ public interface Mobile extends Container, Holdable {
 	public Map<SkillBook, Integer> viewSkillBooks();
 	public void dropItemsOnDeath();
 	public Equipment getEquipment();
+	public void createNewEffectManager();
 	
 }

@@ -34,7 +34,7 @@ public class Look extends Skills {
 		messageSelf(UsefulCommands.ANSI.GREEN + lookHere.getDescription() + UsefulCommands.ANSI.SANE);
 		lookHere.displayAll(currentPlayer);	//need to expand this so location doesn't do it anymore			
 		messageSelf(UsefulCommands.ANSI.CYAN + lookHere.displayExits() + UsefulCommands.ANSI.SANE);
-		messageSelf("(God sight) Location number: " + id + ". Ground type: " + lookHere.getGroundType() + ".");  // GOD SIGHT
+		messageSelf("(God sight) Location number: " + lookHere.getId() + ". Ground type: " + lookHere.getGroundType() + ".");  // GOD SIGHT
 	}
 	
 }

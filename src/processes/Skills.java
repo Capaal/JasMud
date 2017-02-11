@@ -7,7 +7,6 @@ import java.util.*;
 public abstract class Skills {
 	
 	protected String name;
-	protected int id; 
 	protected String description;
 	protected List<Syntax> syntaxList = new ArrayList<Syntax>();	
 	

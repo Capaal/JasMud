@@ -6,6 +6,9 @@ import items.StdItem;
 
 import java.util.*;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 import effects.*;
 import processes.Equipment.EquipmentEnum;
 import processes.MobileDecorator.DecoratorType;
@@ -18,6 +21,8 @@ import processes.MobileDecorator.DecoratorType;
  * Undead might also be an extension, as they would have additional methods, or overwritten methods.
  * @author Jason
  */
+
+@XStreamAlias("StdMob")
 public class StdMob implements Mobile, Container, Holdable {
 
 	protected final String name;
@@ -25,6 +30,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	protected final int id;
 	protected int maxHp;
 	protected int currentHp; 
+//	@XStreamOmitField
 	protected Location mobLocation;
 	protected boolean isDead;
 	protected final Equipment equipment;		
@@ -34,14 +40,18 @@ public class StdMob implements Mobile, Container, Holdable {
 	protected int experience;
 	protected int level;
 	protected int age; 
+	@XStreamOmitField
 	protected SendMessage sendBack;
 	protected boolean isControlled = false;
 //	protected boolean loadOnStartUp = false;
 	protected TreeMap<String, Holdable> inventory = new TreeMap<String, Holdable>();
 	protected InductionSkill inductionSkill = null;
+	@XStreamOmitField
 	protected Map<SkillBook, Integer> skillBookList = new HashMap<SkillBook, Integer>();
-	protected List<ItemBuilder> dropsOnDeath;	
-	protected final EffectManager effectManager;
+	protected List<ItemBuilder> dropsOnDeath;
+	@XStreamOmitField
+	protected EffectManager effectManager;
+	@XStreamOmitField
 	protected Mobile lastAggressor;
 	protected ArrayList<String> messages;
 	
@@ -60,7 +70,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		this.inventory.putAll(build.getInventory())	;
 		this.dropsOnDeath = build.getDropsOnDeath();
 		this.experience = build.getExperience();
-		effectManager = new EffectManager(this);
+		createNewEffectManager();		
 		this.skillBookList = build.getSkillBookList();		
 		this.equipment = build.getEquipment();
 		
@@ -75,6 +85,12 @@ public class StdMob implements Mobile, Container, Holdable {
 			return decorate(build, m);
 		}
 		return m;
+	}
+	
+	
+	// SHOULD MOVE TO a readResolve for XStream
+	@Override public void createNewEffectManager() {
+		effectManager = new EffectManager(this);
 	}
 	
 	@Override public String getName() {return name;}	
@@ -111,8 +127,10 @@ public class StdMob implements Mobile, Container, Holdable {
 	
 	@Override
 	public synchronized void moveHoldable(Container finalLocation) {
-		if (finalLocation instanceof Location) {	
-			getContainer().removeItemFromLocation(this);
+		if (finalLocation instanceof Location) {
+	//		if (getContainer() != null) {
+				getContainer().removeItemFromLocation(this);
+	//		}
 			finalLocation.acceptItem(this);
 			this.mobLocation = (Location) finalLocation;
 		} else {
@@ -181,7 +199,7 @@ public class StdMob implements Mobile, Container, Holdable {
 			String key = oldItem.getName() + oldItem.getId();
 			inventory.remove(key);
 		} else if (equipment.hasItem(oldItem)){
-			equipment.unEquip((StdItem)oldItem);
+			equipment.remove(oldItem);
 			removeItemFromLocation(oldItem);
 		} else {
 			System.out.println("An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
@@ -288,6 +306,9 @@ public class StdMob implements Mobile, Container, Holdable {
 	
 	@Override
 	public void addBook(SkillBook skillBook, int progress) {
+		if (skillBookList == null) {
+			skillBookList = new HashMap<SkillBook, Integer>();
+		}
 		skillBookList.put(skillBook, progress);
 		
 	}
@@ -302,70 +323,22 @@ public class StdMob implements Mobile, Container, Holdable {
 	}
 	
 	@Override
-	public boolean save() {
-	//	if (!saveStats()) {
-	//		System.out.println("Failed save of stats for " + this.getName());
-	//		return false;
-	//		
-	//	}
-	//	if (!saveItems()) {
-	//		System.out.println("Failed save of items for " + this.getName());
-	//		return false;
-	//	}	
-		return true;
-	}
-	
-	//TODO
-	private boolean saveStats() {
-		// Should update everything that we expect to change A LOT, like location and hp. Things like description would
-		// probably be best somewhere else that get updated right when the change occurs.
-	//	String updateStats = "UPDATE MOBSTATS SET MOBDESC='" + description + "', MOBSHORTD='" + shortDescription 
-	//			+ "', MOBLOC=" + mobLocation.getId() + ", MOBCURRENTHP=" + currentHp + ", MOBDEAD='" + (isDead ? 1 : 0) + "', "
-//					+ "MOBCURRENTXP=" + experience + ", MOBCURRENTLEVEL=" + level + ", MOBAGE=" + age
-//						+ ", LOADONSTARTUP=" + (loadOnStartUp ? 1 : 0) + " WHERE MOBID=" + id + ";";
-	//	WorldServer.databaseInterface.saveAction(updateStats);
-		return true;
+	public void save() {
+		WorldServer.saveMobile(this);
 	}	
-	
-	private boolean saveItems() {
-//		for (Holdable saveInventoryItem : inventory) {
-//			if (!saveInventoryItem.save()) {
-//				return false;
-//			}
-//		}
-		for (Holdable saveEquipmentItem : equipment.values()) {
-			if (saveEquipmentItem != null) {
-				if (!saveEquipmentItem.save()) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-//	@Override
-//	public void setStartup(boolean b) {
-//		loadOnStartUp = b;		
-//	}	
 
-	@Override // TODO
+	@Override
 	public void removeFromWorld() {	
-//		if (!loadOnStartUp) { // WHY THIS?
-			for (Holdable inventoryItem : inventory.values()) {
-				inventoryItem.removeFromWorld();
-			}
-			for (Holdable equipmentItem : equipment.values()) {
-				if (equipmentItem != null) {
-					equipmentItem.removeFromWorld();
-				}
-			}
-			save();
-			effectManager.shutDown();
-			if (isInducting()) {
-				inductionSkill.shutDown();
-			}
-			mobLocation.removeItemFromLocation(this);
-			WorldServer.gameState.removeMob(this.getName() + this.getId());
-	//	}
+		save();
+		effectManager.shutDown();
+		if (isInducting()) {
+			inductionSkill.shutDown();
+		}
+		for (Holdable h : new HashSet<Holdable>(inventory.values())) {
+			h.removeFromWorld();
+		}
+		mobLocation.removeItemFromLocation(this);
+		WorldServer.gameState.removeMob(this.getName() + this.getId());
 	}
 	
 	@Override
@@ -433,6 +406,8 @@ public class StdMob implements Mobile, Container, Holdable {
 		this.lastAggressor = aggressor;
 		
 	}
+	
+	// TODO
 	private static int findNewId(String name) {
 /*		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
 				+ " LEFT JOIN MOBSTATS ON sequencetable.sequenceid = mobstats.mobid"
@@ -450,12 +425,6 @@ public class StdMob implements Mobile, Container, Holdable {
 		}
 		return 0;*/
 		return 1;
-	}
-
-	@Override
-	public boolean firstTimeSave() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 	
 	@Override
@@ -505,6 +474,35 @@ public class StdMob implements Mobile, Container, Holdable {
 	  //  	return true;
 	   // }
 	//    return false;
+	}
+	
+	private Object readResolve() {
+	//	setLocation();
+    	addBook(CreateWorld.generalSkills.duplicate(),100);
+    	WorldServer.gameState.addMob(name + id, this);
+    //	buildSkillList();
+    	getContainer().acceptItem(this);
+    	createNewEffectManager();	 
+    	controlStatus(true);
+		for (Holdable h: inventory.values()) {
+			h.setContainer(this);
+		}
+		for (Holdable h : equipment.values()) {
+			if (h != null) {
+				h.setContainer(this);
+			}
+		}
+		return this;
+	}
+
+	// Not safe to use? But required for save load
+	@Override
+	public void setContainer(Container container) {
+		if (container instanceof Location) {
+			this.mobLocation = (Location) container;
+		}
+		// TODO Auto-generated method stub
+		
 	}
 }
 
