@@ -53,6 +53,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new BreakLimb());
 		generalSkills.addSkill(new Drink());
 		generalSkills.addSkill(new Intimidate());
+		generalSkills.addSkill(new Straighten());
 	}
 	
 	public static void makeItems() {

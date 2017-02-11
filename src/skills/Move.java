@@ -2,6 +2,7 @@ package skills;
 
 import java.util.Arrays;
 
+import effects.ConditionsEnum;
 import interfaces.Container;
 import processes.Location;
 import processes.Skills;
@@ -50,7 +51,7 @@ public class Move extends Skills {
 	}
 	
 	private boolean canMove() {
-		if(!((StdMob)currentPlayer).isBodyPartOK("legs")) {
+		if(currentPlayer.hasAllConditions(ConditionsEnum.BROKENLEGS)) {
 			messageSelf("Oh no your legs are broken.");
 			return false;
 		}

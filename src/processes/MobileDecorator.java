@@ -1,8 +1,10 @@
 package processes;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
+import effects.ConditionsEnum;
 import processes.Equipment.EquipmentEnum;
 import interfaces.Container;
 import interfaces.Effect;
@@ -118,8 +120,7 @@ public class MobileDecorator implements Mobile {
 
 	@Override
 	public boolean addEffect(Effect newEffect, int duration) {
-		decoratedMobile.addEffect(newEffect, duration);
-		return true;
+		return decoratedMobile.addEffect(newEffect, duration);
 	}
 
 	@Override
@@ -289,8 +290,7 @@ public enum DecoratorType {
 		
 		}
 	public int getDefense() {
-		// TODO Auto-generated method stub
-		return 0;
+		return decoratedMobile.getDefense();
 	}
 
 	@Override
@@ -298,7 +298,26 @@ public enum DecoratorType {
 		decoratedMobile.createNewEffectManager();
 		}		
 	public void addDefense(int i) {
-		// TODO Auto-generated method stub
-		
+		decoratedMobile.addDefense(i);
+	}
+
+	@Override
+	public void addAllConditions(ConditionsEnum conditions) {
+		decoratedMobile.addAllConditions(conditions);
+	}
+
+	@Override
+	public void removeAllConditions(ConditionsEnum conditions) {
+		decoratedMobile.removeAllConditions(conditions);
+	}
+
+	@Override
+	public Set<ConditionsEnum> getAllConditions() {
+		return decoratedMobile.getAllConditions();
+	}
+
+	@Override
+	public boolean hasAllConditions(ConditionsEnum conditions) {
+		return hasAllConditions(conditions);
 	}
 }

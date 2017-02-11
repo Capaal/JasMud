@@ -3,7 +3,9 @@ package interfaces;
 import items.StdItem;
 
 import java.util.Map;
+import java.util.Set;
 
+import effects.ConditionsEnum;
 import processes.Equipment;
 import processes.Equipment.EquipmentEnum;
 import processes.InductionSkill;
@@ -64,6 +66,10 @@ public interface Mobile extends Container, Holdable {
 	public Map<SkillBook, Integer> viewSkillBooks();
 	public void dropItemsOnDeath();
 	public Equipment getEquipment();
+	public void addAllConditions(ConditionsEnum conditions);
 	public void createNewEffectManager();
+	public void removeAllConditions(ConditionsEnum conditions);
+	public Set<ConditionsEnum> getAllConditions();
+	public boolean hasAllConditions(ConditionsEnum conditions);
 	
 }

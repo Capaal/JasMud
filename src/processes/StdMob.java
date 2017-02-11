@@ -55,7 +55,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	@XStreamOmitField
 	protected Mobile lastAggressor;
 	protected ArrayList<String> messages;
-	protected Map<String, Boolean> bodyParts;
+	protected Set<ConditionsEnum> allConditions;
 	
 	public StdMob(MobileBuilder build) {
 		Mobile decoratedMob = decorate(build, this);
@@ -76,7 +76,7 @@ public class StdMob implements Mobile, Container, Holdable {
 		createNewEffectManager();		
 		this.skillBookList = build.getSkillBookList();		
 		this.equipment = build.getEquipment();
-		this.bodyParts = build.getBodyParts();
+		this.allConditions = build.getAllConditions();
 		
 		WorldServer.gameState.addMob(decoratedMob.getName() + decoratedMob.getId(), decoratedMob);
 		decoratedMob.getContainer().acceptItem(decoratedMob);
@@ -112,6 +112,22 @@ public class StdMob implements Mobile, Container, Holdable {
 		return shortDescription;
 	}
 	
+	@Override public void addAllConditions(ConditionsEnum condition) {
+		allConditions.add(condition);
+	}
+	
+	@Override public void removeAllConditions(ConditionsEnum condition) {
+		allConditions.remove(condition);
+	}
+	
+	@Override public Set<ConditionsEnum> getAllConditions() {
+		return allConditions;
+	}
+	
+	public boolean hasAllConditions(ConditionsEnum condition) {
+		return allConditions.contains(condition);
+	}
+	
 	public void addDefense(int i) {
 		//should calculate from equipment, effectors?, decorators, potions, herbs, etc
 		this.defense = this.defense + i;
@@ -131,14 +147,6 @@ public class StdMob implements Mobile, Container, Holdable {
 				return skill;		
 		}
 		return null;
-	}
-	
-	public boolean isBodyPartOK(String part) {
-		return bodyParts.get(part);
-	}
-	
-	public void setBodyPart(String part, boolean value) {
-		bodyParts.put(part, value);
 	}
 	
 	@Override
@@ -540,6 +548,8 @@ public class StdMob implements Mobile, Container, Holdable {
 		// TODO Auto-generated method stub
 		
 	}
+
+
 }
 
 	
