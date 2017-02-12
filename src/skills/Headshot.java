@@ -13,7 +13,7 @@ import processes.Type;
 
 public class Headshot extends InductionSkill {
 	
-	private int intensity = (8*3);
+	private int intensity = (10*3);
 	private Set<Location> allLocations;
 	private String possibleTarg;
 	private Mobile finalTarget;

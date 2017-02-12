@@ -88,7 +88,7 @@ public class PunchTest {
 	@Test
 	public void testEnemyNOTPresent() {		
 		LocationBuilder lb = new LocationBuilder();
-		lb.setId(2);
+	//	lb.setId(2);
 		lb.complete();
 		Location newLocation = lb.getFinishedLocation();
 		newLocation.acceptItem(target);
@@ -117,7 +117,7 @@ public class PunchTest {
 		WorldServer.setGameState(new GameState());
 		testSkill = new Punch();
 		LocationBuilder lb = new LocationBuilder();
-		lb.setId(1);
+//		lb.setId(1);
 		lb.complete();
 		location = lb.getFinishedLocation();
 		MobileBuilder mb = new MobileBuilder();

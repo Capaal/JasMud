@@ -2,6 +2,7 @@ package skills;
 
 import java.util.Arrays;
 import effects.Balance;
+import effects.ConditionsEnum;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Skills;
@@ -25,9 +26,8 @@ public class Punch extends Skills {
 	@Override
 	protected void performSkill() {
 		targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
-		if (!hasBalance()) {
-			return;
-		}
+		if (!hasBalance()) {return;}
+		if (brokenArms()) {return;}
 		setTarget();
 		if (finalTarget == null) {
 			messageSelf("There is no " + targetName + " here for you to punch.");
@@ -46,6 +46,14 @@ public class Punch extends Skills {
 
 	private int calculateDamage() {
 		return intensity;
+	}
+	
+	private boolean brokenArms() {
+		if (currentPlayer.hasAllConditions(ConditionsEnum.BROKENLEFTARM) && currentPlayer.hasAllConditions(ConditionsEnum.BROKENRIGHTARM)) {
+			messageSelf("Your arms are broken!");
+			return true;
+		} 
+		return false;
 	}
 	
 	private void setTarget() {

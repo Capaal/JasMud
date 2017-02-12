@@ -38,11 +38,11 @@ public class MoveTest {
 		WorldServer.setGameState(new GameState());
 		testSkill = new Move();
 		LocationBuilder lb = new LocationBuilder();
-		lb.setId(1);
+	//	lb.setId(1);
 		lb.complete();
 		locationOne = lb.getFinishedLocation();
 		lb = new LocationBuilder();
-		lb.setId(2);
+	//	lb.setId(2);
 		lb.south(1, "north");
 		lb.complete();
 		locationTwo = lb.getFinishedLocation();
@@ -66,7 +66,7 @@ public class MoveTest {
 	@Test
 	public void testInfiniteLoop() {
 		LocationBuilder lb = new LocationBuilder();
-		lb.setId(3);
+	//	lb.setId(3);
 		lb.south(2, "north");
 		lb.north(1, "south");
 		lb.complete();
@@ -97,7 +97,7 @@ public class MoveTest {
 	@Test
 	public void testMaze() {
 		LocationBuilder lb = new LocationBuilder();
-		lb.setId(3);
+	//	lb.setId(3);
 		lb.south(2, "east");
 		lb.north(1, "southwest");
 		lb.complete();

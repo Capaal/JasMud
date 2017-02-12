@@ -2,6 +2,7 @@ package skills;
 
 import java.util.Arrays;
 
+import effects.ConditionsEnum;
 import interfaces.Container;
 import interfaces.Holdable;
 import items.StackableItem;
@@ -22,6 +23,7 @@ public class Get extends Skills {
 	@Override
 	protected void performSkill() {
 		if (!hasBalance()) {return;}
+		if (brokenArms()) {return;}
 		Container here = currentPlayer.getContainer();
 		Holdable itemToMove = here.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
 		if (itemToMove == null) {
@@ -33,6 +35,14 @@ public class Get extends Skills {
 		} else {
 			standardGetItem(itemToMove);
 		}
+	}
+	
+	private boolean brokenArms() {
+		if (currentPlayer.hasAllConditions(ConditionsEnum.BROKENLEFTARM) && currentPlayer.hasAllConditions(ConditionsEnum.BROKENRIGHTARM)) {
+			messageSelf("Your arms are broken!");
+			return true;
+		} 
+		return false;
 	}
 	
 	private void moveStackableItem(StackableItem itemToMove) {

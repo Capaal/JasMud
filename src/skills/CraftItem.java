@@ -32,6 +32,20 @@ public class CraftItem extends Skills {
 			return;
 		}
 		Map<String, ItemBuilder> allItemTemplates = CreateWorld.viewItemTemplates(); //maybe list of only craftable items?
+		if (itemToMake.equals("list")) {
+			for (String s : allItemTemplates.keySet()) {
+				String display = s + ":";
+				List<String> componentsNeeded = allItemTemplates.get(s).getComponents(); 
+				for (String c : componentsNeeded) {
+					display = display + " " + c;
+				}
+				if (componentsNeeded.isEmpty()) {
+					display = display + " no components needed.";
+				}
+				messageSelf(display);
+			}
+			return;
+		}
 		ItemBuilder copyThis = allItemTemplates.get(itemToMake);
 		if (copyThis == null) {
 			messageSelf("That is not an item you are able to make."); //fail from no template for item specified

@@ -43,9 +43,10 @@ public class Move extends Skills {
 			messageSelf("You can't go that way!");
 			return;
 		}
-		messageOthers(currentPlayer.getName() + " leaves to the " + dir + ".", Arrays.asList(currentPlayer));
+		messageOthers(currentPlayer.getName() + " leaves to the " + dir.toLowerCase() + ".", Arrays.asList(currentPlayer));
 		currentPlayer.moveHoldable(endContainer);
-		messageOthers(currentPlayer.getName() + " arrives from the " + Location.Direction.getDirectionName(dir).getOpp() + ".", Arrays.asList(currentPlayer));
+		//this opposite direction is not always correct?
+		messageOthers(currentPlayer.getName() + " arrives from the " + Location.Direction.getDirectionName(dir).getOpp().toLowerCase() + ".", Arrays.asList(currentPlayer));
 		Look look = new Look();
 		look.perform("", currentPlayer);
 	}

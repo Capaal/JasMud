@@ -79,7 +79,7 @@ public class ThrowTest {
 	@Test
 	public void testEnemyNOTPresent() {		
 		LocationBuilder lb = new LocationBuilder();
-		lb.setId(2);
+	//	lb.setId(2);
 		lb.complete();
 		Location newLocation = lb.getFinishedLocation();
 		newLocation.acceptItem(target);
@@ -98,7 +98,7 @@ public class ThrowTest {
 	@Test
 	public void testThrowOneAway() {
 		LocationBuilder lb = new LocationBuilder();
-		lb.setId(2);
+	//	lb.setId(2);
 		lb.south(1, "north");
 		lb.complete();
 		Location newLocation = lb.getFinishedLocation();
@@ -112,7 +112,7 @@ public class ThrowTest {
 	@Test
 	public void testThrowTargetIsHereButIncludeNorth() {
 		LocationBuilder lb = new LocationBuilder();
-		lb.setId(2);
+//		lb.setId(2);
 		lb.south(1, "north");
 		lb.complete();
 		Location newLocation = lb.getFinishedLocation();
@@ -133,7 +133,7 @@ public class ThrowTest {
 		WorldServer.setGameState(new GameState());
 		testSkill = new Shoot();
 		LocationBuilder lb = new LocationBuilder();
-		lb.setId(1);
+	//	lb.setId(1);
 		lb.complete();
 		location = lb.getFinishedLocation();
 		MobileBuilder mb = new MobileBuilder();

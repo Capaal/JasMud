@@ -13,7 +13,7 @@ public class StdMobBuilderTest {
 	@Before
 	public void initialize() {
 		mob = new MobileBuilder();
-		mob.setId(1);
+	//	mob.setId(1);
 	}
 
 	@Test

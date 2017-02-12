@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import Quests.Quest;
 import Quests.Quest.Trigger;
+import effects.ConditionsEnum;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Location;
@@ -22,9 +23,8 @@ public class Give extends Skills {
 	// Requires balance, syntax = "give goblin2334 dagger " or "give andrew sword1532 "
 	@Override
 	protected void performSkill() {
-		if (!hasBalance()) {
-			return;
-		}
+		if (!hasBalance()) {return;}
+		if (brokenArms()) {return;}
 		Holdable itemToMove = currentPlayer.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
 		if (itemToMove == null) {
 			messageSelf("You can't find that item.");
@@ -40,6 +40,14 @@ public class Give extends Skills {
 		messageTarget(currentPlayer.getName() + " gives you " + itemToMove + ".", Arrays.asList((Mobile)mobileToGive));
 		messageOthers(currentPlayer.getName() + " gives " + itemToMove.getName() + " to " + (Mobile)mobileToGive + ".", Arrays.asList(currentPlayer));
 		questCares(itemToMove, (Mobile)mobileToGive);		
+	}
+	
+	private boolean brokenArms() {
+		if (currentPlayer.hasAllConditions(ConditionsEnum.BROKENLEFTARM) && currentPlayer.hasAllConditions(ConditionsEnum.BROKENRIGHTARM)) {
+			messageSelf("Your arms are broken!");
+			return true;
+		} 
+		return false;
 	}
 	
 	private void questCares(Holdable item, Mobile mobile) {
