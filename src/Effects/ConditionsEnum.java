@@ -13,6 +13,10 @@ public enum ConditionsEnum {
 		
 		BROKENLEGS() {
 			
+		},
+		
+		DIZZY() {
+			
 		};
 		
 		

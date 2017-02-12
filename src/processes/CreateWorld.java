@@ -55,6 +55,8 @@ public class CreateWorld {
 		generalSkills.addSkill(new Intimidate());
 		generalSkills.addSkill(new Straighten());
 		generalSkills.addSkill(new Say());
+		generalSkills.addSkill(new SpinKick());
+		generalSkills.addSkill(new Clearmind());
 	}
 	
 	public static void makeItems() {
