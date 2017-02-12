@@ -11,7 +11,7 @@ import processes.WorldServer;
 public class FarmerQuest extends Quest {
 	
 	private String bondedMobileName = "farmerjames";
-	private int questLocationID = 4;
+//	private int questLocationID = 4;
 	private Mobile bondedMobile;
 	
 	public FarmerQuest() {
@@ -25,7 +25,7 @@ public class FarmerQuest extends Quest {
 	}
 	
 	protected boolean testRequirementsMet() {
-		questLocation = WorldServer.gameState.viewLocations().get(questLocationID);
+//		questLocation = WorldServer.gameState.viewLocations().get(questLocationID);
 		bondedMobile = (Mobile) questLocation.getHoldableFromString(bondedMobileName);
 		if (bondedMobile != null && !bondedMobile.isDead()) {
 			return true;
@@ -85,8 +85,7 @@ public class FarmerQuest extends Quest {
 		
 		private void createSkeletonBody() {
 			skeletonBody = new ItemBuilder();	
-			skeletonBody.setId(150);
-			skeletonBody.setName("skeleton");
+			skeletonBody.setName("skeletonbones");
 			skeletonBody.setDescription("It's a dead skeleton!");	
 		}
 		
@@ -94,7 +93,7 @@ public class FarmerQuest extends Quest {
 		@Override protected void runNods() {}
 		@Override protected void runNewState() { // SHOULD PROBABLY LOAD WHEN THATS A THING
 			questSkelly.complete();
-			Mobile finishedSkelly = (Mobile) questLocation.getHoldableFromString("skeleton200");
+			Mobile finishedSkelly = questSkelly.getFinishedMob();
 			finishedSkelly.informLastAggressor(bondedMobile);
 			finishedSkelly.takeDamage(Type.SHARP, 0); // Required to trigger AGGRESSIVE decorator to start attacking.
 			sayHere("Farmer James says: Ahhhh, help me!");

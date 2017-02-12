@@ -262,10 +262,6 @@ public class LocationBuilder {
 	public void setQuest(Quest quest) {
 		bondedQuest = quest;
 	}
-	
-	public void removeQuest() {
-		bondedQuest = null;
-	}
 
 	public Quest getQuest() {
 		return bondedQuest;

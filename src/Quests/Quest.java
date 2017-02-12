@@ -30,6 +30,10 @@ public abstract class Quest {
 		}
 	}
 	
+	public void bondLocation(Location loc) {
+		this.questLocation = loc;
+	}
+	
 	protected abstract boolean testRequirementsMet();
 	
 	public void progressQuest(State newState) {

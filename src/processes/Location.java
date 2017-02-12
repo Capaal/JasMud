@@ -5,11 +5,9 @@ import java.util.Map.Entry;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
-
 import Quests.Quest;
 import Quests.Quest.Trigger;
 import interfaces.*;
-import processes.Location.Direction;
 
 /*
  *  Contains all information relating to each "room" a player may visit.
@@ -38,6 +36,9 @@ public class Location implements Container {
 		this.description = builder.getDescription();
 		this.groundType = builder.getGroundType();
 		this.bondedQuest = builder.getQuest();
+		if (bondedQuest != null) {
+			bondedQuest.bondLocation(this);
+		}
 		this.locationMap = builder.getlocationMap();
 		WorldServer.gameState.addLocation(this.id, this);		
 		for (int s : builder.locationConnections.keySet()){
@@ -149,10 +150,40 @@ public class Location implements Container {
 		return new TreeMap<String, Holdable>(this.inventory);
 	}
 	
-	@Override
+	
+	// Get regenpotion GOT A GOBLIN GAHHH
+	@Override //TODO skeleton comes BEFORE skeletonbones so failing to ever grab skeletonbones
 	public Holdable getHoldableFromString(String holdableString) {	
+		holdableString = holdableString.toLowerCase();
+		String ceiling = inventory.ceilingKey(holdableString);
+		String floor = inventory.floorKey(holdableString);
+		
+		
+		System.out.println(floor + " to " + ceiling);
+		if (ceiling != null && floor != null) {
+			Map<String, Holdable> subMap = inventory.subMap(floor, true, ceiling, true);
+			for (String s : subMap.keySet()) {
+				if ((s.equalsIgnoreCase(holdableString) || subMap.get(s).getName().equalsIgnoreCase(holdableString))) {
+					return subMap.get(s);
+				}
+			}
+			System.out.println(subMap);
+		} else if (ceiling == null && floor != null) {
+			if ((floor.equalsIgnoreCase(holdableString) || inventory.get(floor).getName().equalsIgnoreCase(holdableString))) {
+				return inventory.get(floor);
+			}
+		} else if (ceiling != null && floor == null) {
+			if ((ceiling.equalsIgnoreCase(holdableString) || inventory.get(ceiling).getName().equalsIgnoreCase(holdableString))) {
+				return inventory.get(ceiling);
+			}
+		} else {
+			return null;
+		}
+		
+		
+		
 		Map.Entry<String,Holdable> answer = inventory.ceilingEntry(holdableString);
-		if (answer != null && (answer.getKey().equals(holdableString) || answer.getValue().getName().equals(holdableString))) {
+		if (answer != null && (answer.getKey().equalsIgnoreCase(holdableString) || answer.getValue().getName().equalsIgnoreCase(holdableString))) {
 			return answer.getValue();
 		}
 		return null;
