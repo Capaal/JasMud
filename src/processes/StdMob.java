@@ -23,7 +23,7 @@ import processes.MobileDecorator.DecoratorType;
  */
 
 @XStreamAlias("StdMob")
-public class StdMob implements Mobile, Container, Holdable {
+public class StdMob implements Mobile, Container{
 
 	protected final String name;
 	protected final String password;
@@ -151,7 +151,7 @@ public class StdMob implements Mobile, Container, Holdable {
 	
 	@Override
 	public void acceptItem(Holdable item) {
-		inventory.put(item.getName() + item.getId(), item);
+		inventory.put(item.getName().toLowerCase() + item.getId(), item);
 	}
 	
 	@Override
@@ -251,7 +251,39 @@ public class StdMob implements Mobile, Container, Holdable {
 	
 	// TODO SHOULD REWRITE AS: Try ceiling, then try range? Or ceiling, then floor, then range. ceiling is USUALLY correct
 	@Override
-	public Holdable getHoldableFromString(String holdableString) {		
+	public Holdable getHoldableFromString(String holdableString) {
+		holdableString = holdableString.toLowerCase();
+		String ceiling = inventory.ceilingKey(holdableString);
+		String floor = inventory.floorKey(holdableString);
+//		NavigableMap<String, Holdable> subMap = null;
+//		if (ceiling != null && floor != null) {
+//			subMap = inventory.subMap(floor, true, ceiling, true);
+//		}
+		
+//		System.out.println(floor + " to " + ceiling + " with submap of " + subMap);
+//		System.out.println(inventory.keySet());
+		
+		if (ceiling != null) {
+			if ((ceiling.equalsIgnoreCase(holdableString) || inventory.get(ceiling).getName().equalsIgnoreCase(holdableString))) {
+				return inventory.get(ceiling);
+			}
+		}
+		if (floor != null) {
+			if ((floor.equalsIgnoreCase(holdableString) || inventory.get(floor).getName().equalsIgnoreCase(holdableString))) {
+				return inventory.get(floor);
+			}
+		} 
+	//	if (ceiling != null && floor != null) {
+	//		System.out.println(inventory.keySet());
+	//		for (String s : inventory.keySet()) {
+	//			if ((s.equalsIgnoreCase(holdableString) || inventory.get(s).getName().equalsIgnoreCase(holdableString))) {
+	//				return inventory.get(s);
+	//			}
+	//		}
+	//	}
+		return null;
+		/*
+		
 		holdableString = holdableString.toLowerCase();
 		String ceiling = inventory.ceilingKey(holdableString);
 		String floor = inventory.floorKey(holdableString);

@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 import Quests.Quest;
 import Quests.Quest.Trigger;
 import interfaces.*;
@@ -123,7 +124,7 @@ public class Location implements Container {
 	
 	// The HOLDABLE being moved is EXPECTED to handle adding/removing itself properly.
 	public void acceptItem(Holdable newItem) {
-		inventory.put(newItem.getName() + newItem.getId(), newItem);
+		inventory.put(newItem.getName().toLowerCase() + newItem.getId(), newItem);
 	}	
 	
 	//TODO implement a null location object?
@@ -141,7 +142,7 @@ public class Location implements Container {
 	}
 	
 	public void removeItemFromLocation(Holdable oldItem) {
-		if ((inventory.remove(oldItem.getName() + oldItem.getId()) == null)) {
+		if ((inventory.remove(oldItem.getName().toLowerCase() + oldItem.getId()) == null)) {
 			System.out.println("Failed to remove item from location: " + oldItem);
 		}
 	}
@@ -151,23 +152,51 @@ public class Location implements Container {
 	}
 	
 	
-	// Get regenpotion GOT A GOBLIN GAHHH
-	@Override //TODO skeleton comes BEFORE skeletonbones so failing to ever grab skeletonbones
+	
+	@Override //TODO Ceiling and Floor does not work well with capital letters, so then full loop is used. Very bad design :(
 	public Holdable getHoldableFromString(String holdableString) {	
 		holdableString = holdableString.toLowerCase();
 		String ceiling = inventory.ceilingKey(holdableString);
 		String floor = inventory.floorKey(holdableString);
+		NavigableMap<String, Holdable> subMap = null;
+		if (ceiling != null && floor != null) {
+			subMap = inventory.subMap(floor, true, ceiling, true);
+		}
 		
+		System.out.println(floor + " to " + ceiling + " with submap of " + subMap);
+		System.out.println(inventory.keySet());
+		
+		if (ceiling != null) {
+			if ((ceiling.equalsIgnoreCase(holdableString) || inventory.get(ceiling).getName().equalsIgnoreCase(holdableString))) {
+				return inventory.get(ceiling);
+			}
+		}
+		if (floor != null) {
+			if ((floor.equalsIgnoreCase(holdableString) || inventory.get(floor).getName().equalsIgnoreCase(holdableString))) {
+				return inventory.get(floor);
+			}
+		} 
+	//	if (ceiling != null && floor != null) {
+	//		System.out.println(inventory.keySet());
+	//		for (String s : inventory.keySet()) {
+	//			if ((s.equalsIgnoreCase(holdableString) || inventory.get(s).getName().equalsIgnoreCase(holdableString))) {
+	//				return inventory.get(s);
+	//			}
+	//		}
+	//	}
+		return null;
+		
+		/*
 		
 		System.out.println(floor + " to " + ceiling);
 		if (ceiling != null && floor != null) {
 			Map<String, Holdable> subMap = inventory.subMap(floor, true, ceiling, true);
+			System.out.println(subMap);
 			for (String s : subMap.keySet()) {
 				if ((s.equalsIgnoreCase(holdableString) || subMap.get(s).getName().equalsIgnoreCase(holdableString))) {
 					return subMap.get(s);
 				}
 			}
-			System.out.println(subMap);
 		} else if (ceiling == null && floor != null) {
 			if ((floor.equalsIgnoreCase(holdableString) || inventory.get(floor).getName().equalsIgnoreCase(holdableString))) {
 				return inventory.get(floor);
@@ -186,7 +215,7 @@ public class Location implements Container {
 		if (answer != null && (answer.getKey().equalsIgnoreCase(holdableString) || answer.getValue().getName().equalsIgnoreCase(holdableString))) {
 			return answer.getValue();
 		}
-		return null;
+		return null;*/
 	}
 
 	@Override
