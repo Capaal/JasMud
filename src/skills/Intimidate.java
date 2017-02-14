@@ -11,7 +11,8 @@ import processes.Skills.Syntax;
 
 public class Intimidate extends Skills {
 	
-	Mobile mobileToFear;
+	private Mobile mobileToFear;
+	private String targetName;
 	
 	public Intimidate() {
 		super.name = "intimidate";
@@ -21,23 +22,31 @@ public class Intimidate extends Skills {
 
 	@Override
 	protected void performSkill() {
-		if (!hasBalance()) {
-			return;
-		}
-		String mobName = Syntax.TARGET.getStringInfo(fullCommand, this);
-		if (mobName.equals("")) {
-			messageSelf("Specify a target.");
-			return;
-		}
-		mobileToFear = (currentPlayer.getContainer().getMobileFromString(mobName));
-		if (mobileToFear == null) {
-			messageSelf("You can't find a person called " + mobileToFear.getName() + ".");
-			return;
-		}
+		if (!hasBalance()) {return;}
+		if (!setTarget()) {return;}
+
 		mobileToFear.addTickingEffect(new Fear(mobileToFear), 10000, 4);
 		messageSelf("You fear someone.");
 		messageTarget("Someone fears you.", Arrays.asList(mobileToFear));
 	}
 
+	
+	private boolean setTarget() {
+		targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
+		mobileToFear = null;
+		Holdable h = currentPlayer.getContainer().getHoldableFromString(targetName);
+		if (h != null && h instanceof Mobile) {
+			mobileToFear = (Mobile)h;
+			return true;
+		} else if (!(h instanceof Mobile)) {
+			messageSelf("The " +  targetName + " does not find you intimidating.");
+			return false;
+		}
+		if (mobileToFear == null) {
+			messageSelf("There is no " + targetName + " here for you to intimidate.");
+			return false;
+		}
+		return false;
+	}
 }
 

@@ -23,16 +23,9 @@ public class SpinKick extends Skills {
 	
 	@Override
 	protected void performSkill() {
-		targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
 		if (!hasBalance()) {return;}
-		finalTarget = setTarget();
-		if (finalTarget == null) {
-			messageSelf("There is no " + targetName + " here for you to attack.");
-			return;
-		}
-		if (isBlocking(finalTarget)) {  // Probably not complete still
-			return;
-		}
+		if (!setTarget()) {return;}
+		if (isBlocking(finalTarget)) {return;}  // Probably not complete still
 		
 		if (!(finalTarget.hasAllConditions(ConditionsEnum.DIZZY))) {
 			finalTarget.addAllConditions(ConditionsEnum.DIZZY);
@@ -47,12 +40,17 @@ public class SpinKick extends Skills {
 		messageOthers(currentPlayer.getName() + " spins and kicks " + finalTarget.getName() + ".", Arrays.asList(currentPlayer, finalTarget));
 	}
 	
-	private Mobile setTarget() {
-		Mobile h = currentPlayer.getContainer().getMobileFromString(targetName);
+	private boolean setTarget() {
+		targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
 		if (h != null) {
 			return h;
+			return true;
 		}	
-		return null;
+		if (finalTarget == null) {
+			messageSelf("There is no " + targetName + " here for you to attack.");
+			return false;
+		}
+		return false;
 	}
 	
 	private int calculateDamage() {

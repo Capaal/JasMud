@@ -32,31 +32,37 @@ public class CreateWorld {
 	//Hardcoded skill list
 	public static void makeSkills() {
 		WorldServer.gameState.addBook(1, generalSkills);
+		generalSkills.addSkill(new SkillList());
+		//general
 		generalSkills.addSkill(new Punch());
 		generalSkills.addSkill(new Throw());
 		generalSkills.addSkill(new Get());
 		generalSkills.addSkill(new Move());
 		generalSkills.addSkill(new Inventory());
-		generalSkills.addSkill(new Greet());
 		generalSkills.addSkill(new Shoot());
 		generalSkills.addSkill(new Give());
-		generalSkills.addSkill(new Headshot());
-		generalSkills.addSkill(new CraftItem());
-		generalSkills.addSkill(new Nod());
 		generalSkills.addSkill(new Look());
-		generalSkills.addSkill(new Salvage());
-		generalSkills.addSkill(new Heal());
-		generalSkills.addSkill(new SkillList());
 		generalSkills.addSkill(new Drop());
 		generalSkills.addSkill(new Info());
 		generalSkills.addSkill(new Wield());
-		generalSkills.addSkill(new BreakLimb());
 		generalSkills.addSkill(new Drink());
+		generalSkills.addSkill(new Say());
+		//crafting
+		generalSkills.addSkill(new CraftItem());
+		generalSkills.addSkill(new Salvage());
+		//quest
+		generalSkills.addSkill(new Greet());
+		generalSkills.addSkill(new Nod());
+		//mage?
+		generalSkills.addSkill(new Heal());
+		//mercenary only
+		generalSkills.addSkill(new Headshot());
+		generalSkills.addSkill(new BreakLimb());
 		generalSkills.addSkill(new Intimidate());
 		generalSkills.addSkill(new Straighten());
-		generalSkills.addSkill(new Say());
 		generalSkills.addSkill(new SpinKick());
 		generalSkills.addSkill(new Clearmind());
+		generalSkills.addSkill(new Shove());
 	}
 	
 	public static void makeItems() {

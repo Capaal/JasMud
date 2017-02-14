@@ -19,9 +19,7 @@ public class Drop extends Skills {
 	// Requires balance, syntax = "drop dagger" or "drop sword1532"
 	@Override
 	protected void performSkill() {
-		if (!hasBalance()) {
-			return;
-		}
+		if (!hasBalance()) {return;}
 		Holdable itemToMove = currentPlayer.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
 		if (itemToMove == null) {
 			messageSelf("You can't find that item.");

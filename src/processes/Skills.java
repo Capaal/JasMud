@@ -68,6 +68,26 @@ public abstract class Skills {
 			}			
 		}
 	}
+	
+	public void messageOthersAway(String msg, List<Mobile> toIgnore, Location otherLoc) {
+		for (Holdable h : otherLoc.getInventory().values()) {
+			if (h instanceof Mobile && ((Mobile) h).isControlled()) {
+				Boolean shouldTell = true;
+				if (h.equals(currentPlayer)) {
+					shouldTell = false;
+				} else {
+					for (Mobile m : toIgnore) {
+						if (h.equals(m)) {
+							shouldTell = false;
+						}
+					}
+				}
+				if (shouldTell) {
+					((Mobile)h).tell(msg);
+				}
+			}			
+		}
+	}
 
 	public void messageTarget(String msg, List<Mobile> targets) {
 		for (Mobile m : targets) {

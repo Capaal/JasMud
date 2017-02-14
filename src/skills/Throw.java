@@ -35,6 +35,7 @@ public class Throw extends Skills {
 		messageSelf("You throw " + itemToThrow.getName() + " at " + finalTarget.getName() + ".");
 		messageTarget(currentPlayer.getName() + " throws " + itemToThrow.getName() + " at you.", Arrays.asList(finalTarget));
 		messageOthers(currentPlayer.getName() + " throws " + itemToThrow.getName() + " at " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));
+		messageOthersAway(finalTarget.getName() + "is hit with a thrown " +  itemToThrow.getName() + ".", Arrays.asList(finalTarget), finalLoc);
 	}	
 	
 	private boolean preSkillChecks() {
