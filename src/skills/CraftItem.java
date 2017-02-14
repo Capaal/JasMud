@@ -1,18 +1,14 @@
 package skills;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-
 import interfaces.Holdable;
 import items.ItemBuilder;
-import items.StdItem;
 import processes.CreateWorld;
 import processes.Skills;
-import processes.WorldServer;
 
 public class CraftItem extends Skills {
 
@@ -34,15 +30,16 @@ public class CraftItem extends Skills {
 		Map<String, ItemBuilder> allItemTemplates = CreateWorld.viewItemTemplates(); //maybe list of only craftable items?
 		if (itemToMake.equals("list")) {
 			for (String s : allItemTemplates.keySet()) {
-				String display = s + ":";
+				StringBuilder display = new StringBuilder();
+				display.append(s + ":");
 				List<String> componentsNeeded = allItemTemplates.get(s).getComponents(); 
 				for (String c : componentsNeeded) {
-					display = display + " " + c;
+					display.append(" " + c);
 				}
 				if (componentsNeeded.isEmpty()) {
-					display = display + " no components needed.";
+					display.append(" no components needed.");
 				}
-				messageSelf(display);
+				messageSelf(display.toString());
 			}
 			return;
 		}

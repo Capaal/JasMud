@@ -15,7 +15,7 @@ import processes.Skills;
 import processes.SkillBook;
 import processes.Type;
 
-public interface Mobile extends Container, Holdable {
+public interface Mobile extends Container {
 	
 	public String getName();
 	public int getId();
@@ -24,7 +24,7 @@ public interface Mobile extends Container, Holdable {
 	public int getCurrentHp();
 	public int getDefense();
 	public void addDefense(int i);
-	@Override public Location getContainer();
+	public Location getContainer();
 	public boolean hasBalance();
 	public boolean isDead();
 	public String getDescription();
@@ -71,5 +71,8 @@ public interface Mobile extends Container, Holdable {
 	public void removeAllConditions(ConditionsEnum conditions);
 	public Set<ConditionsEnum> getAllConditions();
 	public boolean hasAllConditions(ConditionsEnum conditions);
+	public void moveHoldable(Location finalLocation);
+	public void setContainer(Location container);
+	public int compareTo(Mobile arg0);
 	
 }

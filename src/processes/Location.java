@@ -25,6 +25,7 @@ public class Location implements Container {
 	private Map<Direction, Location> locationMap;
 	@XStreamOmitField
 	protected TreeMap<String, Holdable> inventory = new TreeMap<String, Holdable>();
+	protected TreeMap<String, Mobile> mobiles = new TreeMap<String, Mobile>();
 	
 	private final Quest bondedQuest;
 	
@@ -106,6 +107,11 @@ public class Location implements Container {
 		boolean anItem = false;
 		StringBuilder sb = new StringBuilder();
 		sb.append("Looking around you see: ");
+		for (Mobile h : mobiles.values()) {
+			sb.append(UsefulCommands.ANSI.YELLOW + h.getName() + ". " + UsefulCommands.ANSI.SANE);
+			anItem = true;
+		}
+		sb.append("Lying on the ground: ");
 		for (Holdable h : inventory.values()) {
 			sb.append(UsefulCommands.ANSI.YELLOW + h.getName() + ". " + UsefulCommands.ANSI.SANE);
 			anItem = true;
@@ -127,6 +133,10 @@ public class Location implements Container {
 		inventory.put(newItem.getName().toLowerCase() + newItem.getId(), newItem);
 	}	
 	
+	public void acceptItem(Mobile newMob) {
+		mobiles.put(newMob.getName().toLowerCase() + newMob.getId(), newMob);
+	}
+	
 	//TODO implement a null location object?
 	public Location getLocation(String dir) {
 		Direction trueDirection = Direction.getDirectionName(dir);
@@ -147,11 +157,36 @@ public class Location implements Container {
 		}
 	}
 	
+	public void removeItemFromLocation(Mobile oldMob) {
+		if ((mobiles.remove(oldMob.getName().toLowerCase() + oldMob.getId()) == null)) {
+			System.out.println("Failed to remove mobile from location: " + oldMob);
+		}
+	}
+	
 	public TreeMap<String, Holdable> getInventory() {
 		return new TreeMap<String, Holdable>(this.inventory);
 	}
 	
+	public TreeMap<String, Mobile> getMobiles() {
+		return new TreeMap<String, Mobile>(this.mobiles);
+	}
 	
+	public Mobile getMobileFromString(String mobileString) {	
+		mobileString = mobileString.toLowerCase();
+		String ceiling = mobiles.ceilingKey(mobileString);
+		String floor = mobiles.floorKey(mobileString);
+		if (ceiling != null) {
+			if ((ceiling.equalsIgnoreCase(mobileString) || mobiles.get(ceiling).getName().equalsIgnoreCase(mobileString))) {
+				return mobiles.get(ceiling);
+			}
+		}
+		if (floor != null) {
+			if ((floor.equalsIgnoreCase(mobileString) || mobiles.get(floor).getName().equalsIgnoreCase(mobileString))) {
+				return mobiles.get(floor);
+			}
+		} 
+		return null;
+	}
 	
 	@Override //TODO Ceiling and Floor does not work well with capital letters, so then full loop is used. Very bad design :(
 	public Holdable getHoldableFromString(String holdableString) {	

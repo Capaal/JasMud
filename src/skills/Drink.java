@@ -2,8 +2,6 @@ package skills;
 
 import interfaces.Holdable;
 import processes.Skills;
-import processes.Skills.Syntax;
-import processes.StdMob;
 import items.Drinkable;
 
 public class Drink extends Skills {

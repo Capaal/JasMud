@@ -2,7 +2,6 @@ package skills;
 
 import interfaces.Holdable;
 import processes.Skills;
-import processes.Skills.Syntax;
 import items.Drinkable;
 
 public class EmptyPotion extends Skills {
@@ -43,7 +42,7 @@ public class EmptyPotion extends Skills {
 			messageSelf("That potion is already empty.");
 			return;
 		}
-		potion.changeSips(potion.getSips());
+		potion.changeSips(potion.getSips()); 
 		messageSelf("You empty the potion.");
 
 	}

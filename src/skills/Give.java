@@ -1,13 +1,11 @@
 package skills;
 
 import java.util.Arrays;
-
 import Quests.Quest;
 import Quests.Quest.Trigger;
 import effects.ConditionsEnum;
 import interfaces.Holdable;
 import interfaces.Mobile;
-import processes.Location;
 import processes.Skills;
 
 public class Give extends Skills {
@@ -30,8 +28,8 @@ public class Give extends Skills {
 			messageSelf("You can't find that item.");
 			return;
 		}
-		Holdable mobileToGive = currentPlayer.getContainer().getHoldableFromString(Syntax.TARGET.getStringInfo(fullCommand, this));
-		if (mobileToGive == null || !(mobileToGive instanceof Mobile)) {
+		Mobile mobileToGive = currentPlayer.getContainer().getMobileFromString(Syntax.TARGET.getStringInfo(fullCommand, this));
+		if (mobileToGive == null) {
 			messageSelf("You can't find that person to give " + itemToMove.getName() + ".");
 			return;
 		}
@@ -51,7 +49,7 @@ public class Give extends Skills {
 	}
 	
 	private void questCares(Holdable item, Mobile mobile) {
-		Quest locationQuest = (((Location)currentPlayer.getContainer()).getQuest());
+		Quest locationQuest = currentPlayer.getContainer().getQuest();
 		if (locationQuest != null) {
 			if (locationQuest.stateRequiresItem(item, mobile)) {
 				locationQuest.triggered(Trigger.GIVES);	

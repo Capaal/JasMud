@@ -1,6 +1,5 @@
 package skills;
 
-import interfaces.Container;
 import processes.Location;
 import processes.Skills;
 import processes.UsefulCommands;

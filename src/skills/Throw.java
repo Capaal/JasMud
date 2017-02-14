@@ -107,7 +107,7 @@ public class Throw extends Skills {
 	}
 	
 	private Mobile getTarget(String possibleTarg) {
-		Holdable h = finalLoc.getHoldableFromString(possibleTarg);
+		Mobile h = finalLoc.getMobileFromString(possibleTarg);
 		if (h != null && h instanceof Mobile) {
 			return (Mobile)h;
 		}

@@ -2,7 +2,6 @@ package skills;
 
 import java.util.Arrays;
 import effects.Balance;
-import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Skills;
 import processes.Type;
@@ -10,7 +9,6 @@ import processes.Type;
 public class Heal extends Skills {
 	
 	private final int intensity = -30;
-	private String targetName;
 	private Mobile finalTarget;
 	
 	public Heal() {
@@ -22,18 +20,17 @@ public class Heal extends Skills {
 	// Deals damage to a single target in currentPlayer's location
 	@Override
 	protected void performSkill() {
-		targetName = Syntax.TARGET.getStringInfo(fullCommand, this).toLowerCase();
+		String targetName = Syntax.TARGET.getStringInfo(fullCommand, this).toLowerCase();
 		if (!hasBalance()) {return;}
-		setTarget();
-		if (!(finalTarget instanceof Mobile)) {
+		finalTarget = setTarget(targetName);
+		if (finalTarget == null) {
 			messageSelf("You can't heal that.");
 			return;
 		}
 		if (finalTarget.isDead()) {
 			messageSelf("You can't heal dead people.");
 			return;
-		}
-		
+		}		
 		finalTarget.takeDamage(Type.BLUNT, calculateDamage());
 		currentPlayer.addEffect(new Balance(), 3000);
 		if (finalTarget == currentPlayer) {
@@ -50,15 +47,11 @@ public class Heal extends Skills {
 		return intensity;
 	}
 	
-	private void setTarget() {
-		finalTarget = null;
+	private Mobile setTarget(String targetName) {
 		if (targetName.equals("") || targetName.equals(currentPlayer.getName().toLowerCase())) {
-			finalTarget = currentPlayer;
-			return;
+			return currentPlayer;
 		}
-		Holdable h = currentPlayer.getContainer().getHoldableFromString(targetName);
-		if (h != null && h instanceof Mobile) {
-			finalTarget = (Mobile)h;
-		} 
+		Mobile h = currentPlayer.getContainer().getMobileFromString(targetName);
+		return h;
 	}
 }

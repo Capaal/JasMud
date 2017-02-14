@@ -4,19 +4,13 @@ import java.util.Arrays;
 
 import effects.Balance;
 import effects.ConditionsEnum;
-import interfaces.Holdable;
 import interfaces.Mobile;
-import items.StdItem;
-import processes.Equipment;
 import processes.Skills;
 import processes.Type;
 import processes.Equipment.EquipmentEnum;
-import processes.Skills.Syntax;
-import processes.StdMob;
 
 public class BreakLimb extends Skills {
 
-	private String targetName;
 	private Mobile finalTarget;
 	private EquipmentEnum slot;
 	private final int intensity = 8;
@@ -32,9 +26,9 @@ public class BreakLimb extends Skills {
 	
 	@Override
 	protected void performSkill() {
-		targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
+		String targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
 		if (!hasBalance()) {return;}
-		setTarget();
+		finalTarget = setTarget(targetName);
 		if (finalTarget == null) {
 			messageSelf("There is no " + targetName + " here for you to attack.");
 			return;
@@ -66,12 +60,8 @@ public class BreakLimb extends Skills {
 		messageOthers(currentPlayer.getName() + " punches " + finalTarget.getName() + " harder than usual.", Arrays.asList(currentPlayer, finalTarget));
 	}
 	
-	private void setTarget() {
-		finalTarget = null;
-		Holdable h = currentPlayer.getContainer().getHoldableFromString(targetName);
-		if (h != null && h instanceof Mobile) {
-			finalTarget = (Mobile)h;
-		}			
+	private Mobile setTarget(String targetName) {
+		return currentPlayer.getContainer().getMobileFromString(targetName);
 	}
 	
 	private boolean findSlotAndWeapon() {

@@ -28,7 +28,7 @@ public class Punch extends Skills {
 		targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
 		if (!hasBalance()) {return;}
 		if (brokenArms()) {return;}
-		setTarget();
+		finalTarget = setTarget();
 		if (finalTarget == null) {
 			messageSelf("There is no " + targetName + " here for you to punch.");
 			return;
@@ -56,11 +56,11 @@ public class Punch extends Skills {
 		return false;
 	}
 	
-	private void setTarget() {
-		finalTarget = null;
-		Holdable h = currentPlayer.getContainer().getHoldableFromString(targetName);
-		if (h != null && h instanceof Mobile) {
-			finalTarget = (Mobile)h;
+	private Mobile setTarget() {
+		Mobile h = currentPlayer.getContainer().getMobileFromString(targetName);
+		if (h != null) {
+			return h;
 		}			
+		return null;
 	}
 }

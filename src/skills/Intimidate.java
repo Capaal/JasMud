@@ -29,14 +29,8 @@ public class Intimidate extends Skills {
 			messageSelf("Specify a target.");
 			return;
 		}
-		Holdable possibleMobile = (currentPlayer.getContainer().getHoldableFromString(mobName));
-		if (possibleMobile instanceof Mobile) {
-			mobileToFear = (Mobile)possibleMobile;
-		} else {
-			messageSelf("The " +  mobName + " does not find you intimidating.");
-			return;
-		}
-		if (mobileToFear == null || !(mobileToFear instanceof Mobile)) {
+		mobileToFear = (currentPlayer.getContainer().getMobileFromString(mobName));
+		if (mobileToFear == null) {
 			messageSelf("You can't find a person called " + mobileToFear.getName() + ".");
 			return;
 		}

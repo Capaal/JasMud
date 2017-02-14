@@ -2,10 +2,7 @@ package Quests;
 
 import interfaces.Holdable;
 import interfaces.Mobile;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import processes.Location;
@@ -42,9 +39,9 @@ public abstract class Quest {
 	}
 	
 	protected void sayHere(String msg) {
-		for (Holdable m : questLocation.getInventory().values()) {
-			if (m instanceof Mobile && ((Mobile)m).isControlled()) {
-				((Mobile)m).tell(msg);
+		for (Mobile m : questLocation.getMobiles().values()) {
+			if (m.isControlled()) {
+				m.tell(msg);
 			}
 		}
 	}	

@@ -18,7 +18,7 @@ public class SkillList extends Skills {
 		for (SkillBook b : books.keySet()) {
 			for (Skills s : b.viewSkills()) {
 				if (s.getName() != "skills") {
-					messageSelf((String)s.getName());
+					messageSelf(s.getName());
 				}
 			}
 		}

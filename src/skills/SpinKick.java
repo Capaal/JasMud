@@ -1,15 +1,11 @@
 package skills;
 
 import java.util.Arrays;
-
 import effects.Balance;
 import effects.ConditionsEnum;
-import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Skills;
 import processes.Type;
-import processes.Equipment.EquipmentEnum;
-import processes.Skills.Syntax;
 
 public class SpinKick extends Skills {
 
@@ -29,7 +25,7 @@ public class SpinKick extends Skills {
 	protected void performSkill() {
 		targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
 		if (!hasBalance()) {return;}
-		setTarget();
+		finalTarget = setTarget();
 		if (finalTarget == null) {
 			messageSelf("There is no " + targetName + " here for you to attack.");
 			return;
@@ -51,12 +47,12 @@ public class SpinKick extends Skills {
 		messageOthers(currentPlayer.getName() + " spins and kicks " + finalTarget.getName() + ".", Arrays.asList(currentPlayer, finalTarget));
 	}
 	
-	private void setTarget() {
-		finalTarget = null;
-		Holdable h = currentPlayer.getContainer().getHoldableFromString(targetName);
-		if (h != null && h instanceof Mobile) {
-			finalTarget = (Mobile)h;
-		}			
+	private Mobile setTarget() {
+		Mobile h = currentPlayer.getContainer().getMobileFromString(targetName);
+		if (h != null) {
+			return h;
+		}	
+		return null;
 	}
 	
 	private int calculateDamage() {

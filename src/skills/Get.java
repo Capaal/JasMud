@@ -6,6 +6,7 @@ import effects.ConditionsEnum;
 import interfaces.Container;
 import interfaces.Holdable;
 import items.StackableItem;
+import processes.Location;
 import processes.Skills;
 import processes.UsefulCommands;
 
@@ -24,7 +25,7 @@ public class Get extends Skills {
 	protected void performSkill() {
 		if (!hasBalance()) {return;}
 		if (brokenArms()) {return;}
-		Container here = currentPlayer.getContainer();
+		Location here = currentPlayer.getContainer();
 		Holdable itemToMove = here.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
 		if (itemToMove == null) {
 			messageSelf("You can't find that item.");
@@ -45,6 +46,7 @@ public class Get extends Skills {
 		return false;
 	}
 	
+	// TODO Doesn't stackable item handle most of these cases?
 	private void moveStackableItem(StackableItem itemToMove) {
 		String quantityToMove = Syntax.QUANTITY.getStringInfo(fullCommand, this);
 		if (!quantityToMove.isEmpty()) {

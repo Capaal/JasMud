@@ -2,15 +2,9 @@ package skills;
 
 import interfaces.Container;
 import interfaces.Holdable;
-import items.StdItem;
-import processes.Location;
 import processes.Skills;
-import processes.Skills.Syntax;
 
 public class Info extends Skills {
-	
-	private Container where;
-	private Holdable possibleItem;
 	
 	public Info() {
 		super.name = "info";
@@ -26,19 +20,13 @@ public class Info extends Skills {
 			return;
 		}
 		if (toInfo.equals("here")) {
-			where = currentPlayer.getContainer();
-			listAllInfo(where);
+			listAllInfo(currentPlayer.getContainer());
 		} else if (toInfo.equals("inventory")) {
-			where = currentPlayer;
-			listAllInfo(where);
-		} else { //specific item
-			boolean found = false;
-
-			if(found = listOneInfo(possibleItem, currentPlayer.getContainer())) {return;}
-			
-			if(found = listOneInfo(possibleItem, currentPlayer)) {return;}
-			
-			if (!found) {
+			listAllInfo(currentPlayer);
+		} else { //specific item			
+			if (searchForItem(currentPlayer.getContainer())) {return;} // Search on ground.
+			else if (searchForItem(currentPlayer)) {return;} // Search in inventory.
+			else {
 				messageSelf("You can't find that item.");
 			}
 		}
@@ -50,13 +38,12 @@ public class Info extends Skills {
 		}
 	}
 	
-	private boolean listOneInfo (Holdable possibleItem, Container where) {
-		possibleItem = where.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
+	private boolean searchForItem(Container where) {
+		Holdable possibleItem = where.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
 		if (possibleItem != null) {
 			messageSelf(possibleItem.getName() + possibleItem.getId());
 			return true;
 		} 
 		return false;
-	}
-	
+	}	
 }

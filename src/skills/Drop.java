@@ -5,7 +5,6 @@ import java.util.Arrays;
 import interfaces.Holdable;
 import items.StackableItem;
 import processes.Skills;
-import processes.Skills.Syntax;
 
 public class Drop extends Skills {
 	
@@ -35,6 +34,7 @@ public class Drop extends Skills {
 		}
 	}
 	
+	//TODO does stackable not handle some of these cases?
 	private void moveStackableItem(StackableItem itemToMove) {
 		String quantityToMove = Syntax.QUANTITY.getStringInfo(fullCommand, this);
 		if (!quantityToMove.isEmpty()) {

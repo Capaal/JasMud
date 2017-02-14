@@ -50,8 +50,8 @@ public abstract class Skills {
 	}
 	
 	public void messageOthers(String msg, List<Mobile> toIgnore) {
-		for (Holdable h : currentPlayer.getContainer().getInventory().values()) {
-			if (h instanceof Mobile && ((Mobile) h).isControlled()) {
+		for (Mobile h : currentPlayer.getContainer().getMobiles().values()) {
+			if (h.isControlled()) {
 				Boolean shouldTell = true;
 				if (h.equals(currentPlayer)) {
 					shouldTell = false;
@@ -63,7 +63,7 @@ public abstract class Skills {
 					}
 				}
 				if (shouldTell) {
-					((Mobile)h).tell(msg);
+					h.tell(msg);
 				}
 			}			
 		}
@@ -165,7 +165,7 @@ public abstract class Skills {
 		}
 	}
 
-	public Object getName() {
+	public String getName() {
 		return name;
 	}
 }

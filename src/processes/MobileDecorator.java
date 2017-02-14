@@ -269,13 +269,13 @@ public enum DecoratorType {
 	}
 
 	@Override
-	public void moveHoldable(Container finalLocation) {
+	public void moveHoldable(Location finalLocation) {
 		decoratedMobile.moveHoldable(finalLocation);
 		
 	}
 
 	@Override
-	public int compareTo(Holdable arg0) {
+	public int compareTo(Mobile arg0) {
 		return decoratedMobile.compareTo(arg0);
 	}
 
@@ -285,7 +285,7 @@ public enum DecoratorType {
 	}
 
 	@Override
-	public void setContainer(Container container) {
+	public void setContainer(Location container) {
 		decoratedMobile.setContainer(container);
 		
 		}
@@ -318,6 +318,6 @@ public enum DecoratorType {
 
 	@Override
 	public boolean hasAllConditions(ConditionsEnum conditions) {
-		return hasAllConditions(conditions);
+		return decoratedMobile.hasAllConditions(conditions);
 	}
 }

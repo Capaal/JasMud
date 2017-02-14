@@ -1,10 +1,7 @@
 package skills;
 
-import interfaces.Holdable;
 import interfaces.Mobile;
-
 import java.util.Arrays;
-
 import Quests.Quest;
 import processes.Location;
 import processes.Skills;
@@ -21,7 +18,8 @@ public class Nod extends Skills {
 
 	@Override
 	protected void performSkill() {
-		if (!setTarget()) {
+		target = setTarget();
+		if (target == null) {
 			messageSelf("Whom do you wish to nod to?");
 			return;
 		}
@@ -31,13 +29,11 @@ public class Nod extends Skills {
 		((Location)currentPlayer.getContainer()).notifyQuest(Quest.Trigger.NODS);	
 	}
 	
-	private boolean setTarget() {
-		target = null;
-		Holdable h = currentPlayer.getContainer().getHoldableFromString(Syntax.TARGET.getStringInfo(fullCommand, this));
-		if (h != null && h instanceof Mobile) {
-			target = (Mobile)h;
-			return true;
+	private Mobile setTarget() {
+		Mobile h = currentPlayer.getContainer().getMobileFromString(Syntax.TARGET.getStringInfo(fullCommand, this));
+		if (h != null) {
+			return h;
 		}			
-		return false;
+		return null;
 	}
 }

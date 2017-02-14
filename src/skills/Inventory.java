@@ -2,14 +2,8 @@ package skills;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import interfaces.Container;
 import interfaces.Holdable;
-import processes.Location;
 import processes.Skills;
-import processes.UsefulCommands;
 
 public class Inventory extends Skills {
 

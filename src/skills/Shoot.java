@@ -60,7 +60,7 @@ public class Shoot extends Skills {
 	}
 	
 	private void findAllLocations() {
-		Location currentPlayerLocation = (Location)(currentPlayer.getContainer());		
+		Location currentPlayerLocation = (currentPlayer.getContainer());		
 		allLocations.add(currentPlayerLocation);		
 		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
 		if (!dir.equals("")) {
@@ -85,9 +85,9 @@ public class Shoot extends Skills {
 	
 	private Mobile getTarget() {
 		for (Location l : allLocations) {		
-			Holdable t = l.getHoldableFromString(possibleTarg);
-				if (t != null && t instanceof Mobile) {
-					return (Mobile)t;
+			Mobile t = l.getMobileFromString(possibleTarg);
+				if (t != null) {
+					return t;
 				}
 		}
 		return null;

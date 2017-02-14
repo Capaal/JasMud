@@ -20,7 +20,8 @@ public class Greet extends Skills {
 
 	@Override
 	public void performSkill() {
-		if (!setTarget()) {
+		target = setTarget();
+		if (target == null) {
 			messageSelf("Whom do you wish to greet?");
 			return;
 		}
@@ -34,14 +35,9 @@ public class Greet extends Skills {
 		}
 	}
 	
-	private boolean setTarget() {
-		target = null;
-		Holdable h = currentPlayer.getContainer().getHoldableFromString(Syntax.TARGET.getStringInfo(fullCommand, this));
-		if (h != null && h instanceof Mobile) {
-			target = (Mobile)h;
-			return true;
-		}			
-		return false;
+	private Mobile setTarget() {
+		Mobile h = currentPlayer.getContainer().getMobileFromString(Syntax.TARGET.getStringInfo(fullCommand, this));
+		return h;
 	}
 	
 	//checks for dumb, silence, etc

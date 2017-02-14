@@ -2,17 +2,13 @@ package skills;
 
 import java.util.Arrays;
 import java.util.Random;
-
 import effects.ConditionsEnum;
-import interfaces.Container;
 import processes.Location;
-import processes.Location.Direction;
 import processes.Skills;
-import processes.StdMob;
 
 public class Move extends Skills {
 	
-	private String dir;
+	private String dir; // Not Direction enum?
 	
 	public Move() {
 		super.name = "move";
@@ -30,7 +26,7 @@ public class Move extends Skills {
 		if (!canMove()) {return;}
 		startContainer = currentPlayer.getContainer();
 		endContainer = null;
-		dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
+		dir = Syntax.DIRECTION.getStringInfo(fullCommand, this); // Why not convert to enum?
 		ifDizzy(); //if dizzy, sets a new random direction, ok to run into walls
 		if (!dir.equals("")) {
 			endContainer = startContainer.getContainer(dir);

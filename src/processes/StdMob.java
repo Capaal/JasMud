@@ -155,16 +155,10 @@ public class StdMob implements Mobile, Container{
 	}
 	
 	@Override
-	public synchronized void moveHoldable(Container finalLocation) {
-		if (finalLocation instanceof Location) {
-	//		if (getContainer() != null) {
-				getContainer().removeItemFromLocation(this);
-	//		}
+	public synchronized void moveHoldable(Location finalLocation) {
+			getContainer().removeItemFromLocation(this);
 			finalLocation.acceptItem(this);
-			this.mobLocation = (Location) finalLocation;
-		} else {
-			System.out.println("CRITICAL ERROR, MOBILE ATTEMPTED TO BE MOVED TO A NON-LOCATION");
-		}		
+			this.mobLocation = finalLocation;	
 	}
 	
 	@Override
@@ -554,8 +548,8 @@ public class StdMob implements Mobile, Container{
 		return new HashMap<SkillBook, Integer>(skillBookList);
 	}
 
-	@Override
-	public int compareTo(Holdable other) {
+	// TODO
+	public int compareTo(Mobile other) {
 		String thisItem = this.getName()+this.getId();
 		String otherItem = other.getName()+other.getId();
 		return thisItem.compareToIgnoreCase(otherItem);
@@ -566,10 +560,10 @@ public class StdMob implements Mobile, Container{
 	    if (obj == null) {
 	        return false;
 	    }
-	    if (!(obj instanceof StdMob)) {
+	    if (!(obj instanceof Mobile)) {
 	    	return false;
 	    }
-	    final Holdable other = (Holdable) obj;
+	    final Mobile other = (Mobile) obj;
 	    String thisHoldable = this.getName() + this.getId();
 	    String otherHoldable = other.getName() + other.getId();
 	    return thisHoldable.equals(otherHoldable);
@@ -600,10 +594,9 @@ public class StdMob implements Mobile, Container{
 
 	// Not safe to use? But required for save load
 	@Override
-	public void setContainer(Container container) {
-		if (container instanceof Location) {
-			this.mobLocation = (Location) container;
-		}
+	public void setContainer(Location container) {
+		this.mobLocation = (Location) container;
+	
 		// TODO Auto-generated method stub
 		
 	}

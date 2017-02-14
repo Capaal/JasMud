@@ -45,8 +45,8 @@ public class Fear implements TickingEffect {
 			return;
 		}
 		Location startContainer;
-		Container endContainer;
-		startContainer = (Location)currentPlayer.getContainer();
+		Location endContainer;
+		startContainer = currentPlayer.getContainer();
 		endContainer = null;
 
 		Map<Direction, Location> availDir = startContainer.getLocationMap();
@@ -58,9 +58,7 @@ public class Fear implements TickingEffect {
 		Object randomDir = values[r.nextInt(values.length)];
 		
 		if (!(randomDir == null)) {
-			if (startContainer instanceof Location) {
-				endContainer = (Location)randomDir;
-			}		
+				endContainer = (Location)randomDir;				
 		}
 		if (endContainer == null) {
 			currentPlayer.tell("You run around in circles, panicking but unable to find an exit.");

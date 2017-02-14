@@ -26,7 +26,7 @@ public class FarmerQuest extends Quest {
 	
 	protected boolean testRequirementsMet() {
 //		questLocation = WorldServer.gameState.viewLocations().get(questLocationID);
-		bondedMobile = (Mobile) questLocation.getHoldableFromString(bondedMobileName);
+		bondedMobile = questLocation.getMobileFromString(bondedMobileName);
 		if (bondedMobile != null && !bondedMobile.isDead()) {
 			return true;
 		}

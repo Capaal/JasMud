@@ -1,20 +1,15 @@
 package skills;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-
 import interfaces.Holdable;
 import items.ItemBuilder;
 import items.StdItem;
 import processes.CreateWorld;
 import processes.Skills;
-import processes.Skills.Syntax;
 import processes.WorldServer;
-
-
 
 public class Salvage extends Skills {
 
@@ -53,15 +48,10 @@ public class Salvage extends Skills {
 			Random chance = new Random();
 			int p = chance.nextInt(100);
 			if (p>50) {
-				ItemBuilder toCopy = allItemTemplates.get(i);
-				Set<StdItem> allItems = WorldServer.gameState.viewAllItems();
-				ItemBuilder newItem = new ItemBuilder();
-				newItem.setId(allItems.size()+1);
-				newItem.setName(toCopy.getName());
-				newItem.setDescription(toCopy.getDescription());
-				newItem.setItemContainer(currentPlayer);
-				newItem.complete();
-				messageSelf(newItem.getName() + " salvaged.");
+				ItemBuilder toCopy = allItemTemplates.get(i); // Are all components actually stored in this list?
+				toCopy.setItemContainer(currentPlayer);
+				toCopy.complete();
+				messageSelf(toCopy.getName() + " salvaged.");
 			} else {
 				messageSelf("You weren't able to salvage the " + i + " this time.");
 			}

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import effects.Balance;
-import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Equipment;
 import processes.InductionSkill;
@@ -116,9 +115,9 @@ public class Headshot extends InductionSkill {
 	
 	private Mobile getTarget() {
 		for (Location l : allLocations) {		
-			Holdable t = l.getHoldableFromString(possibleTarg);
-			if (t != null && t instanceof Mobile) {
-				return (Mobile)t;
+			Mobile t = l.getMobileFromString(possibleTarg);
+			if (t != null) {
+				return t;
 			}
 		}
 		return null;

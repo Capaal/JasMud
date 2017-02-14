@@ -43,14 +43,15 @@ public class Attack extends Skills {
     }
 
     private boolean findTarget() {
+    	finalTarget = null;
         String possibleTarg = Syntax.TARGET.getStringInfo(fullCommand, this);
         if (possibleTarg == "") {
             messageSelf("Specify target.");
             return false;
         }
         Location here = currentPlayer.getContainer();
-        Holdable possTarg = here.getHoldableFromString(possibleTarg);
-        if (possTarg != null && possTarg instanceof Mobile) {finalTarget = (Mobile)possTarg;}
+        Mobile possTarg = here.getMobileFromString(possibleTarg);
+        if (possTarg != null) {finalTarget = possTarg;}
         if (finalTarget == null) {
             messageSelf("Can't find target.");
             return false;
