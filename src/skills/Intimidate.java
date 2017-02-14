@@ -33,20 +33,12 @@ public class Intimidate extends Skills {
 	
 	private boolean setTarget() {
 		targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
-		mobileToFear = null;
-		Holdable h = currentPlayer.getContainer().getHoldableFromString(targetName);
-		if (h != null && h instanceof Mobile) {
-			mobileToFear = (Mobile)h;
-			return true;
-		} else if (!(h instanceof Mobile)) {
-			messageSelf("The " +  targetName + " does not find you intimidating.");
-			return false;
-		}
+		mobileToFear = currentPlayer.getContainer().getMobileFromString(targetName);
 		if (mobileToFear == null) {
-			messageSelf("There is no " + targetName + " here for you to intimidate.");
+			messageSelf("There is no " + targetName + " here for you to intimidate.");	
 			return false;
 		}
-		return false;
+		return true;
 	}
 }
 

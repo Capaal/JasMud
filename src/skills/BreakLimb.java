@@ -28,7 +28,11 @@ public class BreakLimb extends Skills {
 	protected void performSkill() {
 		String targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
 		if (!hasBalance()) {return;}
-		if (!setTarget()) {return;}
+		finalTarget = setTarget(targetName);
+		if (finalTarget == null) {
+			messageSelf("There is no " + targetName + " here for you to attack.");
+			return;
+		}
 		if (isBlocking(finalTarget)) {return;}  // Probably not complete still
 		if (!findSlotAndWeapon()) {
 			messageSelf("What are you trying to break?");
@@ -54,14 +58,8 @@ public class BreakLimb extends Skills {
 		messageOthers(currentPlayer.getName() + " punches " + finalTarget.getName() + " harder than usual.", Arrays.asList(currentPlayer, finalTarget));
 	}
 	
-	private boolean setTarget() {
+	private Mobile setTarget(String targetName) {
 		return currentPlayer.getContainer().getMobileFromString(targetName);
-			return true;
-		if (finalTarget == null) {
-			messageSelf("There is no " + targetName + " here for you to attack.");
-			return false;
-		}
-		return false;
 	}
 	
 	private boolean findSlotAndWeapon() {

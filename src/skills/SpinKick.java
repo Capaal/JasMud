@@ -9,7 +9,6 @@ import processes.Type;
 
 public class SpinKick extends Skills {
 
-	private String targetName;
 	private Mobile finalTarget;
 	private final int intensity = 8;
 	
@@ -41,16 +40,14 @@ public class SpinKick extends Skills {
 	}
 	
 	private boolean setTarget() {
-		targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
-		if (h != null) {
-			return h;
+		String targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
+		finalTarget = currentPlayer.getContainer().getMobileFromString(targetName);
+		if (finalTarget != null) {
 			return true;
-		}	
-		if (finalTarget == null) {
+		} else {
 			messageSelf("There is no " + targetName + " here for you to attack.");
 			return false;
 		}
-		return false;
 	}
 	
 	private int calculateDamage() {
