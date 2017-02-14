@@ -3,7 +3,7 @@ package skills;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import effects.Balance;
+import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Equipment;
 import processes.InductionSkill;
@@ -36,7 +36,7 @@ public class Headshot extends InductionSkill {
 			return;
 		}		
 		finalTarget.takeDamage(Type.SHARP, calculateDamage());
-		currentPlayer.addEffect(new Balance(), calculateBalance());
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
 		messageSelf("You headshot " + finalTarget.getName() + ".");
 		messageTarget(currentPlayer.getName() + " headshots you.", Arrays.asList(finalTarget));
 		messageOthers(currentPlayer.getName() + " headshots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));		

@@ -11,7 +11,7 @@ import interfaces.*;
 // Each tick DECREASES the intensity after damage.
 // So lowers to 205, 200, then 195 and so on.
 // So it counts down as it deals damage until it goes away.
-public class Bleed implements TickingEffect {
+public class Bleed extends TickingEffect {
 	
 	private final Mobile currentPlayer;
 	private final Type type;
@@ -19,13 +19,6 @@ public class Bleed implements TickingEffect {
 	public Bleed(Mobile currentPlayer) {
 		this.currentPlayer = currentPlayer;
 		type = Type.BLEED;
-	}
-	@Override
-	public boolean isInstanceOf(Effect otherEffect) {
-		if (otherEffect.getClass() == Bleed.class) {
-			return true;
-		}
-		return false;
 	}
 	@Override
 	public void run() {

@@ -1,9 +1,7 @@
 package skills;
 
 import java.util.Arrays;
-
-import effects.Balance;
-import effects.ConditionsEnum;
+import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Skills;
 import processes.Type;
@@ -42,17 +40,17 @@ public class BreakLimb extends Skills {
 		//checks if slot specified is a hand, then checks if hand is already broken
 		//sets limb to broken, unwield if hand
 		if (slot.equals(EquipmentEnum.LEFTHAND)) {
-			breakarm(ConditionsEnum.BROKENLEFTARM);
+			breakarm(PassiveCondition.BROKENLEFTARM);
 		} else if (slot.equals(EquipmentEnum.RIGHTHAND)) {
-			breakarm(ConditionsEnum.BROKENRIGHTARM);
+			breakarm(PassiveCondition.BROKENRIGHTARM);
 		} else if (slot.equals(EquipmentEnum.LEGS)) {
 		//	messageTarget("Your legs are broken.", Arrays.asList(finalTarget));
-			finalTarget.addAllConditions(ConditionsEnum.BROKENLEGS);
+			finalTarget.addAllConditions(PassiveCondition.BROKENLEGS);
 		}
 		//the regular stuff a damaging atk does
 		finalTarget.informLastAggressor(currentPlayer);
 		finalTarget.takeDamage(Type.BLUNT, calculateDamage());
-		currentPlayer.addEffect(new Balance(), 3000);
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
 		messageSelf("You target a specific limb and hit " + finalTarget.getName() + " really hard.");
 		messageTarget(currentPlayer.getName() + " hits you with a targetted punch.", Arrays.asList(finalTarget));
 		messageOthers(currentPlayer.getName() + " punches " + finalTarget.getName() + " harder than usual.", Arrays.asList(currentPlayer, finalTarget));
@@ -74,7 +72,7 @@ public class BreakLimb extends Skills {
 		return true;
 	}
 	
-	private void breakarm(ConditionsEnum brokenHand) {
+	private void breakarm(PassiveCondition brokenHand) {
 		String hand = slot.toString().toLowerCase();
 		if (finalTarget.hasAllConditions(brokenHand)) {
 			messageSelf("That players " + hand + " is already broken.");

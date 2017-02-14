@@ -1,7 +1,7 @@
 package skills;
 
 import java.util.Arrays;
-import effects.Balance;
+import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import items.StdItem;
@@ -29,7 +29,7 @@ public class Attack extends Skills {
         if (!preSkillChecks()) {return;};	
         finalTarget.takeDamage(Type.SHARP, calculateDamage()); //type based on item
         //apply weapon effect + message
-        currentPlayer.addEffect(new Balance(), calculateBalance()); 
+        currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance()); 
         messageSelf("You attack " + finalTarget.getName() + " with your " + weapon.getName() + ".");
 		messageTarget(currentPlayer.getName() + " attacks you.", Arrays.asList(finalTarget));
 		messageOthers(currentPlayer.getName() + " attacks " + finalTarget.getName() + ".", Arrays.asList(currentPlayer, finalTarget));

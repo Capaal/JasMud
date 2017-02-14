@@ -51,7 +51,7 @@ public class PunchTest {
 	
 	@Test
 	public void testCannotPunchWhenOffBalance() {
-		currentPlayer.addEffect(new Balance(), 3000);
+		currentPlayer.addPassiveCondition(new Balance(), 3000);
 		testSkill.perform("punch testtarget", currentPlayer);
 		verify(target, Mockito.times(0)).takeDamage(Type.BLUNT,  expectedDamage);
 	}

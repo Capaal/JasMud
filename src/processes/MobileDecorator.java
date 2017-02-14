@@ -3,11 +3,8 @@ package processes;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-
-import effects.ConditionsEnum;
+import effects.PassiveCondition;
 import processes.Equipment.EquipmentEnum;
-import interfaces.Container;
-import interfaces.Effect;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import interfaces.TickingEffect;
@@ -119,24 +116,34 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public boolean addEffect(Effect newEffect, int duration) {
-		return decoratedMobile.addEffect(newEffect, duration);
+	public boolean addPassiveCondition(PassiveCondition newEffect, int duration) {
+		return decoratedMobile.addPassiveCondition(newEffect, duration);
 	}
 
 	@Override
-	public void addTickingEffect(TickingEffect newEffect, int duration,
+	public boolean addActiveCondition(TickingEffect newEffect, int duration,
 			int times) {
-		decoratedMobile.addTickingEffect(newEffect, duration, times);
+		return decoratedMobile.addActiveCondition(newEffect, duration, times);
 	}
 
 	@Override
-	public boolean hasEffect(Effect effect) {
-		return decoratedMobile.hasEffect(effect);
+	public boolean hasCondition(TickingEffect effect) {
+		return decoratedMobile.hasCondition(effect);
 	}
 
 	@Override
-	public void removeEffect(Effect effect) {
-		decoratedMobile.removeEffect(effect);
+	public void removeCondition(PassiveCondition effect) {
+		decoratedMobile.removeCondition(effect);
+	}
+	
+	@Override
+	public boolean hasCondition(PassiveCondition effect) {
+		return decoratedMobile.hasCondition(effect);
+	}
+
+	@Override
+	public void removeCondition(TickingEffect effect) {
+		decoratedMobile.removeCondition(effect);
 	}
 
 	@Override
@@ -302,22 +309,22 @@ public enum DecoratorType {
 	}
 
 	@Override
-	public void addAllConditions(ConditionsEnum conditions) {
+	public void addAllConditions(PassiveCondition conditions) {
 		decoratedMobile.addAllConditions(conditions);
 	}
 
 	@Override
-	public void removeAllConditions(ConditionsEnum conditions) {
+	public void removeAllConditions(PassiveCondition conditions) {
 		decoratedMobile.removeAllConditions(conditions);
 	}
 
 	@Override
-	public Set<ConditionsEnum> getAllConditions() {
+	public Set<PassiveCondition> getAllConditions() {
 		return decoratedMobile.getAllConditions();
 	}
 
 	@Override
-	public boolean hasAllConditions(ConditionsEnum conditions) {
+	public boolean hasAllConditions(PassiveCondition conditions) {
 		return decoratedMobile.hasAllConditions(conditions);
 	}
 }

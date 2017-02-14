@@ -3,9 +3,8 @@ package items;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
-
+import effects.PassiveCondition;
 import effects.Bleed;
-import effects.Defence;
 import effects.Regen;
 import interfaces.Container;
 import interfaces.Holdable;
@@ -69,23 +68,27 @@ public class Drinkable extends StdItem {
 		},
 		
 		DEFENSE() {
-			@Override public String drink(Mobile currentPlayer) {
-				currentPlayer.addEffect(new Defence(currentPlayer), -1); //should be an effect
-				return "The potion makes you feel tougher.";
+			@Override public String drink(Mobile currentPlayer) {	
+				if (currentPlayer.addPassiveCondition(PassiveCondition.DEFENCE,  -1)) {
+					return "The potion makes you feel tougher.";
+				}
+				return failedSip();
 			}
 		},
 
 		BLEED() {
 			@Override public String drink(Mobile currentPlayer) {
-				currentPlayer.addTickingEffect(new Bleed(currentPlayer), 10000, 5);
-				return "The caustic liquid starts opening bloody wounds.";
+				if (currentPlayer.addActiveCondition(new Bleed(currentPlayer), 10000, 5)) {
+					return "The caustic liquid starts opening bloody wounds.";
+				}
+				return failedSip();
 			}
 		},
 			
 		ANTIDOTE() {
 			@Override public String drink(Mobile currentPlayer) {
-				if (currentPlayer.hasEffect(new Bleed(currentPlayer))) {
-					currentPlayer.removeEffect(new Bleed(currentPlayer));
+				if (currentPlayer.hasCondition(new Bleed(currentPlayer))) {
+					currentPlayer.removeCondition(new Bleed(currentPlayer));
 					return "The soothing liquid closes your wounds.";
 				}
 				return failedSip();
@@ -94,10 +97,10 @@ public class Drinkable extends StdItem {
 		
 		REGEN() {
 			@Override public String drink(Mobile currentPlayer) {
-				if (currentPlayer.hasEffect(new Regen(currentPlayer))) {
+				if (currentPlayer.hasCondition(new Regen(currentPlayer))) {
 					return failedSip();
 				} 
-				currentPlayer.addTickingEffect(new Regen(currentPlayer), 10000, 5);
+				currentPlayer.addActiveCondition(new Regen(currentPlayer), 10000, 5);
 				return "The potion gives you a warm, healthy glow.";
 			}
 			

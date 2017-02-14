@@ -2,7 +2,7 @@ package skills;
 
 import java.util.Arrays;
 
-import effects.ConditionsEnum;
+import effects.PassiveCondition;
 import interfaces.Container;
 import interfaces.Holdable;
 import items.StackableItem;
@@ -39,7 +39,7 @@ public class Get extends Skills {
 	}
 	
 	private boolean brokenArms() {
-		if (currentPlayer.hasAllConditions(ConditionsEnum.BROKENLEFTARM) && currentPlayer.hasAllConditions(ConditionsEnum.BROKENRIGHTARM)) {
+		if (currentPlayer.hasAllConditions(PassiveCondition.BROKENLEFTARM) && currentPlayer.hasAllConditions(PassiveCondition.BROKENRIGHTARM)) {
 			messageSelf("Your arms are broken!");
 			return true;
 		} 

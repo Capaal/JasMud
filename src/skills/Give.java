@@ -3,7 +3,7 @@ package skills;
 import java.util.Arrays;
 import Quests.Quest;
 import Quests.Quest.Trigger;
-import effects.ConditionsEnum;
+import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Skills;
@@ -41,7 +41,7 @@ public class Give extends Skills {
 	}
 	
 	private boolean brokenArms() {
-		if (currentPlayer.hasAllConditions(ConditionsEnum.BROKENLEFTARM) && currentPlayer.hasAllConditions(ConditionsEnum.BROKENRIGHTARM)) {
+		if (currentPlayer.hasAllConditions(PassiveCondition.BROKENLEFTARM) && currentPlayer.hasAllConditions(PassiveCondition.BROKENRIGHTARM)) {
 			messageSelf("Your arms are broken!");
 			return true;
 		} 

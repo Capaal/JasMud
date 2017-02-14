@@ -1,7 +1,7 @@
 package items;
 
 import effects.Bleed;
-import effects.Defence;
+import effects.PassiveCondition;
 import effects.Regen;
 import interfaces.Mobile;
 import processes.Type;
@@ -18,15 +18,19 @@ public class WeaponEffect extends StdItem {
 		
 		DEFENSE() {
 			@Override public String applyEffect(Mobile currentPlayer) {
-				currentPlayer.addEffect(new Defence(currentPlayer), 10000);
-				return "Defense added.";
+				if (currentPlayer.addPassiveCondition(PassiveCondition.DEFENCE, 10000)) {
+					return "Defense added.";
+				}
+				return failedApply();
 			}
 		},
 
 		BLEED() {
 			@Override public String applyEffect(Mobile currentPlayer) {
-				currentPlayer.addTickingEffect(new Bleed(currentPlayer), 10000, 5);
-				return "Bleeding caused.";
+				if (currentPlayer.addActiveCondition(new Bleed(currentPlayer), 10000, 5)) {
+					return "Bleeding caused.";
+				}
+				return failedApply();
 			}
 		},	
 		

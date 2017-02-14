@@ -1,7 +1,7 @@
 package skills;
 
 import java.util.Arrays;
-import effects.Balance;
+import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Skills;
 import processes.Type;
@@ -32,7 +32,7 @@ public class Heal extends Skills {
 			return;
 		}		
 		finalTarget.takeDamage(Type.BLUNT, calculateDamage());
-		currentPlayer.addEffect(new Balance(), 3000);
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
 		if (finalTarget == currentPlayer) {
 			messageSelf("You heal yourself a bit.");
 			messageOthers(currentPlayer.getName() + " heals a bit.", Arrays.asList(currentPlayer, finalTarget));

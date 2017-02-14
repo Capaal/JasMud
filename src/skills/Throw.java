@@ -1,7 +1,7 @@
 package skills;
 
 import java.util.Arrays;
-import effects.Balance;
+import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import items.StdItem;
@@ -31,7 +31,7 @@ public class Throw extends Skills {
 		if (!preSkillChecks()) {return;};		
 		finalTarget.takeDamage(Type.SHARP, calculateDamage());
 		itemToThrow.moveHoldable(finalLoc);
-		currentPlayer.addEffect(new Balance(), calculateBalance());
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
 		messageSelf("You throw " + itemToThrow.getName() + " at " + finalTarget.getName() + ".");
 		messageTarget(currentPlayer.getName() + " throws " + itemToThrow.getName() + " at you.", Arrays.asList(finalTarget));
 		messageOthers(currentPlayer.getName() + " throws " + itemToThrow.getName() + " at " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));

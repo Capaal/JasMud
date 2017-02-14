@@ -193,13 +193,13 @@ public class Location implements Container {
 		holdableString = holdableString.toLowerCase();
 		String ceiling = inventory.ceilingKey(holdableString);
 		String floor = inventory.floorKey(holdableString);
-		NavigableMap<String, Holdable> subMap = null;
-		if (ceiling != null && floor != null) {
-			subMap = inventory.subMap(floor, true, ceiling, true);
-		}
+	//	NavigableMap<String, Holdable> subMap = null;
+	//	if (ceiling != null && floor != null) {
+	//		subMap = inventory.subMap(floor, true, ceiling, true);
+	//	}
 		
-		System.out.println(floor + " to " + ceiling + " with submap of " + subMap);
-		System.out.println(inventory.keySet());
+//		System.out.println(floor + " to " + ceiling + " with submap of " + subMap);
+//		System.out.println(inventory.keySet());
 		
 		if (ceiling != null) {
 			if ((ceiling.equalsIgnoreCase(holdableString) || inventory.get(ceiling).getName().equalsIgnoreCase(holdableString))) {

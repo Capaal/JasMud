@@ -1,8 +1,7 @@
 package skills;
 
 import java.util.Arrays;
-
-import effects.Balance;
+import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Location;
@@ -34,7 +33,7 @@ public class Shove extends Skills {
 		if (!setTarget()) {return;}
 		if (!setDirection()) {return;}
 		
-		currentPlayer.addEffect(new Balance(), 3000);
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
 		messageSelf("You shove " + finalTarget.getName() + " to the " + dir + ".");
 		messageTarget(currentPlayer.getName() + " shoves you away.", Arrays.asList(finalTarget));
 		messageOthers(currentPlayer.getName() + " shoves " + finalTarget.getName() + " away.", Arrays.asList(currentPlayer, finalTarget));

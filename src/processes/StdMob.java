@@ -55,7 +55,7 @@ public class StdMob implements Mobile, Container{
 	@XStreamOmitField
 	protected Mobile lastAggressor;
 	protected ArrayList<String> messages;
-	protected Set<ConditionsEnum> allConditions;
+	protected Set<PassiveCondition> allConditions;
 	
 	public StdMob(MobileBuilder build) {
 		Mobile decoratedMob = decorate(build, this);
@@ -76,7 +76,7 @@ public class StdMob implements Mobile, Container{
 		createNewEffectManager();		
 		this.skillBookList = build.getSkillBookList();		
 		this.equipment = build.getEquipment();
-		this.allConditions = build.getAllConditions();
+		this.allConditions = EnumSet.noneOf(PassiveCondition.class);
 		
 		WorldServer.gameState.addMob(decoratedMob.getName() + decoratedMob.getId(), decoratedMob);
 		decoratedMob.getContainer().acceptItem(decoratedMob);
@@ -101,7 +101,7 @@ public class StdMob implements Mobile, Container{
 	@Override public boolean isDead() {return isDead;}	
 	
 	@Override public boolean hasBalance() {
-		return !hasEffect(new Balance());
+		return !hasCondition(PassiveCondition.BALANCE);
 	}
 	
 	@Override public String getDescription() {
@@ -112,19 +112,19 @@ public class StdMob implements Mobile, Container{
 		return shortDescription;
 	}
 	
-	@Override public void addAllConditions(ConditionsEnum condition) {
+	@Override public void addAllConditions(PassiveCondition condition) {
 		allConditions.add(condition);
 	}
 	
-	@Override public void removeAllConditions(ConditionsEnum condition) {
+	@Override public void removeAllConditions(PassiveCondition condition) {
 		allConditions.remove(condition);
 	}
 	
-	@Override public Set<ConditionsEnum> getAllConditions() {
+	@Override public Set<PassiveCondition> getAllConditions() {
 		return allConditions;
 	}
 	
-	public boolean hasAllConditions(ConditionsEnum condition) {
+	public boolean hasAllConditions(PassiveCondition condition) {
 		return allConditions.contains(condition);
 	}
 	
@@ -329,35 +329,42 @@ public class StdMob implements Mobile, Container{
 			}
 		}
 		return null;	*/	
-	}
-	
+	}	
 	
 	@Override
-	public boolean addEffect(Effect newEffect, int duration) {
-		if (effectManager.hasEffect(newEffect)) {
+	public boolean addPassiveCondition(PassiveCondition newEffect, int duration) {
+		if (effectManager.hasCondition(newEffect)) {
 			return false;
 		}
 		if (duration == -1) {
-			effectManager.registerPermanentEffect(newEffect);
-			return true;
+			return effectManager.registerPermanentEffect(newEffect);
 		}
-		effectManager.registerEffectDestroyAfterXMilliseconds(newEffect, duration);
-		return true;
+		return effectManager.registerEffectDestroyAfterXMilliseconds(newEffect, duration);
 	}
 	
 	@Override
-	public void addTickingEffect(TickingEffect newEffect, int duration, int times) {
-		effectManager.registerEffectRepeatNTimesOverXMilliseconds(newEffect, times, duration);
+	public boolean addActiveCondition(TickingEffect newEffect, int interval, int times) {
+		return effectManager.registerEffectRepeatNTimesOverXMilliseconds(newEffect, times, interval);
 	}
 	
 	@Override
-	public void removeEffect(Effect effect) {
-		effectManager.removeInstanceOf(effect);		
+	public void removeCondition(TickingEffect oldEffect) {
+		effectManager.unRegisterEffect(oldEffect);	
+	}	
+
+	@Override
+	public void removeCondition(PassiveCondition oldEffect) {
+		effectManager.unRegisterEffect(oldEffect);	
 	}
 	
 	@Override
-	public boolean hasEffect(Effect effect) {
-		return effectManager.hasInstanceOf(effect);
+	public boolean hasCondition(TickingEffect effect) {
+		return effectManager.hasCondition(effect);
+	}
+	
+	@Override
+	public boolean hasCondition(PassiveCondition effect) {
+		return effectManager.hasCondition(effect);
 	}
 
 	@Override 

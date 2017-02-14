@@ -2,7 +2,7 @@ package skills;
 
 import java.util.Set;
 
-import effects.ConditionsEnum;
+import effects.PassiveCondition;
 import interfaces.Container;
 import interfaces.Holdable;
 import items.StdItem;
@@ -46,12 +46,12 @@ public class Wield extends Skills {
 		}
 		//is bodypart broken/wieldable
 		if (wantSlot.equals("righthand")) {
-			if (currentPlayer.hasAllConditions(ConditionsEnum.BROKENRIGHTARM)) {
+			if (currentPlayer.hasAllConditions(PassiveCondition.BROKENRIGHTARM)) {
 				messageSelf("Your arm is broken, you can't wield right now.");
 				return;
 			}
 		} else if (wantSlot.equals("lefthand")) {
-			if (currentPlayer.hasAllConditions(ConditionsEnum.BROKENLEFTARM)) {
+			if (currentPlayer.hasAllConditions(PassiveCondition.BROKENLEFTARM)) {
 				messageSelf("Your arm is broken, you can't wield right now.");
 				return;
 			}

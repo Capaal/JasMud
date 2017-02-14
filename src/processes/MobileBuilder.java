@@ -1,11 +1,12 @@
 package processes;
 
 import interfaces.Container;
-import interfaces.Effect;
 import interfaces.Holdable;
 import interfaces.Mobile;
+import interfaces.TickingEffect;
 import items.ItemBuilder;
 import items.StdItem;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -17,7 +18,7 @@ import java.util.Stack;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import effects.ConditionsEnum;
+import effects.PassiveCondition;
 import processes.Equipment.EquipmentEnum;
 import processes.MobileDecorator.DecoratorType;
 
@@ -40,13 +41,13 @@ public class MobileBuilder {
 	private boolean loadOnStartUp = false;
 	private Map<String, Holdable> inventory = new TreeMap<String, Holdable>();
 	private Equipment equipment = new Equipment(null);	
-	private ArrayList<Effect> effectList = new ArrayList<Effect>();	
+//	private ArrayList<TickingEffect> activeConditions = new ArrayList<TickingEffect>();	
 	private Stack<DecoratorType> decorators = new Stack<DecoratorType>();
 	private Map<SkillBook, Integer> skillBookList = new HashMap<SkillBook, Integer>();
 	private List<ItemBuilder> dropsOnDeath = new ArrayList<ItemBuilder>();
 	private boolean buildComplete = false;
 	private Mobile finishedMob;
-	public Set<ConditionsEnum> allConditions = EnumSet.noneOf(ConditionsEnum.class);
+//	public Set<PassiveCondition> allConditions = EnumSet.noneOf(PassiveCondition.class);
 	private static Map<String, Integer> idMap = new HashMap<String, Integer>();
 	
 	public MobileBuilder() {
@@ -181,9 +182,9 @@ public class MobileBuilder {
 
 	public void setInventory(TreeMap<String, Holdable> inventory) {this.inventory = inventory;	}
 
-	public List<Effect> getEffectList() {return new ArrayList<Effect>(effectList);	}
+//	public List<Effect> getEffectList() {return new ArrayList<Effect>(effectList);	}
 
-	public void setEffectList(ArrayList<Effect> effectList) {this.effectList = effectList;	}
+//	public void setEffectList(ArrayList<Effect> effectList) {this.effectList = effectList;	}
 
 	public String getName() {return name;}
 
@@ -356,7 +357,7 @@ public class MobileBuilder {
 		finishedMob = decoratedMob;
 	}
 
-	public Set<ConditionsEnum> getAllConditions() {
-		return this.allConditions;
-	}	
+//	public Set<PassiveCondition> getAllConditions() {
+//		return this.allConditions;
+//	}	
 }

@@ -3,7 +3,7 @@ package effects;
 import processes.Type;
 import interfaces.*;
 
-public class Regen implements TickingEffect {
+public class Regen extends TickingEffect {
 	
 	private final Mobile currentPlayer;
 	private final Type type;
@@ -11,13 +11,6 @@ public class Regen implements TickingEffect {
 	public Regen(Mobile currentPlayer) {
 		this.currentPlayer = currentPlayer;
 		type = Type.REGEN;
-	}
-	@Override
-	public boolean isInstanceOf(Effect otherEffect) {
-		if (otherEffect.getClass() == Regen.class) {
-			return true;
-		}
-		return false;
 	}
 	@Override
 	public void run() {

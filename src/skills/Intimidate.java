@@ -2,12 +2,10 @@ package skills;
 
 import java.util.Arrays;
 
-import effects.Balance;
 import effects.Fear;
-import interfaces.Holdable;
+import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Skills;
-import processes.Skills.Syntax;
 
 public class Intimidate extends Skills {
 	
@@ -25,7 +23,9 @@ public class Intimidate extends Skills {
 		if (!hasBalance()) {return;}
 		if (!setTarget()) {return;}
 
-		mobileToFear.addTickingEffect(new Fear(mobileToFear), 10000, 4);
+		mobileToFear.addActiveCondition(new Fear(mobileToFear), 2500, 4);
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+//				new Fear(mobileToFear), 10000, 4);
 		messageSelf("You fear someone.");
 		messageTarget("Someone fears you.", Arrays.asList(mobileToFear));
 	}

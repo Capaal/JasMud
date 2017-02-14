@@ -1,8 +1,7 @@
 package skills;
 
 import java.util.Arrays;
-import effects.Balance;
-import effects.ConditionsEnum;
+import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Skills;
 import processes.Type;
@@ -26,14 +25,14 @@ public class SpinKick extends Skills {
 		if (!setTarget()) {return;}
 		if (isBlocking(finalTarget)) {return;}  // Probably not complete still
 		
-		if (!(finalTarget.hasAllConditions(ConditionsEnum.DIZZY))) {
-			finalTarget.addAllConditions(ConditionsEnum.DIZZY);
+		if (!(finalTarget.hasAllConditions(PassiveCondition.DIZZY))) {
+			finalTarget.addAllConditions(PassiveCondition.DIZZY);
 			messageTarget("You feel dizzy.", Arrays.asList(finalTarget));
 		}
 		
 		finalTarget.informLastAggressor(currentPlayer);
 		finalTarget.takeDamage(Type.BLUNT, calculateDamage());
-		currentPlayer.addEffect(new Balance(), 3000);
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
 		messageSelf("You spin around really fast and kick " + finalTarget.getName() + ".");
 		messageTarget(currentPlayer.getName() + " makes you stumble with a dizzying kick.", Arrays.asList(finalTarget));
 		messageOthers(currentPlayer.getName() + " spins and kicks " + finalTarget.getName() + ".", Arrays.asList(currentPlayer, finalTarget));

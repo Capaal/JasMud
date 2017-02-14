@@ -1,7 +1,9 @@
 package effects;
 
+import interfaces.Mobile;
 
-public enum ConditionsEnum {
+
+public enum PassiveCondition {
 		
 		BROKENRIGHTARM() {
 			
@@ -15,13 +17,30 @@ public enum ConditionsEnum {
 			
 		},
 		
+		BALANCE() {
+			
+		},
+		
+		DEFENCE() {
+			@Override
+			public void doOnCreation(Mobile currentPlayer) {
+				currentPlayer.addDefense(10);
+			}
+			@Override
+			public void doOnDestruction(Mobile currentPlayer) {
+				currentPlayer.addDefense(-10);
+				
+			}
+		},
+		
 		DIZZY() {
 			
-		};
+		};	
 		
+		private PassiveCondition() {}
 		
-		
-		private ConditionsEnum() {}
+		public void doOnCreation(Mobile currentPlayer) {}
+		public void doOnDestruction(Mobile currentPlayer) {}
 		
 		//this doesn't work here
 /*		public ConditionsEnum getBroken(String slot) {

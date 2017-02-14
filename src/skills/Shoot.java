@@ -3,7 +3,7 @@ package skills;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import effects.Balance;
+import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Location;
@@ -52,7 +52,7 @@ public class Shoot extends Skills {
 		messageOthers(currentPlayer.getName() + " shoots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));
 		finalTarget.informLastAggressor(currentPlayer);
 		finalTarget.takeDamage(Type.SHARP, calculateDamage());
-		currentPlayer.addEffect(new Balance(), 3000);
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
 	}		
 		
 	private int calculateDamage() {

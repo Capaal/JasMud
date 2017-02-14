@@ -1,7 +1,7 @@
 package processes;
 
 import interfaces.*;
-
+import effects.PassiveCondition;
 import java.util.*;
 
 public abstract class Skills {

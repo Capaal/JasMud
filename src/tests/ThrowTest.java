@@ -52,7 +52,7 @@ public class ThrowTest {
 	
 	@Test
 	public void testCannotThrowWhenOffBalance() {
-		currentPlayer.addEffect(new Balance(), 3000);
+		currentPlayer.addPassiveCondition(new Balance(), 3000);
 		testSkill.perform("throw dagger target", currentPlayer);
 		verify(target, Mockito.times(0)).takeDamage(Type.SHARP,  expectedDamage);
 	}

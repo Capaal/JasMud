@@ -1,76 +1,67 @@
 package processes;
 
-import interfaces.Effect;
 import interfaces.Mobile;
 import interfaces.TickingEffect;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import effects.PassiveCondition;
 
+
+// Can TickingEffect just contain it's own wrapper? So that it can kill and we can not be in a map?
 public class EffectManager {
 	
 	private ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(4);
 	private ExecutorService wrapperExecutor = Executors.newCachedThreadPool();
-	private List<Effect> effectList;
+	private Map<TickingEffect, ConditionWrapper> activeConditions;
+	private EnumSet<PassiveCondition> passiveConditions;
 	private Mobile bondedMobile;
 	
 	public EffectManager(Mobile currentPlayer) {
 		bondedMobile = currentPlayer;
-		effectList = new ArrayList<Effect>();
+		activeConditions = new TreeMap<TickingEffect, ConditionWrapper>();
+		passiveConditions = EnumSet.noneOf(PassiveCondition.class);
 	}
 	
-	public void registerEffectRepeatNTimesOverXMilliseconds(TickingEffect newEffect, int times, int duration) {
-		if (times == 0 || duration / times <= 50 || newEffect == null || duration <= 0) {
-			throw new IllegalArgumentException("Invalid duration or times: " + duration + " " + times);
+	public boolean registerEffectRepeatNTimesOverXMilliseconds(TickingEffect newEffect, int times, int interval) {
+		if (times == 0 || interval <= 50 || newEffect == null) {
+			throw new IllegalArgumentException("Invalid duration or times: " + interval + " " + times);
 		}
-		registerEffect(newEffect);
-		scheduleDestroyAfterXMilliseconds(newEffect, duration);
-		scheduleEffectRepeatNTimesOverXMilliseconds(newEffect, times, duration);	
-			
+//		registerEffect(newEffect);
+//		scheduleDestroyAfterXMilliseconds(newEffect, interval * times);
+		return scheduleEffectRepeatNTimesOverXMilliseconds(newEffect, times, interval);	// This should also handle destroy			
 	}
 	
-	public void registerEffectDestroyAfterXMilliseconds(Effect newEffect, int duration) {
+	public boolean registerEffectDestroyAfterXMilliseconds(PassiveCondition newEffect, int duration) {
 		if (newEffect == null || duration <= 0) {
 			throw new IllegalArgumentException("Invalid effect or duration: " + newEffect + " " + duration);
 		}		
-		registerEffect(newEffect);
-		scheduleDestroyAfterXMilliseconds(newEffect, duration);
-	}
-	
-	public void registerPermanentEffect(Effect newEffect) {
-		registerEffect(newEffect);
-	}
-	
-	public boolean hasEffect(Effect checkedEffect) {
-		return effectList.contains(checkedEffect);
-	}
-	
-	//should be same as above, add comparableness
-	public boolean hasInstanceOf(Effect effectType) {
-		for (Effect possibleEffect : effectList) {
-			if (possibleEffect.isInstanceOf(effectType)) {
-				return true;
-			}
+		if(registerEffect(newEffect)) {
+			scheduleDestroyAfterXMilliseconds(newEffect, duration);
+			return true;
 		}
 		return false;
 	}
 	
-	public void removeInstanceOf(Effect effectType) {
-		Effect effectToBeRemoved = null;
-		
-		for (Effect possibleEffect : effectList) {
-			
-			if (possibleEffect.isInstanceOf(effectType)) {
-				effectToBeRemoved = possibleEffect;
-				break;
-			}
-		}
-		effectList.remove(effectToBeRemoved);
+	public boolean registerPermanentEffect(PassiveCondition newEffect) {
+		if (newEffect == null) {
+			throw new IllegalArgumentException("Invalid effect: " + newEffect);
+		}		
+		return registerEffect(newEffect);
+	}
+	
+	public boolean hasCondition(TickingEffect checkedEffect) {
+		return activeConditions.containsKey(checkedEffect);
+	}
+	
+	public boolean hasCondition(PassiveCondition checkedEffect) {
+		return passiveConditions.contains(checkedEffect);
 	}
 	
 	public void shutDown() {
@@ -78,48 +69,66 @@ public class EffectManager {
 		WorldServer.shutdownAndAwaitTermination(wrapperExecutor);
 	}
 	
-	private void registerEffect(Effect newEffect) {
-		effectList.add(newEffect);
-		newEffect.doOnCreation();
+	private boolean registerEffect(PassiveCondition newEffect) {
+		if (passiveConditions.add(newEffect)) {
+			newEffect.doOnCreation(bondedMobile);
+			return true;
+		}
+		return false;		
 	}
 	
-	private void scheduleEffectRepeatNTimesOverXMilliseconds(TickingEffect newEffect, int times, int duration) {
-		int timeGaps = duration / times;
-		EffectWrapper wrapper = new EffectWrapper(newEffect, times);
-		ScheduledFuture<?> future = effectExecutor.scheduleWithFixedDelay(wrapper, timeGaps, timeGaps, TimeUnit.MILLISECONDS);
-		wrapper.setOwnFuture(future);
+	private boolean scheduleEffectRepeatNTimesOverXMilliseconds(TickingEffect newEffect, int times, int interval) {		
+		if (!activeConditions.containsKey(newEffect)) {
+			ConditionWrapper wrapper = new ConditionWrapper(newEffect, times);
+			activeConditions.put(newEffect, wrapper);
+			newEffect.doOnCreation();
+			ScheduledFuture<?> future = effectExecutor.scheduleWithFixedDelay(wrapper, interval, interval, TimeUnit.MILLISECONDS);
+			wrapper.setOwnFuture(future);
+			return true;
+		}
+		return false;		
 	}
 	
-	private void scheduleDestroyAfterXMilliseconds(Effect newEffect, int milliseconds) {
+	private void scheduleDestroyAfterXMilliseconds(PassiveCondition newEffect, int milliseconds) {
 		effectExecutor.schedule(new removeTask(newEffect), milliseconds, TimeUnit.MILLISECONDS);
 	}
 	
-	private void unRegisterEffect(Effect oldEffect) {
-		effectList.remove(oldEffect);
+	public void unRegisterEffect(TickingEffect oldEffect) {
+		if (!activeConditions.containsKey(oldEffect)) {
+			throw new IllegalArgumentException("Not Present: " + oldEffect);
+		}
+		activeConditions.get(oldEffect).kill();
+	}
+	
+	private void unRegisterActiveCondition(TickingEffect oldEffect) {
+		activeConditions.remove(oldEffect);
 		oldEffect.doOnDestruction();
+		bondedMobile.displayPrompt();
 	}	
 	
-	private class removeTask implements Runnable {
-		
-		private Effect effectToBeRemoved;
-		
-		public removeTask(Effect effect) {
+	public void unRegisterEffect(PassiveCondition oldEffect) {
+		passiveConditions.remove(oldEffect);
+		oldEffect.doOnDestruction(bondedMobile);
+		bondedMobile.displayPrompt();
+	}	
+	
+	private class removeTask implements Runnable {		
+		private PassiveCondition effectToBeRemoved;		
+		public removeTask(PassiveCondition effect) {
 			this.effectToBeRemoved = effect;
 		}		
-
 		public void run() {
-			unRegisterEffect(effectToBeRemoved);
-			bondedMobile.displayPrompt();
+			unRegisterEffect(effectToBeRemoved);			
 		}
 	}
 	
-	private class EffectWrapper implements Runnable {
+	private class ConditionWrapper implements Runnable {
 		private final TickingEffect wrappedEffect;	
 		private int timesToRun;
 		private int totalTimesRan = 0;
 		private Future<?> future;
 		
-		public EffectWrapper(TickingEffect effect, int times) {
+		public ConditionWrapper(TickingEffect effect, int times) {
 			this.wrappedEffect = effect;
 			this.timesToRun = times;
 		}
@@ -130,11 +139,17 @@ public class EffectManager {
 				totalTimesRan ++;
 			} else {
 				future.cancel(true);
+				unRegisterActiveCondition(wrappedEffect);
 			}
 		}
 		
 		public void setOwnFuture(Future<?> future) {
 			this.future = future;
+		}
+		
+		public void kill() {
+			future.cancel(true);
+			unRegisterActiveCondition(wrappedEffect);
 		}
 	}
 }

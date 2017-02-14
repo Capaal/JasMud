@@ -1,7 +1,7 @@
 package skills;
 
-import effects.Balance;
-import effects.ConditionsEnum;
+
+import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Skills;
 import processes.Skills.Syntax;
@@ -9,7 +9,7 @@ import processes.Skills.Syntax;
 public class Straighten extends Skills {
 	
 	String slot;
-	ConditionsEnum broken;
+	PassiveCondition broken;
 	
 	public Straighten() {
 		super.name = "straighten";
@@ -28,13 +28,13 @@ public class Straighten extends Skills {
 		if (!hasBalance()) {return;}
 
 		if (slot.equals("righthand")) {
-			broken = ConditionsEnum.BROKENRIGHTARM;
+			broken = PassiveCondition.BROKENRIGHTARM;
 			checkBroken(broken);
 		} else if (slot.equals("lefthand")) {
-			broken = ConditionsEnum.BROKENLEFTARM;
+			broken = PassiveCondition.BROKENLEFTARM;
 			checkBroken(broken);
 		} else if (slot.equals("legs")) {
-			broken = ConditionsEnum.BROKENLEGS;
+			broken = PassiveCondition.BROKENLEGS;
 			checkBroken(broken);
 		} else {
 			messageSelf("You can't straighten that.");
@@ -42,11 +42,11 @@ public class Straighten extends Skills {
 
 	}
 	
-	private void checkBroken(ConditionsEnum broken) {
+	private void checkBroken(PassiveCondition broken) {
 		if (currentPlayer.hasAllConditions(broken)) {
 			currentPlayer.removeAllConditions(broken);
 			messageSelf("You straighten your broken " + slot + " by force of will.");
-			currentPlayer.addEffect(new Balance(), 3000);
+			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
 			return;
 		} 
 		messageSelf("Your " + slot + " is not broken.");

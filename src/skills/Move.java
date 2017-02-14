@@ -2,7 +2,7 @@ package skills;
 
 import java.util.Arrays;
 import java.util.Random;
-import effects.ConditionsEnum;
+import effects.PassiveCondition;
 import processes.Location;
 import processes.Skills;
 
@@ -47,7 +47,7 @@ public class Move extends Skills {
 	}
 	
 	private boolean canMove() {
-		if(currentPlayer.hasAllConditions(ConditionsEnum.BROKENLEGS)) {
+		if(currentPlayer.hasAllConditions(PassiveCondition.BROKENLEGS)) {
 			messageSelf("Oh no your legs are broken.");
 			return false;
 		}
@@ -55,7 +55,7 @@ public class Move extends Skills {
 	}
 	
 	private void ifDizzy() {
-		if (currentPlayer.hasAllConditions(ConditionsEnum.DIZZY)) {
+		if (currentPlayer.hasAllConditions(PassiveCondition.DIZZY)) {
 			String[] d = {"n", "s", "e", "w", "nw", "se", "ne", "sw", "in", "out", "up", "down"};
 			Random r = new Random();
 			dir = d[r.nextInt(d.length)];		

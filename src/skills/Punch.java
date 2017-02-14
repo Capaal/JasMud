@@ -1,8 +1,7 @@
 package skills;
 
 import java.util.Arrays;
-import effects.Balance;
-import effects.ConditionsEnum;
+import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Skills;
@@ -38,7 +37,7 @@ public class Punch extends Skills {
 		}		
 		finalTarget.informLastAggressor(currentPlayer);
 		finalTarget.takeDamage(Type.BLUNT, calculateDamage());
-		currentPlayer.addEffect(new Balance(), 3000);
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
 		messageSelf("You punch " + finalTarget.getName());
 		messageTarget(currentPlayer.getName() + " punches you.", Arrays.asList(finalTarget));
 		messageOthers(currentPlayer.getName() + " punches " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));
@@ -49,7 +48,7 @@ public class Punch extends Skills {
 	}
 	
 	private boolean brokenArms() {
-		if (currentPlayer.hasAllConditions(ConditionsEnum.BROKENLEFTARM) && currentPlayer.hasAllConditions(ConditionsEnum.BROKENRIGHTARM)) {
+		if (currentPlayer.hasAllConditions(PassiveCondition.BROKENLEFTARM) && currentPlayer.hasAllConditions(PassiveCondition.BROKENRIGHTARM)) {
 			messageSelf("Your arms are broken!");
 			return true;
 		} 

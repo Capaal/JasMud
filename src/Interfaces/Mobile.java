@@ -4,8 +4,7 @@ import items.StdItem;
 
 import java.util.Map;
 import java.util.Set;
-
-import effects.ConditionsEnum;
+import effects.PassiveCondition;
 import processes.Equipment;
 import processes.Equipment.EquipmentEnum;
 import processes.InductionSkill;
@@ -36,11 +35,13 @@ public interface Mobile extends Container {
 //	public void setContainer(Container newLoc);  SHOULD be handled by moveHoldable(finalLocation);
 	public Skills getCommand(String command);
 	public void acceptItem(Holdable item);
-	public boolean addEffect(Effect newEffect, int duration);
-	public void addTickingEffect(TickingEffect newEffect, int duration, int times);
+	public boolean addPassiveCondition(PassiveCondition newEffect, int duration);
+	public boolean addActiveCondition(TickingEffect newEffect, int interval, int times);
 //	public double getWeaponMultiplier(); TODO
-	public boolean hasEffect(Effect effect);
-	public void removeEffect(Effect effect);
+	public boolean hasCondition(TickingEffect effect);
+	public boolean hasCondition(PassiveCondition effect);
+	public void removeCondition(TickingEffect effect);
+	public void removeCondition(PassiveCondition effect);
 //	public void removeItem(Holdable item); Handled by Container
 	public void addBook(SkillBook skillBook, int progress);
 	public boolean isControlled();
@@ -66,11 +67,11 @@ public interface Mobile extends Container {
 	public Map<SkillBook, Integer> viewSkillBooks();
 	public void dropItemsOnDeath();
 	public Equipment getEquipment();
-	public void addAllConditions(ConditionsEnum conditions);
+	public void addAllConditions(PassiveCondition conditions);
 	public void createNewEffectManager();
-	public void removeAllConditions(ConditionsEnum conditions);
-	public Set<ConditionsEnum> getAllConditions();
-	public boolean hasAllConditions(ConditionsEnum conditions);
+	public void removeAllConditions(PassiveCondition conditions);
+	public Set<PassiveCondition> getAllConditions();
+	public boolean hasAllConditions(PassiveCondition conditions);
 	public void moveHoldable(Location finalLocation);
 	public void setContainer(Location container);
 	public int compareTo(Mobile arg0);
