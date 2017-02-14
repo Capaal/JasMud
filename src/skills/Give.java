@@ -17,13 +17,20 @@ public class Give extends Skills {
 		super.syntaxList.add(Syntax.ITEM);		
 	}
 	
+	String possItem;
+	
 	// Moves a HOLDABLE from the CURRENTPLAYER's INVENTORY to the MOBILE who is in currentPlayer's LOCATION.
 	// Requires balance, syntax = "give goblin2334 dagger " or "give andrew sword1532 "
 	@Override
 	protected void performSkill() {
+		possItem = Syntax.ITEM.getStringInfo(fullCommand, this);
+		if (possItem.equals("")) {
+			messageSelf("Give what to who? Syntax: GIVE [item] [player]");
+			return;
+		}
 		if (!hasBalance()) {return;}
 		if (brokenArms()) {return;}
-		Holdable itemToMove = currentPlayer.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
+		Holdable itemToMove = currentPlayer.getHoldableFromString(possItem);
 		if (itemToMove == null) {
 			messageSelf("You can't find that item.");
 			return;

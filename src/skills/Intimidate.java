@@ -35,7 +35,7 @@ public class Intimidate extends Skills {
 		targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
 		mobileToFear = currentPlayer.getContainer().getMobileFromString(targetName);
 		if (mobileToFear == null) {
-			messageSelf("There is no " + targetName + " here for you to intimidate.");	
+			messageSelf("There is no \"" + targetName + "\" here for you to intimidate.");	
 			return false;
 		}
 		return true;

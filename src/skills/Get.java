@@ -19,14 +19,21 @@ public class Get extends Skills {
 		super.syntaxList.add(Syntax.QUANTITY);
 	}
 
+	String possItem;
+	
 	// Moves a HOLDABLE from the LOCATION of the CURRENTPLAYER into their INVENTORY.
 	// Requires Balance, Syntax = "get sword" or "get dagger1234" or "get gold 26"
 	@Override
 	protected void performSkill() {
+		possItem = Syntax.ITEM.getStringInfo(fullCommand, this);
+		if (possItem.equals("")) {
+			messageSelf("Get what?");
+			return;
+		}
 		if (!hasBalance()) {return;}
 		if (brokenArms()) {return;}
 		Location here = currentPlayer.getContainer();
-		Holdable itemToMove = here.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
+		Holdable itemToMove = here.getHoldableFromString(possItem);
 		if (itemToMove == null) {
 			messageSelf("You can't find that item.");
 			return;

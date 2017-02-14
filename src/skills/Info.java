@@ -27,7 +27,7 @@ public class Info extends Skills {
 			if (searchForItem(currentPlayer.getContainer())) {return;} // Search on ground.
 			else if (searchForItem(currentPlayer)) {return;} // Search in inventory.
 			else {
-				messageSelf("You can't find that item.");
+				messageSelf("You can't find that item."); //maybe add "you can't pickup mobiles"
 			}
 		}
 	}
