@@ -45,16 +45,16 @@ public class Shove extends Skills {
 	
 	private boolean setTarget() {
 		finalTarget = null;
-		Holdable h = startContainer.getHoldableFromString(targetName);
-		if (h != null && h instanceof Mobile) {
-			finalTarget = (Mobile)h;
-			return true;
-		}			
+		if (targetName.equals("")) {
+			messageSelf("Who are you trying to shove?");
+			return false;
+		}
+		finalTarget = startContainer.getMobileFromString(targetName);		
 		if (finalTarget == null) {
 			messageSelf("There is no " + targetName + " here for you to shove.");
 			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	private boolean setDirection() {

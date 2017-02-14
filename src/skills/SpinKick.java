@@ -41,6 +41,10 @@ public class SpinKick extends Skills {
 	
 	private boolean setTarget() {
 		String targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
+		if (targetName.equals("")) {
+			messageSelf("Specify target.");
+			return false;
+		}
 		finalTarget = currentPlayer.getContainer().getMobileFromString(targetName);
 		if (finalTarget != null) {
 			return true;

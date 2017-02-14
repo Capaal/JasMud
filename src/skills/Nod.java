@@ -20,7 +20,8 @@ public class Nod extends Skills {
 	protected void performSkill() {
 		target = setTarget();
 		if (target == null) {
-			messageSelf("Whom do you wish to nod to?");
+			messageSelf("You nod agreeably.");
+			messageOthers(currentPlayer.getName() + " nods in agreement.", Arrays.asList(currentPlayer));
 			return;
 		}
 		messageSelf("You nod to " + target.getName() + " in agreement.");

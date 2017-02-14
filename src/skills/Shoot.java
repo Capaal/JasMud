@@ -32,7 +32,7 @@ public class Shoot extends Skills {
 		allLocations = new HashSet<Location>();
 		possibleTarg = Syntax.TARGET.getStringInfo(fullCommand, this);
 		if (possibleTarg == "") {
-			messageSelf("What are you trying to headshot?");
+			messageSelf("What are you trying to shoot?");
 			return;
 		}
 		if (!hasBalance()) {

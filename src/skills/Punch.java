@@ -26,6 +26,10 @@ public class Punch extends Skills {
 	@Override
 	protected void performSkill() {
 		targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
+		if (targetName.equals("")) {
+			messageSelf("Specify target.");
+			return;
+		}
 		if (!hasBalance()) {return;}
 		if (brokenArms()) {return;}
 		finalTarget = setTarget();

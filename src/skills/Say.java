@@ -14,8 +14,11 @@ public class Say extends Skills {
 	@Override
 	protected void performSkill() {
 		if (canTalk()) {
-			messageSelf("You say: \"" + Syntax.LIST.getStringInfo(fullCommand, this) + "\".");
-			messageOthers(currentPlayer.getName() + " says, \"" + Syntax.LIST.getStringInfo(fullCommand, this) + "\".", Arrays.asList(currentPlayer));
+			String words = Syntax.LIST.getStringInfo(fullCommand, this);
+			if(!words.equals("")) {
+				messageSelf("You say: \"" + words + "\".");
+				messageOthers(currentPlayer.getName() + " says, \"" + Syntax.LIST.getStringInfo(fullCommand, this) + "\".", Arrays.asList(currentPlayer));
+			}
 		} else {
 			messageSelf("You can't talk.");
 		}

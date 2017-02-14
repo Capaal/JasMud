@@ -49,6 +49,7 @@ public class CraftItem extends Skills {
 			return;
 		}
 		//looking for TIMES specified:
+		quantity = 1;
 		if (!Syntax.TIMES.getStringInfo(fullCommand, this).equals("")) {
 			try {
 				quantity = Integer.parseInt(Syntax.TIMES.getStringInfo(fullCommand, this));
@@ -57,6 +58,10 @@ public class CraftItem extends Skills {
 				messageSelf("Syntax: CRAFT [item] (quantity).");
 				return;
 			}
+		}
+		if (quantity < 1) {
+			messageSelf("We don't have a delete skill yet.");
+			return;
 		}
 		//finds components needed to make the item, if any. Should return empty list if no components.
 		Set<Holdable> componentsOnHand = new HashSet<Holdable> ();
