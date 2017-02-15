@@ -1,7 +1,7 @@
 package tests;
 
 import static org.junit.Assert.*;
-import interfaces.Effect;
+//import interfaces.Effect;
 import interfaces.TickingEffect;
 import static org.mockito.Mockito.*;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import processes.EffectManager;
 
-public class EffectManagerTest {
+/*public class EffectManagerTest {
 	
 	private EffectManager manager;
 	
@@ -185,4 +185,4 @@ public class EffectManagerTest {
 		Thread.sleep(500);
 		assertTrue("Should only have triggered 5 times: " + testEffect.timings.size(), testEffect.timings.size() == 5);
 	}
-}
+} */

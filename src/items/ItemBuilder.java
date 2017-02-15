@@ -2,6 +2,7 @@ package items;
 
 import interfaces.Container;
 import items.Drinkable.DrinkType;
+import items.MercWeaponAttack.MercEffect;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -29,6 +30,7 @@ public class ItemBuilder {
 	private boolean salvageable = false;
 	private static Map<String, Integer> idMap = new HashMap<String, Integer>();
 	private StdItem finishedItem =  null;
+	private  MercWeaponAttack.MercEffect mercEffect = null;
 	
 	// Declares which specific item type to produce.
 	private ItemType typeToProduce = ItemType.STDITEM;
@@ -365,7 +367,6 @@ public class ItemBuilder {
 				return new Drinkable(build);
 			}
 			
-			
 		};
 		
 		private ItemType() {};
@@ -373,5 +374,13 @@ public class ItemBuilder {
 			return null;			
 		}
 				
+	}
+
+	public MercWeaponAttack.MercEffect getMercEffect() {
+		return this.mercEffect;
+	}
+	
+	public void setMercEffect(MercEffect a) {
+		mercEffect = a;
 	}
 }

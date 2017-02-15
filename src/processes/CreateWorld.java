@@ -3,6 +3,8 @@ package processes;
 import items.Drinkable.DrinkType;
 import items.ItemBuilder;
 import items.ItemBuilder.ItemType;
+import items.MercWeaponAttack;
+import items.MercWeaponAttack.MercEffect;
 import items.StdItem;
 import processes.Equipment.EquipmentEnum;
 
@@ -63,6 +65,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new SpinKick());
 		generalSkills.addSkill(new Clearmind());
 		generalSkills.addSkill(new Shove());
+		generalSkills.addSkill(new Attack());
 	}
 	
 	public static void makeItems() {
@@ -181,7 +184,8 @@ public class CreateWorld {
 		newItem.setSalvageable(true);
 		newItem.setAllowedSlots(EquipmentEnum.LEFTHAND);
 		newItem.setAllowedSlots(EquipmentEnum.RIGHTHAND);
-	//	newItem.complete();
+		newItem.setMercEffect(MercEffect.BLEED);
+		newItem.complete();
 		itemTemplates.put("dagger", newItem);
 	}
 	
