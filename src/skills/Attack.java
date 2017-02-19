@@ -1,11 +1,15 @@
 package skills;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import items.StdItem;
-import items.MercWeaponAttack;
+import items.MercWeapon;
 import processes.Location;
 import processes.Equipment;
 import processes.Skills;
@@ -14,10 +18,13 @@ import processes.Type;
 public class Attack extends Skills {
 
     private int intensity = 8;
-    private Mobile finalTarget;
+//    private Mobile finalTarget; //replaced with targets list
     private Holdable weapon;
     private StdItem mercWeapon;
-
+    private double balAdjust = 1;       
+    String possibleTarg;
+    private Collection<Mobile> targets = null;
+    
     //Mercenary class skill, probably needs better name. Attacks target using wielded weapon. If weapon has special effect, applies.
     //Uses right hand only - dual wield uses both hands+weapons
     public Attack() {
@@ -29,15 +36,20 @@ public class Attack extends Skills {
     @Override
 	protected void performSkill() {
         if (!preSkillChecks()) {return;};	
-        finalTarget.takeDamage(Type.SHARP, calculateDamage()); //type based on item
         //apply weapon effect + message
         if(isMercWeapon()) {
-        	mercWeapon.getMercEffect().applyEffect(finalTarget);
+        	MercWeapon.MercEffect effectType = mercWeapon.getMercEffect();
+        	if (effectType.equals(MercWeapon.MercEffect.FASTBALANCE)) {
+        		balAdjust = 0.8;
+        	} else if (effectType.equals(MercWeapon.MercEffect.HIGHDMG)) {
+        		intensity = 9;
+        	}
+        	regularRun(effectType);
+        } else {
+        	mercWeapon = (StdItem)weapon;
+        	regularRun(null);
         }
-        currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance()); 
-        messageSelf("You attack " + finalTarget.getName() + " with your " + weapon.getName() + ".");
-		messageTarget(currentPlayer.getName() + " attacks you.", Arrays.asList(finalTarget));
-		messageOthers(currentPlayer.getName() + " attacks " + finalTarget.getName() + ".", Arrays.asList(currentPlayer, finalTarget));
+    	currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance()); 
     }
 
     private boolean preSkillChecks() {
@@ -47,23 +59,50 @@ public class Attack extends Skills {
         return true;
     }
 
+    private void regularRun(MercWeapon.MercEffect effectType) {
+    	for (Mobile m : targets) {
+    		if (effectType != null) {effectType.applyEffect(m);}
+    		messageSelf("You attack " + m.getName() + " with your " + weapon.getName() + ".");
+    		messageTarget(currentPlayer.getName() + " attacks you.", Arrays.asList(m));
+    		m.takeDamage(Type.SHARP, calculateDamage()); //calculate dmg once rather than mult times?
+    	}
+    	if (targets.size() > 1) {
+    		messageOthers(currentPlayer.getName() + " attacks everyone at once.", Arrays.asList(currentPlayer));
+    	} else {
+    		for (Mobile m : targets) {
+    			messageOthers(currentPlayer.getName() + " attacks " + targets.iterator().next().getName() + ".", Arrays.asList(currentPlayer,m));
+    		}
+    	}
+    }
+    
     private boolean findTarget() {
-    	finalTarget = null;
+    	targets = null;
         String possibleTarg = Syntax.TARGET.getStringInfo(fullCommand, this);
         if (possibleTarg == "") {
             messageSelf("Specify target.");
             return false;
         }
-        Location here = currentPlayer.getContainer();
+    	Location here = currentPlayer.getContainer();
+        if (possibleTarg.equals("all")) {
+        	targets = here.getMobiles().values();
+        	targets.remove(currentPlayer); //maybe remove friends or add an effect that's aoeEnemies etc
+        	if (targets.isEmpty()) {
+        		return false;
+        	}
+        	return true;
+        }
         Mobile possTarg = here.getMobileFromString(possibleTarg);
-        if (possTarg != null) {finalTarget = possTarg;}
-        if (finalTarget == null) {
+        if (possTarg != null) {
+        	targets = new ArrayList<Mobile>();
+        	targets.add(possTarg);
+        	}
+        if (targets == null || targets.isEmpty()) {
             messageSelf("Can't find target.");
             return false;
         }
-        if (isBlocking(finalTarget)) {  // Probably not complete still
-            return false;
-        }
+  //      if (isBlocking(finalTarget)) {  this is not even a thing
+  //          return false;
+  //      }
         return true;
     }
 
@@ -81,7 +120,7 @@ public class Attack extends Skills {
     	if (!(weapon instanceof StdItem)) {
     		return false;
     	} 
-    	mercWeapon = (StdItem)weapon;
+    	mercWeapon = (StdItem)weapon; //all weapons should be StdItems, so this should handle fine nonMercWeapons too
     	if (mercWeapon.getMercEffect() == null) {
     		return false;
     	}
@@ -89,16 +128,14 @@ public class Attack extends Skills {
     }
     
     private int calculateDamage() {
-		double damageMult = ((StdItem)weapon).getDamageMult();
+		double damageMult = mercWeapon.getDamageMult();
 		return (int) (damageMult * intensity);
 	}
     
     private int calculateBalance() {
-		return (int) (3000 * ((StdItem)weapon).getBalanceMult());
+		return (int) (3000 * mercWeapon.getBalanceMult() * balAdjust);
 	}
+    
 }
 
-//get the item and the method associated with the item
-//does item or skill hold the method?
-//if item, something needs to check if user is the right mercenary class
 

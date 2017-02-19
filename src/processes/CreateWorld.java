@@ -3,8 +3,8 @@ package processes;
 import items.Drinkable.DrinkType;
 import items.ItemBuilder;
 import items.ItemBuilder.ItemType;
-import items.MercWeaponAttack;
-import items.MercWeaponAttack.MercEffect;
+import items.MercWeapon;
+import items.MercWeapon.MercEffect;
 import items.StdItem;
 import processes.Equipment.EquipmentEnum;
 
@@ -203,8 +203,9 @@ public class CreateWorld {
 	public static void makeAStick() {	
 		ItemBuilder newItem = new ItemBuilder();	
 		newItem.setName("stick");
-		newItem.setDescription("It's a stick!");
+		newItem.setDescription("It's an evil stick.");
 		newItem.setDamageMult(0.5);
+		newItem.setMercEffect(MercEffect.FEAR);
 //		newItem.complete();
 		itemTemplates.put("stick", newItem);
 //		StdItem item = newItem.getFinishedItem();
@@ -221,6 +222,7 @@ public class CreateWorld {
 		newItem.setDamageMult(1.8);
 		newItem.setBalanceMult(1.5);
 		newItem.setSalvageable(true);
+		newItem.setMercEffect(MercEffect.AOE);
 		itemTemplates.put("pike", newItem);
 	}
 	

@@ -26,7 +26,7 @@ public class StdItem implements Holdable {
 //  protected int currentDurability;
 	protected final List<String> components; // Add to weapon interface? Make a craftable interface?
 	protected final boolean salvageable; // same as components?
-	protected MercWeaponAttack.MercEffect mercEffect;
+	protected MercWeapon.MercEffect mercEffect;
 	
 	protected final Set<EquipmentEnum> allowedEquipSlots;
 
@@ -161,7 +161,7 @@ public class StdItem implements Holdable {
 		this.itemLocation = container;
 	}
 	
-	public MercWeaponAttack.MercEffect getMercEffect() {
+	public MercWeapon.MercEffect getMercEffect() {
 		return this.mercEffect;
 	}
 
