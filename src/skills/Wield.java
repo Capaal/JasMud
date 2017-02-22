@@ -31,17 +31,17 @@ public class Wield extends Skills {
 		Container here = currentPlayer;
 		StdItem itemToWield = (StdItem)here.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
 		if (itemToWield == null) {
-			messageSelf("You can't find that item. Failed step 1.");
+			messageSelf("You can't find that item.");
 			return;
 		}		
 		if (!(itemToWield instanceof StdItem)) {
-			messageSelf("You can't wield that. Failed step 2.");
+			messageSelf("You can't wield that. Not StdItem.");
 			return;
 		}
 		//find if item can be wielded in slot specified
 		Set<Equipment.EquipmentEnum> equippableSlots = itemToWield.getAllowedEquipSlots();
 		if (equippableSlots == null) {
-			messageSelf("You can't wield that. Failed step 3.");
+			messageSelf("You can't wield that. Not equippable.");
 			return;
 		}
 		//is bodypart broken/wieldable
@@ -58,7 +58,6 @@ public class Wield extends Skills {
 		}
 		
 		for (Equipment.EquipmentEnum s : equippableSlots) {
-
 			if (wantSlot.equalsIgnoreCase(s.toString())) {
 				currentPlayer.equip(s, itemToWield);
 				messageSelf("You are now wielding the " + itemToWield.getName() + " in your " + s.toString().toLowerCase() + ".");
