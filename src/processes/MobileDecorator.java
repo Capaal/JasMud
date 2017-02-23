@@ -121,9 +121,8 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public boolean addActiveCondition(TickingEffect newEffect, int duration,
-			int times) {
-		return decoratedMobile.addActiveCondition(newEffect, duration, times);
+	public boolean addActiveCondition(TickingEffect newEffect, int times) {
+		return decoratedMobile.addActiveCondition(newEffect, times);
 	}
 
 	@Override

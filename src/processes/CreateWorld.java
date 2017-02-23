@@ -185,7 +185,7 @@ public class CreateWorld {
 		newItem.setSalvageable(true);
 		newItem.setAllowedSlots(EquipmentEnum.LEFTHAND);
 		newItem.setAllowedSlots(EquipmentEnum.RIGHTHAND);
-		newItem.setMercEffect(MercEffect.BLEED);
+//		newItem.setMercEffect(MercEffect.BLEED);
 		newItem.complete();
 		itemTemplates.put("dagger", newItem);
 	}

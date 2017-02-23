@@ -11,9 +11,11 @@ import skills.Look;
 public class Fear extends TickingEffect {
 	
 	private final Mobile currentPlayer;
+//	private final int interval = 2500; // milliseconds between running
 	
 	public Fear(Mobile currentPlayer) {
 		this.currentPlayer = currentPlayer;
+		this.interval = 2500;
 	}	
 
 	@Override
@@ -54,8 +56,19 @@ public class Fear extends TickingEffect {
 	}
 	
 	@Override
+	public int getInterval() {
+		return interval;
+	}
+	
+	@Override
+	public boolean stackedInstance(TickingEffect stackedInstance, int times) {
+		return true;
+		// Do nothing, fear does not stack and does not modify existing fear.
+	}
+	
+	@Override
 	public void doOnCreation() {		
-		
+		currentPlayer.displayPrompt();
 	}
 
 	@Override

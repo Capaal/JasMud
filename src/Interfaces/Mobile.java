@@ -4,6 +4,7 @@ import items.StdItem;
 
 import java.util.Map;
 import java.util.Set;
+
 import effects.PassiveCondition;
 import processes.Equipment;
 import processes.Equipment.EquipmentEnum;
@@ -36,7 +37,7 @@ public interface Mobile extends Container {
 	public Skills getCommand(String command);
 	public void acceptItem(Holdable item);
 	public boolean addPassiveCondition(PassiveCondition newEffect, int duration);
-	public boolean addActiveCondition(TickingEffect newEffect, int interval, int times);
+	public boolean addActiveCondition(TickingEffect newEffect, int times);
 //	public double getWeaponMultiplier(); TODO
 	public boolean hasCondition(TickingEffect effect);
 	public boolean hasCondition(PassiveCondition effect);

@@ -39,8 +39,8 @@ public enum PassiveCondition {
 		
 		private PassiveCondition() {}
 		
-		public void doOnCreation(Mobile currentPlayer) {}
-		public void doOnDestruction(Mobile currentPlayer) {}
+		public void doOnCreation(Mobile currentPlayer) {currentPlayer.displayPrompt();}
+		public void doOnDestruction(Mobile currentPlayer) {currentPlayer.displayPrompt();}
 		
 		//this doesn't work here
 /*		public ConditionsEnum getBroken(String slot) {

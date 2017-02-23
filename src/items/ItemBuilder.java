@@ -13,6 +13,7 @@ import java.util.Set;
 
 import processes.WorldServer;
 import processes.Equipment.EquipmentEnum;
+import skills.Attack;
 
 public class ItemBuilder {
 	
@@ -377,10 +378,10 @@ public class ItemBuilder {
 	}
 
 	public MercWeapon.MercEffect getMercEffect() {
-		return this.mercEffect;
-	}
+//		return this.mercEffect;
+//	}
 	
-	public void setMercEffect(MercEffect a) {
-		mercEffect = a;
-	}
+//	public void setMercEffect(MercEffect a) {
+//		mercEffect = a;
+//	}
 }

@@ -343,8 +343,8 @@ public class StdMob implements Mobile, Container{
 	}
 	
 	@Override
-	public boolean addActiveCondition(TickingEffect newEffect, int interval, int times) {
-		return effectManager.registerEffectRepeatNTimesOverXMilliseconds(newEffect, times, interval);
+	public boolean addActiveCondition(TickingEffect newEffect, int times) {
+		return effectManager.registerEffectRepeatNTimesOverXMilliseconds(newEffect, times);
 	}
 	
 	@Override

@@ -13,7 +13,6 @@ import items.ItemBuilder.ItemType;
 import processes.StdMob;
 import processes.Type;
 
-
 //almost same as stackable, except can't split quantity (sips)
 public class Drinkable extends StdItem {
 	
@@ -78,7 +77,7 @@ public class Drinkable extends StdItem {
 
 		BLEED() {
 			@Override public String drink(Mobile currentPlayer) {
-				if (currentPlayer.addActiveCondition(new Bleed(currentPlayer), 10000, 5)) {
+				if (currentPlayer.addActiveCondition(new Bleed(currentPlayer, 30), 10)){
 					return "The caustic liquid starts opening bloody wounds.";
 				}
 				return failedSip();
@@ -87,8 +86,9 @@ public class Drinkable extends StdItem {
 			
 		ANTIDOTE() {
 			@Override public String drink(Mobile currentPlayer) {
-				if (currentPlayer.hasCondition(new Bleed(currentPlayer))) {
-					currentPlayer.removeCondition(new Bleed(currentPlayer));
+				if (currentPlayer.hasCondition(new Bleed(currentPlayer, 0))) {
+				//	currentPlayer.removeCondition(Bleed.class); Would remove all bleeds
+					currentPlayer.addActiveCondition(new Bleed(currentPlayer, -40), 10); // To remove 40 from the bleed amount?
 					return "The soothing liquid closes your wounds.";
 				}
 				return failedSip();
@@ -97,11 +97,9 @@ public class Drinkable extends StdItem {
 		
 		REGEN() {
 			@Override public String drink(Mobile currentPlayer) {
-				if (currentPlayer.hasCondition(new Regen(currentPlayer))) {
-					return failedSip();
-				} 
-				currentPlayer.addActiveCondition(new Regen(currentPlayer), 10000, 5);
-				return "The potion gives you a warm, healthy glow.";
+				currentPlayer.addActiveCondition(new Regen(currentPlayer, -10), 5); // 10 intensity, 5 times.
+//				currentPlayer.addActiveCondition(new Regen(currentPlayer, 10, 5)); // Heals 10 hitpoints every tick for 5 ticks.
+				return "The potion gives you a warm, healthy glow."; // Should this be on Regen's doOnCreation()?
 			}
 			
 		};
