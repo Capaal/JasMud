@@ -10,7 +10,7 @@ import items.ItemBuilder.ItemType;
 import processes.Type;
 
 
-
+//may want to have multiple effects per weapon (aoe + bleed) someday
 public class MercWeapon extends StdItem {
 	
 	//private int maxSips;
