@@ -276,59 +276,6 @@ public class StdMob implements Mobile, Container{
 	//		}
 	//	}
 		return null;
-		/*
-		
-		holdableString = holdableString.toLowerCase();
-		String ceiling = inventory.ceilingKey(holdableString);
-		String floor = inventory.floorKey(holdableString);
-		
-		System.out.println(floor + " to " + ceiling);
-		if (ceiling != null && floor != null) {
-			Map<String, Holdable> subMap = inventory.subMap(floor, true, ceiling, true);
-			for (String s : subMap.keySet()) {
-				if ((s.equalsIgnoreCase(holdableString) || subMap.get(s).getName().equalsIgnoreCase(holdableString))) {
-					return subMap.get(s);
-				}
-			}
-			System.out.println(subMap);
-		} else if (ceiling == null && floor != null) {
-			if ((floor.equalsIgnoreCase(holdableString) || inventory.get(floor).getName().equalsIgnoreCase(holdableString))) {
-				return inventory.get(floor);
-			}
-		} else if (ceiling != null && floor == null) {
-			if ((ceiling.equalsIgnoreCase(holdableString) || inventory.get(ceiling).getName().equalsIgnoreCase(holdableString))) {
-				return inventory.get(ceiling);
-			}
-		} else {
-			return null;
-		}
-		
-		
-		
-		Map.Entry<String,Holdable> answer = inventory.ceilingEntry(holdableString.toUpperCase());
-		if (answer != null && (answer.getKey().equals(holdableString) || answer.getValue().getName().equals(holdableString))) {
-			return answer.getValue();
-		}
-		return null;
-		
-	/*	
-		for (Holdable h : inventory) {
-			String tempItemName = h.getName().toLowerCase();
-			if (tempItemName.equals(holdableString) || (tempItemName + h.getId()).equals(holdableString)) {
-				return h;
-			}
-		}
-		// Below related to Equipment, which is a TODO item.
-		Collection<Holdable> items =  equipment.values();
-		for (Holdable item : items) {
-			if (item != null) {
-				String posName = item.getName().toLowerCase();					
-				if (posName.equals(holdableString) || (posName + item.getId()).equals(holdableString)) {
-					return item;
-				}
-			}
-		}
-		return null;	*/	
 	}	
 	
 	@Override
@@ -337,14 +284,14 @@ public class StdMob implements Mobile, Container{
 			return false;
 		}
 		if (duration == -1) {
-			return effectManager.registerPermanentEffect(newEffect);
+			return effectManager.registerPermanentPassiveEffect(newEffect);
 		}
-		return effectManager.registerEffectDestroyAfterXMilliseconds(newEffect, duration);
+		return effectManager.registerPassiveEffectDestroyAfterXMilliseconds(newEffect, duration);
 	}
 	
 	@Override
 	public boolean addActiveCondition(TickingEffect newEffect, int times) {
-		return effectManager.registerEffectRepeatNTimesOverXMilliseconds(newEffect, times);
+		return effectManager.registerActiveEffect(newEffect, times);
 	}
 	
 	@Override

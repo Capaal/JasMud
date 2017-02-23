@@ -43,7 +43,7 @@ public class StdItem implements Holdable {
 		this.allowedEquipSlots = build.getAllowedSlots();
 		this.components = build.getComponents();
 		this.salvageable = build.getSalvageable();
-//		this.mercEffect = build.getMercEffect();
+		this.mercEffect = build.getMercEffect();
 		
 		WorldServer.gameState.addItem(name + id, this);
 		itemLocation.acceptItem(this);

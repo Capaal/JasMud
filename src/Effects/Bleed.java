@@ -16,10 +16,11 @@ public class Bleed extends TickingEffect {
 	private final Mobile currentPlayer;
 	private final Type type;
 	private int intensity;
-	private final int interval = 2000; // Milliseconds
+//	private final int interval = 2000; // Milliseconds
 
 	public Bleed(Mobile currentPlayer, int initialIntensity) {
 		this.currentPlayer = currentPlayer;
+		this.interval = 2000;
 		type = Type.BLEED;
 		intensity = initialIntensity;
 	}
