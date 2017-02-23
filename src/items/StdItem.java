@@ -162,7 +162,7 @@ public class StdItem implements Holdable {
 	}
 	
 	public MercWeapon.MercEffect getMercEffect() {
-//		return this.mercEffect;
-//	}
+		return this.mercEffect;
+	}
 
 }

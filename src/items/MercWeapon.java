@@ -33,7 +33,7 @@ public class MercWeapon extends StdItem {
 
 		BLEED() {
 			@Override public boolean applyEffect(Mobile currentPlayer) {
-				if (currentPlayer.addActiveCondition(new Bleed(currentPlayer), 2000, 5)) {
+				if (currentPlayer.addActiveCondition(new Bleed(currentPlayer, 10), 5)) {
 					currentPlayer.tell("Bleeding caused.");
 					return true;
 				}
@@ -46,7 +46,7 @@ public class MercWeapon extends StdItem {
 			
 		FEAR() {
 			@Override public boolean applyEffect(Mobile currentPlayer) {
-				if (currentPlayer.addActiveCondition(new Fear(currentPlayer), 3000, 10)) {
+				if (currentPlayer.addActiveCondition(new Fear(currentPlayer), 10)) {
 					currentPlayer.tell("Fear applied.");
 					return true;
 				}

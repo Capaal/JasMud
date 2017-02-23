@@ -378,10 +378,10 @@ public class ItemBuilder {
 	}
 
 	public MercWeapon.MercEffect getMercEffect() {
-//		return this.mercEffect;
-//	}
+		return this.mercEffect;
+	}
 	
-//	public void setMercEffect(MercEffect a) {
-//		mercEffect = a;
-//	}
+	public void setMercEffect(MercEffect a) {
+		mercEffect = a;
+	}
 }
