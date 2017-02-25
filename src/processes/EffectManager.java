@@ -31,7 +31,20 @@ public class EffectManager {
 		if (times == 0 || newEffect == null) {
 			throw new IllegalArgumentException("Invalid times or Effect cannot be null: " + times);
 		}
-		if (!activeEffects.contains(newEffect)) { // If is an effect NOT present on Mobile.
+		for (TickingEffect effect : activeEffects) {
+			if (effect.equals(newEffect)) {
+				return effect.stackedInstance(newEffect, times);
+			}
+		}
+		newEffect.startTicking(times);
+		activeEffects.add(newEffect); // Registers this effect with the Mobile
+		newEffect.setLinkedManager(this);
+		return true;
+		
+		
+		/*if (!activeEffects.contains(newEffect)) { // If is an effect NOT present on Mobile.
+			System.out.println(activeEffects.contains(newEffect)); // Always returns false TODO
+			System.out.println(activeEffects);
 			newEffect.startTicking(times);
 			activeEffects.add(newEffect); // Registers this effect with the Mobile
 			newEffect.setLinkedManager(this);
@@ -43,14 +56,14 @@ public class EffectManager {
 				}
 			}
 			return false;
-		}		
+		}	*/	
 	}
 	// For Passive effects that are on a time limit.
 	public boolean registerPassiveEffectDestroyAfterXMilliseconds(PassiveCondition newEffect, int duration) {
 		if (newEffect == null || duration <= 0) {
 			throw new IllegalArgumentException("Invalid effect or duration: " + newEffect + " " + duration);
 		}		
-		if(registerEffect(newEffect)) { // If registered successfully.
+		if(registerPassiveEffect(newEffect)) { // If registered successfully.
 			scheduleDestroyAfterXMilliseconds(newEffect, duration);
 			return true;
 		}
@@ -62,7 +75,7 @@ public class EffectManager {
 		if (newEffect == null) {
 			throw new IllegalArgumentException("Invalid effect: " + newEffect);
 		}		
-		return registerEffect(newEffect);
+		return registerPassiveEffect(newEffect);
 	}
 	
 	public boolean hasCondition(TickingEffect checkedEffect) {
@@ -83,7 +96,7 @@ public class EffectManager {
 		WorldServer.shutdownAndAwaitTermination(wrapperExecutor);
 	}
 	
-	private boolean registerEffect(PassiveCondition newEffect) {
+	private boolean registerPassiveEffect(PassiveCondition newEffect) {
 		if (passiveEffects.add(newEffect)) {
 			newEffect.doOnCreation(bondedMobile);
 			return true;
@@ -91,52 +104,29 @@ public class EffectManager {
 		return false;		
 	}
 	
-/*	private boolean scheduleEffectRepeatNTimesOverXMilliseconds(TickingEffect newEffect, int times) {	
-		int interval = newEffect.getInterval();
-		if (!activeConditions.containsKey(newEffect)) {
-			ConditionWrapper wrapper = new ConditionWrapper(newEffect, times);
-			activeConditions.put(newEffect, wrapper);
-			newEffect.doOnCreation();
-			ScheduledFuture<?> future = effectExecutor.scheduleWithFixedDelay(wrapper, interval, interval, TimeUnit.MILLISECONDS);
-			wrapper.setOwnFuture(future);
-			return true;
-		} else { // Tell existing ticking condition that another instance wants to be applied (and possibly modify the current effect)
-			activeConditions.get(newEffect).getWrappedEffect().stackedInstance(newEffect, times);
-		}
-		return false;		
-	}*/
-	
 	private void scheduleDestroyAfterXMilliseconds(PassiveCondition newEffect, int milliseconds) {
 		effectExecutor.schedule(new removeTask(newEffect), milliseconds, TimeUnit.MILLISECONDS);
 	}
 	
+	// Removing an existing effect (curing and the such)
 	public void unRegisterEffect(TickingEffect oldEffect) {
-		System.out.println(activeEffects);
 		for (TickingEffect effect : activeEffects) {
 			if (effect.equals(oldEffect)) {
 				effect.kill();
 				break;
 			}
-			return;
 		}
-	//	activeConditions.remove(oldEffect); Does within kill()?
-		System.out.println(activeEffects);
-	//	if (!hasCondition(oldEffect)) {
-	//		throw new IllegalArgumentException("Not Present: " + oldEffect);
-	//	}
-	//	activeConditions.get(oldEffect.getClass()).kill();
 	}
 	
+	// Specifically for use within kill();
 	public void unRegisterActiveCondition(TickingEffect oldEffect) {
 		activeEffects.remove(oldEffect);
 		oldEffect.doOnDestruction();
-//		bondedMobile.displayPrompt();
 	}	
 	
 	public void unRegisterEffect(PassiveCondition oldEffect) {
 		passiveEffects.remove(oldEffect);
 		oldEffect.doOnDestruction(bondedMobile);
-//		bondedMobile.displayPrompt();
 	}	
 	
 	private class removeTask implements Runnable {		
@@ -148,39 +138,4 @@ public class EffectManager {
 			unRegisterEffect(effectToBeRemoved);			
 		}
 	}
-	
-	/*public class ConditionWrapper implements Runnable {
-		private final TickingEffect wrappedEffect;	
-		private int timesToRun;
-		private int totalTimesRan = 0;
-		private Future<?> future;
-		
-		public ConditionWrapper(TickingEffect effect, int times) {
-			this.wrappedEffect = effect;
-			this.timesToRun = times;
-		}
-		
-		public TickingEffect getWrappedEffect() {
-			return wrappedEffect;
-		}
-		
-		public void run() {
-			if (totalTimesRan < timesToRun) {
-				wrapperExecutor.execute(wrappedEffect);
-				totalTimesRan ++;
-			} else {
-				future.cancel(true);
-				unRegisterActiveCondition(wrappedEffect);
-			}
-		}
-		
-		public void setOwnFuture(Future<?> future) {
-			this.future = future;
-		}
-		
-		public void kill() {
-			future.cancel(true);
-			unRegisterActiveCondition(wrappedEffect);
-		}
-	}*/
 }
