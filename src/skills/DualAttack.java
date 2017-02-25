@@ -58,7 +58,7 @@ public class DualAttack extends Skills {
     	for (Mobile m : targets) {
     		for (MercWeapon.MercEffect effect : effectsToApply) {
     			if (effect.equals(MercWeapon.MercEffect.FASTBALANCE)) {
-    	        	balAdjust = 0.8;
+    				setBalances();
     	        } else if (effect.equals(MercWeapon.MercEffect.HIGHDMG)) {
     	        	intensity = 9;
     	        }
@@ -123,7 +123,7 @@ public class DualAttack extends Skills {
     }
     
     private void checkMercWeapons() {
-    	effectsToApply = new ArrayList();
+    	effectsToApply = new ArrayList<MercWeapon.MercEffect>();
     	rmercWeapon = (StdItem)rightWeapon;
         if (rmercWeapon.getMercEffect() != null) {
         	effectsToApply.add(rmercWeapon.getMercEffect());
@@ -135,10 +135,22 @@ public class DualAttack extends Skills {
     }
     
     private int calculateDamage() {
-		double damageMult = rmercWeapon.getDamageMult();
-		double damageMult2 = lmercWeapon.getDamageMult();
-		return (int) (damageMult * damageMult2 * intensity * .9);
+		double damageMultr = rmercWeapon.getDamageMult();
+		double damageMultl = lmercWeapon.getDamageMult();
+		return (int) (((damageMultr * intensity) + (damageMultl * intensity)) *.9 );
 	}
+    
+    private void setBalances() {
+    	if (rmercWeapon.getMercEffect().equals(MercWeapon.MercEffect.FASTBALANCE) && lmercWeapon.getMercEffect().equals(MercWeapon.MercEffect.FASTBALANCE)) {
+    		balAdjust = 0.8;
+    	} else if (rmercWeapon.getMercEffect().equals(MercWeapon.MercEffect.HIGHDMG)) {
+    		intensity = 9;
+    	} else if (rmercWeapon.getMercEffect().equals(MercWeapon.MercEffect.HIGHDMG) && lmercWeapon.getMercEffect().equals(MercWeapon.MercEffect.HIGHDMG)) {
+    		intensity = 10;
+    	} else {
+    		return;
+    	}
+    }
     
     private int calculateBalance() {
 		return (int) (3000 * rmercWeapon.getBalanceMult() * balAdjust);

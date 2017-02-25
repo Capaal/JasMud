@@ -67,6 +67,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new Shove());
 		generalSkills.addSkill(new Attack());
 		generalSkills.addSkill(new DualAttack());
+		generalSkills.addSkill(new Staunch());
 	}
 	
 	public static void makeItems() {

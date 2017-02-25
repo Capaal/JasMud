@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry excluding="TargettingStrategies/|actions/|checks/|effectors/|processes/BlankSQLInterface.java|processes/SkillBuilder.java|processes/SQLInterface.java|tests/ChargeTest.java|tests/SQLInterfaceTest.java" kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="E:/jasmud/junit-4.11.jar"/>
 	<classpathentry exported="true" kind="lib" path="E:/jasmud/mockito-all-1.9.5.jar"/>
 	<classpathentry kind="lib" path="E:/jasmud/xstream-1.4.9/lib/xstream-1.4.9.jar"/>
