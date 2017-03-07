@@ -68,6 +68,9 @@ public class CreateWorld {
 		generalSkills.addSkill(new Attack());
 		generalSkills.addSkill(new DualAttack());
 		generalSkills.addSkill(new Staunch());
+		
+		// Who knows?
+		generalSkills.addSkill(new Shieldblock());
 	}
 	
 	public static void makeItems() {

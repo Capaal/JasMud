@@ -33,6 +33,7 @@ public class StdMob implements Mobile, Container{
 //	@XStreamOmitField
 	protected Location mobLocation;
 	protected boolean isDead;
+	protected boolean isBlocking = false;
 	protected final Equipment equipment;	
 	protected int defense;
 	protected String description;
@@ -195,6 +196,14 @@ public class StdMob implements Mobile, Container{
 			dropItemsOnDeath();
 		}
 	}	
+	
+	public boolean isBlocking() {
+		return isBlocking;
+	}
+	
+	public void changeBlocking(boolean b) {
+		isBlocking = b;
+	}
 	
 	// Triggers only on death, used to spawn NEW items, not to drop held items.
 	@Override

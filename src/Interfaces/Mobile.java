@@ -26,6 +26,8 @@ public interface Mobile extends Container {
 	public void addDefense(int i);
 	public Location getContainer();
 	public boolean hasBalance();
+	public boolean isBlocking();
+	public void changeBlocking(boolean b);
 	public boolean isDead();
 	public String getDescription();
 	public String getShortDescription();

@@ -1,15 +1,13 @@
 package processes;
 
 import interfaces.*;
-import effects.PassiveCondition;
 import java.util.*;
 
 public abstract class Skills {
 	
 	protected String name;
 	protected String description;
-	protected List<Syntax> syntaxList = new ArrayList<Syntax>();	
-	
+	protected List<Syntax> syntaxList = new ArrayList<Syntax>();		
 	protected Mobile currentPlayer;
 	protected String fullCommand;
 	
@@ -41,8 +39,11 @@ public abstract class Skills {
 	}
 	
 	public Boolean isBlocking(Mobile target) {
-		// TODO check for block
-		return false;
+		if (target.isBlocking()) {
+			messageSelf(target.getName() + " deftly blocks your attack.");
+			messageTarget("Your careful defence blocks an attack from " + currentPlayer.getName(), Arrays.asList(target));
+		}		
+		return target.isBlocking();
 	}
 	
 	protected void messageSelf(String msg) {

@@ -326,4 +326,14 @@ public enum DecoratorType {
 	public boolean hasAllConditions(PassiveCondition conditions) {
 		return decoratedMobile.hasAllConditions(conditions);
 	}
+
+	@Override
+	public boolean isBlocking() {
+		return decoratedMobile.isBlocking();
+	}
+
+	@Override
+	public void changeBlocking(boolean b) {
+		decoratedMobile.changeBlocking(b);		
+	}
 }
