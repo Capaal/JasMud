@@ -2,10 +2,7 @@ package processes;
 
 import java.util.*;
 import java.util.Map.Entry;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamOmitField;
-
 import Quests.Quest;
 import Quests.Quest.Trigger;
 import interfaces.*;
@@ -23,7 +20,6 @@ public class Location implements Container {
 	private final String description;
 	private final GroundType groundType;
 	private Map<Direction, Location> locationMap;
-	@XStreamOmitField
 	protected TreeMap<String, Holdable> inventory = new TreeMap<String, Holdable>();
 	protected TreeMap<String, Mobile> mobiles = new TreeMap<String, Mobile>();
 	
@@ -55,11 +51,7 @@ public class Location implements Container {
 	}
 	
 	private void setLocation(Location futureLoc, Direction currentDirection) {
-//		if (futureLoc != null) {
 			this.locationMap.put(currentDirection, futureLoc);
-//		} else {
-//			System.out.println("setLocation just tried to set a null, normal?");
-//		}		
 	}	
 	
 	// This most likely does not belong here.
@@ -87,14 +79,6 @@ public class Location implements Container {
 		return new HashMap<Direction, Location>(locationMap);
 	}
 	
-	// Should probably be a skill that access fields like description and name TODO
-/*	public void look(Mobile currentPlayer) {
-		currentPlayer.tell(UsefulCommands.ANSI.MAGENTA + name + UsefulCommands.ANSI.SANE);
-		currentPlayer.tell(UsefulCommands.ANSI.GREEN + description + UsefulCommands.ANSI.SANE);
-		displayAll(currentPlayer);				
-		currentPlayer.tell(UsefulCommands.ANSI.CYAN + displayExits() + UsefulCommands.ANSI.SANE);
-		currentPlayer.tell("(God sight) Location number: " + id + ". Ground type: " + groundType.name() + ".");  // GOD SIGHT
-	} */
 	// Should probably not be here, but just a skill that accesses name and such.
 	public void glance(Mobile currentPlayer) {
 		currentPlayer.tell(UsefulCommands.ANSI.MAGENTA + name + UsefulCommands.ANSI.SANE);
@@ -102,6 +86,7 @@ public class Location implements Container {
 		currentPlayer.tell(UsefulCommands.ANSI.CYAN + displayExits() + UsefulCommands.ANSI.SANE);
 		currentPlayer.tell("(God sight) Location number: " + id + ". Ground type: " + groundType.name() + ".");
 	}	
+	
 	//Should probably not be here
 	public void displayAll(Mobile currentPlayer) {
 		boolean anItem = false;
@@ -188,19 +173,11 @@ public class Location implements Container {
 		return null;
 	}
 	
-	@Override //TODO Ceiling and Floor does not work well with capital letters, so then full loop is used. Very bad design :(
+	@Override
 	public Holdable getHoldableFromString(String holdableString) {	
 		holdableString = holdableString.toLowerCase();
 		String ceiling = inventory.ceilingKey(holdableString);
-		String floor = inventory.floorKey(holdableString);
-	//	NavigableMap<String, Holdable> subMap = null;
-	//	if (ceiling != null && floor != null) {
-	//		subMap = inventory.subMap(floor, true, ceiling, true);
-	//	}
-		
-//		System.out.println(floor + " to " + ceiling + " with submap of " + subMap);
-//		System.out.println(inventory.keySet());
-		
+		String floor = inventory.floorKey(holdableString);		
 		if (ceiling != null) {
 			if ((ceiling.equalsIgnoreCase(holdableString) || inventory.get(ceiling).getName().equalsIgnoreCase(holdableString))) {
 				return inventory.get(ceiling);
@@ -211,46 +188,7 @@ public class Location implements Container {
 				return inventory.get(floor);
 			}
 		} 
-	//	if (ceiling != null && floor != null) {
-	//		System.out.println(inventory.keySet());
-	//		for (String s : inventory.keySet()) {
-	//			if ((s.equalsIgnoreCase(holdableString) || inventory.get(s).getName().equalsIgnoreCase(holdableString))) {
-	//				return inventory.get(s);
-	//			}
-	//		}
-	//	}
-		return null;
-		
-		/*
-		
-		System.out.println(floor + " to " + ceiling);
-		if (ceiling != null && floor != null) {
-			Map<String, Holdable> subMap = inventory.subMap(floor, true, ceiling, true);
-			System.out.println(subMap);
-			for (String s : subMap.keySet()) {
-				if ((s.equalsIgnoreCase(holdableString) || subMap.get(s).getName().equalsIgnoreCase(holdableString))) {
-					return subMap.get(s);
-				}
-			}
-		} else if (ceiling == null && floor != null) {
-			if ((floor.equalsIgnoreCase(holdableString) || inventory.get(floor).getName().equalsIgnoreCase(holdableString))) {
-				return inventory.get(floor);
-			}
-		} else if (ceiling != null && floor == null) {
-			if ((ceiling.equalsIgnoreCase(holdableString) || inventory.get(ceiling).getName().equalsIgnoreCase(holdableString))) {
-				return inventory.get(ceiling);
-			}
-		} else {
-			return null;
-		}
-		
-		
-		
-		Map.Entry<String,Holdable> answer = inventory.ceilingEntry(holdableString);
-		if (answer != null && (answer.getKey().equalsIgnoreCase(holdableString) || answer.getValue().getName().equalsIgnoreCase(holdableString))) {
-			return answer.getValue();
-		}
-		return null;*/
+		return null;		
 	}
 
 	@Override
@@ -260,9 +198,7 @@ public class Location implements Container {
 
 	public Location getContainer(String dir) {
 		return getLocation(dir);
-	}
-	
-	
+	}	
 	
 	public Direction getDirectionToLocation(Location askingLocation) {
 		for (Entry<Direction, Location> entry : locationMap.entrySet()) {
@@ -523,8 +459,4 @@ public class Location implements Container {
 	public Quest getQuest() {
 		return bondedQuest;
 	}
-
-//	public void removeFromWorld() {
-//		WorldServer.saveLocation(this);
-//	}	
 }
