@@ -1,16 +1,10 @@
 package items;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
 import effects.PassiveCondition;
 import effects.Bleed;
 import effects.Regen;
-import interfaces.Container;
-import interfaces.Holdable;
 import interfaces.Mobile;
 import items.ItemBuilder.ItemType;
-import processes.StdMob;
 import processes.Type;
 
 //almost same as stackable, except can't split quantity (sips)
@@ -20,7 +14,6 @@ public class Drinkable extends StdItem {
 	private int maxSips;
 	private int currentSips;
 	private DrinkType type;
-//	protected ArrayList<DrinkType> drinkTypes = new ArrayList<DrinkType>();
 
 	public Drinkable(ItemBuilder build) {
 		super(build);
@@ -30,7 +23,7 @@ public class Drinkable extends StdItem {
 	}
 	
 	public int getSips() {
-		return currentSips;
+		return this.currentSips;
 	}
 	
 	public boolean changeSips(int number) {

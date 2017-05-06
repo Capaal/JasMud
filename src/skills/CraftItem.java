@@ -24,7 +24,7 @@ public class CraftItem extends Skills {
 	protected void performSkill() {
 		String itemToMake = Syntax.ITEM.getStringInfo(fullCommand, this);
 		if (itemToMake == "") {
-			messageSelf("What are you trying to make?"); //fail from no item specified
+			messageSelf("What are you trying to make? CRAFT LIST for all craftables."); //fail from no item specified
 			return;
 		}
 		Map<String, ItemBuilder> allItemTemplates = CreateWorld.viewItemTemplates(); //maybe list of only craftable items?

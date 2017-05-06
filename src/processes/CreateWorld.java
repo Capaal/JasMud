@@ -5,6 +5,7 @@ import items.ItemBuilder;
 import items.ItemBuilder.ItemType;
 import items.MercWeapon;
 import items.MercWeapon.MercEffect;
+import items.Mineable.OreType;
 import items.StdItem;
 import processes.Equipment.EquipmentEnum;
 
@@ -68,9 +69,10 @@ public class CreateWorld {
 		generalSkills.addSkill(new Attack());
 		generalSkills.addSkill(new DualAttack());
 		generalSkills.addSkill(new Staunch());
-		
+		generalSkills.addSkill(new MercRegenSkill());
 		// Who knows?
 		generalSkills.addSkill(new Shieldblock());
+		generalSkills.addSkill(new Mine());
 	}
 	
 	public static void makeItems() {
@@ -90,6 +92,7 @@ public class CreateWorld {
 		addHealPotion(30);
 		addBleedPotion(31);
 		addRegenPotion(32);
+		addOreRock(33);
 	}
 	
 	public static void makeWorldFromDatabase() {
@@ -243,11 +246,12 @@ public class CreateWorld {
 	
 	public static void addOre() {
 		ItemBuilder newItem = new ItemBuilder();	
-		newItem.setName("ore");
+		newItem.setName("iron");
 		newItem.setDescription("A pile of iron ore chunks.");
 		newItem.setDescriptionSingle("A piece of iron ore.");
 		newItem.setItemType(ItemType.STACKABLEITEM);
 		newItem.setDamageMult(0.2);
+		itemTemplates.put("iron", newItem); // not sure it should be in itemTemplates
 //		newItem.complete();
 //		WorldServer.gameState.addItem("ore", newItem.getFinishedItem()); //added here instead of templates, not a craftable item
 	}
@@ -299,6 +303,18 @@ public class CreateWorld {
 		newItem.setMaxSips(2);
 		newItem.setItemType(ItemType.DRINKABLE);
 		newItem.setDrinkType(DrinkType.REGEN);
+		newItem.complete();
+		itemTemplates.put("regenpotion", newItem);
+	}
+
+	public static void addOreRock(int i) {
+		ItemBuilder newItem = new ItemBuilder();
+		newItem.setId(i);
+		newItem.setName("ironrock");
+		newItem.setMaxOres(5);
+		newItem.setItemType(ItemType.MINEABLE);
+		newItem.setOreType(OreType.IRON);
+		newItem.setItemContainer(WorldServer.gameState.viewLocations().get(7));
 		newItem.complete();
 		itemTemplates.put("regenpotion", newItem);
 	}

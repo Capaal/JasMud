@@ -1,5 +1,6 @@
 package interfaces;
 
+// This is the basiest base item hopefully.
 // SHOULD only define something that can be HELD by CONTAINERs
 public interface Holdable extends Comparable<Holdable> {	
 	
@@ -12,4 +13,5 @@ public interface Holdable extends Comparable<Holdable> {
 	public void removeFromWorld();  // NOT the same as DELETE
 	public void moveHoldable(Container finalLocation);
 	public void setContainer(Container container);// Used for save/load. Not good to use otherwise?
+	public boolean canPickup();
 }

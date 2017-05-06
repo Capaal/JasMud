@@ -3,6 +3,7 @@ package items;
 import interfaces.Container;
 import items.Drinkable.DrinkType;
 import items.MercWeapon.MercEffect;
+import items.Mineable.OreType;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -52,6 +53,15 @@ public class ItemBuilder {
 	public DrinkType getDrinkType() {return drinkType;}
 	public void setDrinkType(DrinkType drinkType) {this.drinkType = drinkType;}
 	//end potions stuff
+	
+	//mining stuff
+	private int maxOres = 0;
+	private OreType oreType;
+	public int getMaxOres() {return maxOres;}
+	public void setMaxOres(int ores) {this.maxOres = ores;}
+	public OreType getOreType() {return oreType;}
+	public void setOreType(OreType oreType) {this.oreType = oreType;}
+	//end mining stuff
 	
 	public void setItemType (ItemType type) {
 		this.typeToProduce = type;
@@ -367,7 +377,19 @@ public class ItemBuilder {
 			@Override public StdItem produceType(ItemBuilder build) {
 				return new Drinkable(build);
 			}
+		},
 			
+		STATIONARYITEM() {
+			@Override public StdItem produceType(ItemBuilder build) {
+				return new StationaryItem(build);
+			}
+		},
+		
+		MINEABLE() {
+			@Override public StdItem produceType(ItemBuilder build) {
+				return new Mineable(build);
+			}
+
 		};
 		
 		private ItemType() {};

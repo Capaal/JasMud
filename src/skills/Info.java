@@ -2,6 +2,7 @@ package skills;
 
 import interfaces.Container;
 import interfaces.Holdable;
+import items.Mineable;
 import processes.Skills;
 
 public class Info extends Skills {
@@ -41,7 +42,14 @@ public class Info extends Skills {
 	private boolean searchForItem(Container where) {
 		Holdable possibleItem = where.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
 		if (possibleItem != null) {
-			messageSelf(possibleItem.getName() + possibleItem.getId());
+			StringBuilder s = new StringBuilder();
+			s.append(possibleItem.getName());
+			s.append(possibleItem.getId());
+			if (possibleItem instanceof Mineable) {
+				s.append("; # of ores remaining: ");
+				s.append(((Mineable)possibleItem).getOres());
+			}
+			messageSelf(s.toString());
 			return true;
 		} 
 		return false;

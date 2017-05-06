@@ -12,7 +12,7 @@ import processes.*;
 import processes.Equipment.EquipmentEnum;
 
 @XStreamAlias("StdItem")
-public class StdItem implements Holdable {
+public class StdItem implements Holdable{
 	
 	protected final String name;
 	protected final int id;	
@@ -163,6 +163,11 @@ public class StdItem implements Holdable {
 	
 	public MercWeapon.MercEffect getMercEffect() {
 		return this.mercEffect;
+	}
+
+	@Override
+	public boolean canPickup() {
+		return true;
 	}
 
 }

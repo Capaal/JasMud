@@ -35,6 +35,11 @@ public enum Type {
 	REGEN() {
 		
 	},
+	
+	MERCREGEN() {
+		
+	},
+	
 	;
 	
 	private Type() {};

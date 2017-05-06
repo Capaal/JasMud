@@ -6,6 +6,7 @@ import effects.PassiveCondition;
 import interfaces.Container;
 import interfaces.Holdable;
 import items.StackableItem;
+import items.StationaryItem;
 import processes.Location;
 import processes.Skills;
 import processes.UsefulCommands;
@@ -40,7 +41,10 @@ public class Get extends Skills {
 		}		
 		if (itemToMove instanceof StackableItem) {	
 			moveStackableItem((StackableItem)itemToMove);			
-		} else {
+		} else if(!itemToMove.canPickup()) {
+			messageSelf("That's not an item you can pickup.");
+			return;
+		}	else {
 			standardGetItem(itemToMove);
 		}
 	}
