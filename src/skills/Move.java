@@ -23,10 +23,11 @@ public class Move extends Skills {
 	@Override
 	protected void performSkill() {
 		if (!hasBalance()) {return;}
-		if (!canMove()) {return;}
+		if (!legsOk()) {return;}
 		startContainer = currentPlayer.getContainer();
 		endContainer = null;
 		dir = Syntax.DIRECTION.getStringInfo(fullCommand, this); // Why not convert to enum?
+		if(isRooted()) {return;};
 		ifDizzy(); //if dizzy, sets a new random direction, ok to run into walls
 		if (!dir.equals("")) {
 			endContainer = startContainer.getContainer(dir);
@@ -46,7 +47,7 @@ public class Move extends Skills {
 		look.perform("", currentPlayer);
 	}
 	
-	private boolean canMove() {
+	private boolean legsOk() {
 		if(currentPlayer.hasAllConditions(PassiveCondition.BROKENLEGS)) {
 			messageSelf("Oh no your legs are broken.");
 			return false;
@@ -61,5 +62,13 @@ public class Move extends Skills {
 			dir = d[r.nextInt(d.length)];		
 			messageSelf("You stumble around in confusion and move a random direction.");
 		}
+	}
+	
+	private boolean isRooted() {
+		if (currentPlayer.hasAllConditions(PassiveCondition.ROOT)) {
+			messageSelf("You are rooted and cannot move.");
+			return true;
+		}
+		return false;
 	}
 }

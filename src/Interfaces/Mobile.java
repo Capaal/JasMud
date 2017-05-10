@@ -78,5 +78,8 @@ public interface Mobile extends Container {
 	public void moveHoldable(Location finalLocation);
 	public void setContainer(Location container);
 	public int compareTo(Mobile arg0);
+//	public void setGender();
+//	public String getGenderHimHer();
+//	public String getGenderHeShe();
 	
 }

@@ -2,6 +2,7 @@ package items;
 
 import interfaces.Container;
 import items.Drinkable.DrinkType;
+import items.Herb.HerbType;
 import items.MercWeapon.MercEffect;
 import items.Mineable.OreType;
 
@@ -14,7 +15,7 @@ import java.util.Set;
 
 import processes.WorldServer;
 import processes.Equipment.EquipmentEnum;
-import skills.Attack;
+import skills.Mercenary.Attack;
 
 public class ItemBuilder {
 	
@@ -62,6 +63,19 @@ public class ItemBuilder {
 	public OreType getOreType() {return oreType;}
 	public void setOreType(OreType oreType) {this.oreType = oreType;}
 	//end mining stuff
+	
+	//herbPouch stuff
+	private int maxHerbs = 1000;
+	public int getMaxHerbs() {return maxHerbs;}
+	public void setMaxHerbs(int herbs) {this.maxHerbs = herbs;}
+	//end herbPouch stuff
+	
+	//herb stuff
+	private HerbType herbType;
+	public HerbType getHerbType() {return herbType;}
+	public void setHerbType(HerbType herbType) {this.herbType = herbType;}
+	//end herb stuff
+
 	
 	public void setItemType (ItemType type) {
 		this.typeToProduce = type;
@@ -388,6 +402,18 @@ public class ItemBuilder {
 		MINEABLE() {
 			@Override public StdItem produceType(ItemBuilder build) {
 				return new Mineable(build);
+			}
+		},
+		
+		HERB() {
+			@Override public StdItem produceType(ItemBuilder build) {
+				return new Herb(build);
+			}
+		},
+		
+		HERBPOUCH() {
+			@Override public StdItem produceType(ItemBuilder build) {
+				return new HerbPouch(build);
 			}
 
 		};

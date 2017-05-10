@@ -79,3 +79,5 @@ src/processes/CreateWorld.java.orig
 .metadata/.log
 .metadata/.lock
 .metadata/version.ini
+Items/*.xml
+Players/*.xml

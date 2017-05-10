@@ -2,6 +2,7 @@ package skills;
 
 import interfaces.Container;
 import interfaces.Holdable;
+import items.HerbPouch;
 import items.Mineable;
 import processes.Skills;
 
@@ -48,6 +49,13 @@ public class Info extends Skills {
 			if (possibleItem instanceof Mineable) {
 				s.append("; # of ores remaining: ");
 				s.append(((Mineable)possibleItem).getOres());
+			}
+			if (possibleItem instanceof HerbPouch) {
+				s.append("; ");
+				s.append(((HerbPouch)possibleItem).getHerbType().toString());
+				s.append(" (");
+				s.append(((HerbPouch)possibleItem).getHerbQty());
+				s.append(").");
 			}
 			messageSelf(s.toString());
 			return true;

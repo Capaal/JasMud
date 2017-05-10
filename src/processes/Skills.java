@@ -23,6 +23,7 @@ public abstract class Skills {
 	}
 	
 	protected abstract void performSkill();
+//	protected abstract void preSkillChecks();
 	
 	private void testForInduction() {
 		if (currentPlayer.isInducting()) {

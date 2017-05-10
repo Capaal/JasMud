@@ -21,6 +21,10 @@ public enum PassiveCondition {
 			
 		},
 		
+		ROOT() {
+			
+		},
+		
 		DEFENCE() {
 			@Override
 			public void doOnCreation(Mobile currentPlayer) {

@@ -27,7 +27,7 @@ public class Drinkable extends StdItem {
 	}
 	
 	public boolean changeSips(int number) {
-		currentSips = currentSips - number;
+		currentSips = currentSips - number; //should change this for fill
 		if (currentSips < 0) {
 			currentSips = 0;
 			return false;

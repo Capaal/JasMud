@@ -1,6 +1,7 @@
 package processes;
 
 import items.Drinkable.DrinkType;
+import items.Herb.HerbType;
 import items.ItemBuilder;
 import items.ItemBuilder.ItemType;
 import items.MercWeapon;
@@ -17,6 +18,18 @@ import java.util.TreeMap;
 import com.thoughtworks.xstream.XStream;
 
 import skills.*;
+import skills.Mercenary.Attack;
+import skills.Mercenary.BreakLimb;
+import skills.Mercenary.Clearmind;
+import skills.Mercenary.DualAttack;
+import skills.Mercenary.Headshot;
+import skills.Mercenary.Intimidate;
+import skills.Mercenary.MercRegenSkill;
+import skills.Mercenary.Shieldblock;
+import skills.Mercenary.Shove;
+import skills.Mercenary.SpinKick;
+import skills.Mercenary.Staunch;
+import skills.Mercenary.Straighten;
 import Quests.FarmerQuest;
 
 public class CreateWorld {
@@ -50,6 +63,9 @@ public class CreateWorld {
 		generalSkills.addSkill(new Wield());
 		generalSkills.addSkill(new Drink());
 		generalSkills.addSkill(new Say());
+		generalSkills.addSkill(new Struggle());
+		generalSkills.addSkill(new Eat());
+		generalSkills.addSkill(new Put());
 		//crafting
 		generalSkills.addSkill(new CraftItem());
 		generalSkills.addSkill(new Salvage());
@@ -58,6 +74,8 @@ public class CreateWorld {
 		generalSkills.addSkill(new Nod());
 		//mage?
 		generalSkills.addSkill(new Heal());
+		generalSkills.addSkill(new Root());
+		generalSkills.addSkill(new VineTrip());
 		//mercenary only
 		generalSkills.addSkill(new Headshot());
 		generalSkills.addSkill(new BreakLimb());
@@ -92,7 +110,10 @@ public class CreateWorld {
 		addHealPotion(30);
 		addBleedPotion(31);
 		addRegenPotion(32);
-		addOreRock(33);
+		addOreRock(33);		
+		makeAloeHerb(34);	
+		makeAloeHerb(35);	
+		addHerbPouch(36);
 	}
 	
 	public static void makeWorldFromDatabase() {
@@ -305,6 +326,26 @@ public class CreateWorld {
 		newItem.setDrinkType(DrinkType.REGEN);
 		newItem.complete();
 		itemTemplates.put("regenpotion", newItem);
+	}
+	
+	public static void makeAloeHerb(int i) {
+		ItemBuilder newItem = new ItemBuilder();	
+		newItem.setId(i);
+		newItem.setName("aloe");
+		newItem.setDamageMult(0.1);
+		newItem.setItemType(ItemType.HERB);
+		newItem.setHerbType(HerbType.ALOE);
+		newItem.complete();
+		itemTemplates.put("aloe", newItem);
+	}
+	
+	public static void addHerbPouch(int i) {
+		ItemBuilder newItem = new ItemBuilder();
+		newItem.setId(i);
+		newItem.setName("herbpouch");
+		newItem.setItemType(ItemType.HERBPOUCH);
+		newItem.complete();
+		itemTemplates.put("herbpouch", newItem);
 	}
 
 	public static void addOreRock(int i) {

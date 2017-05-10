@@ -62,12 +62,28 @@ public class StackableItem extends StdItem {
 			if (possibleStack != null && possibleStack.getValue() instanceof StackableItem && possibleStack.getValue().getName().equals(this.name)) {
 				((StackableItem)possibleStack.getValue()).addToStack(number);					
 			} else { // Else create new instance of this type in final location and split				
-				ItemBuilder newStack = this.newBuilder();
-				newStack.setQuantity(number);
-				newStack.setItemContainer(finalLocation);	
-				newStack.complete();				
+				splitAndNew(number, finalLocation); //method created to allow specific item type override, see Herb
 			}
-		}	
+		}
+	}
+	
+	public void splitAndNew(int number, Container finalLocation) {
+		ItemBuilder newStack = this.newBuilder();
+		newStack.setQuantity(number);
+		newStack.setItemContainer(finalLocation);	
+		newStack.complete();
+	}
+	
+	@Override public void removeFromWorld() {
+		if (this.quantity > 1) {
+			this.quantity -= 1;
+		} else if (this.quantity == 1) {
+			this.getContainer().removeItemFromLocation(this);
+			if (!WorldServer.gameState.removeItem(this.getName() + this.getId())) {
+				System.out.println("Item tried to be removed that cannot be: " + this.getName() + this.getId());
+			}
+			this.itemLocation = null;
+		} 
 	}
 	
 	protected void addToStack(int quantity) {
