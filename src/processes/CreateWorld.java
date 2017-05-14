@@ -66,6 +66,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new Struggle());
 		generalSkills.addSkill(new Eat());
 		generalSkills.addSkill(new Put());
+	//	generalSkills.addSkill(new TakeOut());
 		//crafting
 		generalSkills.addSkill(new CraftItem());
 		generalSkills.addSkill(new Salvage());
@@ -114,6 +115,8 @@ public class CreateWorld {
 		makeAloeHerb(34);	
 		makeAloeHerb(35);	
 		addHerbPouch(36);
+		addHerbPouch(37);
+		makeGinsengHerb(37);
 	}
 	
 	public static void makeWorldFromDatabase() {
@@ -338,6 +341,17 @@ public class CreateWorld {
 		newItem.complete();
 		itemTemplates.put("aloe", newItem);
 	}
+	
+	public static void makeGinsengHerb(int i) {
+		ItemBuilder newItem = new ItemBuilder();
+		newItem.setId(i);
+		newItem.setName("ginseng");
+		newItem.setDamageMult(0.1);
+		newItem.setItemType(ItemType.HERB);
+		newItem.setHerbType(HerbType.GINSENG);
+		newItem.complete();
+		itemTemplates.put("ginseng", newItem);
+		}
 	
 	public static void addHerbPouch(int i) {
 		ItemBuilder newItem = new ItemBuilder();

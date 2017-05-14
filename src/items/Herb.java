@@ -1,5 +1,6 @@
 package items;
 
+import effects.Regen;
 import interfaces.Container;
 import interfaces.Mobile;
 import items.ItemBuilder.ItemType;
@@ -45,6 +46,13 @@ public class Herb extends StackableItem {
 				currentPlayer.takeDamage(Type.BLUNT, -20);
 				return "The herb soothes your wounds and restores some life.";
 			}
+		},
+			
+		GINSENG {
+				@Override public String use(Mobile currentPlayer) {
+					currentPlayer.addActiveCondition(new Regen(currentPlayer, -10), 4);
+					return "The root revitalizes and energizes you.";
+				}
 			
 		};
 		

@@ -44,6 +44,10 @@ public class Mineable extends StationaryItem {
 		return this.currentOres;
 	}
 	
+	@Override public String getInfo() {
+		return super.getInfo() + ": number of ore remaining: " + this.currentOres;
+	}
+	
 	public boolean changeOres(int number) {
 		currentOres = currentOres - number;
 		if (currentOres < 0) {

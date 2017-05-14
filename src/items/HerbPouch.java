@@ -30,55 +30,42 @@ public class HerbPouch extends StdItem {
 		return this.herb;
 	}
 	
-	//should not use if herbtype is null / pouch is empty
-	public boolean changeHerbs(int number) {
-		currentHerbs += number;
-		if (currentHerbs == 0) {
-			this.herb = null;  //sets the herbpouch to empty
-			return true;
+	@Override public String getInfo() {
+		if (this.herb == null) {
+			return "empty herbpouch" + this.getId();
+		} else {
+			return this.herb.toString().toLowerCase() + " pouch" + this.getId() + ": " + this.getHerbQty();
 		}
-		if (currentHerbs < 0) {  //this case only for removal
-			currentHerbs = 0;
-			return false;
-		}
-		if (currentHerbs > maxHerbs) {
-			currentHerbs = maxHerbs;
-			return false; 
-		}
-		return true;
 	}
 	
-	// use if pouch is empty/null
-	public boolean addHerbs(int number, HerbType herb) {
-		if (changeHerbs(1)) {
-			this.herb = herb;
-			return true;
+	@Override public String getShortDesc() {
+		if (this.herb == null) {
+			return "empty herbpouch" + this.getId();
 		} else {
-			return false;
+			return this.herb.toString().toLowerCase() + " pouch" + this.getId();
 		}
 	}
-
-/*	public String put(Herb herb, int num) {
-		if (herb.getHerbType() == this.herb) {
-			currentHerbs += num;
-			if (currentHerbs > maxHerbs) {
-				currentHerbs = maxHerbs;
-				return "Your pouch is full."; 
-			}
-			return "You add " + num + " " + herb.getName() + " to your pouch.";
-		} else if (this.herb == null) {
-			currentHerbs += num;
-			this.herb = herb.getHerbType();
-			if (currentHerbs > maxHerbs) {
-				currentHerbs = maxHerbs;
-				return "Your pouch is full."; 
-			}
-			return "You add " + num + " " + herb.getName() + " to your pouch.";
-		} else {
-			//how to handle pouch full, pouch for different herb, "put herb in pouch123" vs "put herb in pouch"
-			return "There is no room for that herb.";
+	
+	//should not use if herbtype is null / pouch is empty. Math is hard.
+	public int changeHerbs(int number, HerbType type) {
+		int newTotal = currentHerbs + number; 
+		if (this.herb == null) {
+			this.herb = type;
 		}
-	} */
+		if (newTotal <= 0) {  // if removing all or trying to remove more than all
+			this.herb = null;
+			int actualQtyRemoved = -currentHerbs;
+			currentHerbs = 0;
+			return actualQtyRemoved; 
+		}
+		if (newTotal > maxHerbs) {
+			number = maxHerbs - currentHerbs; 
+			currentHerbs = maxHerbs;
+			return number; //returns how many actually got put in
+		}
+		currentHerbs = newTotal;
+		return number; 
+	}
 	
 	@Override public ItemBuilder newBuilder() {
 		ItemBuilder newBuild = super.newBuilder();
@@ -88,36 +75,5 @@ public class HerbPouch extends StdItem {
 		return newBuild;
 	}
 
-	//HerbPouch as Container failed
-/*	@Override
-	public TreeMap<String, Holdable> getInventory() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override 
-	public void acceptItem(Holdable newItem) {
-		Herb herb = (Herb)newItem;
-		if (this.herb == null) {
-			currentHerbs += num;
-			this.herb = herb.getHerbType();
-			if (currentHerbs > maxHerbs) {
-				currentHerbs = maxHerbs; 
-			}
-		}
-		
-	}
-
-	@Override
-	public void removeItemFromLocation(Holdable oldItem) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Holdable getHoldableFromString(String holdableString) {
-		// TODO Auto-generated method stub
-		return null;
-	} */
 	
 }

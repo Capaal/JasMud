@@ -169,5 +169,15 @@ public class StdItem implements Holdable{
 	public boolean canPickup() {
 		return true;
 	}
+	
+	@Override
+	public String getInfo() {
+		return this.getName() + this.getId();
+	}
+	
+	@ Override
+	public String getShortDesc() {
+		return this.getName();
+	}
 
 }

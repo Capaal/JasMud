@@ -26,13 +26,14 @@ public class Eat extends Skills{
 	protected void performSkill() {
 		if(!preSkillChecks()) {return;}
 		
-		if (herbItem == null) {
-			if (((HerbPouch)possiblePouch).changeHerbs(-1)) {
+		if (herbItem == null) { //herb in pouch (none in inv)
+			//need to sort through all pouches
+			if (((HerbPouch)possiblePouch).changeHerbs(-1,herbFromPouch) == -1) {
 				messageSelf(herbFromPouch.use(currentPlayer));
 			} else {
-				messageSelf("You can't find a \"" + herbItem + "/.");
+				messageSelf("You can't find a \"" + herbName + "\".");
 			} 
-		} else {	
+		} else {	//herb found in inv
 			Herb herb = (Herb)herbItem;	
 			messageSelf(herb.use(currentPlayer));
 		}; 
@@ -49,14 +50,14 @@ public class Eat extends Skills{
 		}
 		//find the item
 		herbItem = currentPlayer.getHoldableFromString(herbName); //in inventory
-		if (herbItem == null) {
+		if (herbItem == null) { //null means herb not in inv (maybe in pouch)
 			//search through all pouches in inventory/equipped TODO
 			//if has no pouches, return;
 			possiblePouch = currentPlayer.getHoldableFromString("herbpouch");
 			if (possiblePouch instanceof HerbPouch) {
 				HerbType typeToGet = ((HerbPouch)possiblePouch).getHerbType();
 				if (typeToGet == null) {
-					messageSelf("You do not have a \"" + herbName + "\". (Null failure)");
+					messageSelf("You do not have a \"" + herbName + "\".");
 					return false;
 				}
 				if (typeToGet.name().equalsIgnoreCase(herbName)) {

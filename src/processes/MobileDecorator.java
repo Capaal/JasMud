@@ -336,4 +336,10 @@ public enum DecoratorType {
 	public void changeBlocking(boolean b) {
 		decoratedMobile.changeBlocking(b);		
 	}
+
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

@@ -459,4 +459,10 @@ public class Location implements Container {
 	public Quest getQuest() {
 		return bondedQuest;
 	}
+
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

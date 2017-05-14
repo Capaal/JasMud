@@ -24,9 +24,9 @@ public class Inventory extends Skills {
 			return;
 		}
 		Holdable firstItem = i.next();
-		inventoryMsg.append(firstItem.getName());
+		inventoryMsg.append(firstItem.getShortDesc());
 		while (i.hasNext()) {
-			inventoryMsg.append(", " + i.next().getName());
+			inventoryMsg.append(", " + i.next().getShortDesc());
 		}
 		inventoryMsg.append(".");
 		messageSelf(inventoryMsg.toString());

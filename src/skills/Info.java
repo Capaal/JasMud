@@ -44,19 +44,7 @@ public class Info extends Skills {
 		Holdable possibleItem = where.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
 		if (possibleItem != null) {
 			StringBuilder s = new StringBuilder();
-			s.append(possibleItem.getName());
-			s.append(possibleItem.getId());
-			if (possibleItem instanceof Mineable) {
-				s.append("; # of ores remaining: ");
-				s.append(((Mineable)possibleItem).getOres());
-			}
-			if (possibleItem instanceof HerbPouch) {
-				s.append("; ");
-				s.append(((HerbPouch)possibleItem).getHerbType().toString());
-				s.append(" (");
-				s.append(((HerbPouch)possibleItem).getHerbQty());
-				s.append(").");
-			}
+			s.append(possibleItem.getInfo());
 			messageSelf(s.toString());
 			return true;
 		} 

@@ -19,4 +19,5 @@ public interface Container {
 //	public Container getContainer(); // Can a Container HAVE a container? (Holdables are forced to have this, LOCATION would not)
 //	public GroundType getGroundType(); // Should LOCATION be an interface, with this required method?
 	public Holdable getHoldableFromString(String holdableString);
+	public boolean isEmpty();
 }

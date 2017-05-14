@@ -108,4 +108,22 @@ public class StackableItem extends StdItem {
 		File file = new File(this.getName() + this.getId());
 		file.delete();		
 	}
+	
+	@Override
+	public String getInfo() {
+		if (quantity == 1) {
+			return super.getInfo();
+		} else {
+			return this.quantity + " " + super.getInfo();
+		}
+	}
+	
+	@Override
+	public String getShortDesc() {
+		if (quantity == 1) {
+			return this.getName();
+		} else {
+			return this.quantity + " " + this.getName();
+		}
+	}
 }

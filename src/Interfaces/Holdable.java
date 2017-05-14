@@ -14,4 +14,6 @@ public interface Holdable extends Comparable<Holdable> {
 	public void moveHoldable(Container finalLocation);
 	public void setContainer(Container container);// Used for save/load. Not good to use otherwise?
 	public boolean canPickup();
+	public String getInfo();
+	public String getShortDesc();
 }

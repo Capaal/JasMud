@@ -1,5 +1,10 @@
 package skills;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
 import interfaces.Holdable;
 import items.Herb;
 import items.Herb.HerbType;
@@ -13,25 +18,30 @@ public class Put extends Skills {
 	private Holdable item;
 	private String possibleContainer;
 	private Holdable endContainer;
+	private int qty =  1; //may be dangerous to set here if used by muliple ppl at once
 
 	public Put() {
 		super.name = "put";
 		super.description = "Place an item in a container, such as a pouch.";
 		super.syntaxList.add(Syntax.SKILL);
-		//err how to handle qty shit
 		super.syntaxList.add(Syntax.ITEM);
 		super.syntaxList.add(Syntax.FILLER);
 		super.syntaxList.add(Syntax.TARGET);
+		super.syntaxList.add(Syntax.QUANTITY);
 	}	
 	
 	@Override
 	protected void performSkill() {
 		if (!preSkillChecks()) {return;}
 		if (item instanceof Herb && endContainer instanceof HerbPouch) {
-			handleHerb();
+			if (currentPlayer.getHoldableFromString("herbpouch") == null) {
+				messageSelf("You do not have any pouches.");
+				return;
+				}
+			sortPouches();
 			return;
 		}
-		messageSelf("What?");
+		messageSelf("Error failure Put: performSkill last line.");
 	}
 		
 	private boolean preSkillChecks() {
@@ -66,28 +76,59 @@ public class Put extends Skills {
 				return false;
 			}
 		}
+		if (Syntax.QUANTITY.getStringInfo(fullCommand, this).equals("")) {
+			return true; //only returning true because this is the LAST check
+		} else {
+			try {
+				qty = Integer.parseInt(Syntax.QUANTITY.getStringInfo(fullCommand, this)); 
+			} catch (NumberFormatException fail) {
+				System.out.println("User error: 'Put' optional qty not a number. Optional ignored.");
+			}
+		}
+		//DO NOT ADD MORE CHECKS WITHOUT READING QTY CHECK ABOVE
 		return true;
 	}
 	
-	private void handleHerb() {
-		//for all pouches player holds TODO
-		//need to handle rejecting some/all if pouch full or no pouch available
+	private void sortPouches() {
+		Collection<Holdable> inv = currentPlayer.getInventory().values();
+		Iterator<Holdable> i = inv.iterator();
+		int pouchQty = 0;
+		Holdable possiblePouch;
 		Herb herb = (Herb)item;
-		HerbPouch pouch = (HerbPouch)endContainer;
-		//qty: check qty herb in pouch to see remaining to leave in inv or if full
-		if (pouch.getHerbType() == null) {
-			pouch.addHerbs(1,herb.getHerbType());
-			item.removeFromWorld();
-			messageSelf("You put the herb in your pouch.");
-		} else if (pouch.getHerbType().equals(herb.getHerbType())) {
-			if (pouch.changeHerbs(1)) {
-				item.removeFromWorld();
-				messageSelf("You put the herb in your pouch.");
-			} else {
-				messageSelf("Your pouch is too full.");
-			}	
-		} else { //pouch has a different herb
-			messageSelf("Your pouches are all full or used for other herbs.");
+		HerbPouch pouch;
+		int originalQty = qty;
+		while (i.hasNext() && (qty >= 0)) {
+			possiblePouch = i.next();
+		     if (possiblePouch.getName().equalsIgnoreCase("herbpouch")) {
+		          if (possiblePouch instanceof HerbPouch) {
+		               pouch = (HerbPouch)possiblePouch;
+		               pouchQty = pouch.getHerbQty();
+		               if (pouchQty < 1000) { addToPouch(pouch, herb); }
+				 }
+		    }
+		}
+		if (qty == originalQty) {
+			messageSelf("Your pouches are too full or used for other herbs."); 		               
+			return;
+			// expand else to specify if taken by other herbs or full or both TODO
+			// add else if player has only 1 pouch TODO
+		} else if (qty > 0 && qty != originalQty) {
+			messageSelf("You put " + (originalQty-qty) + " " + herb.getName() +" in your pouch."); //not enough pouches
+			return;
+		} else {
+			messageSelf("You put " + originalQty + " " + herb.getName() + " in your pouch.");
+			return;
+		}
+		
+	}
+	
+	// changes 'qty' tp how many could not go in pouch
+	private void addToPouch(HerbPouch pouch, Herb herb) {
+		if ((pouch.getHerbType() == null) || pouch.getHerbType().equals(herb.getHerbType())) {
+			herb.removeFromWorld(); //qty?
+			int actualQty = pouch.changeHerbs(qty,herb.getHerbType());
+		//	messageSelf("You put " +  actualQty + " herbs in your pouch."); could have optional to note specific pouch used
+			qty = qty - actualQty;
 		}
 		
 	}

@@ -1,5 +1,6 @@
 package skills;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import effects.Fear;
@@ -42,6 +43,7 @@ public class Struggle extends InductionSkill {
 		if (n > 2) {  //20% change success
 			currentPlayer.removeAllConditions(PassiveCondition.ROOT);
 			messageSelf("You are free to move about again.");
+			messageOthers(currentPlayer.getName() + " is no longer bound.", Arrays.asList(currentPlayer));
 			return;
 		}
 		messageSelf("You continue to writhe against the bonds holding you.");

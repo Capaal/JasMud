@@ -241,7 +241,7 @@ public class StdMob implements Mobile, Container{
 			equipment.remove(oldItem);
 			removeItemFromLocation(oldItem);
 		} else {
-			System.out.println("An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
+			System.out.println("StdMob removeItemFromLocation: An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
 		}
 		
 	}
@@ -562,6 +562,12 @@ public class StdMob implements Mobile, Container{
 	
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 
