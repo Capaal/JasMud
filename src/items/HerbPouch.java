@@ -8,6 +8,7 @@ import interfaces.Mobile;
 import items.Herb.HerbType;
 import items.ItemBuilder.ItemType;
 
+//THIS SHOULD BE A CONTAINER TODO
 //Pouches for easy accessibility - can eat/rub/use directly out of a pouch as though in hand.
 public class HerbPouch extends StdItem {
 	
@@ -34,7 +35,7 @@ public class HerbPouch extends StdItem {
 		if (this.herb == null) {
 			return "empty herbpouch" + this.getId();
 		} else {
-			return this.herb.toString().toLowerCase() + " pouch" + this.getId() + ": " + this.getHerbQty();
+			return this.herb.toString().toLowerCase() + " herbpouch" + this.getId() + ": " + this.getHerbQty();
 		}
 	}
 	
@@ -42,7 +43,7 @@ public class HerbPouch extends StdItem {
 		if (this.herb == null) {
 			return "empty herbpouch" + this.getId();
 		} else {
-			return this.herb.toString().toLowerCase() + " pouch" + this.getId();
+			return this.herb.toString().toLowerCase() + " herbpouch" + this.getId();
 		}
 	}
 	

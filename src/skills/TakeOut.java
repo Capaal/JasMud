@@ -108,7 +108,7 @@ public class TakeOut extends Skills {
 		Holdable possiblePouch;
 		HerbPouch pouch = null;
 		int originalQty = qty;
-		while (i.hasNext() && (qty > 0)) {
+		while (i.hasNext() && (qty < 0)) {
 			possiblePouch = i.next();
 		     if (possiblePouch.getName().equalsIgnoreCase("herbpouch")) {
 		          if (possiblePouch instanceof HerbPouch) {
@@ -128,7 +128,7 @@ public class TakeOut extends Skills {
 			// add else if player has only 1 pouch TODO
 		} else if (qty > 0 && qty != originalQty) {
 			createHerbs(originalQty-qty, pouch);
-			messageSelf("You remove " + (originalQty-qty) + " " + itemName +" from your pouch."); //not enough in pouches
+			messageSelf("You remove " + -(originalQty-qty) + " " + itemName +" from your pouch."); //not enough in pouches
 			return;
 		} else {
 			createHerbs(originalQty, pouch);
