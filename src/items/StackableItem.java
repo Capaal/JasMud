@@ -86,7 +86,7 @@ public class StackableItem extends StdItem {
 		} 
 	}
 	
-	protected void addToStack(int quantity) {
+	public void addToStack(int quantity) {
 		this.quantity += quantity;
 	}
 	

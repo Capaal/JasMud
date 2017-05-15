@@ -18,7 +18,7 @@ public class Put extends Skills {
 	private Holdable item;
 	private String possibleContainer;
 	private Holdable endContainer;
-	private int qty =  1; //may be dangerous to set here if used by muliple ppl at once
+	private int qty; //may be dangerous to set here if used by muliple ppl at once
 
 	public Put() {
 		super.name = "put";
@@ -32,6 +32,7 @@ public class Put extends Skills {
 	
 	@Override
 	protected void performSkill() {
+		qty = 1;
 		if (!preSkillChecks()) {return;}
 		if (item instanceof Herb && endContainer instanceof HerbPouch) {
 			if (currentPlayer.getHoldableFromString("herbpouch") == null) {
@@ -97,7 +98,7 @@ public class Put extends Skills {
 		Herb herb = (Herb)item;
 		HerbPouch pouch;
 		int originalQty = qty;
-		while (i.hasNext() && (qty >= 0)) {
+		while (i.hasNext() && (qty > 0)) {
 			possiblePouch = i.next();
 		     if (possiblePouch.getName().equalsIgnoreCase("herbpouch")) {
 		          if (possiblePouch instanceof HerbPouch) {
@@ -108,7 +109,7 @@ public class Put extends Skills {
 		    }
 		}
 		if (qty == originalQty) {
-			messageSelf("Your pouches are too full or used for other herbs."); 		               
+			messageSelf("Your pouches are too full or are used for other herbs."); 		               
 			return;
 			// expand else to specify if taken by other herbs or full or both TODO
 			// add else if player has only 1 pouch TODO
@@ -125,8 +126,8 @@ public class Put extends Skills {
 	// changes 'qty' tp how many could not go in pouch
 	private void addToPouch(HerbPouch pouch, Herb herb) {
 		if ((pouch.getHerbType() == null) || pouch.getHerbType().equals(herb.getHerbType())) {
-			herb.removeFromWorld(); //qty?
 			int actualQty = pouch.changeHerbs(qty,herb.getHerbType());
+			herb.removeFromWorld(); //qty?
 		//	messageSelf("You put " +  actualQty + " herbs in your pouch."); could have optional to note specific pouch used
 			qty = qty - actualQty;
 		}

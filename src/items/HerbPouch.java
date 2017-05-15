@@ -46,7 +46,7 @@ public class HerbPouch extends StdItem {
 		}
 	}
 	
-	//should not use if herbtype is null / pouch is empty. Math is hard.
+	
 	public int changeHerbs(int number, HerbType type) {
 		int newTotal = currentHerbs + number; 
 		if (this.herb == null) {

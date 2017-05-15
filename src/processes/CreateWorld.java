@@ -66,7 +66,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new Struggle());
 		generalSkills.addSkill(new Eat());
 		generalSkills.addSkill(new Put());
-	//	generalSkills.addSkill(new TakeOut());
+		generalSkills.addSkill(new TakeOut());
 		//crafting
 		generalSkills.addSkill(new CraftItem());
 		generalSkills.addSkill(new Salvage());
