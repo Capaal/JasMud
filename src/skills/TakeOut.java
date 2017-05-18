@@ -43,8 +43,20 @@ public class TakeOut extends Skills {
 				}
 			sortPouches();
 			return;
-		} 
-		messageSelf("Error failure TakeOut: performSkill last line.");
+		} else if (possibleContainer instanceof Container) {
+			Holdable item = ((Container) possibleContainer).getHoldableFromString(itemName);
+			if (qty > 1) {
+				for (int i=0;i<qty;i++) {
+					item.moveHoldable(currentPlayer);
+				}
+				messageSelf("You take " + qty + " " + item.getName() + " out of your " + possibleContainer.getName());
+				return;
+			} else {
+				item.moveHoldable(currentPlayer);
+				messageSelf("You take the " + item.getName() + " out of your " + possibleContainer.getName());
+				return;
+			}
+		}
 		
 	}
 	

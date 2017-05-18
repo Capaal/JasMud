@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import interfaces.Container;
 import interfaces.Holdable;
 import items.Herb;
 import items.Herb.HerbType;
@@ -27,7 +28,7 @@ public class Put extends Skills {
 		super.syntaxList.add(Syntax.ITEM);
 		super.syntaxList.add(Syntax.FILLER);
 		super.syntaxList.add(Syntax.TARGET);
-		super.syntaxList.add(Syntax.QUANTITY);
+		super.syntaxList.add(Syntax.QUANTITY); //optional
 	}	
 	
 	@Override
@@ -40,6 +41,18 @@ public class Put extends Skills {
 				return;
 				}
 			sortPouches();
+			return;
+		} else if (endContainer instanceof Container) {
+			//check qty/space/weight of container
+			if (qty > 1) {
+				for (int i=0;i<qty;i++) {
+					((Container)endContainer).acceptItem(item);
+				}
+				messageSelf("You put " + qty + " " + item.getName() + " in your " + endContainer.getName());
+			} else {
+				((Container)endContainer).acceptItem(item);
+				messageSelf("You put the " + item.getName() + " in your " + endContainer.getName());
+			}
 			return;
 		}
 		messageSelf("Error failure Put: performSkill last line.");
@@ -69,6 +82,7 @@ public class Put extends Skills {
 			messageSelf("What are you trying to put that in?");
 			return false;
 		} 
+		//tries to set endContainer
 		endContainer = currentPlayer.getHoldableFromString(possibleContainer);
 		if (endContainer == null) {
 			endContainer = currentPlayer.getContainer().getHoldableFromString(possibleContainer);

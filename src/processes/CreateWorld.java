@@ -117,6 +117,7 @@ public class CreateWorld {
 		addHerbPouch(36);
 		addHerbPouch(37);
 		makeGinsengHerb(37);
+		makeBag(38);
 	}
 	
 	public static void makeWorldFromDatabase() {
@@ -360,6 +361,15 @@ public class CreateWorld {
 		newItem.setItemType(ItemType.HERBPOUCH);
 		newItem.complete();
 		itemTemplates.put("herbpouch", newItem);
+	}
+	
+	public static void makeBag(int i) {
+		ItemBuilder newItem = new ItemBuilder();
+		newItem.setId(i);
+		newItem.setName("bag");
+		newItem.setItemType(ItemType.BAG);
+		newItem.complete();
+		itemTemplates.put("bag", newItem);
 	}
 
 	public static void addOreRock(int i) {

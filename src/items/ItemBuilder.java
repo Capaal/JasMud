@@ -411,6 +411,12 @@ public class ItemBuilder {
 			}
 		},
 		
+		BAG() {
+			@Override public StdItem produceType(ItemBuilder build) {
+				return new Bag(build);
+			}
+		},
+		
 		HERBPOUCH() {
 			@Override public StdItem produceType(ItemBuilder build) {
 				return new HerbPouch(build);
