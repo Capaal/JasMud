@@ -151,8 +151,11 @@ public class StdMob implements Mobile, Container{
 	}
 	
 	@Override
-	public void acceptItem(Holdable item) {
-		inventory.put(item.getName().toLowerCase() + item.getId(), item);
+	public boolean acceptItem(Holdable item) {
+		if (inventory.put(item.getName().toLowerCase() + item.getId(), item) == null) {
+			return false;
+		}
+		return true;
 	}
 	
 	@Override

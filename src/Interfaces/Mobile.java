@@ -37,7 +37,7 @@ public interface Mobile extends Container {
 	public void tellLine(String msg);
 //	public void setContainer(Container newLoc);  SHOULD be handled by moveHoldable(finalLocation);
 	public Skills getCommand(String command);
-	public void acceptItem(Holdable item);
+	public boolean acceptItem(Holdable item);
 	public boolean addPassiveCondition(PassiveCondition newEffect, int duration);
 	public boolean addActiveCondition(TickingEffect newEffect, int times);
 //	public double getWeaponMultiplier(); TODO

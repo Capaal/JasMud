@@ -27,8 +27,9 @@ public class Bag extends StdItem implements Container { //wearable
 	public int getId() {return id;}
 	
 	@Override
-	public void acceptItem(Holdable newItem) {
+	public boolean acceptItem(Holdable newItem) {
 		inventory.put(newItem.getName().toLowerCase() + newItem.getId(), newItem);
+		return true; // TODO should actually check from return
 	}	
 	
 	@Override

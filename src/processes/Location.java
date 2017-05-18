@@ -114,8 +114,9 @@ public class Location implements Container {
 	public GroundType getGroundType() {return groundType;}	
 	
 	// The HOLDABLE being moved is EXPECTED to handle adding/removing itself properly.
-	public void acceptItem(Holdable newItem) {
+	public boolean acceptItem(Holdable newItem) {
 		inventory.put(newItem.getName().toLowerCase() + newItem.getId(), newItem);
+		return true; //TODO should check the return
 	}	
 	
 	public void acceptItem(Mobile newMob) {

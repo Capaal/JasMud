@@ -110,9 +110,8 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public void acceptItem(Holdable item) {
-		decoratedMobile.acceptItem(item);
-
+	public boolean acceptItem(Holdable item) {
+		return decoratedMobile.acceptItem(item);
 	}
 
 	@Override

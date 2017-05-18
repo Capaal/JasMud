@@ -76,7 +76,7 @@ public class CreateWorld {
 		//mage?
 		generalSkills.addSkill(new Heal());
 		generalSkills.addSkill(new Root());
-		generalSkills.addSkill(new VineTrip());
+//		generalSkills.addSkill(new VineTrip());
 		//mercenary only
 		generalSkills.addSkill(new Headshot());
 		generalSkills.addSkill(new BreakLimb());
