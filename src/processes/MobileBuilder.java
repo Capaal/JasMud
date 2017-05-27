@@ -1,24 +1,15 @@
 package processes;
 
-import interfaces.Container;
 import interfaces.Holdable;
 import interfaces.Mobile;
-import interfaces.TickingEffect;
 import items.ItemBuilder;
 import items.StdItem;
-
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
-import java.util.TreeSet;
-
-import effects.PassiveCondition;
 import processes.Equipment.EquipmentEnum;
 import processes.MobileDecorator.DecoratorType;
 

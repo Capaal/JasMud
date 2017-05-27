@@ -76,7 +76,7 @@ public class StdItem implements Holdable{
 	}
 	
 	
-	
+	// TODO NEEDS to watch for a FALSE return from ACCEPTITEM, then handle the failed insertion.
 	@Override
 	public void moveHoldable(Container finalLocation) {
 		getContainer().removeItemFromLocation(this);

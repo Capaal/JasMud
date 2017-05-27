@@ -1,5 +1,6 @@
 package processes;
 
+import items.Door;
 import items.Drinkable.DrinkType;
 import items.Herb.HerbType;
 import items.ItemBuilder;
@@ -9,6 +10,7 @@ import items.MercWeapon.MercEffect;
 import items.Mineable.OreType;
 import items.StdItem;
 import processes.Equipment.EquipmentEnum;
+import processes.Location.Direction;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -42,7 +44,7 @@ public class CreateWorld {
 //		makeWorldFromDatabase();
 		makeWorldFromNowhere();
 		makeSkills();
-		makeItems();
+//		makeItems();
 	}
 	
 	//Hardcoded skill list
@@ -67,6 +69,8 @@ public class CreateWorld {
 		generalSkills.addSkill(new Eat());
 		generalSkills.addSkill(new Put());
 		generalSkills.addSkill(new TakeOut());
+		generalSkills.addSkill(new Open());
+		generalSkills.addSkill(new Close());
 		//crafting
 		generalSkills.addSkill(new CraftItem());
 		generalSkills.addSkill(new Salvage());
@@ -140,10 +144,12 @@ public class CreateWorld {
 		LocationBuilder newLoc2 = new LocationBuilder();
 		newLoc2.setName("North of Start.");
 		newLoc2.setDescription("Slightly north.");
-		newLoc2.south(1, "north");
+		newLoc2.addLocationConnection(Direction.SOUTH, 1, Direction.NORTH, new Door());
+	//	newLoc2.addLocationConnection(1, "north");
+	//	newLoc2.addDoor("south", new Door(), false);
 		newLoc2.complete();	
 	
-		//3rd location, south exit to 2
+	/*	//3rd location, south exit to 2
 		LocationBuilder newLoc3 = new LocationBuilder();
 		newLoc3.setName("Road.");
 		newLoc3.setDescription("On the road to nowhere.");
@@ -193,7 +199,7 @@ public class CreateWorld {
 		newLoc9.setDescription("Not the watery type.");
 		newLoc9.east(1, "west");
 		newLoc9.complete();	
-		
+	*/	
 		// map: 
 		//   [8](loops 5)
 		//   [5] - [6] - [7]

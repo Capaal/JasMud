@@ -2,13 +2,14 @@ package skills;
 
 import java.util.Arrays;
 import java.util.Random;
+
 import effects.PassiveCondition;
 import processes.Location;
+import processes.Location.Direction;
+import processes.LocationConnection;
 import processes.Skills;
 
-public class Move extends Skills {
-	
-	private String dir; // Not Direction enum?
+public class Move extends Skills {	
 	
 	public Move() {
 		super.name = "move";
@@ -17,8 +18,11 @@ public class Move extends Skills {
 		super.syntaxList.add(Syntax.DIRECTION);
 	}
 	
+	private String dir; // Not Direction enum?
+	private Direction directionEnum;
 	private Location startContainer;
 	private Location endContainer;
+	private LocationConnection connection;
 	
 	@Override
 	protected void performSkill() {
@@ -26,17 +30,23 @@ public class Move extends Skills {
 		if (!legsOk()) {return;}
 		startContainer = currentPlayer.getContainer();
 		endContainer = null;
-		dir = Syntax.DIRECTION.getStringInfo(fullCommand, this); // Why not convert to enum?
+		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this); // Why not convert to enum?
+		
 		if(isRooted()) {return;};
 		ifDizzy(); //if dizzy, sets a new random direction, ok to run into walls
 		if (!dir.equals("")) {
 			endContainer = startContainer.getContainer(dir);
+			directionEnum = Direction.getDirectionName(dir);
 		} else {
 			messageSelf("You need to say which way you want to go!");
 			return;
 		}
 		if (endContainer == null) {
 			messageSelf("You can't go that way!");
+			return;
+		}
+		if (startContainer.getDoor(directionEnum) != null &&!startContainer.getDoor(directionEnum).isOpen()) {
+			messageSelf("The door is closed before you.");
 			return;
 		}
 		messageOthers(currentPlayer.getName() + " leaves to the " + dir.toLowerCase() + ".", Arrays.asList(currentPlayer));

@@ -2,10 +2,13 @@ package processes;
 
 import java.util.*;
 import java.util.Map.Entry;
+
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import Quests.Quest;
 import Quests.Quest.Trigger;
 import interfaces.*;
+import items.Door;
 
 /*
  *  Contains all information relating to each "room" a player may visit.
@@ -18,8 +21,8 @@ public class Location implements Container {
 	private final int id;
 	private final String name;
 	private final String description;
-	private final GroundType groundType;
-	private Map<Direction, Location> locationMap;
+	private final GroundType groundType; // NOT IMPLEMENTED
+	private Map<Direction, LocationConnection> locationMap;
 	protected TreeMap<String, Holdable> inventory = new TreeMap<String, Holdable>();
 	protected TreeMap<String, Mobile> mobiles = new TreeMap<String, Mobile>();
 	
@@ -27,7 +30,7 @@ public class Location implements Container {
 	
 	public Location(LocationBuilder builder) {
 		if (!builder.isCompleted()) {
-			throw new IllegalArgumentException("Builder is not in a valid state, Location not built.");
+			throw new IllegalStateException("Builder is not in a valid state, Location not built.");
 		}
 		this.id = builder.getId();
 		this.name = builder.getName();
@@ -39,84 +42,36 @@ public class Location implements Container {
 		}
 		this.locationMap = builder.getlocationMap();
 		WorldServer.gameState.addLocation(this.id, this);		
-		for (int s : builder.locationConnections.keySet()){
-			Location futureLoc = WorldServer.gameState.viewLocations().get(s);
-			if (futureLoc != null) {
-				Direction currentDirection = builder.locationConnections.get(s);
-				futureLoc.setLocation(this, currentDirection);
+		for (Location otherLocation : builder.locationConnections.keySet()){
+			if (otherLocation != null) {
+				Direction directionToHere = builder.locationConnections.get(otherLocation).otherLocationToCurrentDirection;
+				Door connectingDoor = builder.locationConnections.get(otherLocation).door;
+				otherLocation.setLocation(this, connectingDoor, directionToHere);
 			} else {
-				System.out.println("Location: " + s + " does not exist to connect to." + this);
+				System.out.println("Location: " + otherLocation + " does not exist to connect to." + this);
 			}
 		}
 	}
 	
-	private void setLocation(Location futureLoc, Direction currentDirection) {
-			this.locationMap.put(currentDirection, futureLoc);
+	// Called from ANOTHER location when connecting locations.
+	private void setLocation(Location futureLoc, Door door, Direction directionToThere) {
+			this.locationMap.put(directionToThere, new LocationConnection(door, futureLoc));
 	}	
 	
-	// This most likely does not belong here.
-	public String displayExits() {
-		boolean atLeastOne = false;
-		String toSay = "You can see no exits.";
-		StringBuffer sb = new StringBuffer();
-		for (Direction k : locationMap.keySet()) {
-			if (!atLeastOne) {
-				sb.append("You can see these exits: ");
-				sb.append(k.toString());
-				atLeastOne = true;
-			} else {
-				sb.append(", " + k.toString());
-			}			
-		}
-		if (atLeastOne) {
-			sb.append(".");
-			toSay = sb.toString();
-		} 
-		return toSay;
-	}
-	
-	public Map<Direction, Location> getLocationMap() {
-		return new HashMap<Direction, Location>(locationMap);
-	}
-	
-	// Should probably not be here, but just a skill that accesses name and such.
-	public void glance(Mobile currentPlayer) {
-		currentPlayer.tell(UsefulCommands.ANSI.MAGENTA + name + UsefulCommands.ANSI.SANE);
-		displayAll(currentPlayer);
-		currentPlayer.tell(UsefulCommands.ANSI.CYAN + displayExits() + UsefulCommands.ANSI.SANE);
-		currentPlayer.tell("(God sight) Location number: " + id + ". Ground type: " + groundType.name() + ".");
+	public Map<Direction, LocationConnection> getLocationMap() {
+		return new HashMap<Direction, LocationConnection>(locationMap);
 	}	
 	
-	//Should probably not be here
-	public void displayAll(Mobile currentPlayer) {
-		boolean anItem = false;
-		StringBuilder sb = new StringBuilder();
-		sb.append("Looking around you see: ");
-		for (Mobile h : mobiles.values()) {
-			sb.append(UsefulCommands.ANSI.YELLOW + h.getName() + ". " + UsefulCommands.ANSI.SANE);
-			anItem = true;
-		}
-		sb.append("Lying on the ground: ");
-		for (Holdable h : inventory.values()) {
-			sb.append(UsefulCommands.ANSI.YELLOW + h.getName() + ". " + UsefulCommands.ANSI.SANE);
-			anItem = true;
-		}
-		if (anItem) {
-			currentPlayer.tell(sb.toString());
-		}
-	}
-	
-	public String getDescription() {
-		return description;
-	}
-			
+	public String getDescription() {return description;}			
 	public int getId() {return id;}
-	public GroundType getGroundType() {return groundType;}	
+	public GroundType getGroundType() {return groundType;}	// NOT IMPLEMENTED
 	
 	// The HOLDABLE being moved is EXPECTED to handle adding/removing itself properly.
 	public boolean acceptItem(Holdable newItem) {
-		inventory.put(newItem.getName().toLowerCase() + newItem.getId(), newItem);
-		return true; //TODO should check the return
+		if (inventory.put(newItem.getName().toLowerCase() + newItem.getId(), newItem) == null) {
+			return false;
+		}
+		return true;
 	}	
 	
 	public void acceptItem(Mobile newMob) {
@@ -126,26 +81,34 @@ public class Location implements Container {
 	//TODO implement a null location object?
 	public Location getLocation(String dir) {
 		Direction trueDirection = Direction.getDirectionName(dir);
-		if (trueDirection == null) {
+		return getLocation(trueDirection);
+	/*	if (trueDirection == null) {
 			return null;
 		} else {
 			return getLocation(trueDirection);
-		}
+		}*/
 	}		
 	
-	public Location getLocation(Direction dir) {		
-		return locationMap.get(dir);
+	public Location getLocation(Direction dir) {	
+		if (locationMap.get(dir) != null) {
+			return locationMap.get(dir).getLocation();
+		}
+		return null;
+	}
+	
+	public Door getDoor(Direction dir) {
+		return locationMap.get(dir).getDoor();
 	}
 	
 	public void removeItemFromLocation(Holdable oldItem) {
 		if ((inventory.remove(oldItem.getName().toLowerCase() + oldItem.getId()) == null)) {
-			System.out.println("Failed to remove item from location: " + oldItem);
+			throw new IllegalStateException("removeItemFromLocation failed to remove item: " + oldItem.getName() + oldItem.getId());
 		}
 	}
 	
 	public void removeItemFromLocation(Mobile oldMob) {
 		if ((mobiles.remove(oldMob.getName().toLowerCase() + oldMob.getId()) == null)) {
-			System.out.println("Failed to remove mobile from location: " + oldMob);
+			throw new IllegalStateException("removeItemFromLocation failed to remove Mobile: " + oldMob.getName() + oldMob.getId());
 		}
 	}
 	
@@ -171,7 +134,7 @@ public class Location implements Container {
 				return mobiles.get(floor);
 			}
 		} 
-		return null;
+		return null;		
 	}
 	
 	@Override
@@ -192,64 +155,21 @@ public class Location implements Container {
 		return null;		
 	}
 
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	public Location getContainer(String dir) {
-		return getLocation(dir);
-	}	
+	@Override public String getName() {return name;}
+	public Location getContainer(String dir) {return getLocation(dir);}	
 	
 	public Direction getDirectionToLocation(Location askingLocation) {
-		for (Entry<Direction, Location> entry : locationMap.entrySet()) {
-			if (entry.getValue() == askingLocation) {
+		for (Entry<Direction, LocationConnection> entry : locationMap.entrySet()) {
+			if (entry.getValue().getLocation() == askingLocation) {
 				return entry.getKey();
 			}
 		}
 		return null;
 	}
 	
-	private String makeKeyInformation() {
-		StringBuilder sb = new StringBuilder();
-		if (locationMap.isEmpty()) {
-			return "";
-		}
-		for (Direction dir : locationMap.keySet()) {
-			sb.append(", LOC");
-			sb.append(dir.toString());
-			sb.append(", LOC");
-			sb.append(dir.toString());
-			sb.append("DIR");			
-		}
-		System.out.println(sb.toString());
-		return sb.toString();
-	}
+//	public static TreeMap<String, String> fullDir;
 	
-	private String makeValueInformation() {
-		StringBuilder sb = new StringBuilder();
-		if (locationMap.isEmpty()) {
-			return "";
-		}		
-		for (Location loc : locationMap.values()) {
-			sb.append(", ");
-			sb.append(loc.getId());
-			Direction howOtherLocationConnectsHere = loc.getDirectionToLocation(this);
-			if (howOtherLocationConnectsHere == null) {
-				sb.append(", null");
-			} else {
-				sb.append(", '");				
-				sb.append(howOtherLocationConnectsHere.toString());
-				sb.append("'");
-			}
-		}
-		System.out.println(sb.toString());
-		return sb.toString();
-	}
-	
-	public static TreeMap<String, String> fullDir;
-	
-	public static String getDirName(String dir) {		
+/*	public static String getDirName(String dir) {		
 		if (fullDir == null) {
 			fullDir = new TreeMap<String, String>();
 			fullDir.put("n", "north");
@@ -277,7 +197,7 @@ public class Location implements Container {
 			}
 		}
 		return null;
-	}
+	}*/
 	
 	public enum Direction {
 		
@@ -463,7 +383,9 @@ public class Location implements Container {
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
+		if (inventory.isEmpty() && mobiles.isEmpty()) {
+			return true;
+		}
 		return false;
 	}
 

@@ -27,31 +27,9 @@ public class HerbPouch extends StdItem implements Container {
 		if (this.inventory == null) {
 			return "empty herbpouch" + this.getId();
 		} else {
-			return this.inventory.toString().toLowerCase() + " herbpouch" + this.getId();
+			return this.inventory.getName() + " herbpouch" + this.getId();
 		}
 	}
-	/*
-	
-	public int changeHerbs(int number, HerbType type) {
-		int newTotal = currentHerbs + number; 
-		if (this.herb == null) {
-			this.herb = type;
-		}
-		if (newTotal <= 0) {  // if removing all or trying to remove more than all
-			this.herb = null;
-			int actualQtyRemoved = -currentHerbs;
-			currentHerbs = 0;
-			return actualQtyRemoved; 
-		}
-		if (newTotal > maxHerbs) {
-			number = maxHerbs - currentHerbs; 
-			currentHerbs = maxHerbs;
-			return number; //returns how many actually got put in
-		}
-		currentHerbs = newTotal;
-		return number; 
-	}
-	*/
 
 	@Override
 	public TreeMap<String, Holdable> getInventory() {

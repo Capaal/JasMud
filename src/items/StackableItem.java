@@ -3,8 +3,12 @@ package items;
 import java.io.File;
 import java.util.Map;
 import java.util.TreeMap;
+
+import processes.Location.Direction;
 import processes.WorldServer;
+
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import interfaces.Container;
 import interfaces.Holdable;
 import items.ItemBuilder.ItemType;
@@ -41,6 +45,7 @@ public class StackableItem extends StdItem {
 	
 	public int getQuantity() {return quantity;}
 	
+	// TODO NEEDS to watch for a FALSE return from ACCEPTITEM, then handle the failed insertion.
 	public void moveHoldable(Container finalLocation, int number) {		
 		TreeMap<String, Holdable> inventoryView = finalLocation.getInventory();
 		Map.Entry<String,Holdable> possibleStack = inventoryView.ceilingEntry(this.name);

@@ -38,35 +38,11 @@ public class PlayerPrompt implements Runnable {
 		this.incoming = incoming;
 		this.sendBack = new SendMessage(incoming);	
 	}
+	
+	
 
 	public void run() {	
-		sendBack.printMessage("Hello, and welcome!");
-		sendBack.printMessage("Your name? ");
-		String enteredName = sendBack.getMessage();
-		sendBack.printMessage("Your password? ");
-		String enteredPass = sendBack.getMessage(); // NOT SAFE
-		sendBack.printSpace();
-		boolean oldPlayer = false;
-		if (enteredName == null) {
-			destroyConnection();
-		} else {
-			oldPlayer = lookForExistingPlayer(enteredName, enteredPass);
-		}
-		
-		// Creates a new player with selected Name if load failed.
-		if (oldPlayer == false && enteredName != null) {
-			sendBack.printMessage("Would you like to create a new character? Y/N ");
-			String create = sendBack.getMessage();
-			String createPlayer = "n";
-			if (create != null) {
-				createPlayer = create;
-			}
-			if (createPlayer.equalsIgnoreCase("y")) {
-				createNewPlayer(enteredName, enteredPass);									
-			} else {				
-				destroyConnection();		// OMG THEY DIDN"T HIT y!!!!		
-			}
-		}		
+		LogIn();				
 		new Look().perform("",  currentPlayer);		
 		// The following is the User's infinite loop they play inside.	
 		boolean stayInsideLoop = true;
@@ -121,6 +97,69 @@ public class PlayerPrompt implements Runnable {
 		destroyConnection();	// If we somehow exit the loop and haven't broken the connection.		
 	}
 	
+	private void LogIn() {
+		sendBack.printMessage("Hello, and welcome!");
+		sendBack.printMessage("Your name? ");
+		String enteredName = sendBack.getMessage();
+		sendBack.printMessage("Your password? ");
+		String enteredPass = sendBack.getMessage(); // NOT SAFE
+		sendBack.printSpace();
+		if (enteredName.equals("") || enteredPass.equals("")) {
+			sendBack.printMessage("Your name or password is invalid");
+			LogIn();
+		} else {
+			boolean oldPlayer = lookForExistingPlayer(enteredName, enteredPass);			
+			// Creates a new player with selected Name if load failed.
+			if (oldPlayer == false && !enteredName.equals("")) {
+				sendBack.printMessage("Would you like to create a new character? Y/N ");
+				String create = sendBack.getMessage();
+				if (create.equalsIgnoreCase("n") || create.equalsIgnoreCase("no")) {
+					LogIn();
+				} else {
+					createNewPlayer(enteredName, enteredPass);
+				}
+			}
+		}
+	}
+	
+	private boolean lookForExistingPlayer(String enteredName, String enteredPass) {
+		StdMob person = null;
+		    try{		    	
+		        File xmlFile = new File("./Players/" + enteredName + enteredPass + ".xml");
+		        if (!xmlFile.exists()) {
+		        	return false;
+		        }
+		        person = (StdMob) WorldServer.xstream.fromXML(xmlFile);       
+		    } catch(Exception e){
+		        System.err.println("Error in XML Read: " + e.getMessage());
+		    }
+	    if (person != null) {
+	    	currentPlayer = person;   	
+	    	currentPlayer.setSendBack(sendBack);
+	    	for (Holdable h : currentPlayer.getInventory().values()) {
+	    		h.setContainer(currentPlayer);
+	    	}
+	    	return true;
+	    }
+	    return false;
+	}
+	
+	private void createNewPlayer(String enteredName, String enteredPass) {
+		MobileBuilder newPlayer = new MobileBuilder();		
+		newPlayer.setName(enteredName);					
+		newPlayer.setPassword(enteredPass);		
+		newPlayer.setLocation(WorldServer.gameState.viewLocations().get(1));  // Default starting location.	
+		newPlayer.complete();
+		this.currentPlayer = newPlayer.getFinishedMob();						
+	//	WorldServer.gameState.addMob(currentPlayer.getName() + currentPlayer.getId(), currentPlayer); This should be happening on mob creation.
+		
+		//adding hardcoded skillbook TEMP
+		currentPlayer.addBook(CreateWorld.generalSkills.duplicate(),100);		
+		currentPlayer.setSendBack(sendBack);
+		currentPlayer.controlStatus(true);
+		currentPlayer.save(); 
+	}
+	
 	private void printFailMessages() {
 		Random rand = new Random();
 		int selection = rand.nextInt(failMessages.length);
@@ -137,45 +176,8 @@ public class PlayerPrompt implements Runnable {
 		WorldServer.gameState.removeClient(this);
 	}	
 	
-	private boolean lookForExistingPlayer(String enteredName, String enteredPass) {
-		StdMob person = null;
-		    try{		    	
-		        File xmlFile = new File("./Players/" + enteredName + enteredPass + ".xml");
-		        if (!xmlFile.exists()) {
-		        	return false;
-		        }
-		        person = (StdMob) WorldServer.xstream.fromXML(xmlFile);       
-		    }catch(Exception e){
-		        System.err.println("Error in XML Read: " + e.getMessage());
-		    }
-	    if (person != null) {
-	    	currentPlayer = person;   	
-	    	currentPlayer.setSendBack(sendBack);
-	    	for (Holdable h : currentPlayer.getInventory().values()) {
-	    		h.setContainer(currentPlayer);
-	    	}
-	    	return true;
-	    }
-	    return false;
-	}
 	
-	private void createNewPlayer(String enteredName, String enteredPass) {
-		MobileBuilder newPlayer = new MobileBuilder();		
-//		newPlayer.setId(WorldServer.gameState.viewActiveClients().size()+1); // VERY VERY DANGEROUS
-		newPlayer.setName(enteredName);					
-		newPlayer.setPassword(enteredPass);		
-		newPlayer.setLocation(WorldServer.gameState.viewLocations().get(1));  // Default starting location.			
-//			newPlayer.setLoadOnStartUp(false);  Outdated.
-		newPlayer.complete();
-		this.currentPlayer = newPlayer.getFinishedMob();						
-		WorldServer.gameState.addMob(currentPlayer.getName() + currentPlayer.getId(), currentPlayer);
-		
-		//adding hardcoded skillbook TEMP
-		currentPlayer.addBook(CreateWorld.generalSkills.duplicate(),100);		
-		currentPlayer.setSendBack(sendBack);
-		currentPlayer.controlStatus(true);
-	//	currentPlayer.setStartup(false);
-		currentPlayer.save(); 
-	}
+	
+	
 }
 
