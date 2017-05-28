@@ -108,16 +108,15 @@ public class CreateWorld {
 		addIronPotion();
 		makeGoblin();
 		makeFarmerJames();
-		addHealPotion(30);
-		addBleedPotion(31);
-		addRegenPotion(32);
-		addOreRock(33);		
-		makeAloeHerb(34);	
-		makeAloeHerb(35);	
-		addHerbPouch(36);
-		addHerbPouch(37);
-		makeGinsengHerb(37);
-		makeBag(38);
+		addHealPotion();
+		addBleedPotion();
+		addRegenPotion();
+		addOreRock();		
+		makeAloeHerb();	
+		addHerbPouch();
+		addHerbPouch();
+		makeGinsengHerb();
+		makeBag();
 	}
 	
 	public static void makeWorldFromDatabase() {
@@ -294,9 +293,8 @@ public class CreateWorld {
 		itemTemplates.put("ironpotion", newItem);
 	}
 	
-	public static void addHealPotion(int i) {
+	public static void addHealPotion() {
 		ItemBuilder newItem = new ItemBuilder();	
-		newItem.setId(i);
 		newItem.setName("healpotion");
 		newItem.setDescription("A potion made from sticks.");
 		newItem.setComponents(Arrays.asList("stick"));
@@ -307,9 +305,8 @@ public class CreateWorld {
 		itemTemplates.put("healpotion", newItem);
 	}
 	
-	public static void addBleedPotion(int i) {
+	public static void addBleedPotion() {
 		ItemBuilder newItem = new ItemBuilder();	
-		newItem.setId(i);
 		newItem.setName("bleedpotion");
 		newItem.setDescription("Don't drink this.");
 		newItem.setDamageMult(0.2);
@@ -320,9 +317,8 @@ public class CreateWorld {
 		itemTemplates.put("bleedpotion", newItem);
 	}
 	
-	public static void addRegenPotion(int i) {
+	public static void addRegenPotion() {
 		ItemBuilder newItem = new ItemBuilder();	
-		newItem.setId(i);
 		newItem.setName("regenpotion");
 		newItem.setDamageMult(0.2);
 		newItem.setMaxSips(2);
@@ -332,20 +328,19 @@ public class CreateWorld {
 		itemTemplates.put("regenpotion", newItem);
 	}
 	
-	public static void makeAloeHerb(int i) {
+	public static void makeAloeHerb() {
 		ItemBuilder newItem = new ItemBuilder();	
-		newItem.setId(i);
 		newItem.setName("aloe");
 		newItem.setDamageMult(0.1);
 		newItem.setItemType(ItemType.HERB);
 		newItem.setHerbType(HerbType.ALOE);
+		newItem.setQuantity(100);
 		newItem.complete();
 		itemTemplates.put("aloe", newItem);
 	}
 	
-	public static void makeGinsengHerb(int i) {
+	public static void makeGinsengHerb() {
 		ItemBuilder newItem = new ItemBuilder();
-		newItem.setId(i);
 		newItem.setName("ginseng");
 		newItem.setDamageMult(0.1);
 		newItem.setItemType(ItemType.HERB);
@@ -354,27 +349,24 @@ public class CreateWorld {
 		itemTemplates.put("ginseng", newItem);
 		}
 	
-	public static void addHerbPouch(int i) {
+	public static void addHerbPouch() {
 		ItemBuilder newItem = new ItemBuilder();
-		newItem.setId(i);
 		newItem.setName("herbpouch");
 		newItem.setItemType(ItemType.HERBPOUCH);
 		newItem.complete();
 		itemTemplates.put("herbpouch", newItem);
 	}
 	
-	public static void makeBag(int i) {
+	public static void makeBag() {
 		ItemBuilder newItem = new ItemBuilder();
-		newItem.setId(i);
 		newItem.setName("bag");
 		newItem.setItemType(ItemType.BAG);
 		newItem.complete();
 		itemTemplates.put("bag", newItem);
 	}
 
-	public static void addOreRock(int i) {
+	public static void addOreRock() {
 		ItemBuilder newItem = new ItemBuilder();
-		newItem.setId(i);
 		newItem.setName("ironrock");
 		newItem.setMaxOres(5);
 		newItem.setItemType(ItemType.MINEABLE);

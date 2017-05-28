@@ -114,9 +114,9 @@ public class Location implements Container {
 	public GroundType getGroundType() {return groundType;}	
 	
 	// The HOLDABLE being moved is EXPECTED to handle adding/removing itself properly.
-	public boolean acceptItem(Holdable newItem) {
+	public ContainerErrors acceptItem(Holdable newItem) {
 		inventory.put(newItem.getName().toLowerCase() + newItem.getId(), newItem);
-		return true; //TODO should check the return
+		return null; //TODO should check the return
 	}	
 	
 	public void acceptItem(Mobile newMob) {
@@ -462,9 +462,22 @@ public class Location implements Container {
 	}
 
 	@Override
-	public boolean isEmpty() {
+	public int getMaxQty() {
 		// TODO Auto-generated method stub
-		return false;
+		return 0;
 	}
+
+	@Override
+	public int getCurrentQty() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public NavigableMap<String, Holdable> getListMatchingString(String holdableString) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

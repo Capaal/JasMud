@@ -3,12 +3,16 @@ package skills;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NavigableMap;
 
 import interfaces.Container;
 import interfaces.Holdable;
 import items.Herb;
 import items.HerbPouch;
 import items.ItemBuilder;
+import items.StackableItem;
+import items.StdItem;
+import processes.ContainerErrors;
 import processes.CreateWorld;
 import processes.Skills;
 import processes.Skills.Syntax;
@@ -16,8 +20,10 @@ import processes.Skills.Syntax;
 public class TakeOut extends Skills {
 	
 	private String itemName;
+	private Holdable item;
 	private String containerName;
 	private Holdable possibleContainer;
+
 //	private Container endContainer;
 	private int qty; 
 
@@ -33,31 +39,53 @@ public class TakeOut extends Skills {
 
 	@Override
 	protected void performSkill() {
-		qty = -1;
+		qty = 1;
 		if (!preSkillChecks()) {return;}
 		
-		if (possibleContainer instanceof HerbPouch) {
-			if (currentPlayer.getHoldableFromString("herbpouch") == null) {
-				messageSelf("You do not have any pouches.");
-				return;
-				}
-			sortPouches();
-			return;
-		} else if (possibleContainer instanceof Container) {
-			Holdable item = ((Container) possibleContainer).getHoldableFromString(itemName);
-			if (qty > 1) {
-				for (int i=0;i<qty;i++) {
-					item.moveHoldable(currentPlayer);
-				}
-				messageSelf("You take " + qty + " " + item.getName() + " out of your " + possibleContainer.getName());
-				return;
-			} else {
-				item.moveHoldable(currentPlayer);
+		if (possibleContainer instanceof Container) {
+			item = ((Container) possibleContainer).getHoldableFromString(itemName);
+			int actualQty = 0;
+			actualQty = handleMultiple(actualQty);
+			
+			if (actualQty == 0) {
+				messageSelf("You can't find any \"" + itemName + "\" in your " + possibleContainer.getName() + ".");
+			} else if (qty > 1) {
+				messageSelf("You take " + actualQty + " " + item.getName() + " out of your " + possibleContainer.getName() + ".");
+			} else if (actualQty == 1 && qty == 1) {
 				messageSelf("You take the " + item.getName() + " out of your " + possibleContainer.getName());
-				return;
+			} else {
+				messageSelf("Not sure what happened here.");
 			}
 		}
-		
+	}
+	
+	//sorts through all containers of same name and takes qty from container
+	//this handles 1 too
+	private int handleMultiple(int actualQty) {
+		NavigableMap <String,Holdable> containerList = currentPlayer.getListMatchingString(containerName);
+		Iterator<Holdable> i = containerList.values().iterator();
+		while (i.hasNext()) {
+			Container c = (Container) i.next();
+			Holdable itemInContainer = c.getHoldableFromString(itemName);  
+			if (itemInContainer instanceof StackableItem) { 
+				StackableItem sItem = (StackableItem) itemInContainer; 
+				if (qty > sItem.getQuantity()) {
+					actualQty = sItem.getQuantity();
+				} else {actualQty = qty;}
+				ContainerErrors internal = sItem.moveHoldable(currentPlayer, qty); 
+				if (internal != null) {System.out.println("TakeOut handleMultiple error: " + internal.toString());}
+				item = itemInContainer;
+				return actualQty;
+			} else if (itemInContainer instanceof StdItem) {
+				actualQty += 1;
+				if (actualQty <= qty) {
+					itemInContainer.moveHoldable(currentPlayer);
+					item = itemInContainer;
+					handleMultiple(actualQty);
+				}
+			}
+		}
+		return actualQty;
 	}
 	
 	//checks all syntax is valid and finds container
@@ -90,16 +118,7 @@ public class TakeOut extends Skills {
 			}
 		}
 		//checks item found is a container and not empty
-	/*	if (possibleContainer instanceof Container) {
-			endContainer = (Container) possibleContainer;
-		} else {
-			messageSelf("You can't take anything out of that.");
-			return false;
-		} 
-		if (endContainer.isEmpty()) {
-			messageSelf("Your " + endContainer.getName() + " is emtpy.");
-			return false;
-		} */
+		
 		//checks optional qty
 		if (Syntax.QUANTITY.getStringInfo(fullCommand, this).equals("")) {
 			return true; //only returning true because this is the LAST check
@@ -113,49 +132,6 @@ public class TakeOut extends Skills {
 		return true;
 	}
 	
-	private void sortPouches() {
-		Collection<Holdable> inv = currentPlayer.getInventory().values();
-		Iterator<Holdable> i = inv.iterator();
-		int pouchQty = 0;
-		Holdable possiblePouch;
-		HerbPouch pouch = null;
-		int originalQty = qty;
-		while (i.hasNext() && (qty < 0)) {
-			possiblePouch = i.next();
-		     if (possiblePouch.getName().equalsIgnoreCase("herbpouch")) {
-		          if (possiblePouch instanceof HerbPouch) {
-		               pouch = (HerbPouch)possiblePouch;
-		               pouchQty = pouch.getHerbQty();
-		               if (pouchQty > 0 && (pouch.getHerbType().toString().equalsIgnoreCase(itemName))) { 
-		           		int actualQty = pouch.changeHerbs(qty,null);
-		        		qty = qty - actualQty;
-		               }
-				 }
-		    }
-		}
-		if (qty == originalQty) {
-			messageSelf("You don't have any \"" + itemName.toLowerCase() + "\" in your pouches."); 		               
-			return;
-			// expand else to specify if taken by other herbs or full or both TODO
-			// add else if player has only 1 pouch TODO
-		} else if (qty > 0 && qty != originalQty) {
-			createHerbs(originalQty-qty, pouch);
-			messageSelf("You remove " + -(originalQty-qty) + " " + itemName +" from your pouch."); //not enough in pouches
-			return;
-		} else {
-			createHerbs(originalQty, pouch);
-			messageSelf("You remove " + originalQty + " " + itemName + " from your pouch.");
-			return;
-		}
-		
-	}
-	
-	private void createHerbs(int qtyToCreate, HerbPouch pouch) {
-		Map<String, ItemBuilder> allItemTemplates = CreateWorld.viewItemTemplates();
-		ItemBuilder toCreate = allItemTemplates.get(itemName); 
-		toCreate.setItemContainer(currentPlayer);
-		toCreate.setQuantity(qtyToCreate);
-		toCreate.complete();
-	}
+
 
 }

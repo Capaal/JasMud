@@ -16,4 +16,5 @@ public interface Holdable extends Comparable<Holdable> {
 	public boolean canPickup();
 	public String getInfo();
 	public String getShortDesc();
+
 }

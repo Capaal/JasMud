@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import interfaces.Holdable;
 import items.ItemBuilder;
+import items.StackableItem;
 import processes.CreateWorld;
 import processes.Skills;
 
@@ -81,10 +82,17 @@ public class CraftItem extends Skills {
 		}
 		//what the skill actually does:
 		for (Holdable d : componentsOnHand) {d.removeFromWorld();} //wrong method, needs a new delete method. Needs to work with stackable.
-		for (int i=1; i<=quantity; i++) {
-			copyThis.setItemContainer(currentPlayer); //may not always create the item in the same place
-			copyThis.complete(); //should make a copy with new stats since template is Builders
-			messageSelf("You have created: " + copyThis.getName() + ".");	
+		if (copyThis.getFinishedItem() instanceof StackableItem) {
+			copyThis.setQuantity(quantity);
+			copyThis.setItemContainer(currentPlayer);
+			copyThis.complete();
+			messageSelf("You have created: " + quantity + " " + copyThis.getName() + ".");
+		} else {
+			for (int i=1; i<=quantity; i++) {
+				copyThis.setItemContainer(currentPlayer); //may not always create the item in the same place
+				copyThis.complete(); //should make a copy with new stats since template is Builders
+				messageSelf("You have created: " + copyThis.getName() + ".");	
+			}
 		}
 	}
 	

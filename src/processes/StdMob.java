@@ -151,11 +151,11 @@ public class StdMob implements Mobile, Container{
 	}
 	
 	@Override
-	public boolean acceptItem(Holdable item) {
+	public ContainerErrors acceptItem(Holdable item) {
 		if (inventory.put(item.getName().toLowerCase() + item.getId(), item) == null) {
-			return false;
+			return null;
 		}
-		return true;
+		return null;
 	}
 	
 	@Override
@@ -289,6 +289,38 @@ public class StdMob implements Mobile, Container{
 	//	}
 		return null;
 	}	
+	
+	@Override
+	public NavigableMap<String, Holdable> getListMatchingString(String holdableString) {
+		holdableString = holdableString.toLowerCase();
+	//	String ceiling = inventory.ceilingKey(holdableString);
+	//	String floor = inventory.floorKey(holdableString);
+		NavigableMap<String, Holdable> subMap = null;
+		subMap = inventory.subMap(holdableString, true, holdableString + Character.MAX_VALUE, true);
+		System.out.println(subMap.keySet().toString());
+		
+		if (subMap.isEmpty() || subMap == null) {
+			Holdable h = getHoldableFromString(holdableString);
+			if (h != null) {
+				subMap.put(h.getName()+h.getId(), h); //change to return set, do not need keystring here TODO
+			}
+			
+		//	subMap = inventory.subMap(floor, false, ceiling, true);
+		//	System.out.println(subMap.keySet().toString());
+			
+		//	testing cases
+		/*	NavigableMap<String, Holdable> subMap2 = inventory.subMap(holdableString, false, holdableString + Character.MAX_VALUE, true);
+			System.out.println(subMap2.keySet().toString());
+			
+			NavigableMap<String, Holdable> subMap3 = inventory.subMap(holdableString, false, holdableString + Character.MAX_VALUE, false);
+			System.out.println(subMap3.keySet().toString());
+			
+			NavigableMap<String, Holdable> subMap4 = inventory.subMap(holdableString, true, holdableString + Character.MAX_VALUE, false);
+			System.out.println(subMap4.keySet().toString()); */
+
+		}
+		return subMap;
+	}
 	
 	@Override
 	public boolean addPassiveCondition(PassiveCondition newEffect, int duration) {
@@ -568,10 +600,17 @@ public class StdMob implements Mobile, Container{
 	}
 
 	@Override
-	public boolean isEmpty() {
+	public int getMaxQty() {
 		// TODO Auto-generated method stub
-		return false;
+		return -1;
 	}
+
+	@Override
+	public int getCurrentQty() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 
 
 }
