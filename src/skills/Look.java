@@ -2,6 +2,7 @@ package skills;
 
 import interfaces.Holdable;
 import interfaces.Mobile;
+import items.Door;
 import processes.Location;
 import processes.Location.Direction;
 import processes.Skills;
@@ -19,6 +20,7 @@ public class Look extends Skills {
 	protected void performSkill() {
 		Location mobLocation = currentPlayer.getContainer();
 		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
+		Direction trueDir = Direction.getDirectionName(dir);
 		if (dir.equals("")) {
 			doLook(mobLocation);
 			return;
@@ -26,6 +28,11 @@ public class Look extends Skills {
 		Location futureLocation = mobLocation.getContainer(dir);
 		if (futureLocation == null) {
 			messageSelf("There is no location that way.");
+			return;
+		}
+		Door door = mobLocation.getDoor(trueDir);
+		if (door != null && !door.isOpen()) {
+			messageSelf("A door is close and blocking your view.");
 			return;
 		}
 		doLook(futureLocation);
@@ -37,7 +44,7 @@ public class Look extends Skills {
 		displayAll(lookHere);	//need to expand this so location doesn't do it anymore	
 		displayExits(lookHere);
 		
-		messageSelf("(God sight) Location number: " + lookHere.getId() + ". Ground type: " + lookHere.getGroundType() + ".");  // GOD SIGHT
+		messageSelf("(God sight) Location number: " + lookHere.getId() + ".");  // GOD SIGHT
 	}
 	
 	private void displayAll(Location lookHere) {
@@ -66,9 +73,25 @@ public class Look extends Skills {
 			if (!atLeastOne) {
 				sb.append("You can see these exits: ");
 				sb.append(k.toString());
+				Door door = lookHere.getDoor(k);
+				if (door != null) {
+					if (!door.isOpen()) {
+						sb.append("(Closed Door)");
+					} else {
+						sb.append("(Open Door)");
+					}
+				}
 				atLeastOne = true;
 			} else {
 				sb.append(", " + k.toString());
+				Door door = lookHere.getDoor(k);
+				if (door != null) {
+					if (!door.isOpen()) {
+						sb.append("(Closed Door)");
+					} else {
+						sb.append("(Open Door)");
+					}
+				}
 			}			
 		}
 		if (atLeastOne) {

@@ -21,7 +21,6 @@ public class Location implements Container {
 	private final int id;
 	private final String name;
 	private final String description;
-	private final GroundType groundType; // NOT IMPLEMENTED
 	private Map<Direction, LocationConnection> locationMap;
 	protected TreeMap<String, Holdable> inventory = new TreeMap<String, Holdable>();
 	protected TreeMap<String, Mobile> mobiles = new TreeMap<String, Mobile>();
@@ -35,7 +34,6 @@ public class Location implements Container {
 		this.id = builder.getId();
 		this.name = builder.getName();
 		this.description = builder.getDescription();
-		this.groundType = builder.getGroundType();
 		this.bondedQuest = builder.getQuest();
 		if (bondedQuest != null) {
 			bondedQuest.bondLocation(this);
@@ -64,7 +62,6 @@ public class Location implements Container {
 	
 	public String getDescription() {return description;}			
 	public int getId() {return id;}
-	public GroundType getGroundType() {return groundType;}	// NOT IMPLEMENTED
 	
 	// The HOLDABLE being moved is EXPECTED to handle adding/removing itself properly.
 	public boolean acceptItem(Holdable newItem) {
@@ -348,28 +345,6 @@ public class Location implements Container {
 			return null;
 		}		
 	}	
-	
-	public enum GroundType {		
-		// GROUND might get broken up into many types of ground? rock, sand, dirt and so on?
-		GROUND() {
-			
-		},
-		
-		WATER() {
-			
-		},
-		
-		AIR() {
-			
-		},
-		
-		CONTAINER() {
-			
-		};
-		
-		private GroundType() {}
-		
-	}
 	
 	public void notifyQuest(Trigger trigger) {
 		if (bondedQuest != null) {

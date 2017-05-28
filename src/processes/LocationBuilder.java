@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import Quests.Quest;
 import processes.Location.Direction;
-import processes.Location.GroundType;
 
 /*
  * Builder class for safely creating a Location
@@ -26,7 +25,6 @@ public class LocationBuilder {
 	private int id;
 	private String name;
 	private String description;
-	private GroundType groundType;
 	public Map<Direction, LocationConnection> locationMap;
 	public Map<Location, LocationConnectionDataBox> locationConnections;	
 	private Location finishedLocation;	
@@ -38,7 +36,6 @@ public class LocationBuilder {
 		id = -1;
 		this.name = "Default name";
 		this.description = "default description.";
-		this.groundType = GroundType.GROUND;
 		this.locationMap = new HashMap<Direction, LocationConnection>();
 		locationConnections = new HashMap<Location, LocationConnectionDataBox>();
 	}
@@ -73,12 +70,7 @@ public class LocationBuilder {
 	public String getName() {return name;}
 	public void setName(String name) {this.name = name;}
 	public String getDescription() {return description;}
-	public void setDescription(String description) {this.description = description;}
-	public GroundType getGroundType() {return groundType;}
-	// See Location for GroundType Enums.
-	public void setGroundType(GroundType groundType) {
-		this.groundType = groundType;
-	}	
+	public void setDescription(String description) {this.description = description;}	
 
 	public void addLocationConnection(Direction directionToOtherLocation, int otherLocationId, Direction otherLocationToHereDirection, Door door) {		
 		if (WorldServer.gameState.checkForLocation(otherLocationId)) { // If otherLocation already exists, continue.

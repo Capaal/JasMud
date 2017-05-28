@@ -5,10 +5,8 @@ import items.Drinkable.DrinkType;
 import items.Herb.HerbType;
 import items.ItemBuilder;
 import items.ItemBuilder.ItemType;
-import items.MercWeapon;
 import items.MercWeapon.MercEffect;
 import items.Mineable.OreType;
-import items.StdItem;
 import processes.Equipment.EquipmentEnum;
 import processes.Location.Direction;
 
@@ -17,22 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.thoughtworks.xstream.XStream;
-
-import skills.*;
-import skills.Mercenary.Attack;
-import skills.Mercenary.BreakLimb;
-import skills.Mercenary.Clearmind;
-import skills.Mercenary.DualAttack;
-import skills.Mercenary.Headshot;
-import skills.Mercenary.Intimidate;
-import skills.Mercenary.MercRegenSkill;
-import skills.Mercenary.Shieldblock;
-import skills.Mercenary.Shove;
-import skills.Mercenary.SpinKick;
-import skills.Mercenary.Staunch;
-import skills.Mercenary.Straighten;
 import Quests.FarmerQuest;
+import skills.*;
+import skills.Mercenary.*;
 
 public class CreateWorld {
 	
@@ -41,10 +26,9 @@ public class CreateWorld {
 	private static Map<String, ItemBuilder> itemTemplates = new TreeMap<String, ItemBuilder>(); //list of all template items
 	
 	public static void createWorld() {
-//		makeWorldFromDatabase();
 		makeWorldFromNowhere();
 		makeSkills();
-//		makeItems();
+		makeItems();
 	}
 	
 	//Hardcoded skill list
@@ -124,14 +108,6 @@ public class CreateWorld {
 		makeBag(38);
 	}
 	
-	public static void makeWorldFromDatabase() {
-//		WorldServer.databaseInterface.connect("root", "".toCharArray());
-//		WorldServer.databaseInterface.loadLocations();
-//		WorldServer.databaseInterface.loadSkillBooks();
-//		WorldServer.databaseInterface.loadMobs();
-//		WorldServer.databaseInterface.disconnect();
-	}
-	
 	public static void makeWorldFromNowhere() {
 
 		//first location, north exit to 2
@@ -145,61 +121,59 @@ public class CreateWorld {
 		newLoc2.setName("North of Start.");
 		newLoc2.setDescription("Slightly north.");
 		newLoc2.addLocationConnection(Direction.SOUTH, 1, Direction.NORTH, new Door());
-	//	newLoc2.addLocationConnection(1, "north");
-	//	newLoc2.addDoor("south", new Door(), false);
 		newLoc2.complete();	
 	
-	/*	//3rd location, south exit to 2
+		//3rd location, south exit to 2
 		LocationBuilder newLoc3 = new LocationBuilder();
 		newLoc3.setName("Road.");
 		newLoc3.setDescription("On the road to nowhere.");
-		newLoc3.south(2, "north");
+		newLoc3.addLocationConnection(Direction.SOUTH, 2, Direction.NORTH, null);
 		newLoc3.complete();	
 		
 		//4th location, south exit to 3
 		LocationBuilder newLoc4 = new LocationBuilder();
 		newLoc4.setName("Along the road.");
-		newLoc4.setDescription("A road passing by some farmlands.");
+		newLoc4.setDescription("A road passing by some farmlands.");		
 		newLoc4.setQuest(new FarmerQuest());
-		newLoc4.south(3, "north");
+		newLoc4.addLocationConnection(Direction.SOUTH, 3, Direction.NORTH, null);
 		newLoc4.complete();	
 		
 		//5th location, south exit to 4
 		LocationBuilder newLoc5 = new LocationBuilder();
 		newLoc5.setName("On a bridge.");
 		newLoc5.setDescription("A bridge over a dried creek.");
-		newLoc5.south(4, "north");
+		newLoc5.addLocationConnection(Direction.SOUTH, 4, Direction.NORTH, null);
 		newLoc5.complete();	
 		
 		//6th location, west exit to 5
 		LocationBuilder newLoc6 = new LocationBuilder();
 		newLoc6.setName("Forest trail.");
 		newLoc6.setDescription("Off the main path.");
-		newLoc6.west(5, "east");
+		newLoc6.addLocationConnection(Direction.WEST, 5, Direction.EAST, null);
 		newLoc6.complete();	
 		
 		//7th location, west exit to 6
 		LocationBuilder newLoc7 = new LocationBuilder();
 		newLoc7.setName("End of trail.");
 		newLoc7.setDescription("Oh no, it's a dead end.");
-		newLoc7.west(6, "east");
-		newLoc7.in(2,"east");
+		newLoc7.addLocationConnection(Direction.WEST, 6, Direction.EAST, null);
+		newLoc7.addLocationConnection(Direction.IN, 2, Direction.EAST, null);
 		newLoc7.complete();	
 		
 		//8th location, south exit to 5
 		LocationBuilder newLoc8 = new LocationBuilder();
 		newLoc8.setName("Loop.");
-		newLoc8.south(5, "north");
-		newLoc8.north(5, "north");
+		newLoc8.addLocationConnection(Direction.SOUTH, 5, Direction.NORTH, null);
+		newLoc8.addLocationConnection(Direction.NORTH, 5, Direction.NORTH, null);
 		newLoc8.complete();	
 		
 		//9th location, east exit to 1
 		LocationBuilder newLoc9 = new LocationBuilder();
 		newLoc9.setName("Bank.");
 		newLoc9.setDescription("Not the watery type.");
-		newLoc9.east(1, "west");
+		newLoc9.addLocationConnection(Direction.EAST, 1, Direction.WEST, null);
 		newLoc9.complete();	
-	*/	
+		
 		// map: 
 		//   [8](loops 5)
 		//   [5] - [6] - [7]
