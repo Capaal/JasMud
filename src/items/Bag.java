@@ -1,9 +1,11 @@
 package items;
 
+import java.util.NavigableMap;
 import java.util.TreeMap;
 
 import interfaces.Container;
 import interfaces.Holdable;
+import processes.ContainerErrors;
 
 public class Bag extends StdItem implements Container { //wearable
 
@@ -27,9 +29,9 @@ public class Bag extends StdItem implements Container { //wearable
 	public int getId() {return id;}
 	
 	@Override
-	public boolean acceptItem(Holdable newItem) {
+	public ContainerErrors acceptItem(Holdable newItem) {
 		inventory.put(newItem.getName().toLowerCase() + newItem.getId(), newItem);
-		return true; // TODO should actually check from return
+		return null; // TODO should actually check from return
 	}	
 	
 	@Override
@@ -56,10 +58,31 @@ public class Bag extends StdItem implements Container { //wearable
 		} 
 		return null;
 	}
-	
+
 	@Override
-	public boolean isEmpty() {
-		return true;
+	public int getMaxQty() {
+		// TODO Auto-generated method stub
+		return -1;
 	}
+
+	@Override
+	public int getCurrentQty() {
+		// TODO Auto-generated method stub
+		return -1;
+	}
+
+	@Override //same as StdMob...
+	public NavigableMap<String, Holdable> getListMatchingString(String holdableString) {
+		holdableString = holdableString.toLowerCase();
+		String ceiling = inventory.ceilingKey(holdableString);
+		String floor = inventory.floorKey(holdableString);
+		NavigableMap<String, Holdable> subMap = null;
+		if (ceiling != null && floor != null && ceiling != floor) {
+			subMap = inventory.subMap(floor, true, ceiling, false);
+		}
+		return subMap;
+	}
+
+
 }
 

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import effects.PassiveCondition;
+import processes.ContainerErrors;
 import processes.Equipment;
 import processes.Equipment.EquipmentEnum;
 import processes.InductionSkill;
@@ -37,7 +38,7 @@ public interface Mobile extends Container {
 	public void tellLine(String msg);
 //	public void setContainer(Container newLoc);  SHOULD be handled by moveHoldable(finalLocation);
 	public Skills getCommand(String command);
-	public boolean acceptItem(Holdable item);
+	public ContainerErrors acceptItem(Holdable item);
 	public boolean addPassiveCondition(PassiveCondition newEffect, int duration);
 	public boolean addActiveCondition(TickingEffect newEffect, int times);
 //	public double getWeaponMultiplier(); TODO

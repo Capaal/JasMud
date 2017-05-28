@@ -1,6 +1,7 @@
 package processes;
 
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 import effects.PassiveCondition;
@@ -110,7 +111,7 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public boolean acceptItem(Holdable item) {
+	public ContainerErrors acceptItem(Holdable item) {
 		return decoratedMobile.acceptItem(item);
 	}
 
@@ -337,8 +338,21 @@ public enum DecoratorType {
 	}
 
 	@Override
-	public boolean isEmpty() {
+	public int getMaxQty() {
 		// TODO Auto-generated method stub
-		return false;
+		return 0;
 	}
+
+	@Override
+	public int getCurrentQty() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public NavigableMap<String, Holdable> getListMatchingString(String holdableString) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

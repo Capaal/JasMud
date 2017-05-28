@@ -1,14 +1,16 @@
 package items;
 
+import java.util.NavigableMap;
 import java.util.TreeMap;
 import interfaces.Container;
 import interfaces.Holdable;
+import processes.ContainerErrors;
 
 //Pouches for easy accessibility - can eat/rub/use directly out of a pouch as though in hand.
 public class HerbPouch extends StdItem implements Container {
 	
 	private int maxHerbs = 1000; //variable for different sizes of pouches	  NOT currently in use.
-	private Herb inventory; 
+	private Herb inventory; //includes qty (stackableitem)
 
 	public HerbPouch(ItemBuilder build) {
 		super(build);
@@ -27,9 +29,19 @@ public class HerbPouch extends StdItem implements Container {
 		if (this.inventory == null) {
 			return "empty herbpouch" + this.getId();
 		} else {
-			return this.inventory.getName() + " herbpouch" + this.getId();
+			return this.inventory.getHerbType().toString().toLowerCase() + " herbpouch" + this.getId();
 		}
 	}
+	@Override
+	public int getMaxQty() {
+		return this.maxHerbs;
+	}
+	
+	@Override
+	public int getCurrentQty() {
+		if (inventory == null) {
+			return 0;
+		return this.inventory.getQuantity();
 
 	@Override
 	public TreeMap<String, Holdable> getInventory() {
@@ -41,19 +53,20 @@ public class HerbPouch extends StdItem implements Container {
 	}
 
 	@Override
-	public boolean acceptItem(Holdable newItem) {
+	public ContainerErrors acceptItem(Holdable newItem) {
 		if (newItem instanceof Herb) {
-			if (inventory != null && ((Herb)newItem).getHerbType() == inventory.getHerbType()) {
-				System.out.println("This should not have happened, stackable should have handled I think?");
-				return false;
-			} else if (inventory == null) {
+			if (inventory == null) {
 				inventory = (Herb) newItem;
-				return true;
-			}			
-			return false;
+				return null;
+			} else if (inventory != null && (((Herb)newItem).getHerbType() != inventory.getHerbType())) {
+				return ContainerErrors.WRONGTYPE;
+			} else if (inventory.getQuantity() == maxHerbs) {
+				return ContainerErrors.QTYFULL;
+			} 
 		} 
-		return false;
+		return ContainerErrors.WRONGTYPE;
 	}
+	
 
 	@Override
 	public void removeItemFromLocation(Holdable oldItem) {
@@ -71,11 +84,12 @@ public class HerbPouch extends StdItem implements Container {
 		return null;
 	}
 
-	@Override
-	public boolean isEmpty() {
-		if (inventory == null) {
-			return true;
-		}
-		return false;
+	@Override //useless method for herbpouch
+	public NavigableMap<String, Holdable> getListMatchingString(String holdableString) {
+		NavigableMap<String, Holdable> submap = null;
+		submap.put(inventory.getName(), inventory);
+		return submap;
 	}	
+	
+
 }

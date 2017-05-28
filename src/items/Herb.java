@@ -20,7 +20,6 @@ public class Herb extends StackableItem {
 	}
 	
 	public String use(Mobile currentPlayer) {
-		this.removeFromWorld();
 		return type.use(currentPlayer);
 	}
 	

@@ -2,11 +2,15 @@ package skills;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.NavigableMap;
+
 import interfaces.Container;
 import interfaces.Holdable;
 import items.Herb;
+import processes.ContainerErrors;
 import processes.Skills;
 import items.HerbPouch;
+import items.StackableItem;
 
 public class Put extends Skills {
 
@@ -26,33 +30,67 @@ public class Put extends Skills {
 		super.syntaxList.add(Syntax.QUANTITY); //optional
 	}	
 	
-	@Override
+	@Override //checks each container if previous is full
 	protected void performSkill() {
 		qty = 1;
+		//sets item, container, qty
 		if (!preSkillChecks()) {return;}
-/*		if (item instanceof Herb && endContainer instanceof HerbPouch) {
-			if (currentPlayer.getHoldableFromString("herbpouch") == null) {
-				messageSelf("You do not have any pouches.");
-				return;
+			//check qty/space/weight of container - errors?
+		
+		if (item instanceof StackableItem) {
+			//change navigablemap to naviset TODO
+			NavigableMap<String, Holdable> containerList = currentPlayer.getListMatchingString(possibleContainer);
+			StackableItem sItem = (StackableItem) item;
+			ContainerErrors error = null;
+			int origQty = qty;			
+			Iterator<Holdable> i = containerList.values().iterator();
+			while (i.hasNext() && qty > 0) {
+				Container c = (Container) i.next();
+				int containerQty = c.getCurrentQty();
+				error = sItem.moveHoldable(c,qty);
+				if (error == null) { //only null if 1st try works
+					messageSelf("You put " + origQty + " " + item.getName() + " in your " + endContainer.getName() + ".");
+					return;
+				} else {
+					qty = qty - (c.getCurrentQty() - containerQty); //to handle remaining qty if some are put in
 				}
-	//		sortPouches();
-			return;
-		}*/if (endContainer instanceof Container) {
-			//check qty/space/weight of container
-			if (qty > 1) {
-	//			for (int i=0;i<qty;i++) {
-	//				((Container)endContainer).acceptItem(item);
-	//			}
-				messageSelf("You put " + qty + " " + item.getName() + " in your " + endContainer.getName());
-			} else {
-				item.moveHoldable(endContainer);
-//				((Container)endContainer).acceptItem(item);
-				messageSelf("You put the " + item.getName() + " in your " + endContainer.getName());
 			}
+				
+			//if exited out of while loop and still has not put away all herbs
+			if (qty > 0 && qty != origQty) {
+				messageSelf("You put " +  qty + " " + item.getName() + " in your " + endContainer.getName() + ".");
+				return;
+			} 
+			//if all containers are full to begin with or wrong type
+			if (qty == origQty) { 
+				messageSelf(error.display(sItem.getName()));
+				return;
+			}
+			System.out.println("Error Put performSkill after Stackable if, should not reach this line.");
+			
+		} else if (qty > 1) {
+			item.moveHoldable(endContainer);
+			int actualQty = 1;
+			while (handleMultiple() && actualQty < qty) {
+				actualQty += 1;				
+			}
+			messageSelf("You put " + actualQty + " " + itemName + " in your " + endContainer.getName() + ".");
+			return;
+		} else {
+			item.moveHoldable(endContainer);
+			messageSelf("You put the " + item.getName() + " in your " + endContainer.getName() + ".");
 			return;
 		}
-		messageSelf("Error failure Put: performSkill last line.");
+
+		System.out.println("Error failure Put: performSkill last line. Should never reach this point.");
 	}
+	
+	private boolean handleMultiple() {
+		if(!checkItem()) {return false;}
+		item.moveHoldable(endContainer);
+		return true;
+	}
+	
 		
 	private boolean preSkillChecks() {
 		itemName = Syntax.ITEM.getStringInfo(fullCommand, this);
@@ -61,11 +99,10 @@ public class Put extends Skills {
 			return false;
 		}
 		//find the item
-		item = currentPlayer.getHoldableFromString(itemName);
-		if (itemName == null) {
+		if (!checkItem()) {
 			messageSelf("You do not have a \"" + itemName + "\".");
 			return false;
-		}
+		} 
 		//check filler word
 		String in = Syntax.FILLER.getStringInfo(fullCommand, this);
 		if (!in.equals("in")) {
@@ -83,16 +120,19 @@ public class Put extends Skills {
 		if (aContainer == null) {
 			aContainer = currentPlayer.getContainer().getHoldableFromString(possibleContainer);
 			if (aContainer == null) {
-				messageSelf("You don't see a " + possibleContainer + ".");
+				messageSelf("You don't see a \"" + possibleContainer + "\".");
 				return false;
 			}
 		}
 		if (!(aContainer instanceof Container)) {
+			messageSelf("That \"" + possibleContainer + "\" is not a valid container.");
 			return false;
 		}
 		endContainer = (Container)aContainer;
+		
+		//checks optional qty
 		if (Syntax.QUANTITY.getStringInfo(fullCommand, this).equals("")) {
-			return true; //only returning true because this is the LAST check
+			return true; //only returning true because this is the !!LAST!! check
 		} else {
 			try {
 				qty = Integer.parseInt(Syntax.QUANTITY.getStringInfo(fullCommand, this)); 
@@ -100,54 +140,16 @@ public class Put extends Skills {
 				System.out.println("User error: 'Put' optional qty not a number. Optional ignored.");
 			}
 		}
-		//DO NOT ADD MORE CHECKS WITHOUT READING QTY CHECK ABOVE
+		//!!DO NOT ADD MORE CHECKS WITHOUT READING QTY CHECK ABOVE!!
 		return true;
 	}
 	
-	private void sortPouches() {
-		Collection<Holdable> inv = currentPlayer.getInventory().values();
-		Iterator<Holdable> i = inv.iterator();
-		int pouchQty = 0;
-		Holdable possiblePouch;
-		Herb herb = (Herb)item;
-		HerbPouch pouch;
-		int originalQty = qty;
-		while (i.hasNext() && (qty > 0)) {
-			possiblePouch = i.next();
-		     if (possiblePouch.getName().equalsIgnoreCase("herbpouch")) {
-		          if (possiblePouch instanceof HerbPouch) {
-		               pouch = (HerbPouch)possiblePouch;
-		        
-		          //     pouchQty = pouch.getHerbQty();
-		               if (pouchQty < 1000) { addToPouch(pouch, herb); }
-				 }
-		    }
+	private boolean checkItem() {
+		item = currentPlayer.getHoldableFromString(itemName);
+		if (item == null) {
+			return false;
 		}
-		if (qty == originalQty) {
-			messageSelf("Your pouches are too full or are used for other herbs."); 		               
-			return;
-			// expand else to specify if taken by other herbs or full or both TODO
-			// add else if player has only 1 pouch TODO
-		} else if (qty > 0 && qty != originalQty) {
-			messageSelf("You put " + (originalQty-qty) + " " + herb.getName() +" in your pouch."); //not enough pouches
-			return;
-		} else {
-			messageSelf("You put " + originalQty + " " + herb.getName() + " in your pouch.");
-			return;
-		}
-		
+		return true;
 	}
 	
-	// changes 'qty' tp how many could not go in pouch
-	private void addToPouch(HerbPouch pouch, Herb herb) {
-	//	if ((pouch.getHerbType() == null) || pouch.getHerbType().equals(herb.getHerbType())) {
-	//		int actualQty = pouch.changeHerbs(qty,herb.getHerbType());
-			// JASON NOTE: Need to test if actualQty == qty == herb's stack's quantity.
-	//		herb.removeFromWorld(); //qty? 
-		//	messageSelf("You put " +  actualQty + " herbs in your pouch."); could have optional to note specific pouch used
-	//		qty = qty - actualQty;
-	//	}
-		
-	}
-
 }
