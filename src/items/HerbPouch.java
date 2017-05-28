@@ -41,7 +41,9 @@ public class HerbPouch extends StdItem implements Container {
 	public int getCurrentQty() {
 		if (inventory == null) {
 			return 0;
+		}
 		return this.inventory.getQuantity();
+	}
 
 	@Override
 	public TreeMap<String, Holdable> getInventory() {

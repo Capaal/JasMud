@@ -357,9 +357,7 @@ public class Location implements Container {
 
 	@Override
 	public int getMaxQty() {
-		if (inventory.isEmpty() && mobiles.isEmpty()) {
-		return 0;
-		}
+		return 100000;		
 	}
 
 	@Override
