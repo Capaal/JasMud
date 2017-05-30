@@ -32,7 +32,7 @@ public class Look extends Skills {
 		}
 		Door door = mobLocation.getDoor(trueDir);
 		if (door != null && !door.isOpen()) {
-			messageSelf("A door is close and blocking your view.");
+			messageSelf("A door is closed and blocking your view.");
 			return;
 		}
 		doLook(futureLocation);
