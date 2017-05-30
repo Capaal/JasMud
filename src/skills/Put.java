@@ -2,14 +2,10 @@ package skills;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.NavigableMap;
-
 import interfaces.Container;
 import interfaces.Holdable;
-import items.Herb;
 import processes.ContainerErrors;
 import processes.Skills;
-import items.HerbPouch;
 import items.StackableItem;
 
 public class Put extends Skills {
@@ -32,20 +28,29 @@ public class Put extends Skills {
 	
 	@Override //checks each container if previous is full
 	protected void performSkill() {
-		qty = 1;
 		//sets item, container, qty
 		if (!preSkillChecks()) {return;}
 			//check qty/space/weight of container - errors?
 		
 		if (item instanceof StackableItem) {
-			//change navigablemap to naviset TODO
-			NavigableMap<String, Holdable> containerList = currentPlayer.getListMatchingString(possibleContainer);
+			Collection<Holdable> containerList = currentPlayer.getListMatchingString(possibleContainer);
 			StackableItem sItem = (StackableItem) item;
-			ContainerErrors error = null;
-			int origQty = qty;			
-			Iterator<Holdable> i = containerList.values().iterator();
+			ContainerErrors error = null;					
+			Iterator<Holdable> i = containerList.iterator();
+			
+			// SOMEWHERE if I say put 30 in, but I have 28, it still puts in 30!! BUG
+			if (sItem.getQuantity() < qty) {
+				qty = sItem.getQuantity();
+			}
+			int origQty = qty;	
+			
 			while (i.hasNext() && qty > 0) {
+				
 				Container c = (Container) i.next();
+				if (!(c instanceof Container)) {
+					System.out.println("Bug? Reached stage with something that is not a container.");
+					break;
+				}
 				int containerQty = c.getCurrentQty();
 				error = sItem.moveHoldable(c,qty);
 				if (error == null) { //only null if 1st try works
@@ -128,19 +133,16 @@ public class Put extends Skills {
 			messageSelf("That \"" + possibleContainer + "\" is not a valid container.");
 			return false;
 		}
-		endContainer = (Container)aContainer;
-		
+		endContainer = (Container)aContainer;		
 		//checks optional qty
-		if (Syntax.QUANTITY.getStringInfo(fullCommand, this).equals("")) {
-			return true; //only returning true because this is the !!LAST!! check
-		} else {
+		qty = 1;
+		if (!Syntax.QUANTITY.getStringInfo(fullCommand, this).equals("")) {			
 			try {
 				qty = Integer.parseInt(Syntax.QUANTITY.getStringInfo(fullCommand, this)); 
 			} catch (NumberFormatException fail) {
 				System.out.println("User error: 'Put' optional qty not a number. Optional ignored.");
 			}
 		}
-		//!!DO NOT ADD MORE CHECKS WITHOUT READING QTY CHECK ABOVE!!
 		return true;
 	}
 	

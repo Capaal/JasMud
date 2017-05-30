@@ -1,6 +1,8 @@
 package items;
 
+import java.util.Collection;
 import java.util.NavigableMap;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 import interfaces.Container;
@@ -89,9 +91,24 @@ public class Bag extends StdItem implements Container { //wearable
 		// TODO Auto-generated method stub
 		return -1;
 	}
-
+	
+	@Override
+	public Collection<Holdable> getListMatchingString(String holdableString) {
+		holdableString = holdableString.toLowerCase();		
+		SortedMap<String, Holdable> subMap = inventory.subMap(holdableString, true, holdableString + Character.MAX_VALUE, true);		
+		Collection<Holdable> set = subMap.values();
+		System.out.println(set.toString());		
+		if (set.isEmpty() || set == null) {
+			Holdable h = getHoldableFromString(holdableString);
+			if (h != null) {
+				set.add(h);
+			}
+		}
+		return set;
+	}
+/*
 	@Override //same as StdMob...
-	public NavigableMap<String, Holdable> getListMatchingString(String holdableString) {
+	public Collection<Holdable> getListMatchingString(String holdableString) {
 		holdableString = holdableString.toLowerCase();
 		String ceiling = inventory.ceilingKey(holdableString);
 		String floor = inventory.floorKey(holdableString);
@@ -101,7 +118,7 @@ public class Bag extends StdItem implements Container { //wearable
 		}
 		return subMap;
 	}
-
+*/
 
 }
 

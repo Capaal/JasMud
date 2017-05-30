@@ -1,7 +1,10 @@
 package items;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.NavigableMap;
 import java.util.TreeMap;
+
 import interfaces.Container;
 import interfaces.Holdable;
 import processes.ContainerErrors;
@@ -87,11 +90,9 @@ public class HerbPouch extends StdItem implements Container {
 	}
 
 	@Override //useless method for herbpouch
-	public NavigableMap<String, Holdable> getListMatchingString(String holdableString) {
-		NavigableMap<String, Holdable> submap = null;
-		submap.put(inventory.getName(), inventory);
-		return submap;
+	public Collection<Holdable> getListMatchingString(String holdableString) {
+		Collection<Holdable> set = new HashSet<Holdable>();
+		set.add(inventory);
+		return set;
 	}	
-	
-
 }

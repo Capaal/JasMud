@@ -367,7 +367,7 @@ public class Location implements Container {
 	}
 
 	@Override
-	public NavigableMap<String, Holdable> getListMatchingString(String holdableString) {
+	public Collection<Holdable> getListMatchingString(String holdableString) {
 		// TODO Auto-generated method stub
 		return null;
 	}

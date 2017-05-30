@@ -1,8 +1,10 @@
  package interfaces;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
+
 import processes.ContainerErrors;
 
 public interface Container {
@@ -24,6 +26,6 @@ public interface Container {
 //	public Container getContainer(); // Can a Container HAVE a container? (Holdables are forced to have this, LOCATION would not)
 //	public GroundType getGroundType(); // Should LOCATION be an interface, with this required method?
 	public Holdable getHoldableFromString(String holdableString);
-	public NavigableMap<String, Holdable> getListMatchingString(String holdableString);
+	public Collection<Holdable> getListMatchingString(String holdableString);
 
 }

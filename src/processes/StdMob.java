@@ -291,35 +291,18 @@ public class StdMob implements Mobile, Container{
 	}	
 	
 	@Override
-	public NavigableMap<String, Holdable> getListMatchingString(String holdableString) {
-		holdableString = holdableString.toLowerCase();
-	//	String ceiling = inventory.ceilingKey(holdableString);
-	//	String floor = inventory.floorKey(holdableString);
-		NavigableMap<String, Holdable> subMap = null;
-		subMap = inventory.subMap(holdableString, true, holdableString + Character.MAX_VALUE, true);
-		System.out.println(subMap.keySet().toString());
-		
-		if (subMap.isEmpty() || subMap == null) {
+	public Collection<Holdable> getListMatchingString(String holdableString) {
+		holdableString = holdableString.toLowerCase();		
+		SortedMap<String, Holdable> subMap = inventory.subMap(holdableString, true, holdableString + Character.MAX_VALUE, true);		
+		Collection<Holdable> set = subMap.values();
+		System.out.println(set.toString());		
+		if (set.isEmpty() || set == null) {
 			Holdable h = getHoldableFromString(holdableString);
 			if (h != null) {
-				subMap.put(h.getName()+h.getId(), h); //change to return set, do not need keystring here TODO
+				set.add(h);
 			}
-			
-		//	subMap = inventory.subMap(floor, false, ceiling, true);
-		//	System.out.println(subMap.keySet().toString());
-			
-		//	testing cases
-		/*	NavigableMap<String, Holdable> subMap2 = inventory.subMap(holdableString, false, holdableString + Character.MAX_VALUE, true);
-			System.out.println(subMap2.keySet().toString());
-			
-			NavigableMap<String, Holdable> subMap3 = inventory.subMap(holdableString, false, holdableString + Character.MAX_VALUE, false);
-			System.out.println(subMap3.keySet().toString());
-			
-			NavigableMap<String, Holdable> subMap4 = inventory.subMap(holdableString, true, holdableString + Character.MAX_VALUE, false);
-			System.out.println(subMap4.keySet().toString()); */
-
 		}
-		return subMap;
+		return set;
 	}
 	
 	@Override

@@ -1,9 +1,11 @@
 package processes;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
+
 import effects.PassiveCondition;
 import processes.Equipment.EquipmentEnum;
 import interfaces.Holdable;
@@ -350,7 +352,7 @@ public enum DecoratorType {
 	}
 
 	@Override
-	public NavigableMap<String, Holdable> getListMatchingString(String holdableString) {
+	public Collection<Holdable> getListMatchingString(String holdableString) {
 		// TODO Auto-generated method stub
 		return null;
 	}
