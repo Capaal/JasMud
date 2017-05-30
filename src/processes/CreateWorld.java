@@ -101,6 +101,7 @@ public class CreateWorld {
 		addRegenPotion();
 		addOreRock();		
 		makeAloeHerb();	
+		makeComfreyHerb();
 		addHerbPouch();
 		addHerbPouch();
 		makeGinsengHerb();
@@ -318,6 +319,17 @@ public class CreateWorld {
 		newItem.complete();
 		itemTemplates.put("aloe", newItem);
 	}
+	
+	public static void makeComfreyHerb() {
+		ItemBuilder newItem = new ItemBuilder();	
+		newItem.setName("comfrey");
+		newItem.setDamageMult(0.1);
+		newItem.setItemType(ItemType.HERB);
+		newItem.setHerbType(HerbType.COMFREY);
+	//	newItem.complete();
+		itemTemplates.put("comfrey", newItem);
+	}
+	
 	
 	public static void makeGinsengHerb() {
 		ItemBuilder newItem = new ItemBuilder();

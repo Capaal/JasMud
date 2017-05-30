@@ -29,6 +29,25 @@ public class Bag extends StdItem implements Container { //wearable
 	public int getId() {return id;}
 	
 	@Override
+	public String getInfo() {
+		StringBuilder s = new StringBuilder();
+		if (this.inventory != null) {
+			s.append("This ");
+			s.append(this.getName());
+			s.append(" contains: ");
+			s.append(System.getProperty("line.separator"));
+			for (Holdable h: inventory.values()) {
+				s.append("  ");
+				s.append(h.getInfo());
+				s.append(System.getProperty("line.separator"));
+			}
+			s.append("There are " + inventory.size() + " items inside.");
+			return s.toString();
+		} else
+			return ("That bag is empty.");
+	}
+	
+	@Override
 	public ContainerErrors acceptItem(Holdable newItem) {
 		inventory.put(newItem.getName().toLowerCase() + newItem.getId(), newItem);
 		return null; // TODO should actually check from return

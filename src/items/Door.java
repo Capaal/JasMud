@@ -7,7 +7,7 @@ public class Door {
 	
 	private boolean isOpen = true;
 	private boolean isLocked = false;
-	private ArrayList<Key> validKeys = new ArrayList<Key>();
+//	private ArrayList<Key> validKeys = new ArrayList<Key>();
 	
 	// Returns true if door's state changed, else false
 	// Does not care about opening open doors, or closing closed doors TODO
@@ -31,33 +31,33 @@ public class Door {
 	
 	// returns true if state changed, else false
 	// Does not care if locking locked door (or unlocking unlocked door) TODO
-	public boolean alterLock(boolean lockState, Key key) {
-		if (validKeys.contains(key)) {
-			isLocked = lockState;
-			return true;
-		}
-		return false;
-	}
+//	public boolean alterLock(boolean lockState, Key key) {
+//		if (validKeys.contains(key)) {
+//			isLocked = lockState;
+//			return true;
+//		}
+//		return false;
+//	}
 	
 	// Returns true if key successfully bonded to door, else false
 	// TODO require gear and supplies to create a key, or a skill that does this?
-	public Key addKey(Key oldKey) {
-		if (validKeys.contains(oldKey)) {
-			Key newKey = Key.newKey(this);
-			validKeys.add(newKey);
-			return newKey;		
-		}
-		return null;
-	}
+//	public Key addKey(Key oldKey) {
+//		if (validKeys.contains(oldKey)) {
+//			Key newKey = Key.newKey(this);
+//			validKeys.add(newKey);
+//			return newKey;		
+//		}
+//		return null;
+//	}
 	
-	public boolean removeKey(Key key) {
-		if (this.equals(key.getDoor()) && validKeys.contains(key)) {
-			key.removeFromWorld();
-			validKeys.remove(key);
-			return true;
-		}
-		return false;
-	}
+//	public boolean removeKey(Key key) {
+//		if (this.equals(key.getDoor()) && validKeys.contains(key)) {
+//			key.removeFromWorld();
+//			validKeys.remove(key);
+//			return true;
+//		}
+//		return false;
+//	}
 	
 	//TODO methods to return keys bonded to it?
 	// TODO method for picking lock/locking the lock without key OR this a skill on it's own?

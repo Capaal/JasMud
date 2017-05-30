@@ -1,5 +1,6 @@
 package items;
 
+import effects.PassiveCondition;
 import effects.Regen;
 import interfaces.Container;
 import interfaces.Mobile;
@@ -44,6 +45,20 @@ public class Herb extends StackableItem {
 			@Override public String use(Mobile currentPlayer) {
 				currentPlayer.takeDamage(Type.BLUNT, -20);
 				return "The herb soothes your wounds and restores some life.";
+			}
+		},
+		
+		COMFREY {
+			@Override public String use(Mobile currentPlayer) {
+				if (currentPlayer.hasAllConditions(PassiveCondition.BROKENLEFTARM)) {
+					currentPlayer.removeAllConditions(PassiveCondition.BROKENLEFTARM);
+					return("The herbs quickly knits your bones together and fixes your left arm.");
+				} else if (currentPlayer.hasAllConditions(PassiveCondition.BROKENRIGHTARM)) {
+					currentPlayer.removeAllConditions(PassiveCondition.BROKENRIGHTARM);
+					return("The herbs quickly knits your bones together and fixes your right arm.");
+				} else {
+					return("The comfrey has no effect.");
+				}
 			}
 		},
 			

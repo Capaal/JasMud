@@ -57,7 +57,7 @@ public class Look extends Skills {
 		}
 		sb.append("Lying on the ground: ");
 		for (Holdable h : lookHere.getInventory().values()) {
-			sb.append(UsefulCommands.ANSI.YELLOW + h.getName() + ". " + UsefulCommands.ANSI.SANE);
+			sb.append(UsefulCommands.ANSI.YELLOW + h.getShortDesc() + ". " + UsefulCommands.ANSI.SANE);
 			anItem = true;
 		}
 		if (anItem) {

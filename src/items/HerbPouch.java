@@ -27,9 +27,9 @@ public class HerbPouch extends StdItem implements Container {
 	
 	@Override public String getShortDesc() {
 		if (this.inventory == null) {
-			return "empty herbpouch" + this.getId();
+			return "empty herbpouch";
 		} else {
-			return this.inventory.getHerbType().toString().toLowerCase() + " herbpouch" + this.getId();
+			return this.inventory.getHerbType().toString().toLowerCase() + " herbpouch";
 		}
 	}
 	@Override

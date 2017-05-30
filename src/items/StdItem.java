@@ -170,8 +170,8 @@ public class StdItem implements Holdable{
 		return true;
 	}
 	
-	@Override
-	public String getInfo() {
+	@Override 
+	public String getInfo() { 
 		return this.getName() + this.getId();
 	}
 	
