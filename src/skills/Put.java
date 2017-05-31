@@ -13,8 +13,8 @@ public class Put extends Skills {
 	private String itemName;
 	private Holdable item;
 	private String possibleContainer;
-	private Container endContainer;
-	private int qty; //may be dangerous to set here if used by muliple ppl at once
+	private Collection<Holdable> containerList;
+	private int qty;
 
 	public Put() {
 		super.name = "put";
@@ -30,73 +30,26 @@ public class Put extends Skills {
 	protected void performSkill() {
 		//sets item, container, qty
 		if (!preSkillChecks()) {return;}
-			//check qty/space/weight of container - errors?
-		
+		//check qty/space/weight of container - errors?		
 		if (item instanceof StackableItem) {
-			Collection<Holdable> containerList = currentPlayer.getListMatchingString(possibleContainer);
-			StackableItem sItem = (StackableItem) item;
-			ContainerErrors error = null;					
-			Iterator<Holdable> i = containerList.iterator();
-			
-			// SOMEWHERE if I say put 30 in, but I have 28, it still puts in 30!! BUG
-			if (sItem.getQuantity() < qty) {
-				qty = sItem.getQuantity();
-			}
-			int origQty = qty;	
-			
-			while (i.hasNext() && qty > 0) {
-				
-				Container c = (Container) i.next();
-				if (!(c instanceof Container)) {
-					System.out.println("Bug? Reached stage with something that is not a container.");
-					break;
-				}
-				int containerQty = c.getCurrentQty();
-				error = sItem.moveHoldable(c,qty);
-				if (error == null) { //only null if 1st try works
-					messageSelf("You put " + origQty + " " + item.getName() + " in your " + endContainer.getName() + ".");
-					return;
-				} else {
-					qty = qty - (c.getCurrentQty() - containerQty); //to handle remaining qty if some are put in
-				}
-			}
-				
-			//if exited out of while loop and still has not put away all herbs
-			if (qty > 0 && qty != origQty) {
-				messageSelf("You put " +  qty + " " + item.getName() + " in your " + endContainer.getName() + ".");
-				return;
-			} 
-			//if all containers are full to begin with or wrong type
-			if (qty == origQty) { 
-				messageSelf(error.display(sItem.getName()));
-				return;
-			}
-			System.out.println("Error Put performSkill after Stackable if, should not reach this line.");
-			
-		} else if (qty > 1) {
-			item.moveHoldable(endContainer);
-			int actualQty = 1;
-			while (handleMultiple() && actualQty < qty) {
-				actualQty += 1;				
-			}
-			messageSelf("You put " + actualQty + " " + itemName + " in your " + endContainer.getName() + ".");
-			return;
+			moveStack();		
 		} else {
-			item.moveHoldable(endContainer);
-			messageSelf("You put the " + item.getName() + " in your " + endContainer.getName() + ".");
-			return;
+			Iterator<Holdable> i = containerList.iterator();
+			while (i.hasNext() && qty > 0) { // Loops through containers
+				Container c = (Container) i.next();			
+				while (qty > 0) { // Loops through putting away items.
+					if(!checkItem()) { // If out of things to put away
+						messageSelf("You don't have anymore " + itemName + " to put away.");
+						return;
+					}
+					item.moveHoldable(c);
+					messageSelf("You put " + itemName + "in your " + c.getName() + ".");
+					qty --;			
+				}	
+			}				
 		}
-
-		System.out.println("Error failure Put: performSkill last line. Should never reach this point.");
 	}
 	
-	private boolean handleMultiple() {
-		if(!checkItem()) {return false;}
-		item.moveHoldable(endContainer);
-		return true;
-	}
-	
-		
 	private boolean preSkillChecks() {
 		itemName = Syntax.ITEM.getStringInfo(fullCommand, this);
 		if (itemName.equals("")) {
@@ -110,7 +63,7 @@ public class Put extends Skills {
 		} 
 		//check filler word
 		String in = Syntax.FILLER.getStringInfo(fullCommand, this);
-		if (!in.equals("in")) {
+		if (!in.equalsIgnoreCase("in")) {
 			messageSelf("Syntax: PUT (ITEM) IN (CONTAINER).");
 			return false;
 		}
@@ -119,21 +72,22 @@ public class Put extends Skills {
 		if (possibleContainer.equals("")) {
 			messageSelf("What are you trying to put that in?");
 			return false;
-		} 
-		//tries to set endContainer
-		Holdable aContainer = currentPlayer.getHoldableFromString(possibleContainer);
-		if (aContainer == null) {
-			aContainer = currentPlayer.getContainer().getHoldableFromString(possibleContainer);
-			if (aContainer == null) {
+		} 		
+		// Tries to set containerList.
+		containerList = currentPlayer.getListMatchingString(possibleContainer);
+		if (containerList == null) { // If not in player's inventory
+			containerList = currentPlayer.getContainer().getListMatchingString(possibleContainer);
+			if (containerList == null) { // If also not on the ground.
 				messageSelf("You don't see a \"" + possibleContainer + "\".");
 				return false;
 			}
 		}
-		if (!(aContainer instanceof Container)) {
-			messageSelf("That \"" + possibleContainer + "\" is not a valid container.");
-			return false;
-		}
-		endContainer = (Container)aContainer;		
+		for (Holdable h : containerList) {
+			if (!(h instanceof Container)) {
+				messageSelf("That \"" + possibleContainer + "\" is not a valid container.");
+				return false;
+			}
+		}		
 		//checks optional qty
 		qty = 1;
 		if (!Syntax.QUANTITY.getStringInfo(fullCommand, this).equals("")) {			
@@ -154,4 +108,29 @@ public class Put extends Skills {
 		return true;
 	}
 	
+	private void moveStack() {
+		StackableItem sItem = (StackableItem) item;
+		ContainerErrors error = null;					
+		Iterator<Holdable> i = containerList.iterator();
+		if (sItem.getQuantity() < qty) {
+			qty = sItem.getQuantity();
+		}
+		int origQty = qty;				
+		while (i.hasNext() && qty > 0) {
+			Container c = (Container) i.next();				
+			int containerQty = c.getCurrentQty();
+			error = sItem.moveHoldable(c,qty);
+			qty = qty - (c.getCurrentQty() - containerQty); //to handle remaining qty if some are put in
+		}
+		if (qty == 0) {
+			messageSelf("You put " + origQty + " " + sItem.getName() + " in your " + possibleContainer + ".");
+		//if exited out of while loop and still has not put away all herbs
+		} else if (qty > 0 && qty != origQty) {
+			messageSelf("You put " +  (origQty - qty) + " " + sItem.getName() + " in your " + possibleContainer + "."); 
+		//if all containers are full to begin with or wrong type
+		} else { 
+			// BUG: returned: "That aloe is full." whent he bag was full.
+			messageSelf(error.display(sItem.getName()));
+		}
+	}	
 }
