@@ -129,7 +129,7 @@ public class Put extends Skills {
 			messageSelf("You put " +  (origQty - qty) + " " + sItem.getName() + " in your " + possibleContainer + "."); 
 		//if all containers are full to begin with or wrong type
 		} else { 
-			// BUG: returned: "That aloe is full." whent he bag was full.
+			// BUG: returned: "That aloe is full." when the bag was full.
 			messageSelf(error.display(sItem.getName()));
 		}
 	}	
