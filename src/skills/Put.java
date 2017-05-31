@@ -39,11 +39,11 @@ public class Put extends Skills {
 				Container c = (Container) i.next();			
 				while (qty > 0) { // Loops through putting away items.
 					if(!checkItem()) { // If out of things to put away
-						messageSelf("You don't have anymore " + itemName + " to put away.");
+						messageSelf("You don't have any more " + itemName + " to put away.");
 						return;
 					}
 					item.moveHoldable(c);
-					messageSelf("You put " + itemName + "in your " + c.getName() + ".");
+					messageSelf("You put " + itemName + " in your " + c.getName() + ".");
 					qty --;			
 				}	
 			}				

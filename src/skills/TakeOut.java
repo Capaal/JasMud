@@ -20,9 +20,8 @@ import processes.Skills.Syntax;
 public class TakeOut extends Skills {
 	
 	private String itemName;
-	private Holdable item;
 	private String containerName;
-	private Holdable possibleContainer;
+	private Collection<Holdable> containerList;
 
 //	private Container endContainer;
 	private int qty; 
@@ -39,55 +38,43 @@ public class TakeOut extends Skills {
 
 	@Override
 	protected void performSkill() {
-		qty = 1;
 		if (!preSkillChecks()) {return;}
-		
-		if (possibleContainer instanceof Container) {
-			item = ((Container) possibleContainer).getHoldableFromString(itemName);
-			int actualQty = 0;
-			actualQty = handleMultiple(actualQty);
-			
-			if (actualQty == 0) {
-				messageSelf("You can't find any \"" + itemName + "\" in your " + possibleContainer.getName() + ".");
-			} else if (qty > 1) {
-				messageSelf("You take " + actualQty + " " + item.getName() + " out of your " + possibleContainer.getName() + ".");
-			} else if (actualQty == 1 && qty == 1) {
-				messageSelf("You take the " + item.getName() + " out of your " + possibleContainer.getName());
-			} else {
-				messageSelf("Not sure what happened here.");
-			}
-		}
-	}
-	
-	//sorts through all containers of same name and takes qty from container
-	//this handles 1 too
-	private int handleMultiple(int actualQty) {
-		NavigableMap <String,Holdable> containerList = currentPlayer.getListMatchingString(containerName);
-		Iterator<Holdable> i = containerList.values().iterator();
-		while (i.hasNext()) {
+		Iterator<Holdable> i = containerList.iterator();
+		int origQty = qty;
+		while (i.hasNext() && qty > 0) {
 			Container c = (Container) i.next();
-			Holdable itemInContainer = c.getHoldableFromString(itemName);  
-			if (itemInContainer instanceof StackableItem) { 
-				StackableItem sItem = (StackableItem) itemInContainer; 
-				if (qty > sItem.getQuantity()) {
-					actualQty = sItem.getQuantity();
-				} else {actualQty = qty;}
-				ContainerErrors internal = sItem.moveHoldable(currentPlayer, qty); 
-				if (internal != null) {System.out.println("TakeOut handleMultiple error: " + internal.toString());}
-				item = itemInContainer;
-				return actualQty;
-			} else if (itemInContainer instanceof StdItem) {
-				actualQty += 1;
-				if (actualQty <= qty) {
-					itemInContainer.moveHoldable(currentPlayer);
-					item = itemInContainer;
-					handleMultiple(actualQty);
+			Holdable item = c.getHoldableFromString(itemName);		
+			if (item != null) {				
+				if (item instanceof StackableItem) { 
+					StackableItem sItem = (StackableItem) item; 
+					int qtyAvailable = sItem.getQuantity();
+					ContainerErrors internal = sItem.moveHoldable(currentPlayer, qty); 				
+					qty = qty - qtyAvailable;
+				} else {					
+					while (qty > 0) { // Loops through putting away items.
+						item.moveHoldable(c);
+						messageSelf("You take " + itemName + " from your " + c.getName() + ".");
+						qty --;	
+						item = c.getHoldableFromString(itemName);	
+						if (item == null) {
+							messageSelf("You don't have any more " + itemName + " to take out.");
+							return;
+						}								
+					}			
 				}
-			}
+			}					
 		}
-		return actualQty;
+		if (qty == 0) {
+			messageSelf("You take " + origQty + " " + itemName + " from your " + containerName + ".");
+		//if exited out of while loop and still has not put away all herbs
+		} else if (qty > 0 && qty != origQty) {
+			messageSelf("You take  " +  (origQty - qty) + " " + itemName + " from your " + containerName + "."); 
+		//if all containers are full to begin with or wrong type
+		} else { 
+			messageSelf("You can't find " + itemName + " anywhere.");
+		}
 	}
-	
+		
 	//checks all syntax is valid and finds container
 	private boolean preSkillChecks() {
 		//checks item word
@@ -105,24 +92,27 @@ public class TakeOut extends Skills {
 		//find container word
 		containerName = Syntax.TARGET.getStringInfo(fullCommand, this);
 		if (containerName.equals("")) {
-			messageSelf("What are you trying to put that in?");
+			messageSelf("What are you trying to take that from?");
 			return false;
 		} 
-		//checks if potential container exists (inventory or location)
-		possibleContainer = currentPlayer.getHoldableFromString(containerName);
-		if (possibleContainer == null) { //not in inventory, next line tries location
-			possibleContainer = currentPlayer.getContainer().getHoldableFromString(containerName);
-			if (possibleContainer == null) {
-				messageSelf("You don't see a " + containerName + ".");
+		// Tries to set containerList.
+		containerList = currentPlayer.getListMatchingString(containerName);
+		if (containerList == null) { // If not in player's inventory
+			containerList = currentPlayer.getContainer().getListMatchingString(containerName);
+			if (containerList == null) { // If also not on the ground.
+				messageSelf("You don't see a \"" + containerName + "\".");
 				return false;
 			}
 		}
-		//checks item found is a container and not empty
-		
+		for (Holdable h : containerList) {
+			if (!(h instanceof Container)) {
+				messageSelf("That \"" + containerName + "\" is not a valid container.");
+				return false;
+			}
+		}
 		//checks optional qty
-		if (Syntax.QUANTITY.getStringInfo(fullCommand, this).equals("")) {
-			return true; //only returning true because this is the LAST check
-		} else {
+		qty = 1;
+		if (!Syntax.QUANTITY.getStringInfo(fullCommand, this).equals("")) {
 			try {
 				qty = Integer.parseInt(Syntax.QUANTITY.getStringInfo(fullCommand, this)); 
 			} catch (NumberFormatException fail) {
