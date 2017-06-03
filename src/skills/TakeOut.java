@@ -7,8 +7,8 @@ import java.util.NavigableMap;
 
 import interfaces.Container;
 import interfaces.Holdable;
-import items.Herb;
-import items.HerbPouch;
+import items.Plant;
+import items.Pouch;
 import items.ItemBuilder;
 import items.StackableItem;
 import items.StdItem;

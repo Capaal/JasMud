@@ -26,7 +26,6 @@ public class StdItem implements Holdable{
 //  protected int currentDurability;
 	protected final List<String> components; // Add to weapon interface? Make a craftable interface?
 	protected final boolean salvageable; // same as components?
-	protected MercWeapon.MercEffect mercEffect;
 	
 	protected final Set<EquipmentEnum> allowedEquipSlots;
 
@@ -43,7 +42,6 @@ public class StdItem implements Holdable{
 		this.allowedEquipSlots = build.getAllowedSlots();
 		this.components = build.getComponents();
 		this.salvageable = build.getSalvageable();
-		this.mercEffect = build.getMercEffect();
 		
 		WorldServer.gameState.addItem(name + id, this);
 		itemLocation.acceptItem(this);
@@ -161,9 +159,6 @@ public class StdItem implements Holdable{
 		this.itemLocation = container;
 	}
 	
-	public MercWeapon.MercEffect getMercEffect() {
-		return this.mercEffect;
-	}
 
 	@Override
 	public boolean canPickup() {

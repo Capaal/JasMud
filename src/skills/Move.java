@@ -30,7 +30,7 @@ public class Move extends Skills {
 		if (!legsOk()) {return;}
 		startContainer = currentPlayer.getContainer();
 		endContainer = null;
-		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this); // Why not convert to enum?
+		dir = Syntax.DIRECTION.getStringInfo(fullCommand, this); // Why not convert to enum?
 		
 		if(isRooted()) {return;};
 		ifDizzy(); //if dizzy, sets a new random direction, ok to run into walls

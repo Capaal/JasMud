@@ -1,15 +1,12 @@
 package skills.Mercenary;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import items.StdItem;
-import items.MercWeapon;
+import items.Weapon;
 import processes.Location;
 import processes.Equipment;
 import processes.Skills;
@@ -18,12 +15,13 @@ import processes.Type;
 public class Attack extends Skills {
 
     private int intensity = 8;
-//    private Mobile finalTarget; //replaced with targets list
-    private Holdable weapon;
-    private StdItem mercWeapon;
+    private Holdable item;
+    private StdItem possWeapon;
+    private Weapon weapon;
     private double balAdjust = 1;       
     String possibleTarg;
-    private Collection<Mobile> targets = null;
+ // private Collection<Mobile> targets = null;
+    private Mobile target;
     
     //Mercenary class skill, probably needs better name. Attacks target using wielded weapon. If weapon has special effect, applies.
     //Uses right hand only - dual wield uses both hands+weapons
@@ -37,29 +35,43 @@ public class Attack extends Skills {
 	protected void performSkill() {
         if (!preSkillChecks()) {return;};	
         //apply weapon effect + message
-        if(isMercWeapon()) {
-        	MercWeapon.MercEffect effectType = mercWeapon.getMercEffect();
-        	if (effectType.equals(MercWeapon.MercEffect.FASTBALANCE)) {
-        		balAdjust = 0.8;
-        	} else if (effectType.equals(MercWeapon.MercEffect.HIGHDMG)) {
-        		intensity = 9;
-        	}
-        	regularRun(effectType);
-        } else {
-        	mercWeapon = (StdItem)weapon;
-        	regularRun(null);
-        }
+        //MercWeapon.MercEffect effectType = mercWeapon.getMercEffect();
+		messageSelf("You attack " + target.getName() + " with your " + item.getName() + ".");
+		messageTarget(currentPlayer.getName() + " attacks you with a " + item.getName() + ".", Arrays.asList(target));
+        if (hasEffect()) {
+    		Weapon weapon = (Weapon) possWeapon;
+        	weapon.applyEffect(target);
+    	}
+		target.takeDamage(Type.SHARP, calculateDamage()); //calculate dmg once rather than mult times?
     	currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance()); 
     }
 
     private boolean preSkillChecks() {
         if (!hasBalance()) {return false;}
+   //   if (!findTargets()) {return false;}
         if (!findTarget()) {return false;}
         if (!weaponWielded()) {return false;}
         return true;
     }
-
-    private void regularRun(MercWeapon.MercEffect effectType) {
+    
+    private boolean findTarget() {
+    	target = null;
+        String possibleTarg = Syntax.TARGET.getStringInfo(fullCommand, this);
+        if (possibleTarg == "") {
+            messageSelf("Specify target.");
+            return false;
+        }
+        Location here = currentPlayer.getContainer();
+        target = here.getMobileFromString(possibleTarg);
+        if (target == null) {
+        	 messageSelf("Can't find target.");
+             return false;
+        }
+    	return true;
+    }
+    
+    //below commented out was for aoe (all)
+/*    private void regularRun(MercWeapon.MercEffect effectType) {
     	for (Mobile m : targets) {
     		if (effectType != null) {effectType.applyEffect(m);}
     		messageSelf("You attack " + m.getName() + " with your " + weapon.getName() + ".");
@@ -75,7 +87,7 @@ public class Attack extends Skills {
     	}
     }
     
-    private boolean findTarget() {
+    private boolean findTargets() {
     	targets = null;
         String possibleTarg = Syntax.TARGET.getStringInfo(fullCommand, this);
         if (possibleTarg == "") {
@@ -100,40 +112,52 @@ public class Attack extends Skills {
             messageSelf("Can't find target.");
             return false;
         }
-  //      if (isBlocking(finalTarget)) {  this is not even a thing
+   //     if (isBlocking(finalTarget)) {  
   //          return false;
-  //      }
+   //     }
         return true;
-    }
+    } */
 
     private boolean weaponWielded() {
-        if (currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.LEFTHAND) == null && currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND) == null) {
+     //   if (currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.LEFTHAND) == null && currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND) == null) {
+     //       messageSelf("You are not wielding a weapon.");
+     //       return false;
+     //   }  
+    	
+        //righthand primary for now
+    	item = currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND);
+    	if (item == null) {
+    		item = currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.LEFTHAND);
+    	}
+    	
+    	if (item == null) {
             messageSelf("You are not wielding a weapon.");
             return false;
         }
-        //players are all righthanded for now
-        weapon = currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND);
-        return true;
-    }
-    
-    private boolean isMercWeapon() {
-    	if (!(weapon instanceof StdItem)) {
-    		return false;
-    	} 
-    	mercWeapon = (StdItem)weapon; //all weapons should be StdItems, so this should handle fine nonMercWeapons too
-    	if (mercWeapon.getMercEffect() == null) {
-    		return false;
-    	}
     	return true;
     }
     
+    private boolean hasEffect() {
+    	if (!(item instanceof StdItem)) {
+    		return false;
+    	} 
+    	possWeapon = (StdItem) item;
+    	if (item instanceof Weapon) {
+    		weapon = (Weapon)item;
+    		if (weapon.getMercEffect() != null) {
+    			return true;
+    		}
+    	}
+    	return false;
+    } 
+    
     private int calculateDamage() {
-		double damageMult = mercWeapon.getDamageMult();
+		double damageMult = possWeapon.getDamageMult();
 		return (int) (damageMult * intensity);
 	}
     
     private int calculateBalance() {
-		return (int) (3000 * mercWeapon.getBalanceMult() * balAdjust);
+		return (int) (3000 * possWeapon.getBalanceMult() * balAdjust);
 	}
     
 }

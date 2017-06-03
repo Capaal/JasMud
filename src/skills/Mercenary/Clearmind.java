@@ -6,7 +6,7 @@ import processes.Skills;
 
 public class Clearmind extends Skills {
 	
-	//check for: limb already broken, is item wielded, unwield item
+
 	public Clearmind() {
 		super.name = "clearmind";
 		super.description = "Cures mental afflictions.";

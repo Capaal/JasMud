@@ -2,10 +2,10 @@ package processes;
 
 import items.Door;
 import items.Drinkable.DrinkType;
-import items.Herb.HerbType;
+import items.Plant.PlantType;
 import items.ItemBuilder;
 import items.ItemBuilder.ItemType;
-import items.MercWeapon.MercEffect;
+import items.Weapon.MercEffect;
 import items.Mineable.OreType;
 import processes.Equipment.EquipmentEnum;
 import processes.Location.Direction;
@@ -64,7 +64,7 @@ public class CreateWorld {
 		//mage?
 		generalSkills.addSkill(new Heal());
 		generalSkills.addSkill(new Root());
-//		generalSkills.addSkill(new VineTrip());
+		generalSkills.addSkill(new VineTrip());
 		//mercenary only
 		generalSkills.addSkill(new Headshot());
 		generalSkills.addSkill(new BreakLimb());
@@ -102,6 +102,7 @@ public class CreateWorld {
 		addOreRock();		
 		makeAloeHerb();	
 		makeComfreyHerb();
+		makeOleander();
 		addHerbPouch();
 		addHerbPouch();
 		makeGinsengHerb();
@@ -197,6 +198,7 @@ public class CreateWorld {
 		newItem.setSalvageable(true);
 		newItem.setAllowedSlots(EquipmentEnum.LEFTHAND);
 		newItem.setAllowedSlots(EquipmentEnum.RIGHTHAND);
+		newItem.setItemType(ItemType.WEAPON);
 		newItem.setMercEffect(MercEffect.BLEED);
 		newItem.complete();
 		itemTemplates.put("dagger", newItem);
@@ -209,6 +211,7 @@ public class CreateWorld {
 		newItem.setComponents(Arrays.asList("ingot","ingot"));
 		newItem.setSalvageable(true);
 		newItem.setDamageMult(1.5);
+		newItem.setItemType(ItemType.WEAPON);
 		newItem.setBalanceMult(1.2);
 		itemTemplates.put("sword", newItem);
 	}
@@ -218,6 +221,7 @@ public class CreateWorld {
 		newItem.setName("stick");
 		newItem.setDescription("It's an evil stick.");
 		newItem.setDamageMult(0.5);
+		newItem.setItemType(ItemType.WEAPON);
 		newItem.setMercEffect(MercEffect.FEAR);
 //		newItem.complete();
 		itemTemplates.put("stick", newItem);
@@ -232,10 +236,10 @@ public class CreateWorld {
 		newItem.setName("pike");
 		newItem.setDescription("It's a pike!");
 		newItem.setComponents(Arrays.asList("dagger","stick"));
+		newItem.setItemType(ItemType.WEAPON);
 		newItem.setDamageMult(1.8);
 		newItem.setBalanceMult(1.5);
 		newItem.setSalvageable(true);
-		newItem.setMercEffect(MercEffect.AOE);
 		itemTemplates.put("pike", newItem);
 	}
 	
@@ -313,8 +317,8 @@ public class CreateWorld {
 		ItemBuilder newItem = new ItemBuilder();	
 		newItem.setName("aloe");
 		newItem.setDamageMult(0.1);
-		newItem.setItemType(ItemType.HERB);
-		newItem.setHerbType(HerbType.ALOE);
+		newItem.setItemType(ItemType.PLANT);
+		newItem.setPlantType(PlantType.ALOE);
 		newItem.setQuantity(100);
 		newItem.complete();
 		itemTemplates.put("aloe", newItem);
@@ -324,19 +328,28 @@ public class CreateWorld {
 		ItemBuilder newItem = new ItemBuilder();	
 		newItem.setName("comfrey");
 		newItem.setDamageMult(0.1);
-		newItem.setItemType(ItemType.HERB);
-		newItem.setHerbType(HerbType.COMFREY);
+		newItem.setItemType(ItemType.PLANT);
+		newItem.setPlantType(PlantType.COMFREY);
 	//	newItem.complete();
 		itemTemplates.put("comfrey", newItem);
 	}
 	
+	public static void makeOleander() {
+		ItemBuilder newItem = new ItemBuilder();	
+		newItem.setName("oleander");
+		newItem.setDamageMult(0.1);
+		newItem.setItemType(ItemType.PLANT);
+		newItem.setPlantType(PlantType.OLEANDER);
+	//	newItem.complete();
+		itemTemplates.put("oleander", newItem);
+	}
 	
 	public static void makeGinsengHerb() {
 		ItemBuilder newItem = new ItemBuilder();
 		newItem.setName("ginseng");
 		newItem.setDamageMult(0.1);
-		newItem.setItemType(ItemType.HERB);
-		newItem.setHerbType(HerbType.GINSENG);
+		newItem.setItemType(ItemType.PLANT);
+		newItem.setPlantType(PlantType.GINSENG);
 		newItem.complete();
 		itemTemplates.put("ginseng", newItem);
 		}

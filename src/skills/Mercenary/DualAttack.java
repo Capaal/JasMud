@@ -9,7 +9,7 @@ import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import items.StdItem;
-import items.MercWeapon;
+import items.Weapon;
 import processes.Location;
 import processes.Equipment;
 import processes.Skills;
@@ -27,7 +27,7 @@ public class DualAttack extends Skills {
     private int totalDmg;
     String possibleTarg;
     private Collection<Mobile> targets = null;
-    private List<MercWeapon.MercEffect> effectsToApply = null;
+    private List<Weapon.MercEffect> effectsToApply = null;
     
     //Mercenary class skill, probably needs better name. Attacks target using wielded weapon. If weapon has special effect, applies.
     //Uses right hand only - dual wield uses both hands+weapons
@@ -56,12 +56,7 @@ public class DualAttack extends Skills {
 
     private void regularRun() {
     	for (Mobile m : targets) {
-    		for (MercWeapon.MercEffect effect : effectsToApply) {
-    			if (effect.equals(MercWeapon.MercEffect.FASTBALANCE)) {
-    				setBalances();
-    	        } else if (effect.equals(MercWeapon.MercEffect.HIGHDMG)) {
-    	        	intensity = 9;
-    	        }
+    		for (Weapon.MercEffect effect : effectsToApply) {
     			effect.applyEffect(m);
     		}
 			messageSelf("You attack " + m.getName() + ".");
@@ -123,14 +118,20 @@ public class DualAttack extends Skills {
     }
     
     private void checkMercWeapons() {
-    	effectsToApply = new ArrayList<MercWeapon.MercEffect>();
+    	effectsToApply = new ArrayList<Weapon.MercEffect>();
     	rmercWeapon = (StdItem)rightWeapon;
-        if (rmercWeapon.getMercEffect() != null) {
-        	effectsToApply.add(rmercWeapon.getMercEffect());
-    	} 
+    	if (rmercWeapon instanceof Weapon) {
+    		Weapon rightWeapon = (Weapon) rmercWeapon;
+            if (rightWeapon.getMercEffect() != null) {
+            	effectsToApply.add(rightWeapon.getMercEffect());
+        	} 
+    	}
         lmercWeapon = (StdItem)leftWeapon;
-    	if (lmercWeapon.getMercEffect() != null) {
-    		effectsToApply.add(lmercWeapon.getMercEffect());
+    	if (lmercWeapon instanceof Weapon) {
+    		Weapon leftWeapon = (Weapon) rmercWeapon;
+            if (leftWeapon.getMercEffect() != null) {
+            	effectsToApply.add(leftWeapon.getMercEffect());
+        	} 
     	}
     }
     
@@ -139,18 +140,6 @@ public class DualAttack extends Skills {
 		double damageMultl = lmercWeapon.getDamageMult();
 		return (int) (((damageMultr * intensity) + (damageMultl * intensity)) *.9 );
 	}
-    
-    private void setBalances() {
-    	if (rmercWeapon.getMercEffect().equals(MercWeapon.MercEffect.FASTBALANCE) && lmercWeapon.getMercEffect().equals(MercWeapon.MercEffect.FASTBALANCE)) {
-    		balAdjust = 0.8;
-    	} else if (rmercWeapon.getMercEffect().equals(MercWeapon.MercEffect.HIGHDMG)) {
-    		intensity = 9;
-    	} else if (rmercWeapon.getMercEffect().equals(MercWeapon.MercEffect.HIGHDMG) && lmercWeapon.getMercEffect().equals(MercWeapon.MercEffect.HIGHDMG)) {
-    		intensity = 10;
-    	} else {
-    		return;
-    	}
-    }
     
     private int calculateBalance() {
 		return (int) (3000 * rmercWeapon.getBalanceMult() * balAdjust);

@@ -2,8 +2,8 @@ package items;
 
 import interfaces.Container;
 import items.Drinkable.DrinkType;
-import items.Herb.HerbType;
-import items.MercWeapon.MercEffect;
+import items.Plant.PlantType;
+import items.Weapon.MercEffect;
 import items.Mineable.OreType;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -30,7 +30,7 @@ public class ItemBuilder {
 	private boolean salvageable = false;
 	private static Map<String, Integer> idMap = new HashMap<String, Integer>();
 	private StdItem finishedItem =  null;
-	private  MercWeapon.MercEffect mercEffect = null;
+	private  Weapon.MercEffect mercEffect = null;
 	
 	// Declares which specific item type to produce.
 	private ItemType typeToProduce = ItemType.STDITEM;
@@ -68,9 +68,9 @@ public class ItemBuilder {
 	//end herbPouch stuff
 	
 	//herb stuff
-	private HerbType herbType;
-	public HerbType getHerbType() {return herbType;}
-	public void setHerbType(HerbType herbType) {this.herbType = herbType;}
+	private PlantType herbType;
+	public PlantType getPlantType() {return herbType;}
+	public void setPlantType(PlantType herbType) {this.herbType = herbType;}
 	//end herb stuff
 
 	
@@ -249,9 +249,15 @@ public class ItemBuilder {
 			}
 		},
 		
-		HERB() {
+		WEAPON() {
 			@Override public StdItem produceType(ItemBuilder build) {
-				return new Herb(build);
+				return new Weapon(build);
+			}
+		},
+		
+		PLANT() {
+			@Override public StdItem produceType(ItemBuilder build) {
+				return new Plant(build);
 			}
 		},
 		
@@ -263,7 +269,7 @@ public class ItemBuilder {
 		
 		HERBPOUCH() {
 			@Override public StdItem produceType(ItemBuilder build) {
-				return new HerbPouch(build);
+				return new Pouch(build);
 			}
 
 		};
@@ -275,7 +281,7 @@ public class ItemBuilder {
 				
 	}
 
-	public MercWeapon.MercEffect getMercEffect() {
+	public Weapon.MercEffect getMercEffect() {
 		return this.mercEffect;
 	}
 	

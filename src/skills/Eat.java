@@ -2,9 +2,9 @@ package skills;
 
 import java.util.Collection;
 import interfaces.Holdable;
-import items.Herb;
-import items.Herb.HerbType;
-import items.HerbPouch;
+import items.Plant;
+import items.Plant.PlantType;
+import items.Pouch;
 import processes.Skills;
 
 //currently only for herbs
@@ -12,7 +12,7 @@ public class Eat extends Skills{
 	
 	private String itemName;
 	private Collection<Holdable> containerList;
-	private Herb finalHerb;
+	private Plant finalHerb;
 	
 	public Eat() {
 		super.name = "eat";
@@ -40,7 +40,7 @@ public class Eat extends Skills{
 		Holdable itemToEat = currentPlayer.getHoldableFromString(itemName); //in inventory
 		if (itemToEat == null) { //null = herb not in inv (maybe in pouch)		
 			try {
-				HerbType.valueOf(itemName.toUpperCase()); 
+				PlantType.valueOf(itemName.toUpperCase()); 
 			} catch (IllegalArgumentException e) {
 				messageSelf(itemName + " is not something you can eat.");
 				return false; //not an herb
@@ -56,8 +56,8 @@ public class Eat extends Skills{
 				}
 			}	
 			for (Holdable h : containerList) {
-				HerbPouch pouch = (HerbPouch) h;
-				Herb herb = (Herb) pouch.getHoldableFromString(itemName);
+				Pouch pouch = (Pouch) h;
+				Plant herb = (Plant) pouch.getHoldableFromString(itemName);
 				if (herb != null) {
 					finalHerb = herb;
 					return true;
@@ -66,8 +66,8 @@ public class Eat extends Skills{
 			messageSelf("You have no " + itemName);
 			return false;
 		//if item is in inv and is an herb
-		} else if (itemToEat instanceof Herb) { 
-			finalHerb = (Herb) itemToEat;
+		} else if (itemToEat instanceof Plant) { 
+			finalHerb = (Plant) itemToEat;
 			return true;
 		} else {
 			messageSelf("You cannot eat the \"" + itemName + "\".");

@@ -2,7 +2,7 @@ package skills;
 
 import interfaces.Container;
 import interfaces.Holdable;
-import items.HerbPouch;
+import items.Pouch;
 import items.Mineable;
 import processes.Skills;
 

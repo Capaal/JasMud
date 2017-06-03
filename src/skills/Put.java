@@ -54,23 +54,27 @@ public class Put extends Skills {
 		itemName = Syntax.ITEM.getStringInfo(fullCommand, this);
 		if (itemName.equals("")) {
 			messageSelf("What are you trying to put?");
+			System.out.println("Put precheck: no item specified.");
 			return false;
 		}
 		//find the item
 		if (!checkItem()) {
 			messageSelf("You do not have a \"" + itemName + "\".");
+			System.out.println("Put precheck: item not in inv.");
 			return false;
 		} 
 		//check filler word
 		String in = Syntax.FILLER.getStringInfo(fullCommand, this);
 		if (!in.equalsIgnoreCase("in")) {
 			messageSelf("Syntax: PUT (ITEM) IN (CONTAINER).");
+			System.out.println("Put precheck: invalid filler (in).");
 			return false;
 		}
 		//find target container
 		possibleContainer = Syntax.TARGET.getStringInfo(fullCommand, this);
 		if (possibleContainer.equals("")) {
 			messageSelf("What are you trying to put that in?");
+			System.out.println("Put precheck: no container.");
 			return false;
 		} 		
 		// Tries to set containerList.
@@ -79,12 +83,14 @@ public class Put extends Skills {
 			containerList = currentPlayer.getContainer().getListMatchingString(possibleContainer);
 			if (containerList == null) { // If also not on the ground.
 				messageSelf("You don't see a \"" + possibleContainer + "\".");
+				System.out.println("Put precheck: no container in loc or inv.");
 				return false;
 			}
 		}
 		for (Holdable h : containerList) {
 			if (!(h instanceof Container)) {
 				messageSelf("That \"" + possibleContainer + "\" is not a valid container.");
+			System.out.println("Put precheck: attempted container invalid.");
 				return false;
 			}
 		}		
@@ -130,7 +136,7 @@ public class Put extends Skills {
 		//if all containers are full to begin with or wrong type
 		} else { 
 			// BUG: returned: "That aloe is full." when the bag was full.
-			messageSelf(error.display(sItem.getName()));
+			messageSelf(error.display(possibleContainer));
 		}
 	}	
 }
