@@ -1,5 +1,9 @@
 package items;
 
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Queue;
+
 import effects.Bleed;
 import effects.Fear;
 import effects.PassiveCondition;
@@ -14,6 +18,7 @@ import processes.Type;
 public class Weapon extends StdItem {
 	
 	private MercEffect type;
+	private Queue<Plant> appliedPlants = new ArrayDeque(); 
 	
 	public Weapon(ItemBuilder build) {
 		super(build);
@@ -42,10 +47,17 @@ public class Weapon extends StdItem {
 	}
 	
 	public MercEffect getMercEffect() {return this.type;}
+	public Queue<Plant> getAppliedList() {return this.appliedPlants;}
 	
+	public String applyPlant(Mobile target) {
+		return this.appliedPlants.poll().getPlantType().use(target);
+	}
 	
 	public boolean applyEffect(Mobile target) {
-		return type.applyEffect(target);
+		if (type != null) {
+			return type.applyEffect(target);
+		}
+		return false;
 	}
 	
 	public enum MercEffect {
@@ -61,9 +73,7 @@ public class Weapon extends StdItem {
 		},	
 		
 		FASTBALANCE() {
-			@Override public boolean applyEffect(Mobile target) {
-				return true;
-			}
+
 		},
 			
 		FEAR() {
@@ -77,9 +87,7 @@ public class Weapon extends StdItem {
 		},
 		
 		HIGHDMG() {
-			@Override public boolean applyEffect(Mobile target) {
-				return true;
-			}
+
 		},
 		
 		KNOCKDOWN() {
@@ -96,7 +104,7 @@ public class Weapon extends StdItem {
 		}
 		
 		public boolean applyEffect(Mobile target) {
-			return false;
+			return true;
 		}
 
 		

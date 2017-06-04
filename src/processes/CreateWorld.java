@@ -55,6 +55,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new TakeOut());
 		generalSkills.addSkill(new Open());
 		generalSkills.addSkill(new Close());
+		generalSkills.addSkill(new Apply());
 		//crafting
 		generalSkills.addSkill(new CraftItem());
 		generalSkills.addSkill(new Salvage());
