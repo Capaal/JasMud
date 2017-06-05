@@ -27,6 +27,10 @@ public class Fear extends TickingEffect {
 			currentPlayer.tell("You try to flee, but are off balance.");
 			return;
 		}
+		if (!currentPlayer.hasAllConditions(PassiveCondition.ROOT)) {
+			currentPlayer.tell("You try to flee, but you are rooted in place.");
+			return;
+		}
 		if (currentPlayer.hasAllConditions(PassiveCondition.BROKENLEGS)) {
 			currentPlayer.tell("You try to flee, but your legs are broken.");
 			return;
@@ -44,7 +48,7 @@ public class Fear extends TickingEffect {
 			currentPlayer.tell("You run around in circles, panicking but unable to find an exit.");
 			return;
 		}
-		messageOthers(currentPlayer.getName() + " flees in a random direction.", Arrays.asList(currentPlayer));
+		messageOthers(currentPlayer.getName() + " flees away in a random direction.", Arrays.asList(currentPlayer)); //TODO need to specify direction
 		currentPlayer.moveHoldable(endContainer);new Look().perform("", currentPlayer);	
 		messageOthers(currentPlayer.getName() + " flees in from a random direction.", Arrays.asList(currentPlayer));
 	}

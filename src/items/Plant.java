@@ -46,6 +46,7 @@ public class Plant extends StackableItem {
 				currentPlayer.takeDamage(Type.BLUNT, -20);
 				return "The herb soothes your wounds and restores some life.";
 			}
+			//TODO if at full life, failmsg
 		},
 		
 		COMFREY {
@@ -57,7 +58,7 @@ public class Plant extends StackableItem {
 					currentPlayer.removeAllConditions(PassiveCondition.BROKENRIGHTARM);
 					return("The herbs quickly knits your bones together and fixes your right arm.");
 				} else {
-					return("The comfrey has no effect.");
+					return failMsg;
 				}
 			}
 		},
@@ -75,7 +76,7 @@ public class Plant extends StackableItem {
 					currentPlayer.addAllConditions(PassiveCondition.DIZZY);
 					return "You feel dizzy.";
 				} else {
-					return failedUse();
+					return failMsg;
 				}
 			}		
 			
@@ -83,9 +84,7 @@ public class Plant extends StackableItem {
 		
 		private PlantType() {}
 		
-		public String failedUse() {
-			return "The plant doesn't seem to have an effect.";
-		}
+		String failMsg = "The plant doesn't seem to have an effect.";
 		
 		public String use(Mobile currentPlayer) {
 			return "Error: failure Herb.use(...).";

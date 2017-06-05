@@ -22,14 +22,22 @@ public class Info extends Skills {
 			return;
 		}
 		if (toInfo.equals("here")) {
-			listAllInfo(currentPlayer.getContainer());
+			if (currentPlayer.getContainer().getInventory().keySet().isEmpty()) {
+				messageSelf("There is nothing on the ground.");
+			} else {
+				listAllInfo(currentPlayer.getContainer());
+			}
 		} else if (toInfo.equals("inventory")) {
-			listAllInfo(currentPlayer);
+			if (currentPlayer.getInventory().keySet().isEmpty()) {
+				messageSelf("You are holding nothing.");
+			} else {
+				listAllInfo(currentPlayer);
+			}
 		} else { //specific item			
 			if (searchForItem(currentPlayer.getContainer())) {return;} // Search on ground.
 			else if (searchForItem(currentPlayer)) {return;} // Search in inventory.
 			else {
-				messageSelf("You can't find that item."); //maybe add "you can't pickup mobiles"
+				messageSelf("You can't find that item."); 
 			}
 		}
 	}

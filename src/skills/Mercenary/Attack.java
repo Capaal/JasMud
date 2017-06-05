@@ -40,6 +40,7 @@ public class Attack extends Skills {
 		if (possWeapon instanceof Weapon) {
 			Weapon weapon = (Weapon) possWeapon;
 			weapon.applyEffect(target);
+		//	messageOthers(target.getName() + weapon.displayEffectOthers(),Arrays.asList(currentPlayer));
 			if (!weapon.getAppliedList().isEmpty()) {
 				messageTarget(weapon.applyPlant(target), Arrays.asList(target));
 			}

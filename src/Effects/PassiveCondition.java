@@ -6,15 +6,15 @@ import interfaces.Mobile;
 public enum PassiveCondition {
 		
 		BROKENRIGHTARM() {
-			
+			@Override public String limbName() {return "righthand";}
 		},
 		
 		BROKENLEFTARM() {
-			
+			@Override public String limbName() {return "lefthand";}
 		},
 		
 		BROKENLEGS() {
-			
+			@Override public String limbName() {return "legs";}
 		},
 		
 		BALANCE() {
@@ -45,6 +45,8 @@ public enum PassiveCondition {
 		
 		public void doOnCreation(Mobile currentPlayer) {currentPlayer.displayPrompt();}
 		public void doOnDestruction(Mobile currentPlayer) {currentPlayer.displayPrompt();}
+		
+		public String limbName() {return "";}
 		
 		//this doesn't work here
 /*		public ConditionsEnum getBroken(String slot) {

@@ -248,7 +248,7 @@ public class CreateWorld {
 		ItemBuilder newItem = new ItemBuilder();	
 		newItem.setName("ingot");
 		newItem.setDescription("An iron ingot.");
-		newItem.setComponents(Arrays.asList("ore","ore"));
+		newItem.setComponents(Arrays.asList("iron","iron")); //TODO should use the object iron instead of string
 		newItem.setDamageMult(0.4);
 		newItem.setSalvageable(true);
 		itemTemplates.put("ingot", newItem);
@@ -270,7 +270,7 @@ public class CreateWorld {
 		ItemBuilder newItem = new ItemBuilder();	
 		newItem.setName("ironpotion");
 		newItem.setDescription("A potion made from iron.");
-		newItem.setComponents(Arrays.asList("ore"));
+		newItem.setComponents(Arrays.asList("iron"));
 		newItem.setDamageMult(0.2);
 		newItem.setMaxSips(2);
 		newItem.setDefenseMult(10); //wtf is this for?

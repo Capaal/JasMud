@@ -2,6 +2,7 @@ package items;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Queue;
 
 import effects.Bleed;
@@ -18,7 +19,8 @@ import processes.Type;
 public class Weapon extends StdItem {
 	
 	private MercEffect type;
-	private Queue<Plant> appliedPlants = new ArrayDeque(); 
+	private ArrayDeque<Plant> appliedPlants = new ArrayDeque<Plant>(); 
+
 	
 	public Weapon(ItemBuilder build) {
 		super(build);
@@ -28,6 +30,22 @@ public class Weapon extends StdItem {
 	@Override public ItemBuilder newBuilder() {
 		ItemBuilder newBuild = super.newBuilder();
 		return newBuild;
+	}
+	
+	@Override 
+	public String getInfo() { 
+		StringBuilder s = new StringBuilder();
+		s.append(this.getName() + this.getId());
+		if (!appliedPlants.isEmpty()) {
+			s.append(System.getProperty("line.separator"));
+			s.append("These plants have been applied:");
+			s.append(System.getProperty("line.separator"));
+			for (Plant p : appliedPlants) {
+				s.append(p.getName());
+				s.append(System.getProperty("line.separator"));
+			}
+		}
+		return s.toString();
 	}
 
 	@Override
@@ -60,6 +78,10 @@ public class Weapon extends StdItem {
 		return false;
 	}
 	
+//	public String displayEffectOthers() {
+//		return "";
+//	}
+	
 	public enum MercEffect {
 
 		BLEED() {
@@ -84,6 +106,7 @@ public class Weapon extends StdItem {
 				}
 				return failedApply(target);
 			}
+			
 		},
 		
 		HIGHDMG() {
@@ -107,6 +130,11 @@ public class Weapon extends StdItem {
 			return true;
 		}
 
+	//	public String displayEffectOthers() {
+	//		return displayEffectOthers;		
+	//	}
+		
+	//	private static String displayEffectOthers;
 		
 	}
 	

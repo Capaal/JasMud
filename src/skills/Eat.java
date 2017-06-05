@@ -1,5 +1,6 @@
 package skills;
 
+import java.util.Arrays;
 import java.util.Collection;
 import interfaces.Holdable;
 import items.Plant;
@@ -25,6 +26,7 @@ public class Eat extends Skills{
 	protected void performSkill() {
 		if(!preSkillChecks()) {return;}		
 		messageSelf(finalHerb.use(currentPlayer));
+		messageOthers(currentPlayer.getName() + "eats a " + finalHerb.getName() + ".", Arrays.asList(currentPlayer));
 		finalHerb.removeFromStack(1); 			
 	//	messageSelf("You eat " + itemName + "."); 		
 	}
