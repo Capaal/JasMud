@@ -4,7 +4,7 @@ import interfaces.Container;
 import items.Drinkable.DrinkType;
 import items.Plant.PlantType;
 import items.Weapon.MercEffect;
-import items.Mineable.OreType;
+import items.Harvestable.HarvestType;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -54,18 +54,12 @@ public class ItemBuilder {
 	
 	//mining stuff
 	private int maxOres = 0;
-	private OreType oreType;
+	private HarvestType oreType;
 	public int getMaxOres() {return maxOres;}
 	public void setMaxOres(int ores) {this.maxOres = ores;}
-	public OreType getOreType() {return oreType;}
-	public void setOreType(OreType oreType) {this.oreType = oreType;}
+	public HarvestType getOreType() {return oreType;}
+	public void setOreType(HarvestType oreType) {this.oreType = oreType;}
 	//end mining stuff
-	
-	//herbPouch stuff
-	private int maxHerbs = 1000;
-	public int getMaxHerbs() {return maxHerbs;}
-	public void setMaxHerbs(int herbs) {this.maxHerbs = herbs;}
-	//end herbPouch stuff
 	
 	//herb stuff
 	private PlantType herbType;
@@ -76,6 +70,10 @@ public class ItemBuilder {
 	
 	public void setItemType (ItemType type) {
 		this.typeToProduce = type;
+	}
+	
+	public ItemType getItemType() {
+		return this.typeToProduce;
 	}
 	
 	public void setDescriptionSingle(String desc) {
@@ -210,6 +208,7 @@ public class ItemBuilder {
 			idMap.put(this.name,  this.id);
 		}
 	}
+
 	
 	public StdItem getFinishedItem() {
 		return finishedItem;
@@ -243,9 +242,9 @@ public class ItemBuilder {
 			}
 		},
 		
-		MINEABLE() {
+		HARVESTABLE() {
 			@Override public StdItem produceType(ItemBuilder build) {
-				return new Mineable(build);
+				return new Harvestable(build);
 			}
 		},
 		

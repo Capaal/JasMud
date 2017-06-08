@@ -30,7 +30,7 @@ public class Pouch extends StdItem implements Container {
 	
 	@Override public String getShortDesc() {
 		if (this.inventory == null) {
-			return "empty pouch";
+			return "empty herbpouch";
 		} else {
 			return this.inventory.getPlantType().toString().toLowerCase() + " pouch";
 		}

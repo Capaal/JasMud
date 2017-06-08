@@ -79,9 +79,9 @@ public class Put extends Skills {
 		} 		
 		// Tries to set containerList.
 		containerList = currentPlayer.getListMatchingString(possibleContainer);
-		if (containerList == null) { // If not in player's inventory
+		if (containerList == null || containerList.isEmpty()) { // If not in player's inventory
 			containerList = currentPlayer.getContainer().getListMatchingString(possibleContainer);
-			if (containerList == null) { // If also not on the ground.
+			if (containerList == null || containerList.isEmpty()) { // If also not on the ground.
 				messageSelf("You don't see a \"" + possibleContainer + "\".");
 				System.out.println("Put precheck: no container in loc or inv.");
 				return false;

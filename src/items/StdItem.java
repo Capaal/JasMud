@@ -170,6 +170,11 @@ public class StdItem implements Holdable{
 		return this.getName() + this.getId();
 	}
 	
+	@Override
+	public String getExamine() {
+		return this.getDescription();
+	}
+	
 	@ Override
 	public String getShortDesc() {
 		return this.getName();

@@ -33,14 +33,23 @@ public class Bag extends StdItem implements Container { //wearable
 	@Override
 	public String getInfo() {
 		StringBuilder s = new StringBuilder();
+		s.append(this.getName());
+		s.append(this.getId());
+		return s.toString();
+	}
+	
+	@Override
+	public String getExamine() {
+		StringBuilder s = new StringBuilder();
 		if (this.inventory != null) {
+			s.append(System.getProperty("line.separator"));
 			s.append("This ");
 			s.append(this.getName());
 			s.append(" contains: ");
 			s.append(System.getProperty("line.separator"));
 			for (Holdable h: inventory.values()) {
 				s.append("  ");
-				s.append(h.getInfo());
+				s.append(h.getShortDesc());
 				s.append(System.getProperty("line.separator"));
 			}
 			s.append("There are " + inventory.size() + " items inside.");
@@ -48,6 +57,7 @@ public class Bag extends StdItem implements Container { //wearable
 		} else
 			return ("That bag is empty.");
 	}
+	
 	
 	@Override
 	public ContainerErrors acceptItem(Holdable newItem) {

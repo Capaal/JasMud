@@ -25,41 +25,45 @@ import processes.Type;
 
 
 //almost same as stackable, except can't split quantity
-public class Mineable extends StationaryItem {
+public class Harvestable extends StationaryItem {
 	
 	// Probably handle recovering IDs at some point
-	private int maxOres;
-	private int currentOres;
-	private OreType type;
+	private int maxHarvestNum;
+	private int remainingHarvestNum;
+	private HarvestType type;
 	private boolean running = false;
+	private int timeToReset = 5;
 
-	public Mineable(ItemBuilder build) {
+	//add timeToRegen
+	public Harvestable(ItemBuilder build) {
 		super(build);
-		this.maxOres = build.getMaxOres();
-		this.currentOres = maxOres;
+		this.maxHarvestNum = build.getMaxOres();
+		this.remainingHarvestNum = maxHarvestNum;
 		this.type = build.getOreType();
 	}
 	
 	public int getOres() {
-		return this.currentOres;
+		return this.remainingHarvestNum;
 	}
 	
+	//TODO should actually be getExamine
 	@Override public String getInfo() {
-		return super.getInfo() + ": number of ore remaining: " + this.currentOres;
+		return this.type.getInfo();
 	}
 	
-	public boolean changeOres(int number) {
-		currentOres = currentOres - number;
-		if (currentOres < 0) {
-			currentOres = 0;
+	//shouldn't this just be removeOne?
+	public boolean changeRemaining(int number) {
+		remainingHarvestNum = remainingHarvestNum - number;
+		if (remainingHarvestNum < 0) {
+			remainingHarvestNum = 0;
 			if (!running) {
 				schedule();
 				running = true;
 			}
 			return false;
 		}
-		if (currentOres > maxOres) {
-			currentOres = maxOres;
+		if (remainingHarvestNum > maxHarvestNum) {
+			remainingHarvestNum = maxHarvestNum;
 			return false;
 		}
 		return true;
@@ -78,45 +82,51 @@ public class Mineable extends StationaryItem {
 	
 	private void schedule() {
 		SkillWrapper wrapper = new SkillWrapper();
-		effectExecutor.schedule(wrapper, 5, TimeUnit.SECONDS); //20s for test
+		effectExecutor.schedule(wrapper, timeToReset, TimeUnit.SECONDS); //20s for test
 	}
 	//end timer stuff
 	
 	// possible to access by outside methods - reset on daily for example
 	public void reset() {
 		Random n = new Random();
-		currentOres = n.nextInt(maxOres - 1) + 1; //between 1 and max, no zero
-		System.out.println("Rock reset worked.");
+		remainingHarvestNum = n.nextInt(maxHarvestNum - 1) + 1; //between 1 and max, no zero
+		System.out.println(this.type.toString() + " reset done.");
 	}
 	
-	public String mine(Mobile currentPlayer) {
-		return type.mine(currentPlayer);
+	public String harvest(Mobile currentPlayer) {
+		return type.harvest(currentPlayer);
 	}
 	
 	@Override public ItemBuilder newBuilder() {
 		ItemBuilder newBuild = super.newBuilder();
-		newBuild.setQuantity(this.currentOres);
+		newBuild.setQuantity(this.remainingHarvestNum);
 		newBuild.setDescription(this.description);
-		newBuild.setItemType(ItemType.MINEABLE);
+		newBuild.setItemType(ItemType.HARVESTABLE);
 		return newBuild;
 	} 
 	
-	public enum OreType {
+	public enum HarvestType {
 		IRON() {
-			@Override public String mine(Mobile currentPlayer) {
-				createOre(currentPlayer, "iron");
+			@Override public String harvest(Mobile currentPlayer) {
+				createHarvestedItem(currentPlayer, "iron");
 				return "You manage to pick out a chunk of iron."; //or return just "iron" and the message can otherwise be the same
 			}
-/*		},
-		
-		SILVER() {
-			@Override public String mine(Mobile currentPlayer) {	
-				if (currentPlayer.addPassiveCondition(PassiveCondition.DEFENCE,  -1)) {
-					return "The potion makes you feel tougher.";
-				}
-				return failedMine();
+			
+			@Override public String getInfo() {
+				return "";
 			}
 		},
+		
+		WOOD() {
+			@Override public String harvest(Mobile currentPlayer) {	
+				createHarvestedItem(currentPlayer, "log");
+				return "You cut a log out of the tree.";
+			}
+			
+			@Override public String getInfo() {
+				return "";
+			}
+/*		},
 
 		GOLD() {
 			@Override public String mine(Mobile currentPlayer) {
@@ -148,20 +158,26 @@ public class Mineable extends StationaryItem {
 		};
 	
 		Map<String, ItemBuilder> allItemTemplates = CreateWorld.viewItemTemplates();
-		private OreType() {}
+		private HarvestType() {}
 		
-		public String failedMine() {
-			return "You can't mine this rock.";
+		public String failedHarvest() {
+			return "You can't harvest this... thing.";
 		}
 		
-		public String mine(Mobile currentPlayer) {
-			return "Wrong method, tells the coders they screwed up.";
+		public String harvest(Mobile currentPlayer) {
+			System.out.println("Error Harvestable harvest: this method should never run.");
+			return "";
 		}
 		
-		public void createOre(Mobile currentPlayer, String oreToCreate) {
-			ItemBuilder toCopy = allItemTemplates.get(oreToCreate); // Are all components actually stored in this list?
+		public void createHarvestedItem(Mobile currentPlayer, String itemToCreate) {
+			ItemBuilder toCopy = allItemTemplates.get(itemToCreate); 
 			toCopy.setItemContainer(currentPlayer);
 			toCopy.complete();
+		}
+		
+		public String getInfo() {
+			System.out.println("Error Harvestable getInfo: this method should never run.");
+			return "";
 		}
 		
 	}

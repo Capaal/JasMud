@@ -43,10 +43,12 @@ public class Plant extends StackableItem {
 	public enum PlantType {
 		ALOE {
 			@Override public String use(Mobile currentPlayer) {
+				if (currentPlayer.getCurrentHp() >= currentPlayer.getMaxHp()) {
+					return failMsg;
+				}
 				currentPlayer.takeDamage(Type.BLUNT, -20);
 				return "The herb soothes your wounds and restores some life.";
 			}
-			//TODO if at full life, failmsg
 		},
 		
 		COMFREY {

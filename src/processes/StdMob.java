@@ -295,7 +295,7 @@ public class StdMob implements Mobile, Container{
 		holdableString = holdableString.toLowerCase();		
 		SortedMap<String, Holdable> subMap = inventory.subMap(holdableString, true, holdableString + Character.MAX_VALUE, true);		
 		Collection<Holdable> set = subMap.values();
-		System.out.println(set.toString());		
+		System.out.println("StdMob getListMatchingString: " + set.toString());		
 		if (set.isEmpty() || set == null) {
 			Holdable h = getHoldableFromString(holdableString);
 			if (h != null) {

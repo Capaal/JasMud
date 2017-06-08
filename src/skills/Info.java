@@ -3,7 +3,7 @@ package skills;
 import interfaces.Container;
 import interfaces.Holdable;
 import items.Pouch;
-import items.Mineable;
+import items.Harvestable;
 import processes.Skills;
 
 public class Info extends Skills {

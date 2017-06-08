@@ -17,5 +17,6 @@ public interface Holdable extends Comparable<Holdable> {
 	public String getInfo(); //name + id
 	public String getShortDesc(); //qty + short descriptive name (emtpy herbpouch or aloe herbpouch instead of just herbpouch)
 //  public String getShortLook(); //qty + short ground description	
+	public String getExamine();
 
 }

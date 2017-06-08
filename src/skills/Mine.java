@@ -4,13 +4,13 @@ import java.util.Arrays;
 
 import interfaces.Holdable;
 import processes.InductionSkill;
-import items.Mineable;
+import items.Harvestable;
 
 public class Mine extends InductionSkill {
 	
 	private String oreName;
 	private Holdable oreItem;
-	Mineable rock;
+	Harvestable rock;
 
 	public Mine() {
 		super.name = "mine";
@@ -34,11 +34,11 @@ public class Mine extends InductionSkill {
 			return;
 		}
 		//check if the item is a rock
-		if (!(oreItem instanceof Mineable)) { 
+		if (!(oreItem instanceof Harvestable)) { 
 			messageSelf("You cannot mine " + oreName + ".");
 			return;
 		}
-		rock = (Mineable) oreItem;		
+		rock = (Harvestable) oreItem;		
 		scheduleSkillRepeatNTimesOverXMilliseconds(1, 5000); // Triggers this skill's "run()" in 5 seconds. Interruptible.
 		currentPlayer.setInduction(this);
 		messageSelf("You begin mining.");
@@ -48,11 +48,11 @@ public class Mine extends InductionSkill {
 
 	@Override
 	public void run() {
-		if(!rock.changeOres(1)) {
+		if(!rock.changeRemaining(1)) {
 			messageSelf("There are no more ores left in this rock.");
 			return;
 		}
-		messageSelf(rock.mine(currentPlayer));
+		messageSelf(rock.harvest(currentPlayer));
 	}
 
 	@Override

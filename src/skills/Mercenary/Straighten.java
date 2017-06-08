@@ -2,6 +2,7 @@ package skills.Mercenary;
 
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import effects.PassiveCondition;
@@ -13,7 +14,7 @@ public class Straighten extends Skills {
 	
 	String slot;
 	PassiveCondition broken;
-	Map<String,PassiveCondition> affectedList;
+	Map<String,PassiveCondition> affectedList = new HashMap<String,PassiveCondition>();
 	
 	public Straighten() {
 		super.name = "straighten";

@@ -368,8 +368,17 @@ public class Location implements Container {
 
 	@Override
 	public Collection<Holdable> getListMatchingString(String holdableString) {
-		// TODO Auto-generated method stub
-		return null;
+		holdableString = holdableString.toLowerCase();		
+		SortedMap<String, Holdable> subMap = inventory.subMap(holdableString, true, holdableString + Character.MAX_VALUE, true);		
+		Collection<Holdable> set = subMap.values();
+		System.out.println("Location getListMatchingString: " + set.toString());		
+		if (set.isEmpty() || set == null) {
+			Holdable h = getHoldableFromString(holdableString);
+			if (h != null) {
+				set.add(h);
+			}
+		}
+		return set;
 	}
 
 

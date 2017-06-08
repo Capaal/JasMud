@@ -27,8 +27,7 @@ public class Eat extends Skills{
 		if(!preSkillChecks()) {return;}		
 		messageSelf(finalHerb.use(currentPlayer));
 		messageOthers(currentPlayer.getName() + "eats a " + finalHerb.getName() + ".", Arrays.asList(currentPlayer));
-		finalHerb.removeFromStack(1); 			
-	//	messageSelf("You eat " + itemName + "."); 		
+		finalHerb.removeFromStack(1); 			 		
 	}
 	
 	private boolean preSkillChecks() {

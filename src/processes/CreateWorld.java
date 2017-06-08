@@ -6,7 +6,7 @@ import items.Plant.PlantType;
 import items.ItemBuilder;
 import items.ItemBuilder.ItemType;
 import items.Weapon.MercEffect;
-import items.Mineable.OreType;
+import items.Harvestable.HarvestType;
 import processes.Equipment.EquipmentEnum;
 import processes.Location.Direction;
 
@@ -56,6 +56,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new Open());
 		generalSkills.addSkill(new Close());
 		generalSkills.addSkill(new Apply());
+		generalSkills.addSkill(new Examine());
 		//crafting
 		generalSkills.addSkill(new CraftItem());
 		generalSkills.addSkill(new Salvage());
@@ -375,8 +376,8 @@ public class CreateWorld {
 		ItemBuilder newItem = new ItemBuilder();
 		newItem.setName("ironrock");
 		newItem.setMaxOres(5);
-		newItem.setItemType(ItemType.MINEABLE);
-		newItem.setOreType(OreType.IRON);
+		newItem.setItemType(ItemType.HARVESTABLE);
+		newItem.setOreType(HarvestType.IRON);
 		newItem.setItemContainer(WorldServer.gameState.viewLocations().get(7));
 		newItem.complete();
 		itemTemplates.put("regenpotion", newItem);
