@@ -7,6 +7,7 @@ import java.util.TreeMap;
 
 import interfaces.Container;
 import interfaces.Holdable;
+import items.Bag.BagItemBuilder;
 import processes.ContainerErrors;
 
 //Pouches for easy accessibility - can eat/rub/use directly out of a pouch as though in hand.
@@ -95,4 +96,22 @@ public class Pouch extends StdItem implements Container {
 		set.add(inventory);
 		return set;
 	}	
+	
+	@Override public ItemBuilder newBuilder() {
+		return newBuilder(new PouchItemBuilder());
+	}
+	
+	protected ItemBuilder newBuilder(PouchItemBuilder newBuild) {
+		super.newBuilder(newBuild);
+		return newBuild;
+	}
+	
+	public static class PouchItemBuilder extends BagItemBuilder {
+		
+		
+		
+		@Override public StdItem produceType() {
+			return new Pouch(this);
+		} 
+	}
 }

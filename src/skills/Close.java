@@ -21,7 +21,6 @@ public class Close extends Skills {
 	@Override
 	protected void performSkill() {
 		String dirString = Syntax.DIRECTION.getStringInfo(fullCommand, this);
-		dir = null;
 		dir = Direction.getDirectionName(dirString); // Does this return null? it is defaulting north?
 		if (dir == null) {
 			messageSelf("There is not a direction that way, nor a door.");
@@ -32,8 +31,13 @@ public class Close extends Skills {
 			messageSelf("There is no door in that direction.");
 			return;
 		}
+		if (!door.isOpen()) {
+			messageSelf("That door is already closed.");
+			return;
+		}
 		door.alterDoor(false);
 		messageSelf("You close the door to your " + dir.toString().toLowerCase() + ".");
 		messageOthers(currentPlayer.getName() + " closes the door to the " + dir.toString().toLowerCase() + ".", Arrays.asList(currentPlayer));
+		// TODO, get location on the other side of door and display message?
 	}
 }

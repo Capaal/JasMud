@@ -12,7 +12,6 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import interfaces.Container;
 import interfaces.Holdable;
-import items.ItemBuilder.ItemType;
 
 @XStreamAlias("StackableItem")
 public class StackableItem extends StdItem {
@@ -22,7 +21,7 @@ public class StackableItem extends StdItem {
 	private String descriptionSingle;
 	private String descriptionMany;
 
-	public StackableItem(ItemBuilder build) {
+	public StackableItem(StackableItemBuilder build) {
 		super(build);
 		this.quantity = build.getQuantity();
 		this.descriptionMany = build.getDescription();
@@ -95,7 +94,7 @@ public class StackableItem extends StdItem {
 	}
 	
 	public void splitAndNew(int number, Container finalLocation) {
-		ItemBuilder newStack = this.newBuilder();
+		StackableItemBuilder newStack = (StackableItemBuilder) newBuilder();
 		newStack.setQuantity(number);
 		newStack.setItemContainer(finalLocation);	
 		newStack.complete();
@@ -126,12 +125,41 @@ public class StackableItem extends StdItem {
 	}
 	
 	@Override public ItemBuilder newBuilder() {
-		ItemBuilder newBuild = super.newBuilder();
+		return newBuilder(new StackableItemBuilder());
+	}
+	
+	protected ItemBuilder newBuilder(StackableItemBuilder newBuild) {
+		super.newBuilder(newBuild);
 		newBuild.setQuantity(this.quantity);
 		newBuild.setDescription(this.description);
 		newBuild.setDescriptionSingle(this.descriptionSingle);
-		newBuild.setItemType(ItemType.STACKABLEITEM);
 		return newBuild;
+	}
+	
+	public static class StackableItemBuilder extends ItemBuilder {
+		
+		private int quantity = 1;
+		private String descriptionSingle = "";
+		
+		public void setDescriptionSingle(String desc) {
+			this.descriptionSingle = desc;
+		}
+		
+		public String getDescriptionSingle() {
+			return descriptionSingle;
+		}
+		
+		public int getQuantity() {
+			return quantity;
+		}
+		
+		public void setQuantity(int quantity) {
+			this.quantity = quantity;
+		}
+		
+		@Override public StdItem produceType() {
+			return new StackableItem(this);
+		} 
 	}
 	
 	private Object readResolve() {

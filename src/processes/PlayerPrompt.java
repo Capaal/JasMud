@@ -37,9 +37,7 @@ public class PlayerPrompt implements Runnable {
 	public PlayerPrompt(Socket incoming) throws IOException {	
 		this.incoming = incoming;
 		this.sendBack = new SendMessage(incoming);	
-	}
-	
-	
+	}	
 
 	public void run() {	
 		LogIn();				

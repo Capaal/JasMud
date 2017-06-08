@@ -31,6 +31,10 @@ public class Open extends Skills {
 			messageSelf("There is no door in that direction.");
 			return;
 		}
+		if (door.isOpen()) {
+			messageSelf("The door is already open.");
+			return;
+		}
 		door.alterDoor(true);
 		messageSelf("You open the door to your " + dir.toString().toLowerCase() + ".");
 		messageOthers(currentPlayer.getName() + " opens the door to the " + dir.toString().toLowerCase() + ".", Arrays.asList(currentPlayer));

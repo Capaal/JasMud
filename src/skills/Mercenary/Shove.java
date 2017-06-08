@@ -1,11 +1,13 @@
 package skills.Mercenary;
 
 import java.util.Arrays;
+
 import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Location;
 import processes.Skills;
+import processes.Location.Direction;
 import processes.Skills.Syntax;
 
 public class Shove extends Skills {
@@ -66,6 +68,10 @@ public class Shove extends Skills {
 		}
 		if (endContainer == null) {
 			messageSelf("There is no location in that direction.");
+			return false;
+		}
+		if (isDoorBlocking(startContainer, Direction.getDirectionName(dir))) {
+			messageSelf("You can't shove through closed doors.");
 			return false;
 		}
 		return true;

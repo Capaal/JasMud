@@ -7,6 +7,7 @@ import java.util.TreeMap;
 
 import interfaces.Container;
 import interfaces.Holdable;
+import items.StackableItem.StackableItemBuilder;
 import processes.ContainerErrors;
 
 public class Bag extends StdItem implements Container { //wearable
@@ -129,6 +130,24 @@ public class Bag extends StdItem implements Container { //wearable
 		return subMap;
 	}
 */
+	
+	@Override public ItemBuilder newBuilder() {
+		return newBuilder(new BagItemBuilder());
+	}
+	
+	protected ItemBuilder newBuilder(BagItemBuilder newBuild) {
+		super.newBuilder(newBuild);
+		return newBuild;
+	}
+	
+	public static class BagItemBuilder extends ItemBuilder {
+		
+		
+		
+		@Override public StdItem produceType() {
+			return new Bag(this);
+		} 
+	}
 
 }
 

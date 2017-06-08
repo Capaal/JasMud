@@ -16,81 +16,23 @@ import processes.Equipment.EquipmentEnum;
 
 public class ItemBuilder {
 	
-	private double damageMult = 1.0;
-	private int id = -1;
-	private String name = "";
-	private String description = "default";
-	private double balanceMult = 1.0;
-	private double defenseMult = 0;
-	private int maxDurability = 1;
-	private int currentDurability = 1;
-	private Container itemContainer = WorldServer.gameState.viewLocations().get(1);		
-	private EnumSet<EquipmentEnum> allowedSlots = EnumSet.of(EquipmentEnum.RIGHTHAND, EquipmentEnum.LEFTHAND);// EnumSet.noneOf(EquipmentEnum.class);
-	private List<String> components = new ArrayList<String>();
-	private boolean salvageable = false;
-	private static Map<String, Integer> idMap = new HashMap<String, Integer>();
-	private StdItem finishedItem =  null;
-	private  Weapon.MercEffect mercEffect = null;
+	protected double damageMult = 1.0;
+	protected int id = -1;
+	protected String name = "";
+	protected String description = "default";
+	protected double balanceMult = 1.0;
+	protected double defenseMult = 0;
+	protected int maxDurability = 1;
+	protected int currentDurability = 1;
+	protected Container itemContainer = WorldServer.gameState.viewLocations().get(1);		
+	protected EnumSet<EquipmentEnum> allowedSlots = EnumSet.of(EquipmentEnum.RIGHTHAND, EquipmentEnum.LEFTHAND);// EnumSet.noneOf(EquipmentEnum.class);
+	protected List<String> components = new ArrayList<String>();
+	protected boolean salvageable = false;
+	protected static Map<String, Integer> idMap = new HashMap<String, Integer>();
+	protected StdItem finishedItem =  null;
 	
-	// Declares which specific item type to produce.
-	private ItemType typeToProduce = ItemType.STDITEM;
 	
-	/*
-	 * Specific to StackableItem types
-	 */
-	private int quantity = 1;
-	private String descriptionSingle = "";
 	
-	// Done with StackableItem
-	
-	//potion stuff
-	private int maxSips = 0;
-	private DrinkType drinkType;
-	public int getMaxSips() {return maxSips;}
-	public void setMaxSips(int sips) {this.maxSips = sips;}
-	public DrinkType getDrinkType() {return drinkType;}
-	public void setDrinkType(DrinkType drinkType) {this.drinkType = drinkType;}
-	//end potions stuff
-	
-	//mining stuff
-	private int maxOres = 0;
-	private HarvestType oreType;
-	public int getMaxOres() {return maxOres;}
-	public void setMaxOres(int ores) {this.maxOres = ores;}
-	public HarvestType getOreType() {return oreType;}
-	public void setOreType(HarvestType oreType) {this.oreType = oreType;}
-	//end mining stuff
-	
-	//herb stuff
-	private PlantType herbType;
-	public PlantType getPlantType() {return herbType;}
-	public void setPlantType(PlantType herbType) {this.herbType = herbType;}
-	//end herb stuff
-
-	
-	public void setItemType (ItemType type) {
-		this.typeToProduce = type;
-	}
-	
-	public ItemType getItemType() {
-		return this.typeToProduce;
-	}
-	
-	public void setDescriptionSingle(String desc) {
-		this.descriptionSingle = desc;
-	}
-	
-	public String getDescriptionSingle() {
-		return descriptionSingle;
-	}
-	
-	public int getQuantity() {
-		return quantity;
-	}
-	
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
 	
 	public void setDamageMult(double physicalMult) {
 		this.damageMult = physicalMult;
@@ -196,7 +138,11 @@ public class ItemBuilder {
 	// Then creates a new item using builder's settings.
 	public void complete() {
 		handleId();
-		finishedItem = typeToProduce.produceType(this);
+		finishedItem = produceType();
+	}
+	
+	public StdItem produceType() {
+		return new StdItem(this);
 	}
 	
 	private synchronized void handleId() {
@@ -213,78 +159,6 @@ public class ItemBuilder {
 	public StdItem getFinishedItem() {
 		return finishedItem;
 	}
-	
-	// Used to mean something else (which was meaningless
-	// Defines what to produce.
-	public enum ItemType {
-		
-		STDITEM() {
-			@Override public StdItem produceType(ItemBuilder build) {
-				return new StdItem(build);
-			}
-			
-		},		
-		STACKABLEITEM() {
-			@Override public StdItem produceType(ItemBuilder build) {
-				return new StackableItem(build);
-			}
-		},
-			
-		DRINKABLE() {
-			@Override public StdItem produceType(ItemBuilder build) {
-				return new Drinkable(build);
-			}
-		},
-			
-		STATIONARYITEM() {
-			@Override public StdItem produceType(ItemBuilder build) {
-				return new StationaryItem(build);
-			}
-		},
-		
-		HARVESTABLE() {
-			@Override public StdItem produceType(ItemBuilder build) {
-				return new Harvestable(build);
-			}
-		},
-		
-		WEAPON() {
-			@Override public StdItem produceType(ItemBuilder build) {
-				return new Weapon(build);
-			}
-		},
-		
-		PLANT() {
-			@Override public StdItem produceType(ItemBuilder build) {
-				return new Plant(build);
-			}
-		},
-		
-		BAG() {
-			@Override public StdItem produceType(ItemBuilder build) {
-				return new Bag(build);
-			}
-		},
-		
-		HERBPOUCH() {
-			@Override public StdItem produceType(ItemBuilder build) {
-				return new Pouch(build);
-			}
 
-		};
-		
-		private ItemType() {};
-		public StdItem produceType(ItemBuilder build) {
-			return null;			
-		}
-				
-	}
-
-	public Weapon.MercEffect getMercEffect() {
-		return this.mercEffect;
-	}
 	
-	public void setMercEffect(MercEffect a) {
-		mercEffect = a;
-	}
 }

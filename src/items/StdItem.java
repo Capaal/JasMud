@@ -7,7 +7,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 import interfaces.*;
-import items.ItemBuilder.ItemType;
+import items.StackableItem.StackableItemBuilder;
 import processes.*;
 import processes.Equipment.EquipmentEnum;
 
@@ -139,15 +139,16 @@ public class StdItem implements Holdable{
 	}
 	
 	public ItemBuilder newBuilder() {
-		ItemBuilder newBuilder = new ItemBuilder();
-		newBuilder.setId(this.id + 1);  // THIS IS REALLY BAD, need way of getting new ids
+		return newBuilder(new ItemBuilder());
+	}
+	
+	public ItemBuilder newBuilder(ItemBuilder newBuilder) {
 		newBuilder.setName(name);
 		newBuilder.setDamageMult(physicalMult);
 		newBuilder.setDescription(description);
 		newBuilder.setBalanceMult(balanceMult);
 		newBuilder.setDefenseMult(defenseMult);
 		newBuilder.setItemContainer(itemLocation);
-		newBuilder.setItemType(ItemType.STDITEM);
 	//	newBuilder.setAllowedSlots(allowedEquipSlots);
 		newBuilder.setComponents(components);
 		newBuilder.setSalvageable(salvageable);		

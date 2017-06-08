@@ -5,10 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
 import interfaces.Holdable;
 import items.ItemBuilder;
-import items.ItemBuilder.ItemType;
 import items.StackableItem;
+import items.StackableItem.StackableItemBuilder;
 import processes.CreateWorld;
 import processes.Skills;
 
@@ -83,10 +84,8 @@ public class CraftItem extends Skills {
 		}
 		//what the skill actually does:
 		for (Holdable d : componentsOnHand) {d.removeFromWorld();} //wrong method, needs a new delete method. Needs to work with stackable.
-		ItemType type = copyThis.getItemType(); 
-		//TODO may still sometimes craft multiple stacks instead of 1 stack
-		if (type.equals(ItemType.STACKABLEITEM) || type.equals(ItemType.PLANT)) {
-			copyThis.setQuantity(quantity);
+		if (copyThis instanceof StackableItemBuilder) {
+			((StackableItemBuilder) copyThis).setQuantity(quantity);
 			copyThis.setItemContainer(currentPlayer);
 			copyThis.complete();
 			messageSelf("You have created: " + quantity + " " + copyThis.getName() + ".");

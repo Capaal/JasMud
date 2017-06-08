@@ -1,12 +1,11 @@
 package skills;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-
 import effects.PassiveCondition;
 import processes.Location;
 import processes.Location.Direction;
-import processes.LocationConnection;
 import processes.Skills;
 
 public class Move extends Skills {	
@@ -18,14 +17,18 @@ public class Move extends Skills {
 		super.syntaxList.add(Syntax.DIRECTION);
 	}
 	
-	private String dir; // Not Direction enum?
-	private Direction directionEnum;
-	private Location startContainer;
-	private Location endContainer;
-	private LocationConnection connection;
+	protected String dir; // Not Direction enum?
+	protected Direction directionEnum;
+	protected Location startContainer;
+	protected Location endContainer;
+	protected ArrayList<Follow> followers = new ArrayList<Follow>();
+	protected Follow follow = null;
 	
 	@Override
 	protected void performSkill() {
+		if (follow == null) {
+			follow = (Follow) currentPlayer.getCommand("follow");
+		}
 		if (!hasBalance()) {return;}
 		if (!legsOk()) {return;}
 		startContainer = currentPlayer.getContainer();
@@ -45,16 +48,24 @@ public class Move extends Skills {
 			messageSelf("You can't go that way!");
 			return;
 		}
-		if (startContainer.getDoor(directionEnum) != null &&!startContainer.getDoor(directionEnum).isOpen()) {
+		if (isDoorBlocking(startContainer, directionEnum)) {
 			messageSelf("The door is closed before you.");
 			return;
 		}
-		messageOthers(currentPlayer.getName() + " leaves to the " + dir.toLowerCase() + ".", Arrays.asList(currentPlayer));
-		currentPlayer.moveHoldable(endContainer);
-		//this opposite direction is not always correct?
-		messageOthers(currentPlayer.getName() + " arrives from the " + Location.Direction.getDirectionName(dir).getOpp().toLowerCase() + ".", Arrays.asList(currentPlayer));
+		displayMessages();
+		
 		Look look = new Look();
 		look.perform("", currentPlayer);
+		moveFollowers();
+		stopFollowing();
+	}
+	
+	protected void displayMessages() {
+		messageOthers(currentPlayer.getName() + " leaves to the " + dir.toLowerCase() + ".", Arrays.asList(currentPlayer));
+		currentPlayer.moveHoldable(endContainer);		
+		//this opposite direction is not always correct?
+		messageOthers(currentPlayer.getName() + " arrives from the " + Location.Direction.getDirectionName(dir).getOpp().toLowerCase() + ".", Arrays.asList(currentPlayer));
+		
 	}
 	
 	private boolean legsOk() {
@@ -80,5 +91,27 @@ public class Move extends Skills {
 			return true;
 		}
 		return false;
+	}
+	
+	protected void moveFollowers() {
+		for (Follow f : followers) {
+			f.move(fullCommand);
+		}
+	}
+	
+	protected void stopFollowing() {
+		follow.stopFollowing();
+	}
+	
+	protected void loseFollowers() {
+		followers.clear();
+	}
+	
+	protected void addFollower(Follow follow) {
+		followers.add(follow);
+	}
+	
+	public void removeFollower(Follow follow) {
+		followers.remove(follow);
 	}
 }

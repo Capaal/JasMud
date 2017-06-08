@@ -3,10 +3,12 @@ package skills;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
 import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Location;
+import processes.Location.Direction;
 import processes.Skills;
 import processes.Type;
 
@@ -65,6 +67,10 @@ public class Shoot extends Skills {
 		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
 		if (!dir.equals("")) {
 			Location nextLocation = currentPlayerLocation.getContainer(dir);
+			if (isDoorBlocking(currentPlayerLocation, Direction.getDirectionName(dir))) {
+				messageSelf("There is a door blocking your way.");
+				return;
+			}
 			if (nextLocation == null) {
 				messageSelf("There isn't a location that way.");
 				return;
@@ -77,10 +83,12 @@ public class Shoot extends Skills {
 	
 	private void getNextLocation(String dir, Location currentLocation) {
 		Location anotherLocation = currentLocation.getContainer(dir);
-		if (anotherLocation != null && !allLocations.contains(anotherLocation)) {
-			allLocations.add(anotherLocation);
-			getNextLocation(dir, anotherLocation);
-		}
+		if (!isDoorBlocking(currentLocation, Direction.getDirectionName(dir))) {
+			if (anotherLocation != null && !allLocations.contains(anotherLocation)) {
+				allLocations.add(anotherLocation);
+				getNextLocation(dir, anotherLocation);
+			}
+		}		
 	}
 	
 	private Mobile getTarget() {

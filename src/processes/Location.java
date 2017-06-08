@@ -93,7 +93,11 @@ public class Location implements Container {
 	}
 	
 	public Door getDoor(Direction dir) {
-		return locationMap.get(dir).getDoor();
+		LocationConnection con = locationMap.get(dir);
+		if (con == null) {
+			return null;
+		}
+		return con.getDoor();
 	}
 	
 	public void removeItemFromLocation(Holdable oldItem) {
@@ -335,6 +339,9 @@ public class Location implements Container {
 		public abstract String getAbbreviation();
 		
 		public static Direction getDirectionName(String commandDirection) {
+			if (commandDirection.equals("")) {
+				return null;
+			}
 			for (Direction tryDirection : Direction.values()) {
 				if (tryDirection.name().equals(commandDirection.toUpperCase()) || tryDirection.getAbbreviation().equals(commandDirection.toLowerCase())
 						|| tryDirection.name().startsWith(commandDirection.toUpperCase())) {	

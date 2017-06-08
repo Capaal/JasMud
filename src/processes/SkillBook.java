@@ -78,7 +78,12 @@ public class SkillBook {
 	private Set<Skills> copySkillList() {
 		Set<Skills> newList = new HashSet<Skills>();
 		for (Skills s : skillList) {
-			newList.add(s);
+			try {
+				newList.add(s.getClass().newInstance());
+			} catch (InstantiationException | IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return newList;
 	}

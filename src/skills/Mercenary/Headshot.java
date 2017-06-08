@@ -3,12 +3,14 @@ package skills.Mercenary;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
 import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Equipment;
 import processes.InductionSkill;
 import processes.Location;
 import processes.Type;
+import processes.Location.Direction;
 
 public class Headshot extends InductionSkill {
 	
@@ -80,6 +82,9 @@ public class Headshot extends InductionSkill {
 			if (nextLocation == null) {
 				messageSelf("There isn't a location that way.");
 				return false;
+			} else if (isDoorBlocking(currentPlayerLocation, Direction.getDirectionName(dir))) {
+				messageSelf("A door is blocking your way.");
+				return false;
 			} else {
 				allLocations.add(nextLocation);
 				getNextLocation(dir, nextLocation);
@@ -90,9 +95,11 @@ public class Headshot extends InductionSkill {
 	
 	private void getNextLocation(String dir, Location currentLocation) {
 		Location anotherLocation = currentLocation.getContainer(dir);
-		if (anotherLocation != null && !allLocations.contains(anotherLocation)) {
-			allLocations.add(anotherLocation);
-			getNextLocation(dir, anotherLocation);
+		if (!isDoorBlocking(currentLocation, Direction.getDirectionName(dir))) {		
+			if (anotherLocation != null && !allLocations.contains(anotherLocation)) {
+				allLocations.add(anotherLocation);
+				getNextLocation(dir, anotherLocation);
+			}
 		}
 	}
 	

@@ -1,6 +1,7 @@
 package skills;
 
 import java.util.Arrays;
+
 import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
@@ -8,10 +9,12 @@ import items.StdItem;
 import processes.Location;
 import processes.Skills;
 import processes.Type;
+import processes.Location.Direction;
 
 public class Throw extends Skills {
 	
-	private int intensity = 8;
+	private final int BASEDAMAGE = 8;
+	private final int BASEBALANCE = 3000;
 	private Holdable itemToThrow;
 	private Mobile finalTarget;
 	private Location finalLoc;
@@ -70,9 +73,13 @@ public class Throw extends Skills {
 		finalLoc = currentPlayer.getContainer();
 		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
 		if (!dir.equals("")) {
-			finalLoc = getLoc(dir);
+			finalLoc = getLoc(dir);			
 			if (finalLoc == null) {
 				messageSelf("There isn't a location that way.");
+				return false;
+			}
+			if (isDoorBlocking(finalLoc, Direction.getDirectionName(dir))) {
+				messageSelf("There is a door blocking your way.");
 				return false;
 			}
 		} 
@@ -99,12 +106,12 @@ public class Throw extends Skills {
 	}
 	
 	private int calculateBalance() {
-		return (int) (3000 * ((StdItem)itemToThrow).getBalanceMult());
+		return (int) (BASEBALANCE * ((StdItem)itemToThrow).getBalanceMult());
 	}
 	
 	private int calculateDamage() {
 		double damageMult = ((StdItem)itemToThrow).getDamageMult(); 
-		return (int) (damageMult * intensity);
+		return (int) (damageMult * BASEDAMAGE);
 	}
 	
 	private Mobile getTarget(String possibleTarg) {

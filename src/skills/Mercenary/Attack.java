@@ -1,7 +1,6 @@
 package skills.Mercenary;
 
 import java.util.Arrays;
-
 import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
@@ -37,6 +36,7 @@ public class Attack extends Skills {
 		messageSelf("You attack " + target.getName() + " with your " + possWeapon.getName() + ".");
 		messageTarget(currentPlayer.getName() + " attacks you with a " + possWeapon.getName() + ".", Arrays.asList(target));
 		//applies effect and poison
+		//TODO message others
 		if (possWeapon instanceof Weapon) {
 			Weapon weapon = (Weapon) possWeapon;
 			weapon.applyEffect(target);

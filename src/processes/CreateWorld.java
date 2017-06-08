@@ -1,12 +1,20 @@
 package processes;
 
+import items.Bag.BagItemBuilder;
 import items.Door;
 import items.Drinkable.DrinkType;
+import items.Drinkable.DrinkableItemBuilder;
+import items.Harvestable.HarvestableItemBuilder;
+import items.Mineable.MineableItemBuilder;
+import items.Plant.PlantItemBuilder;
 import items.Plant.PlantType;
 import items.ItemBuilder;
-import items.ItemBuilder.ItemType;
+import items.Pouch.PouchItemBuilder;
+import items.StackableItem;
+import items.StackableItem.StackableItemBuilder;
 import items.Weapon.MercEffect;
 import items.Harvestable.HarvestType;
+import items.Weapon.WeaponItemBuilder;
 import processes.Equipment.EquipmentEnum;
 import processes.Location.Direction;
 
@@ -55,6 +63,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new TakeOut());
 		generalSkills.addSkill(new Open());
 		generalSkills.addSkill(new Close());
+		generalSkills.addSkill(new Follow());
 		generalSkills.addSkill(new Apply());
 		generalSkills.addSkill(new Examine());
 		//crafting
@@ -90,11 +99,9 @@ public class CreateWorld {
 		makeAStick();
 		makeAPike();
 		makeIngot();
-		int quantity = 27;
-		while (quantity > 7) {
 			addOre();
-			quantity=quantity-1;
-		}
+		
+		
 		addIronPotion();
 		makeGoblin();
 		makeFarmerJames();
@@ -193,37 +200,34 @@ public class CreateWorld {
 	
 	//template items should be stored as builders, not actually existing items
 	public static void makeADagger() {
-		ItemBuilder newItem = new ItemBuilder();	
+		WeaponItemBuilder newItem = new WeaponItemBuilder();	
 		newItem.setName("dagger");
 		newItem.setDescription("It's a dagger!");
 		newItem.setComponents(Arrays.asList("ingot"));
 		newItem.setSalvageable(true);
 		newItem.setAllowedSlots(EquipmentEnum.LEFTHAND);
 		newItem.setAllowedSlots(EquipmentEnum.RIGHTHAND);
-		newItem.setItemType(ItemType.WEAPON);
 		newItem.setMercEffect(MercEffect.BLEED);
 		newItem.complete();
 		itemTemplates.put("dagger", newItem);
 	}
 	
 	public static void makeASword() {
-		ItemBuilder newItem = new ItemBuilder();			
+		WeaponItemBuilder newItem = new WeaponItemBuilder();			
 		newItem.setName("sword");
 		newItem.setDescription("It's a sword!");
 		newItem.setComponents(Arrays.asList("ingot","ingot"));
 		newItem.setSalvageable(true);
 		newItem.setDamageMult(1.5);
-		newItem.setItemType(ItemType.WEAPON);
 		newItem.setBalanceMult(1.2);
 		itemTemplates.put("sword", newItem);
 	}
 	
 	public static void makeAStick() {	
-		ItemBuilder newItem = new ItemBuilder();	
+		WeaponItemBuilder newItem = new WeaponItemBuilder();	
 		newItem.setName("stick");
 		newItem.setDescription("It's an evil stick.");
 		newItem.setDamageMult(0.5);
-		newItem.setItemType(ItemType.WEAPON);
 		newItem.setMercEffect(MercEffect.FEAR);
 //		newItem.complete();
 		itemTemplates.put("stick", newItem);
@@ -234,11 +238,10 @@ public class CreateWorld {
 	}
 	
 	public static void makeAPike() {
-		ItemBuilder newItem = new ItemBuilder();
+		WeaponItemBuilder newItem = new WeaponItemBuilder();
 		newItem.setName("pike");
 		newItem.setDescription("It's a pike!");
 		newItem.setComponents(Arrays.asList("dagger","stick"));
-		newItem.setItemType(ItemType.WEAPON);
 		newItem.setDamageMult(1.8);
 		newItem.setBalanceMult(1.5);
 		newItem.setSalvageable(true);
@@ -246,7 +249,8 @@ public class CreateWorld {
 	}
 	
 	public static void makeIngot() {
-		ItemBuilder newItem = new ItemBuilder();	
+		ItemBuilder newItem = new ItemBuilder();
+		
 		newItem.setName("ingot");
 		newItem.setDescription("An iron ingot.");
 		newItem.setComponents(Arrays.asList("iron","iron")); //TODO should use the object iron instead of string
@@ -256,70 +260,66 @@ public class CreateWorld {
 	}
 	
 	public static void addOre() {
-		ItemBuilder newItem = new ItemBuilder();	
+		StackableItemBuilder newItem = new StackableItemBuilder();
+		//ItemBuilder newItem = new ItemBuilder();	
 		newItem.setName("iron");
 		newItem.setDescription("A pile of iron ore chunks.");
 		newItem.setDescriptionSingle("A piece of iron ore.");
-		newItem.setItemType(ItemType.STACKABLEITEM);
 		newItem.setDamageMult(0.2);
+		newItem.setQuantity(5);
 		itemTemplates.put("iron", newItem); // not sure it should be in itemTemplates
-//		newItem.complete();
+		newItem.complete();
 //		WorldServer.gameState.addItem("ore", newItem.getFinishedItem()); //added here instead of templates, not a craftable item
 	}
 	
 	public static void addIronPotion() {
-		ItemBuilder newItem = new ItemBuilder();	
+		DrinkableItemBuilder newItem = new DrinkableItemBuilder();	
 		newItem.setName("ironpotion");
 		newItem.setDescription("A potion made from iron.");
 		newItem.setComponents(Arrays.asList("iron"));
 		newItem.setDamageMult(0.2);
 		newItem.setMaxSips(2);
 		newItem.setDefenseMult(10); //wtf is this for?
-		newItem.setItemType(ItemType.DRINKABLE);
 		newItem.setDrinkType(DrinkType.DEFENSE);
 		itemTemplates.put("ironpotion", newItem);
 	}
 	
 	public static void addHealPotion() {
-		ItemBuilder newItem = new ItemBuilder();	
+		DrinkableItemBuilder newItem = new DrinkableItemBuilder();	
 		newItem.setName("healpotion");
 		newItem.setDescription("A potion made from sticks.");
 		newItem.setComponents(Arrays.asList("stick"));
 		newItem.setDamageMult(0.2);
 		newItem.setMaxSips(2);
-		newItem.setItemType(ItemType.DRINKABLE);
 		newItem.setDrinkType(DrinkType.HEALTH);
 		itemTemplates.put("healpotion", newItem);
 	}
 	
 	public static void addBleedPotion() {
-		ItemBuilder newItem = new ItemBuilder();	
+		DrinkableItemBuilder newItem = new DrinkableItemBuilder();	
 		newItem.setName("bleedpotion");
 		newItem.setDescription("Don't drink this.");
 		newItem.setDamageMult(0.2);
 		newItem.setMaxSips(2);
-		newItem.setItemType(ItemType.DRINKABLE);
 		newItem.setDrinkType(DrinkType.BLEED);
 		newItem.complete();
 		itemTemplates.put("bleedpotion", newItem);
 	}
 	
 	public static void addRegenPotion() {
-		ItemBuilder newItem = new ItemBuilder();	
+		DrinkableItemBuilder newItem = new DrinkableItemBuilder();	
 		newItem.setName("regenpotion");
 		newItem.setDamageMult(0.2);
 		newItem.setMaxSips(2);
-		newItem.setItemType(ItemType.DRINKABLE);
 		newItem.setDrinkType(DrinkType.REGEN);
 		newItem.complete();
 		itemTemplates.put("regenpotion", newItem);
 	}
 	
 	public static void makeAloeHerb() {
-		ItemBuilder newItem = new ItemBuilder();	
+		PlantItemBuilder newItem = new PlantItemBuilder();	
 		newItem.setName("aloe");
 		newItem.setDamageMult(0.1);
-		newItem.setItemType(ItemType.PLANT);
 		newItem.setPlantType(PlantType.ALOE);
 		newItem.setQuantity(100);
 		newItem.complete();
@@ -327,57 +327,50 @@ public class CreateWorld {
 	}
 	
 	public static void makeComfreyHerb() {
-		ItemBuilder newItem = new ItemBuilder();	
+		PlantItemBuilder newItem = new PlantItemBuilder();	
 		newItem.setName("comfrey");
 		newItem.setDamageMult(0.1);
-		newItem.setItemType(ItemType.PLANT);
 		newItem.setPlantType(PlantType.COMFREY);
 	//	newItem.complete();
 		itemTemplates.put("comfrey", newItem);
 	}
 	
 	public static void makeOleander() {
-		ItemBuilder newItem = new ItemBuilder();	
+		PlantItemBuilder newItem = new PlantItemBuilder();	
 		newItem.setName("oleander");
 		newItem.setDamageMult(0.1);
-		newItem.setItemType(ItemType.PLANT);
 		newItem.setPlantType(PlantType.OLEANDER);
 	//	newItem.complete();
 		itemTemplates.put("oleander", newItem);
 	}
 	
 	public static void makeGinsengHerb() {
-		ItemBuilder newItem = new ItemBuilder();
+		PlantItemBuilder newItem = new PlantItemBuilder();
 		newItem.setName("ginseng");
 		newItem.setDamageMult(0.1);
-		newItem.setItemType(ItemType.PLANT);
 		newItem.setPlantType(PlantType.GINSENG);
 		newItem.complete();
 		itemTemplates.put("ginseng", newItem);
 		}
 	
 	public static void addHerbPouch() {
-		ItemBuilder newItem = new ItemBuilder();
+		PouchItemBuilder newItem = new PouchItemBuilder();
 		newItem.setName("herbpouch");
-		newItem.setItemType(ItemType.HERBPOUCH);
 		newItem.complete();
 		itemTemplates.put("herbpouch", newItem);
 	}
 	
 	public static void makeBag() {
-		ItemBuilder newItem = new ItemBuilder();
+		BagItemBuilder newItem = new BagItemBuilder();
 		newItem.setName("bag");
-		newItem.setItemType(ItemType.BAG);
 		newItem.complete();
 		itemTemplates.put("bag", newItem);
 	}
 
 	public static void addOreRock() {
-		ItemBuilder newItem = new ItemBuilder();
+		HarvestableItemBuilder newItem = new HarvestableItemBuilder();
 		newItem.setName("ironrock");
-		newItem.setMaxOres(5);
-		newItem.setItemType(ItemType.HARVESTABLE);
-		newItem.setOreType(HarvestType.IRON);
+		newItem.setMaxQuantity(5);
 		newItem.setItemContainer(WorldServer.gameState.viewLocations().get(7));
 		newItem.complete();
 		itemTemplates.put("regenpotion", newItem);

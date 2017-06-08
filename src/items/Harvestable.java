@@ -1,49 +1,34 @@
 package items;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
-import java.util.TreeMap;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import effects.PassiveCondition;
-import effects.Bleed;
-import effects.Regen;
-import interfaces.Container;
-import interfaces.Holdable;
 import interfaces.Mobile;
-import items.ItemBuilder.ItemType;
 import processes.CreateWorld;
-import processes.InductionSkill;
-import processes.StdMob;
-import processes.Type;
 
 
 //almost same as stackable, except can't split quantity
 public class Harvestable extends StationaryItem {
 	
 	// Probably handle recovering IDs at some point
-	private int maxHarvestNum;
-	private int remainingHarvestNum;
+	private int maxQuantity;
+	private int remainingQuantity;
 	private HarvestType type;
 	private boolean running = false;
 	private int timeToReset = 5;
 
 	//add timeToRegen
-	public Harvestable(ItemBuilder build) {
+	public Harvestable(HarvestableItemBuilder build) {
 		super(build);
-		this.maxHarvestNum = build.getMaxOres();
-		this.remainingHarvestNum = maxHarvestNum;
-		this.type = build.getOreType();
+		this.maxQuantity = build.getMaxQuantity();
+		this.remainingQuantity = maxQuantity;
+		this.type = build.getHarvestType();
 	}
 	
 	public int getOres() {
-		return this.remainingHarvestNum;
+		return this.remainingQuantity;
 	}
 	
 	//TODO should actually be getExamine
@@ -53,17 +38,17 @@ public class Harvestable extends StationaryItem {
 	
 	//shouldn't this just be removeOne?
 	public boolean changeRemaining(int number) {
-		remainingHarvestNum = remainingHarvestNum - number;
-		if (remainingHarvestNum < 0) {
-			remainingHarvestNum = 0;
+		remainingQuantity = remainingQuantity - number;
+		if (remainingQuantity < 0) {
+			remainingQuantity = 0;
 			if (!running) {
 				schedule();
 				running = true;
 			}
 			return false;
 		}
-		if (remainingHarvestNum > maxHarvestNum) {
-			remainingHarvestNum = maxHarvestNum;
+		if (remainingQuantity > maxQuantity) {
+			remainingQuantity = maxQuantity;
 			return false;
 		}
 		return true;
@@ -89,7 +74,7 @@ public class Harvestable extends StationaryItem {
 	// possible to access by outside methods - reset on daily for example
 	public void reset() {
 		Random n = new Random();
-		remainingHarvestNum = n.nextInt(maxHarvestNum - 1) + 1; //between 1 and max, no zero
+		remainingQuantity = n.nextInt(maxQuantity - 1) + 1; //between 1 and max, no zero
 		System.out.println(this.type.toString() + " reset done.");
 	}
 	
@@ -98,11 +83,35 @@ public class Harvestable extends StationaryItem {
 	}
 	
 	@Override public ItemBuilder newBuilder() {
-		ItemBuilder newBuild = super.newBuilder();
-		newBuild.setQuantity(this.remainingHarvestNum);
-		newBuild.setDescription(this.description);
-		newBuild.setItemType(ItemType.HARVESTABLE);
+		return newBuilder(new HarvestableItemBuilder());
+	}
+	
+	protected ItemBuilder newBuilder(HarvestableItemBuilder newBuild) {
+		super.newBuilder(newBuild);
+		newBuild.setCurrentQuantity(this.remainingQuantity);
+		newBuild.setMaxQuantity(this.maxQuantity);
+		newBuild.setHarvestType(this.type);
 		return newBuild;
+	}
+	
+	public static class HarvestableItemBuilder extends ItemBuilder {		
+		
+		private HarvestType type;
+		private int maxQuantity = 0;
+		private int remainingQuantity = 0;
+		
+		public HarvestType getHarvestType() {return type;}
+		public void setHarvestType(HarvestType harvestType) {type = harvestType;}
+		
+		public int getCurrentQuantity() {return remainingQuantity;}
+		public void setCurrentQuantity(int quantity) {this.remainingQuantity = quantity;}
+		
+		public int getMaxQuantity() {return maxQuantity;}
+		public void setMaxQuantity(int quantity) {this.maxQuantity = quantity;}
+		
+		@Override public StdItem produceType() {
+			return new Harvestable(this);
+		} 
 	} 
 	
 	public enum HarvestType {

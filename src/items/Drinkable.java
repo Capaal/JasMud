@@ -4,7 +4,7 @@ import effects.PassiveCondition;
 import effects.Bleed;
 import effects.Regen;
 import interfaces.Mobile;
-import items.ItemBuilder.ItemType;
+import items.StackableItem.StackableItemBuilder;
 import processes.Type;
 
 //almost same as stackable, except can't split quantity (sips)
@@ -15,7 +15,7 @@ public class Drinkable extends StdItem {
 	private int currentSips;
 	private DrinkType type;
 
-	public Drinkable(ItemBuilder build) {
+	public Drinkable(DrinkableItemBuilder build) {
 		super(build);
 		this.maxSips = build.getMaxSips();
 		this.currentSips = maxSips;
@@ -43,13 +43,7 @@ public class Drinkable extends StdItem {
 		return type.drink(currentPlayer);
 	}
 	
-	@Override public ItemBuilder newBuilder() {
-		ItemBuilder newBuild = super.newBuilder();
-		newBuild.setQuantity(this.currentSips);
-		newBuild.setDescription(this.description);
-		newBuild.setItemType(ItemType.DRINKABLE);
-		return newBuild;
-	}
+	
 	
 	public enum DrinkType {
 		HEALTH() {
@@ -106,6 +100,35 @@ public class Drinkable extends StdItem {
 		public String drink(Mobile currentPlayer) {
 			return "Wrong method, tells the coders they screwed up.";
 		}
+		
+	}
+	
+	@Override public ItemBuilder newBuilder() {
+		System.out.println("Drinkable's newBuilder should not be called. Possible invalid state");
+		return newBuilder(new DrinkableItemBuilder());
+	}
+	
+	public ItemBuilder newBuilder(DrinkableItemBuilder newBuild) {
+		super.newBuilder(newBuild);
+		newBuild.setCurrentSips(this.currentSips);
+		newBuild.setMaxSips(this.maxSips);
+		newBuild.setDrinkType(this.type);
+		return newBuild;
+	}
+	
+	public static class DrinkableItemBuilder extends ItemBuilder {
+		
+		private int maxSips = 0;
+		private DrinkType drinkType;
+		private int currentSips = 0;
+		
+		public int getMaxSips() {return maxSips;}
+		public void setMaxSips(int sips) {this.maxSips = sips;}
+		public int getCurrentSips() { return currentSips;}
+		public void setCurrentSips(int sips) {this.currentSips = sips;}
+		public DrinkType getDrinkType() {return drinkType;}
+		public void setDrinkType(DrinkType drinkType) {this.drinkType = drinkType;}
+		
 		
 	}
 	

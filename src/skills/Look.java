@@ -30,8 +30,7 @@ public class Look extends Skills {
 			messageSelf("There is no location that way.");
 			return;
 		}
-		Door door = mobLocation.getDoor(trueDir);
-		if (door != null && !door.isOpen()) {
+		if (isDoorBlocking(mobLocation, trueDir)) {
 			messageSelf("A door is closed and blocking your view.");
 			return;
 		}

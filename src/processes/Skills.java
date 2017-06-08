@@ -1,7 +1,11 @@
 package processes;
 
 import interfaces.*;
+import items.Door;
+
 import java.util.*;
+
+import processes.Location.Direction;
 
 public abstract class Skills {
 	
@@ -25,10 +29,21 @@ public abstract class Skills {
 	protected abstract void performSkill();
 //	protected abstract void preSkillChecks();
 	
-	private void testForInduction() {
+	protected void testForInduction() {
 		if (currentPlayer.isInducting()) {
 			currentPlayer.killInduction();
 		}
+	}
+	
+	protected boolean isDoorBlocking(Location currentLocation, Direction interestedDir) {
+		if (currentLocation == null) {
+			throw new IllegalArgumentException("Supplied location may not be null.");
+		}
+		Door d = currentLocation.getDoor(interestedDir);
+		if (d != null && !d.isOpen()) {
+			return true;
+		}
+		return false;
 	}
 	
 	public Boolean hasBalance() {

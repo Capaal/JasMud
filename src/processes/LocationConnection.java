@@ -4,6 +4,9 @@ import items.Door;
 
 public class LocationConnection {
 	
+	
+	// Direction to Location then door then Direction back to old location
+	
 	private Location otherLocation;
 	private Door doorSlot;
 	

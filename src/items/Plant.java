@@ -4,14 +4,14 @@ import effects.PassiveCondition;
 import effects.Regen;
 import interfaces.Container;
 import interfaces.Mobile;
-import items.ItemBuilder.ItemType;
+import items.StackableItem.StackableItemBuilder;
 import processes.Type;
 
 public class Plant extends StackableItem {
 
 	private PlantType type;
 	
-	public Plant(ItemBuilder build) {
+	public Plant(PlantItemBuilder build) {
 		super(build);
 		this.type = build.getPlantType();
 	}
@@ -24,21 +24,16 @@ public class Plant extends StackableItem {
 		return type.use(currentPlayer);
 	}
 	
-	//multiple methods for other uses? eat/apply/etc
-	
-	@Override public ItemBuilder newBuilder() {
-		ItemBuilder newBuild = super.newBuilder();
-		newBuild.setItemType(ItemType.PLANT);
-		return newBuild;
-	}
-	
-	@Override 	public void splitAndNew(int number, Container finalLocation) {
-		ItemBuilder newStack = this.newBuilder();
+	@Override 	public void splitAndNew(int number, Container finalLocation) {		
+		PlantItemBuilder newStack = (PlantItemBuilder) this.newBuilder();
 		newStack.setQuantity(number);
 		newStack.setItemContainer(finalLocation);
 		newStack.setPlantType(this.type);
 		newStack.complete();	
 	}
+	
+	
+	
 	
 	public enum PlantType {
 		ALOE {
@@ -94,7 +89,24 @@ public class Plant extends StackableItem {
 	}
 	
 
+	public static class PlantItemBuilder extends StackableItemBuilder {
+		private PlantType herbType;
+		public PlantType getPlantType() {return herbType;}
+		public void setPlantType(PlantType herbType) {this.herbType = herbType;}
+		
+		@Override public StdItem produceType() {
+			return new Plant(this);
+		} 
+	}
 	
+	@Override public ItemBuilder newBuilder() {
+		return newBuilder(new PlantItemBuilder());
+	}
+	
+	/*protected ItemBuilder newBuilder(StackableItemBuilder newBuild) {
+		super.newBuilder(newBuild);
+		return newBuild;
+	} */ // Should not be necessary, identical to stackableitem's
 
 
 }
