@@ -18,6 +18,7 @@ public class Harvestable extends StationaryItem {
 	private HarvestType type;
 	private boolean running = false;
 	private int timeToReset = 5;
+	private Map<String, ItemBuilder> allItemTemplates = CreateWorld.viewItemTemplates();
 
 	//add timeToRegen
 	public Harvestable(HarvestableItemBuilder build) {
@@ -27,13 +28,17 @@ public class Harvestable extends StationaryItem {
 		this.type = build.getHarvestType();
 	}
 	
-	public int getOres() {
+	public int getRemainingQty() {
 		return this.remainingQuantity;
+	}
+	
+	public HarvestType getType() {
+		return this.type;
 	}
 	
 	//TODO should actually be getExamine
 	@Override public String getInfo() {
-		return this.type.getInfo();
+		return super.getInfo() + " - " + this.type.getEnumInfo(remainingQuantity);
 	}
 	
 	//shouldn't this just be removeOne?
@@ -78,8 +83,11 @@ public class Harvestable extends StationaryItem {
 		System.out.println(this.type.toString() + " reset done.");
 	}
 	
-	public String harvest(Mobile currentPlayer) {
-		return type.harvest(currentPlayer);
+	//not sure this is correct, why not just use an arraylist to store the type?
+	public void harvest(Mobile currentPlayer) {
+		ItemBuilder toCopy = allItemTemplates.get(type.harvest(currentPlayer)); 
+		toCopy.setItemContainer(currentPlayer);
+		toCopy.complete();
 	}
 	
 	@Override public ItemBuilder newBuilder() {
@@ -117,23 +125,26 @@ public class Harvestable extends StationaryItem {
 	public enum HarvestType {
 		IRON() {
 			@Override public String harvest(Mobile currentPlayer) {
-				createHarvestedItem(currentPlayer, "iron");
-				return "You manage to pick out a chunk of iron."; //or return just "iron" and the message can otherwise be the same
+				currentPlayer.tell("You manage to pick out a chunk of iron."); //or return just "iron" and the message can otherwise be the same
+				return "iron";
 			}
 			
-			@Override public String getInfo() {
-				return "";
+			@Override public String getEnumInfo(int remainingQuantity) {
+				return "This has " + remainingQuantity + " ores remaining.";
 			}
 		},
 		
 		WOOD() {
 			@Override public String harvest(Mobile currentPlayer) {	
-				createHarvestedItem(currentPlayer, "log");
-				return "You cut a log out of the tree.";
+				currentPlayer.tell("You cut a log out of the tree.");
+				return "log";
 			}
 			
-			@Override public String getInfo() {
-				return "";
+			@Override public String getEnumInfo(int remainingQuantity) {
+				if (remainingQuantity == 0) {
+					return "The tree needs time to regrow.";
+				}
+				return "This has " + remainingQuantity + " logs remaining.";
 			}
 /*		},
 
@@ -184,7 +195,7 @@ public class Harvestable extends StationaryItem {
 			toCopy.complete();
 		}
 		
-		public String getInfo() {
+		public String getEnumInfo(int remainingQuantity) {
 			System.out.println("Error Harvestable getInfo: this method should never run.");
 			return "";
 		}

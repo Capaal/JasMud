@@ -5,6 +5,7 @@ import java.util.Arrays;
 import interfaces.Holdable;
 import processes.InductionSkill;
 import items.Harvestable;
+import items.Harvestable.HarvestType;
 
 public class Mine extends InductionSkill {
 	
@@ -34,9 +35,12 @@ public class Mine extends InductionSkill {
 			return;
 		}
 		//check if the item is a rock
-		if (!(oreItem instanceof Harvestable)) { 
-			messageSelf("You cannot mine " + oreName + ".");
-			return;
+		if (oreItem instanceof Harvestable) { 
+			Harvestable item = (Harvestable) oreItem;
+			if (!(item.getType().equals(HarvestType.IRON))) {
+				messageSelf("You cannot mine " + oreName + ".");
+				return;
+			}
 		}
 		rock = (Harvestable) oreItem;		
 		scheduleSkillRepeatNTimesOverXMilliseconds(1, 5000); // Triggers this skill's "run()" in 5 seconds. Interruptible.
@@ -52,7 +56,7 @@ public class Mine extends InductionSkill {
 			messageSelf("There are no more ores left in this rock.");
 			return;
 		}
-		messageSelf(rock.harvest(currentPlayer));
+		rock.harvest(currentPlayer);
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import items.Door;
 import items.Drinkable.DrinkType;
 import items.Drinkable.DrinkableItemBuilder;
 import items.Harvestable.HarvestableItemBuilder;
-import items.Mineable.MineableItemBuilder;
 import items.Plant.PlantItemBuilder;
 import items.Plant.PlantType;
 import items.ItemBuilder;
@@ -66,6 +65,8 @@ public class CreateWorld {
 		generalSkills.addSkill(new Follow());
 		generalSkills.addSkill(new Apply());
 		generalSkills.addSkill(new Examine());
+		generalSkills.addSkill(new Mine());
+		generalSkills.addSkill(new Chop()); //same as mine except for many messages..
 		//crafting
 		generalSkills.addSkill(new CraftItem());
 		generalSkills.addSkill(new Salvage());
@@ -88,9 +89,8 @@ public class CreateWorld {
 		generalSkills.addSkill(new DualAttack());
 		generalSkills.addSkill(new Staunch());
 		generalSkills.addSkill(new MercRegenSkill());
-		// Who knows?
 		generalSkills.addSkill(new Shieldblock());
-		generalSkills.addSkill(new Mine());
+
 	}
 	
 	public static void makeItems() {
@@ -108,7 +108,8 @@ public class CreateWorld {
 		addHealPotion();
 		addBleedPotion();
 		addRegenPotion();
-		addOreRock();		
+		addOreRock();	
+		addTree();
 		makeAloeHerb();	
 		makeComfreyHerb();
 		makeOleander();
@@ -261,7 +262,6 @@ public class CreateWorld {
 	
 	public static void addOre() {
 		StackableItemBuilder newItem = new StackableItemBuilder();
-		//ItemBuilder newItem = new ItemBuilder();	
 		newItem.setName("iron");
 		newItem.setDescription("A pile of iron ore chunks.");
 		newItem.setDescriptionSingle("A piece of iron ore.");
@@ -370,10 +370,21 @@ public class CreateWorld {
 	public static void addOreRock() {
 		HarvestableItemBuilder newItem = new HarvestableItemBuilder();
 		newItem.setName("ironrock");
-		newItem.setMaxQuantity(5);
+		newItem.setMaxQuantity(8);
+		newItem.setHarvestType(HarvestType.IRON);
 		newItem.setItemContainer(WorldServer.gameState.viewLocations().get(7));
 		newItem.complete();
-		itemTemplates.put("regenpotion", newItem);
+		itemTemplates.put("ironrock", newItem);
+	}
+	
+	public static void addTree() {
+		HarvestableItemBuilder newItem = new HarvestableItemBuilder();
+		newItem.setName("tree");
+		newItem.setMaxQuantity(8);
+		newItem.setHarvestType(HarvestType.WOOD);
+		newItem.setItemContainer(WorldServer.gameState.viewLocations().get(6));
+		newItem.complete();
+		itemTemplates.put("tree", newItem);
 	}
 	
 	public static void makeGoblin() {

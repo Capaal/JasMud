@@ -24,22 +24,6 @@ public class Bag extends StdItem implements Container { //wearable
 	}
 	
 	@Override
-	public String getName() {
-		return name;
-	}
-	
-	@Override
-	public int getId() {return id;}
-	
-	@Override
-	public String getInfo() {
-		StringBuilder s = new StringBuilder();
-		s.append(this.getName());
-		s.append(this.getId());
-		return s.toString();
-	}
-	
-	@Override
 	public String getExamine() {
 		StringBuilder s = new StringBuilder();
 		if (this.inventory != null) {

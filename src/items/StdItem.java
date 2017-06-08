@@ -168,7 +168,10 @@ public class StdItem implements Holdable{
 	
 	@Override 
 	public String getInfo() { 
-		return this.getName() + this.getId();
+		StringBuilder s = new StringBuilder();
+		s.append(this.getName());
+		s.append(this.getId());
+		return s.toString();
 	}
 	
 	@Override
