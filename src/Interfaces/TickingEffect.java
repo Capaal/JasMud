@@ -11,7 +11,7 @@ public abstract class TickingEffect implements Runnable {
 	
 	protected int interval;
 	protected ConditionWrapper wrapper;
-	protected ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(4);
+	protected static ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(4);
 	protected EffectManager linkedManager;
 	
 /*	@Override
@@ -68,49 +68,49 @@ public abstract class TickingEffect implements Runnable {
 		wrapper.kill();
 	}
 	
-			public class ConditionWrapper implements Runnable {
-				private final TickingEffect wrappedEffect;	
-				private int timesToRun;
-				private int totalTimesRan = 0;
-				private Future<?> future;
-				
-				public ConditionWrapper(TickingEffect effect, int times) {
-					this.wrappedEffect = effect;
-					this.timesToRun = times;
-				}
-				
-				public TickingEffect getWrappedEffect() {
-					return wrappedEffect;
-				}		
-				
-				public void run() {
-					if (totalTimesRan < timesToRun) {
-						effectExecutor.execute(wrappedEffect);
-						totalTimesRan ++;
-					} else {
-						kill();
-				//		future.cancel(true);
-				//		wrappedEffect.unRegisterActiveCondition();
-					}
-				}
-				
-				public void modifyTimes(int times) {
-					timesToRun = times;
-				}
-				
-				public void modifyTimesRan(int newTimes) {
-					totalTimesRan = newTimes;
-				}
+	public class ConditionWrapper implements Runnable {
+		private final TickingEffect wrappedEffect;	
+		private int timesToRun;
+		private int totalTimesRan = 0;
+		private Future<?> future;
 		
-				
-				
-				public void setOwnFuture(Future<?> future) {
-					this.future = future;
-				}
-				
-				public void kill() {
-					future.cancel(true);
-					linkedManager.unRegisterActiveCondition(wrappedEffect);
-				}
+		public ConditionWrapper(TickingEffect effect, int times) {
+			this.wrappedEffect = effect;
+			this.timesToRun = times;
+		}
+		
+		public TickingEffect getWrappedEffect() {
+			return wrappedEffect;
+		}		
+		
+		public void run() {
+			if (totalTimesRan < timesToRun) {
+				effectExecutor.execute(wrappedEffect);
+				totalTimesRan ++;
+			} else {
+				kill();
+		//		future.cancel(true);
+		//		wrappedEffect.unRegisterActiveCondition();
 			}
+		}
+		
+		public void modifyTimes(int times) {
+			timesToRun = times;
+		}
+		
+		public void modifyTimesRan(int newTimes) {
+			totalTimesRan = newTimes;
+		}
+
+		
+		
+		public void setOwnFuture(Future<?> future) {
+			this.future = future;
+		}
+		
+		public void kill() {
+			future.cancel(true);
+			linkedManager.unRegisterActiveCondition(wrappedEffect);
+		}
+	}
 }

@@ -5,6 +5,8 @@ import items.ItemBuilder;
 import items.StdItem;
 
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
@@ -57,6 +59,8 @@ public class StdMob implements Mobile, Container{
 	protected Mobile lastAggressor;
 	protected ArrayList<String> messages;
 	protected Set<PassiveCondition> allConditions;
+	protected double currentWeight;
+	protected Lock lock = new ReentrantLock();
 	
 	public StdMob(MobileBuilder build) {
 		Mobile decoratedMob = decorate(build, this);
@@ -78,7 +82,6 @@ public class StdMob implements Mobile, Container{
 		this.skillBookList = build.getSkillBookList();		
 		this.equipment = build.getEquipment();
 		this.allConditions = EnumSet.noneOf(PassiveCondition.class);
-		
 		WorldServer.gameState.addMob(decoratedMob.getName() + decoratedMob.getId(), decoratedMob);
 		decoratedMob.getContainer().acceptItem(decoratedMob);
 	}
@@ -152,10 +155,22 @@ public class StdMob implements Mobile, Container{
 	
 	@Override
 	public ContainerErrors acceptItem(Holdable item) {
-		if (inventory.put(item.getName().toLowerCase() + item.getId(), item) == null) {
+	//	if (inventory.put(item.getName().toLowerCase() + item.getId(), item) == null) {
+	//		return null;
+	//	}
+	//	return null;
+		
+		lock.lock();
+		try {
+			if ((getCurrentWeight() + item.getWeight()) > getMaxWeight()) {
+				return ContainerErrors.QTYFULL;
+			}
+			inventory.put(item.getName().toLowerCase() + item.getId(), item);
+			changeCurrentWeight(item.getWeight());
 			return null;
+		} finally {
+			lock.unlock();
 		}
-		return null;
 	}
 	
 	@Override
@@ -237,16 +252,26 @@ public class StdMob implements Mobile, Container{
 	// Put in Container AND remove from Container is complicated, but should be GUARANTEED in ONE LINE TODO
 	@Override
 	public void removeItemFromLocation(Holdable oldItem) {
-		if (inventory.containsValue(oldItem)) {
-			String key = oldItem.getName() + oldItem.getId();
-			inventory.remove(key);
-		} else if (equipment.hasItem(oldItem)){
-			equipment.remove(oldItem);
-			removeItemFromLocation(oldItem);
-		} else {
-			System.out.println("StdMob removeItemFromLocation: An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
+		lock.lock();
+		try {
+			if (inventory.containsValue(oldItem)) {
+				String key = oldItem.getName() + oldItem.getId();
+				inventory.remove(key);
+				changeCurrentWeight(oldItem.getWeight());
+			} else if (equipment.hasItem(oldItem)){
+				equipment.remove(oldItem);
+				removeItemFromLocation(oldItem);
+				changeCurrentWeight(oldItem.getWeight());
+			} else {
+				System.out.println("StdMob removeItemFromLocation: An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
+			}
+		} finally {
+			lock.unlock();
 		}
-		
+	}
+	
+	private void changeCurrentWeight(double change) {
+		currentWeight += change;
 	}
 
 	// Returns view of Inventory, allows editing of objects within (which should be limited) but not to the inventory list.
@@ -294,7 +319,7 @@ public class StdMob implements Mobile, Container{
 	public Collection<Holdable> getListMatchingString(String holdableString) {
 		holdableString = holdableString.toLowerCase();		
 		SortedMap<String, Holdable> subMap = inventory.subMap(holdableString, true, holdableString + Character.MAX_VALUE, true);		
-		Collection<Holdable> set = subMap.values();
+		Collection<Holdable> set = new TreeSet<Holdable>(subMap.values());
 		System.out.println("StdMob getListMatchingString: " + set.toString());		
 		if (set.isEmpty() || set == null) {
 			Holdable h = getHoldableFromString(holdableString);
@@ -583,15 +608,17 @@ public class StdMob implements Mobile, Container{
 	}
 
 	@Override
-	public int getMaxQty() {
-		// TODO Auto-generated method stub
-		return -1;
+	public double getMaxWeight() {
+		return 100;
 	}
 
 	@Override
-	public int getCurrentQty() {
-		// TODO Auto-generated method stub
-		return 0;
+	public double getCurrentWeight() {
+		return currentWeight;
+	}
+
+	@Override public void changeWeight(double change) {
+		this.currentWeight += change;
 	}
 
 

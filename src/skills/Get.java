@@ -61,7 +61,7 @@ public class Get extends Skills {
 	private void moveStackableItem(StackableItem itemToMove) {
 		String quantityToMove = Syntax.QUANTITY.getStringInfo(fullCommand, this);
 		if (!quantityToMove.isEmpty()) {
-			int quantity = Integer.parseInt(quantityToMove);
+			int quantity = Integer.parseInt(quantityToMove); 
 			if (quantity > itemToMove.getQuantity()) {
 				quantity = itemToMove.getQuantity();
 			}

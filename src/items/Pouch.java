@@ -37,12 +37,12 @@ public class Pouch extends StdItem implements Container {
 		}
 	}
 	@Override
-	public int getMaxQty() {
+	public double getMaxWeight() {
 		return this.maxPlants;
 	}
 	
 	@Override
-	public int getCurrentQty() {
+	public double getCurrentWeight() {
 		if (inventory == null) {
 			return 0;
 		}
@@ -115,5 +115,11 @@ public class Pouch extends StdItem implements Container {
 		@Override public StdItem produceType() {
 			return new Pouch(this);
 		} 
+	}
+
+	@Override
+	public void changeWeight(double change) {
+		// TODO Auto-generated method stub
+		
 	}
 }

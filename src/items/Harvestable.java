@@ -124,6 +124,7 @@ public class Harvestable extends StationaryItem {
 	
 	public enum HarvestType {
 		IRON() {
+			
 			@Override public String harvest(Mobile currentPlayer) {
 				currentPlayer.tell("You manage to pick out a chunk of iron."); //or return just "iron" and the message can otherwise be the same
 				return "iron";

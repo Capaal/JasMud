@@ -321,6 +321,7 @@ public class CreateWorld {
 		newItem.setName("aloe");
 		newItem.setDamageMult(0.1);
 		newItem.setPlantType(PlantType.ALOE);
+		newItem.setWeight(.1);
 		newItem.setQuantity(100);
 		newItem.complete();
 		itemTemplates.put("aloe", newItem);

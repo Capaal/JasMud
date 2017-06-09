@@ -340,21 +340,23 @@ public enum DecoratorType {
 	}
 
 	@Override
-	public int getMaxQty() {
-		// TODO Auto-generated method stub
-		return 0;
+	public double getMaxWeight() {
+		return decoratedMobile.getMaxWeight();
 	}
 
 	@Override
-	public int getCurrentQty() {
-		// TODO Auto-generated method stub
-		return 0;
+	public double getCurrentWeight() {
+		return decoratedMobile.getCurrentWeight();
 	}
 
 	@Override
 	public Collection<Holdable> getListMatchingString(String holdableString) {
-		// TODO Auto-generated method stub
-		return null;
+		return decoratedMobile.getListMatchingString(holdableString);
+	}
+
+	@Override
+	public void changeWeight(double change) {
+		decoratedMobile.changeWeight(change);
 	}
 
 }

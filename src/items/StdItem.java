@@ -2,12 +2,8 @@ package items;
 
 import java.util.*;
 
-import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamOmitField;
-
 import interfaces.*;
-import items.StackableItem.StackableItemBuilder;
 import processes.*;
 import processes.Equipment.EquipmentEnum;
 
@@ -27,6 +23,8 @@ public class StdItem implements Holdable{
 	protected final List<String> components; // Add to weapon interface? Make a craftable interface?
 	protected final boolean salvageable; // same as components?
 	
+	protected final double weight;
+	
 	protected final Set<EquipmentEnum> allowedEquipSlots;
 
 	public StdItem(ItemBuilder build) {
@@ -42,9 +40,8 @@ public class StdItem implements Holdable{
 		this.allowedEquipSlots = build.getAllowedSlots();
 		this.components = build.getComponents();
 		this.salvageable = build.getSalvageable();
+		this.weight = build.getWeight();
 		
-		WorldServer.gameState.addItem(name + id, this);
-		itemLocation.acceptItem(this);
 	}
 	
 	@Override public String getName() {return name;}
@@ -53,7 +50,8 @@ public class StdItem implements Holdable{
 	public double getPhysicalMult() {return physicalMult;}
 	public double getBalanceMult() {return balanceMult;}
 	public double getDefenseMult() {return defenseMult;}
-	@Override public synchronized Container getContainer() {return itemLocation;}	
+	public double getWeight() {return weight;}
+	@Override public Container getContainer() {return itemLocation;}	
 	public void doOnAttack() {}; //for my mercenary attack skill
 	
 //	public int getMaxDurability() {return maxDurability;}
@@ -76,10 +74,14 @@ public class StdItem implements Holdable{
 	
 	// TODO NEEDS to watch for a FALSE return from ACCEPTITEM, then handle the failed insertion.
 	@Override
-	public void moveHoldable(Container finalLocation) {
-		getContainer().removeItemFromLocation(this);
-		finalLocation.acceptItem(this);
+	public ContainerErrors moveHoldable(Container finalLocation) {
+		ContainerErrors error = finalLocation.acceptItem(this);		
+		if (error != null) {
+			return error;
+		}
+		getContainer().removeItemFromLocation(this);		
 		this.itemLocation = finalLocation;
+		return error;
 	}
 	
 	// Most of equiping is handled by StdMob
@@ -151,7 +153,8 @@ public class StdItem implements Holdable{
 		newBuilder.setItemContainer(itemLocation);
 	//	newBuilder.setAllowedSlots(allowedEquipSlots);
 		newBuilder.setComponents(components);
-		newBuilder.setSalvageable(salvageable);		
+		newBuilder.setSalvageable(salvageable);	
+		newBuilder.setWeight(weight);
 		return newBuilder;
 	}
 	

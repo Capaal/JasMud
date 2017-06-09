@@ -3,8 +3,8 @@ package items;
 import java.io.File;
 import java.util.Map;
 import java.util.TreeMap;
-
-import processes.Location.Direction;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import processes.ContainerErrors;
 import processes.WorldServer;
 
@@ -18,8 +18,9 @@ public class StackableItem extends StdItem {
 	
 	// Probably handle recovering IDs at some point
 	private int quantity;
-	private String descriptionSingle;
-	private String descriptionMany;
+	private final String descriptionSingle;
+	private final String descriptionMany;
+	private final Lock lock = new ReentrantLock();
 
 	public StackableItem(StackableItemBuilder build) {
 		super(build);
@@ -35,12 +36,12 @@ public class StackableItem extends StdItem {
 		return descriptionMany;
 	}
 	
-	@Override public void moveHoldable(Container finalLocation) {
-		moveHoldable(finalLocation, 1);
+	@Override public ContainerErrors moveHoldable(Container finalLocation) {
+		return moveHoldable(finalLocation, 1);
 	}
 	
-	public void moveAllHoldable(Container finalLocation) {
-		moveHoldable(finalLocation, this.quantity);
+	public ContainerErrors moveAllHoldable(Container finalLocation) {
+		return moveHoldable(finalLocation, this.quantity);
 	}
 	
 	public int getQuantity() {return quantity;}
@@ -48,48 +49,54 @@ public class StackableItem extends StdItem {
 	// TODO NEEDS to watch for a FALSE return from ACCEPTITEM, then handle the failed insertion.
 	//should return true/false or case (ok or why can't go in - wrong (herb) type, too full)
 	public ContainerErrors moveHoldable(Container finalLocation, int number) {	
-		ContainerErrors error = null;
-		int maxQty = finalLocation.getMaxQty();
-		if (maxQty>0) {
-			int inContainerQty = finalLocation.getCurrentQty();
-			int remainingQty = maxQty - inContainerQty;
-			if (number > remainingQty) {
-				number = remainingQty;
-				error = error.QTYFULL; //only used when all containers are full
-				if (number == 0) {return error;}
-			}
-		}
-		TreeMap<String, Holdable> inventoryView = finalLocation.getInventory();
-		Map.Entry<String,Holdable> possibleStack = inventoryView.ceilingEntry(this.name);
-		// If moving the entire stack
-		if (number >= this.quantity) {
-			// if a stack of the same item is in final location
-			if (possibleStack != null && possibleStack.getValue() instanceof StackableItem && possibleStack.getValue().getName().equals(this.name)) {
-				((StackableItem)possibleStack.getValue()).addToStack(number);	
-				this.removeFromWorld(); 
-				this.delete();
-				return error;
-			} else { // No stack in final location, so move THIS there.	
-				error = finalLocation.acceptItem(this);
-				if (error == null) {
-					getContainer().removeItemFromLocation(this);
-					this.itemLocation = finalLocation;
-					return error;
+		lock.lock();
+		try {
+			int maxQty = (int) ((finalLocation.getMaxWeight() - finalLocation.getCurrentWeight()) / this.weight); // Translates Space in bag to qty of stackable.
+			if (maxQty > 0) { // If the bag can hold less than the number requested, set number requested to lower max.
+				if (number > maxQty) {
+					number = maxQty;
 				}
-				else {
-					return error;
-				}		
-			}			
-		} else { // Else split
-			this.quantity -= number;
-			// If a possible stack is found in Final location, give number.
-			if (possibleStack != null && possibleStack.getValue() instanceof StackableItem && possibleStack.getValue().getName().equals(this.name)) {
-				((StackableItem)possibleStack.getValue()).addToStack(number);			
-				return error;
-			} else { // Else create new instance of this type in final location and split				
-				splitAndNew(number, finalLocation); //method created to allow specific item type override, see Herb
-				return error;
+			} else {
+				return ContainerErrors.QTYFULL; // If the bag can accept none of the stackable, return full error.
 			}
+			TreeMap<String, Holdable> inventoryView = finalLocation.getInventory();
+			Map.Entry<String,Holdable> possibleStackEntry = inventoryView.ceilingEntry(this.name);
+			Holdable possibleStack = null;
+			if (possibleStackEntry != null) {
+				possibleStack = possibleStackEntry.getValue();
+			}
+			// If moving the entire stack
+			if (number >= this.quantity) {
+				number = quantity;
+				// if a stack of the same item is in final location, destroy this and add to that
+				if (possibleStack != null &&  possibleStack.getName().equalsIgnoreCase(this.name)) {
+					((StackableItem)possibleStack).addToStack(number);	
+				//	this.removeFromWorld(); 
+				//	this.delete(); // Is there ever a file to be deleted?
+					removeFromStack(number);
+					return null;
+				} else { // No stack in final location, so move THIS there.	
+					ContainerErrors error = finalLocation.acceptItem(this);
+					if (error == null) { // If successfully moved the stack.
+						getContainer().removeItemFromLocation(this);
+						this.itemLocation = finalLocation;
+					}
+					return error;					
+				}			
+			} else { // Else split
+				removeFromStack(number);
+		//		this.quantity -= number;
+				// If a possible stack is found in Final location, give number.
+				if (possibleStack != null && possibleStack.getName().equals(this.name)) {
+					((StackableItem)possibleStack).addToStack(number);	
+					return null;
+				} else { // Else create new instance of this type in final location and split				
+					splitAndNew(number, finalLocation); //method created to allow specific item type override, see Herb
+					return null;
+				}
+			}
+		} finally {
+			lock.unlock();
 		}
 	}
 	
@@ -98,29 +105,29 @@ public class StackableItem extends StdItem {
 		newStack.setQuantity(number);
 		newStack.setItemContainer(finalLocation);	
 		newStack.complete();
-	}
+	}	
 	
-	@Override public void removeFromWorld() {
-	//	if (this.quantity > 1) {
-	//		this.quantity -= 1;
-	//	} else if (this.quantity == 1) {
-		this.getContainer().removeItemFromLocation(this);
-		if (!WorldServer.gameState.removeItem(this.getName() + this.getId())) {
-			System.out.println("Item tried to be removed that cannot be: " + this.getName() + this.getId());
+	public  void addToStack(int quantity) {
+		lock.lock();
+		try {
+			this.quantity += quantity;
+			this.getContainer().changeWeight(quantity * weight);
+		} finally {
+			lock.unlock();
 		}
-		this.itemLocation = null;
-	} 
-	
-	
-	public synchronized void addToStack(int quantity) {
-		this.quantity += quantity;
 	}
 	
 	public void removeFromStack(int qty) {
-		this.quantity -= qty;
-		if (this.quantity <= 0) {
-			this.removeFromWorld();
-			this.delete();
+		lock.lock();
+		try {			
+			this.quantity -= qty;
+			this.getContainer().changeWeight(-quantity * weight);
+			if (this.quantity <= 0) {
+				this.removeFromWorld();
+				this.delete();
+			}
+		} finally {
+			lock.unlock();
 		}
 	}
 	
@@ -188,5 +195,9 @@ public class StackableItem extends StdItem {
 		} else {
 			return this.quantity + " " + this.getName();
 		}
+	}
+	
+	@Override public double getWeight() {
+		return weight * quantity;
 	}
 }

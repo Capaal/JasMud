@@ -42,9 +42,14 @@ public class Put extends Skills {
 						messageSelf("You don't have any more " + itemName + " to put away.");
 						return;
 					}
-					item.moveHoldable(c);
-					messageSelf("You put " + itemName + " in your " + c.getName() + ".");
-					qty --;			
+					ContainerErrors error = item.moveHoldable(c);
+					if (error != null) {
+						messageSelf(error.display(c.getName()));
+						break;
+					} else {
+						messageSelf("You put " + itemName + " in your " + c.getName() + ".");
+						qty --;		
+					}
 				}	
 			}				
 		}
@@ -115,18 +120,18 @@ public class Put extends Skills {
 	}
 	
 	private void moveStack() {
-		StackableItem sItem = (StackableItem) item;
-		ContainerErrors error = null;					
+		StackableItem sItem = (StackableItem) item;				
 		Iterator<Holdable> i = containerList.iterator();
-		if (sItem.getQuantity() < qty) {
+		if (sItem.getQuantity() < qty) { // If the current stack is smaller than the desired quantity.
 			qty = sItem.getQuantity();
 		}
-		int origQty = qty;				
+		int origQty = qty;		
+		ContainerErrors error = null;
 		while (i.hasNext() && qty > 0) {
-			Container c = (Container) i.next();				
-			int containerQty = c.getCurrentQty();
+			Container c = (Container) i.next();		
+			int startQty = sItem.getQuantity();
 			error = sItem.moveHoldable(c,qty);
-			qty = qty - (c.getCurrentQty() - containerQty); //to handle remaining qty if some are put in
+			qty -= (startQty - sItem.getQuantity());
 			System.out.println("Put: moveStack while loop qty: " + qty);
 		}
 		if (qty == 0) {
@@ -137,7 +142,7 @@ public class Put extends Skills {
 		//if all containers are full to begin with or wrong type
 		} else { 
 			// BUG: returned: "That aloe is full." when the bag was full.
-			messageSelf(error.display(possibleContainer));
+		//	messageSelf(error.display(possibleContainer));
 		}
 	}	
 }

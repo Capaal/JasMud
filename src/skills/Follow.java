@@ -47,7 +47,7 @@ public class Follow extends Skills {
 	private boolean findTarget() {
 		String possibleTarg = Syntax.TARGET.getStringInfo(fullCommand, this);
 		if (possibleTarg == "") {
-			messageSelf("Who are you trying to headshot?");
+			messageSelf("Who are you trying to follow?");
 			return false;
 		}							
 		finalTarget = currentPlayer.getContainer().getMobileFromString(possibleTarg);

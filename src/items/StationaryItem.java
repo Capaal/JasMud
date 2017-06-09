@@ -1,5 +1,7 @@
 package items;
 
+import processes.ContainerErrors;
+
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
@@ -16,8 +18,9 @@ public class StationaryItem extends StdItem {
 	}
 	
 	@Override
-	public void moveHoldable(Container finalLocation) {
+	public ContainerErrors moveHoldable(Container finalLocation) {
 		System.out.println("Error: StationaryItem moveHoldable activated: " + finalLocation + " " + this.getName() + this.getId());
+		return null;
 	}
 	
 	@Override

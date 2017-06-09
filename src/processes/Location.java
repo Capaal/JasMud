@@ -363,12 +363,12 @@ public class Location implements Container {
 	}
 
 	@Override
-	public int getMaxQty() {
+	public double getMaxWeight() {
 		return 100000;		
 	}
 
 	@Override
-	public int getCurrentQty() {
+	public double getCurrentWeight() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -386,6 +386,10 @@ public class Location implements Container {
 			}
 		}
 		return set;
+	}
+
+	@Override public void changeWeight(double change) {
+		
 	}
 
 

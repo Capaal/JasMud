@@ -1,21 +1,27 @@
 package items;
 
 import java.util.Collection;
-import java.util.NavigableMap;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import interfaces.Container;
 import interfaces.Holdable;
-import items.StackableItem.StackableItemBuilder;
 import processes.ContainerErrors;
 
+//TODO LOCK access to currentWeight
 public class Bag extends StdItem implements Container { //wearable
 
 	protected TreeMap<String, Holdable> inventory = new TreeMap<String, Holdable>();	
 	
-	public Bag(ItemBuilder build) {
+	private final double maxWeight;
+	private double currentWeight;
+	private final Lock lock = new ReentrantLock();
+	
+	public Bag(BagItemBuilder build) {
 		super(build);
+		maxWeight = build.getMaxWeight();
 	}
 
 	@Override
@@ -23,7 +29,13 @@ public class Bag extends StdItem implements Container { //wearable
 		return new TreeMap<String, Holdable>(this.inventory);
 	}
 	
-	@Override
+	@Override public double getWeight() {
+		return getCurrentWeight() + weight;
+	}
+	
+	private void changeCurrentWeight(double change) {
+		currentWeight += change;
+	}
 	public String getExamine() {
 		StringBuilder s = new StringBuilder();
 		if (this.inventory != null) {
@@ -38,22 +50,39 @@ public class Bag extends StdItem implements Container { //wearable
 				s.append(System.getProperty("line.separator"));
 			}
 			s.append("There are " + inventory.size() + " items inside.");
+			s.append(System.getProperty("line.separator"));
+			s.append("Weight is " + getCurrentWeight() + " out of " + getMaxWeight() + ".");
 			return s.toString();
 		} else
-			return ("That bag is empty.");
+			return ("That " + getName() + " is empty.");
 	}
 	
-	
+	//TODO nothing cares about the error.
 	@Override
 	public ContainerErrors acceptItem(Holdable newItem) {
-		inventory.put(newItem.getName().toLowerCase() + newItem.getId(), newItem);
-		return null; // TODO should actually check from return
+		lock.lock();
+		try {
+			if ((getCurrentWeight() + newItem.getWeight()) > getMaxWeight()) {
+				return ContainerErrors.QTYFULL;
+			}
+			inventory.put(newItem.getName().toLowerCase() + newItem.getId(), newItem);
+			changeCurrentWeight(newItem.getWeight());
+			return null; // TODO should actually check from return
+		} finally {
+			lock.unlock();
+		}
 	}	
 	
 	@Override
 	public void removeItemFromLocation(Holdable oldItem) {
-		if ((inventory.remove(oldItem.getName().toLowerCase() + oldItem.getId()) == null)) {
-			System.out.println("Failed to remove item from location: " + oldItem);
+		lock.lock();
+		try {
+			if ((inventory.remove(oldItem.getName().toLowerCase() + oldItem.getId()) == null)) {
+				System.out.println("Failed to remove item from a bag (MAJOR BUG): " + oldItem);
+			}
+			changeCurrentWeight(-oldItem.getWeight());
+		} finally {
+			lock.unlock();
 		}
 	}
 	
@@ -76,15 +105,17 @@ public class Bag extends StdItem implements Container { //wearable
 	}
 
 	@Override
-	public int getMaxQty() {
-		// TODO Auto-generated method stub
-		return -1;
+	public double getMaxWeight() {
+		return maxWeight;
 	}
 
 	@Override
-	public int getCurrentQty() {
-		// TODO Auto-generated method stub
-		return -1;
+	public double getCurrentWeight() {
+		return currentWeight;
+	}
+	
+	@Override public void changeWeight(double change) {
+		this.currentWeight += change;
 	}
 	
 	@Override
@@ -101,20 +132,8 @@ public class Bag extends StdItem implements Container { //wearable
 		}
 		return set;
 	}
-/*
-	@Override //same as StdMob...
-	public Collection<Holdable> getListMatchingString(String holdableString) {
-		holdableString = holdableString.toLowerCase();
-		String ceiling = inventory.ceilingKey(holdableString);
-		String floor = inventory.floorKey(holdableString);
-		NavigableMap<String, Holdable> subMap = null;
-		if (ceiling != null && floor != null && ceiling != floor) {
-			subMap = inventory.subMap(floor, true, ceiling, false);
-		}
-		return subMap;
-	}
-*/
 	
+	// This do anyting/required?
 	@Override public ItemBuilder newBuilder() {
 		return newBuilder(new BagItemBuilder());
 	}
@@ -126,7 +145,20 @@ public class Bag extends StdItem implements Container { //wearable
 	
 	public static class BagItemBuilder extends ItemBuilder {
 		
+		private int maxWeight = 10;
+		private int currentWeight = 0;
 		
+		public int getMaxWeight() {
+			return maxWeight;
+		}
+		
+		public void setMaxWeight(int newWeight) {
+			maxWeight = newWeight;
+		}
+		
+		public int getCurrentWeight() {
+			return currentWeight;
+		}
 		
 		@Override public StdItem produceType() {
 			return new Bag(this);

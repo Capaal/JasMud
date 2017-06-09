@@ -1,10 +1,6 @@
 package items;
 
 import interfaces.Container;
-import items.Drinkable.DrinkType;
-import items.Plant.PlantType;
-import items.Weapon.MercEffect;
-import items.Harvestable.HarvestType;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -20,6 +16,7 @@ public class ItemBuilder {
 	protected int id = -1;
 	protected String name = "";
 	protected String description = "default";
+	protected double weight = 1;
 	protected double balanceMult = 1.0;
 	protected double defenseMult = 0;
 	protected int maxDurability = 1;
@@ -65,6 +62,9 @@ public class ItemBuilder {
 	public String getDescription() {
 		return description;
 	}
+	
+	public double getWeight() {return weight;}
+	public void setWeight(double newWeight) {this.weight = newWeight;}
 	
 	public void setBalanceMult(double balanceMult) {
 		this.balanceMult = balanceMult;
@@ -139,6 +139,8 @@ public class ItemBuilder {
 	public void complete() {
 		handleId();
 		finishedItem = produceType();
+		WorldServer.gameState.addItem(finishedItem.getName() + finishedItem.getId(), finishedItem);
+		finishedItem.getContainer().acceptItem(finishedItem);
 	}
 	
 	public StdItem produceType() {
