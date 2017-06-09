@@ -127,6 +127,7 @@ public class Put extends Skills {
 			int containerQty = c.getCurrentQty();
 			error = sItem.moveHoldable(c,qty);
 			qty = qty - (c.getCurrentQty() - containerQty); //to handle remaining qty if some are put in
+			System.out.println("Put: moveStack while loop qty: " + qty);
 		}
 		if (qty == 0) {
 			messageSelf("You put " + origQty + " " + sItem.getName() + " in your " + possibleContainer + ".");

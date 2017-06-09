@@ -31,33 +31,45 @@ public class Move extends Skills {
 		}
 		if (!hasBalance()) {return;}
 		if (!legsOk()) {return;}
-		startContainer = currentPlayer.getContainer();
-		endContainer = null;
-		dir = Syntax.DIRECTION.getStringInfo(fullCommand, this); // Why not convert to enum?
+		if (isRooted()) {return;};
 		
-		if(isRooted()) {return;};
+		if (!findDirection()) {return;}
+		
 		ifDizzy(); //if dizzy, sets a new random direction, ok to run into walls
-		if (!dir.equals("")) {
-			endContainer = startContainer.getContainer(dir);
-			directionEnum = Direction.getDirectionName(dir);
-		} else {
-			messageSelf("You need to say which way you want to go!");
-			return;
-		}
+
 		if (endContainer == null) {
 			messageSelf("You can't go that way!");
 			return;
 		}
-		if (isDoorBlocking(startContainer, directionEnum)) {
-			messageSelf("The door is closed before you.");
-			return;
-		}
-		displayMessages();
+		if (!checkDoor()) {return;}
 		
+		displayMessages();
 		Look look = new Look();
 		look.perform("", currentPlayer);
 		moveFollowers();
 		stopFollowing();
+	}
+	
+	protected boolean findDirection() {
+		startContainer = currentPlayer.getContainer();
+		endContainer = null;
+		dir = Syntax.DIRECTION.getStringInfo(fullCommand, this); // Why not convert to enum?
+		if (!dir.equals("")) {
+			endContainer = startContainer.getContainer(dir);
+			directionEnum = Direction.getDirectionName(dir);
+			return true;
+		} else {
+			messageSelf("You need to say which way you want to go!");
+			return false;
+		}
+	}
+	
+	protected boolean checkDoor() { //might crash if directionEnum is null TODO
+		if (isDoorBlocking(startContainer, directionEnum)) {
+			messageSelf("The door is closed before you.");
+			return false;
+		}
+		return true;
 	}
 	
 	protected void displayMessages() {
@@ -65,8 +77,8 @@ public class Move extends Skills {
 		currentPlayer.moveHoldable(endContainer);		
 		//this opposite direction is not always correct?
 		messageOthers(currentPlayer.getName() + " arrives from the " + Location.Direction.getDirectionName(dir).getOpp().toLowerCase() + ".", Arrays.asList(currentPlayer));
-		
 	}
+	
 	
 	private boolean legsOk() {
 		if(currentPlayer.hasAllConditions(PassiveCondition.BROKENLEGS)) {

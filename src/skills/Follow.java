@@ -9,7 +9,7 @@ public class Follow extends Skills {
 	
 	Mobile finalTarget;
 	Move following;
-	FollowMove fm;
+	MoveFollow fm;
 	
 	public Follow() {	
 		super.name = "follow";
@@ -32,7 +32,7 @@ public class Follow extends Skills {
 	
 	public void move(String fullCommand) {
 		if (fm == null) {
-			fm = new FollowMove();
+			fm = new MoveFollow();
 		}
 		fm.perform(fullCommand, currentPlayer);
 	}

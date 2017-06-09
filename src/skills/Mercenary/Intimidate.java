@@ -23,7 +23,7 @@ public class Intimidate extends Skills {
 		if (!hasBalance()) {return;}
 		if (!setTarget()) {return;}
 
-		mobileToFear.addActiveCondition(new Fear(mobileToFear), 4);
+		mobileToFear.addActiveCondition(new Fear(mobileToFear), 5);
 		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
 		messageSelf("You fear someone.");
 		messageTarget("Someone fears you.", Arrays.asList(mobileToFear));

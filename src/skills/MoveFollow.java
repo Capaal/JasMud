@@ -1,6 +1,6 @@
 package skills;
 
-public class FollowMove extends Move {
+public class MoveFollow extends Move {
 	
 	@Override protected void stopFollowing() {
 		// Blank, we do not want to stop following.

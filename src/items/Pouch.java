@@ -78,6 +78,7 @@ public class Pouch extends StdItem implements Container {
 	public void removeItemFromLocation(Holdable oldItem) {
 		if (oldItem != null && oldItem.equals(inventory)) {
 			inventory = null;
+			System.out.println("HerbPouch inv removed.");
 		}		
 	}
 
@@ -93,7 +94,8 @@ public class Pouch extends StdItem implements Container {
 	@Override //useless method for pouch
 	public Collection<Holdable> getListMatchingString(String holdableString) {
 		Collection<Holdable> set = new HashSet<Holdable>();
-		set.add(inventory);
+		boolean setCheck = set.add(inventory);
+		System.out.println("HerbPouch getList (true expected): " + setCheck);
 		return set;
 	}	
 	
