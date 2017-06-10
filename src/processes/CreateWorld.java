@@ -11,6 +11,7 @@ import items.ItemBuilder;
 import items.Pouch.PouchItemBuilder;
 import items.StackableItem;
 import items.StackableItem.StackableItemBuilder;
+import items.StdItem;
 import items.Weapon.MercEffect;
 import items.Harvestable.HarvestType;
 import items.Weapon.WeaponItemBuilder;
@@ -213,11 +214,11 @@ public class CreateWorld {
 	
 	public static void makeIngot() {
 		ItemBuilder newItem = new ItemBuilder();
-		
+		newItem.setWeight(2);
 		newItem.setName("ingot");
 		newItem.setDescription("An iron ingot.");
-		StackableItem iron = (StackableItem) itemTemplates.get("iron").getNonexistentFinishedItem();
-		iron.addToStack(1);
+		StdItem iron = itemTemplates.get("iron").getNonexistentFinishedItem();
+		((StackableItem) iron).addToStack(1);
 		newItem.setComponents(Arrays.asList(iron)); //TODO should use the object iron instead of string
 		newItem.setDamageMult(0.4);
 		newItem.setSalvageable(true);
@@ -230,6 +231,7 @@ public class CreateWorld {
 		newItem.setDescription("It's a dagger!");
 		newItem.setComponents(Arrays.asList(itemTemplates.get("ingot").getNonexistentFinishedItem()));
 		newItem.setSalvageable(true);
+		newItem.setWeight(1.5);
 		newItem.setAllowedSlots(EquipmentEnum.LEFTHAND);
 		newItem.setAllowedSlots(EquipmentEnum.RIGHTHAND);
 		newItem.setMercEffect(MercEffect.BLEED);
@@ -243,6 +245,7 @@ public class CreateWorld {
 		newItem.setDescription("It's a sword!");
 		newItem.setComponents(Arrays.asList(itemTemplates.get("ingot").getNonexistentFinishedItem(), itemTemplates.get("ingot").getNonexistentFinishedItem()));
 		newItem.setSalvageable(true);
+		newItem.setWeight(5);
 		newItem.setDamageMult(1.5);
 		newItem.setBalanceMult(1.2);
 		itemTemplates.put("sword", newItem);
@@ -253,6 +256,7 @@ public class CreateWorld {
 		newItem.setName("stick");
 		newItem.setDescription("It's an evil stick.");
 		newItem.setDamageMult(0.5);
+		newItem.setWeight(.5);
 		newItem.setMercEffect(MercEffect.FEAR);
 //		newItem.complete();
 		itemTemplates.put("stick", newItem);
@@ -268,17 +272,17 @@ public class CreateWorld {
 		newItem.setDescription("It's a pike!");
 		newItem.setComponents(Arrays.asList(itemTemplates.get("dagger").getNonexistentFinishedItem(),itemTemplates.get("stick").getNonexistentFinishedItem()));
 		newItem.setDamageMult(1.8);
+		newItem.setWeight(6);
 		newItem.setBalanceMult(1.5);
 		newItem.setSalvageable(true);
 		itemTemplates.put("pike", newItem);
 	}
-
-
 	
 	public static void addIronPotion() {
 		DrinkableItemBuilder newItem = new DrinkableItemBuilder();	
 		newItem.setName("ironpotion");
 		newItem.setDescription("A potion made from iron.");
+		newItem.setWeight(.5);
 		newItem.setComponents(Arrays.asList(itemTemplates.get("iron").getNonexistentFinishedItem()));
 		newItem.setDamageMult(0.2);
 		newItem.setMaxSips(2);
@@ -293,6 +297,7 @@ public class CreateWorld {
 		newItem.setDescription("A potion made from sticks.");
 		newItem.setComponents(Arrays.asList(itemTemplates.get("stick").getNonexistentFinishedItem()));
 		newItem.setDamageMult(0.2);
+		newItem.setWeight(.5);
 		newItem.setMaxSips(2);
 		newItem.setDrinkType(DrinkType.HEALTH);
 		itemTemplates.put("healpotion", newItem);
@@ -303,6 +308,7 @@ public class CreateWorld {
 		newItem.setName("bleedpotion");
 		newItem.setDescription("Don't drink this.");
 		newItem.setDamageMult(0.2);
+		newItem.setWeight(.5);
 		newItem.setMaxSips(2);
 		newItem.setDrinkType(DrinkType.BLEED);
 		newItem.complete();
@@ -314,6 +320,7 @@ public class CreateWorld {
 		newItem.setName("regenpotion");
 		newItem.setDamageMult(0.2);
 		newItem.setMaxSips(2);
+		newItem.setWeight(.5);
 		newItem.setDrinkType(DrinkType.REGEN);
 		newItem.complete();
 		itemTemplates.put("regenpotion", newItem);
@@ -334,6 +341,7 @@ public class CreateWorld {
 		PlantItemBuilder newItem = new PlantItemBuilder();	
 		newItem.setName("comfrey");
 		newItem.setDamageMult(0.1);
+		newItem.setWeight(.1);
 		newItem.setPlantType(PlantType.COMFREY);
 	//	newItem.complete();
 		itemTemplates.put("comfrey", newItem);
@@ -343,6 +351,7 @@ public class CreateWorld {
 		PlantItemBuilder newItem = new PlantItemBuilder();	
 		newItem.setName("oleander");
 		newItem.setDamageMult(0.1);
+		newItem.setWeight(.1);
 		newItem.setPlantType(PlantType.OLEANDER);
 	//	newItem.complete();
 		itemTemplates.put("oleander", newItem);
@@ -352,6 +361,7 @@ public class CreateWorld {
 		PlantItemBuilder newItem = new PlantItemBuilder();
 		newItem.setName("ginseng");
 		newItem.setDamageMult(0.1);
+		newItem.setWeight(.1);
 		newItem.setPlantType(PlantType.GINSENG);
 		newItem.complete();
 		itemTemplates.put("ginseng", newItem);
@@ -360,6 +370,7 @@ public class CreateWorld {
 	public static void addPouch() {
 		PouchItemBuilder newItem = new PouchItemBuilder();
 		newItem.setName("pouch");
+		newItem.setWeight(.5);
 		newItem.complete();
 		itemTemplates.put("pouch", newItem);
 	}
@@ -367,6 +378,7 @@ public class CreateWorld {
 	public static void makeBag() {
 		BagItemBuilder newItem = new BagItemBuilder();
 		newItem.setName("bag");
+		newItem.setWeight(2);
 		newItem.complete();
 		itemTemplates.put("bag", newItem);
 	}

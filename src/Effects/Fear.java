@@ -5,9 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
 import interfaces.Mobile;
 import interfaces.TickingEffect;
 import processes.Location;
+import processes.WorldServer;
 import processes.Location.Direction;
 import processes.LocationConnection;
 import skills.Look;
@@ -26,7 +28,8 @@ public class Fear extends TickingEffect {
 
 	@Override
 	public void run() {
-		move.perform("", currentPlayer);
+		WorldServer.gameState.addToQueue(move, "", currentPlayer);
+//		move.perform("", currentPlayer);
 		
 	/*	if (!currentPlayer.hasBalance()) {
 			currentPlayer.tell("You try to flee, but are off balance.");

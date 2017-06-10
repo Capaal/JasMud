@@ -41,7 +41,8 @@ public class Headshot extends InductionSkill {
 		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
 		messageSelf("You headshot " + finalTarget.getName() + ".");
 		messageTarget(currentPlayer.getName() + " headshots you.", Arrays.asList(finalTarget));
-		messageOthers(currentPlayer.getName() + " headshots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));		
+		messageOthers(currentPlayer.getName() + " headshots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));	
+		//TODO message for others in TARGET's location.
 	}
 	
 	// Deals damage to a single target in currentPlayer's location or infinitately away in one direction.

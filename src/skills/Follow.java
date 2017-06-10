@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import interfaces.Mobile;
 import processes.Skills;
+import processes.WorldServer;
 
 public class Follow extends Skills {
 	
@@ -34,7 +35,8 @@ public class Follow extends Skills {
 		if (fm == null) {
 			fm = new MoveFollow();
 		}
-		fm.perform(fullCommand, currentPlayer);
+		WorldServer.gameState.addToQueue(fm, fullCommand, currentPlayer);
+	//	fm.perform(fullCommand, currentPlayer);
 	}
 	
 	public void stopFollowing() {
