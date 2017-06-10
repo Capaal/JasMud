@@ -15,9 +15,10 @@ public class Bag extends StdItem implements Container { //wearable
 
 	protected TreeMap<String, Holdable> inventory = new TreeMap<String, Holdable>();	
 	
-	private final double maxWeight;
-	private double currentWeight;
+	private final double maxWeight;	
 	private final Lock lock = new ReentrantLock();
+	
+	private double currentWeight;
 	
 	public Bag(BagItemBuilder build) {
 		super(build);
@@ -115,7 +116,12 @@ public class Bag extends StdItem implements Container { //wearable
 	}
 	
 	@Override public void changeWeight(double change) {
-		this.currentWeight += change;
+		lock.lock();
+		try {
+			this.currentWeight += change;
+		} finally {
+			lock.unlock();
+		}
 	}
 	
 	@Override
@@ -145,7 +151,7 @@ public class Bag extends StdItem implements Container { //wearable
 	
 	public static class BagItemBuilder extends ItemBuilder {
 		
-		private int maxWeight = 10;
+		private int maxWeight = 250;
 		private int currentWeight = 0;
 		
 		public int getMaxWeight() {

@@ -48,8 +48,8 @@ public class TakeOut extends Skills {
 				if (item instanceof StackableItem) { 
 					StackableItem sItem = (StackableItem) item; 
 					int qtyAvailable = sItem.getQuantity();
-					ContainerErrors internal = sItem.moveHoldable(currentPlayer, qty); 				
-					qty = qty - qtyAvailable;
+					sItem.moveHoldable(currentPlayer, qty); 				
+					qty = qty - (qtyAvailable - sItem.getQuantity());
 				} else {					
 					while (qty > 0) { // Loops through putting away items.
 						item.moveHoldable(c);

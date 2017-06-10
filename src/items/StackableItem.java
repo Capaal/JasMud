@@ -18,6 +18,7 @@ public class StackableItem extends StdItem {
 	
 	// Probably handle recovering IDs at some point
 	private int quantity;
+	
 	private final String descriptionSingle;
 	private final String descriptionMany;
 	private final Lock lock = new ReentrantLock();
@@ -121,7 +122,7 @@ public class StackableItem extends StdItem {
 		lock.lock();
 		try {			
 			this.quantity -= qty;
-			this.getContainer().changeWeight(-quantity * weight);
+			this.getContainer().changeWeight(-qty * weight);
 			if (this.quantity <= 0) {
 				this.removeFromWorld();
 				this.delete();
