@@ -20,7 +20,7 @@ public class StdItem implements Holdable{
 	protected Container itemLocation;	
 //	protected final int maxDurability;
 //  protected int currentDurability;
-	protected final List<String> components; // Add to weapon interface? Make a craftable interface?
+	protected final List<StdItem> components; // Add to weapon interface? Make a craftable interface?
 	protected final boolean salvageable; // same as components?
 	
 	protected final double weight;
@@ -65,7 +65,7 @@ public class StdItem implements Holdable{
 //	}
 	
 	public Set<EquipmentEnum> getAllowedEquipSlots() {return allowedEquipSlots;}
-	public List<String> getComponents() {return components;}
+	public List<StdItem> getComponents() {return components;}
 	
 	public double getDamageMult() {
 		return physicalMult;

@@ -43,8 +43,8 @@ public class Salvage extends Skills {
 		}
 		deleteThis.removeFromWorld(); //removes the salvaged item
 		//salvages. currently set at 50% chance to salvage each component
-		List<String> components = salvageThis.getComponents(); 
-		for (String i : components) {
+		List<StdItem> components = salvageThis.getComponents(); 
+		for (StdItem i : components) {
 			Random chance = new Random();
 			int p = chance.nextInt(100);
 			if (p>50) {

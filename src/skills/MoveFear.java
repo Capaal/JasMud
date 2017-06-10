@@ -29,10 +29,12 @@ public class MoveFear extends Move {
 		return true;
 	}
 	
-	@Override protected void displayMessages() {
+	@Override protected void displayLeaveMsg() {
 		messageSelf("You flee away to the " + dir + ".");
 		messageOthers(currentPlayer.getName() + " flees away to the " + dir + ".", Arrays.asList(currentPlayer)); //TODO need to specify direction
-		currentPlayer.moveHoldable(endContainer);
+	}
+	
+	@Override protected void displayEnterMsg() {
 		messageOthers(currentPlayer.getName() + " flees in from a random direction.", Arrays.asList(currentPlayer));
 	}
 	

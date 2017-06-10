@@ -33,6 +33,8 @@ public class Move extends Skills {
 		if (!legsOk()) {return;}
 		if (isRooted()) {return;};
 		
+		startContainer = currentPlayer.getContainer();
+		endContainer = null;
 		if (!findDirection()) {return;}
 		
 		ifDizzy(); //if dizzy, sets a new random direction, ok to run into walls
@@ -43,7 +45,10 @@ public class Move extends Skills {
 		}
 		if (!checkDoor()) {return;}
 		
-		displayMessages();
+		displayLeaveMsg();
+		currentPlayer.moveHoldable(endContainer);
+		displayEnterMsg();
+		
 		Look look = new Look();
 		look.perform("", currentPlayer);
 		moveFollowers();
@@ -51,8 +56,6 @@ public class Move extends Skills {
 	}
 	
 	protected boolean findDirection() {
-		startContainer = currentPlayer.getContainer();
-		endContainer = null;
 		dir = Syntax.DIRECTION.getStringInfo(fullCommand, this); // Why not convert to enum?
 		if (!dir.equals("")) {
 			endContainer = startContainer.getContainer(dir);
@@ -72,15 +75,16 @@ public class Move extends Skills {
 		return true;
 	}
 	
-	protected void displayMessages() {
+	protected void displayLeaveMsg() {
 		messageOthers(currentPlayer.getName() + " leaves to the " + dir.toLowerCase() + ".", Arrays.asList(currentPlayer));
-		currentPlayer.moveHoldable(endContainer);		
-		//this opposite direction is not always correct?
-		messageOthers(currentPlayer.getName() + " arrives from the " + Location.Direction.getDirectionName(dir).getOpp().toLowerCase() + ".", Arrays.asList(currentPlayer));
 	}
 	
+	protected void displayEnterMsg() {
+		messageOthers(currentPlayer.getName() + " arrives from the " + Location.Direction.getDirectionName(dir).getOpp().toLowerCase() + ".", Arrays.asList(currentPlayer));
+		//this opposite direction is not always correct?
+	}
 	
-	private boolean legsOk() {
+	protected boolean legsOk() {
 		if(currentPlayer.hasAllConditions(PassiveCondition.BROKENLEGS)) {
 			messageSelf("Oh no your legs are broken.");
 			return false;
@@ -88,7 +92,7 @@ public class Move extends Skills {
 		return true;
 	}
 	
-	private void ifDizzy() {
+	protected void ifDizzy() {
 		if (currentPlayer.hasAllConditions(PassiveCondition.DIZZY)) {
 			String[] d = {"n", "s", "e", "w", "nw", "se", "ne", "sw", "in", "out", "up", "down"};
 			Random r = new Random();
@@ -97,7 +101,7 @@ public class Move extends Skills {
 		}
 	}
 	
-	private boolean isRooted() {
+	protected boolean isRooted() {
 		if (currentPlayer.hasAllConditions(PassiveCondition.ROOT)) {
 			messageSelf("You are rooted and cannot move.");
 			return true;

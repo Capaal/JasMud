@@ -9,9 +9,16 @@ import processes.Location;
 import processes.Skills;
 import processes.Location.Direction;
 import processes.Skills.Syntax;
+import skills.MoveShove;
 
 public class Shove extends Skills {
-
+	
+	private String dir;
+	private Location startContainer;
+	private Location endContainer;
+	private String targetName;
+	private Mobile finalTarget;
+	private MoveShove move;
 	
 	public Shove() {
 		super.name = "shove";
@@ -19,13 +26,9 @@ public class Shove extends Skills {
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 		super.syntaxList.add(Syntax.DIRECTION);
+		this.move = new MoveShove();
 	}
 
-	private String dir;
-	private Location startContainer;
-	private Location endContainer;
-	private String targetName;
-	private Mobile finalTarget;
 	
 	@Override
 	protected void performSkill() {
@@ -35,12 +38,14 @@ public class Shove extends Skills {
 		if (!setTarget()) {return;}
 		if (!setDirection()) {return;}
 		
+
+	//	messageSelf("You shove " + finalTarget.getName() + " to the " + dir + ".");
+	//	messageTarget(currentPlayer.getName() + " shoves you away.", Arrays.asList(finalTarget));
+	//	messageOthers(currentPlayer.getName() + " shoves " + finalTarget.getName() + " away.", Arrays.asList(currentPlayer, finalTarget));
 		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
-		messageSelf("You shove " + finalTarget.getName() + " to the " + dir + ".");
-		messageTarget(currentPlayer.getName() + " shoves you away.", Arrays.asList(finalTarget));
-		messageOthers(currentPlayer.getName() + " shoves " + finalTarget.getName() + " away.", Arrays.asList(currentPlayer, finalTarget));
-		finalTarget.moveHoldable(endContainer);
-		messageOthersAway(targetName + "is suddenly shoved into this location.", Arrays.asList(finalTarget), endContainer);
+		move.setShover(currentPlayer);
+		move.perform("move " + dir + " " + currentPlayer.getName(), finalTarget);
+	//	messageOthersAway(targetName + "is suddenly shoved into this location.", Arrays.asList(finalTarget), endContainer);
 		
 	}
 	

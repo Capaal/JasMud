@@ -94,14 +94,12 @@ public class CreateWorld {
 	}
 	
 	public static void makeItems() {
+		addOre();
+		makeIngot();
 		makeADagger();
 		makeASword();
 		makeAStick();
 		makeAPike();
-		makeIngot();
-			addOre();
-		
-		
 		addIronPotion();
 		makeGoblin();
 		makeFarmerJames();
@@ -113,8 +111,7 @@ public class CreateWorld {
 		makeAloeHerb();	
 		makeComfreyHerb();
 		makeOleander();
-		addHerbPouch();
-	//	addHerbPouch();
+		addPouch();
 		makeGinsengHerb();
 		makeBag();
 	}
@@ -200,11 +197,38 @@ public class CreateWorld {
 	}
 	
 	//template items should be stored as builders, not actually existing items
+	
+	
+	public static void addOre() {
+		StackableItemBuilder newItem = new StackableItemBuilder();
+		newItem.setName("iron");
+		newItem.setDescription("A pile of iron ore chunks.");
+		newItem.setDescriptionSingle("A piece of iron ore.");
+		newItem.setDamageMult(0.2);
+		newItem.setQuantity(1);
+		itemTemplates.put("iron", newItem); // not sure it should be in itemTemplates
+		newItem.complete();
+//		WorldServer.gameState.addItem("ore", newItem.getFinishedItem()); //added here instead of templates, not a craftable item
+	}
+	
+	public static void makeIngot() {
+		ItemBuilder newItem = new ItemBuilder();
+		
+		newItem.setName("ingot");
+		newItem.setDescription("An iron ingot.");
+		StackableItem iron = (StackableItem) itemTemplates.get("iron").getNonexistentFinishedItem();
+		iron.addToStack(1);
+		newItem.setComponents(Arrays.asList(iron)); //TODO should use the object iron instead of string
+		newItem.setDamageMult(0.4);
+		newItem.setSalvageable(true);
+		itemTemplates.put("ingot", newItem);
+	}
+	
 	public static void makeADagger() {
 		WeaponItemBuilder newItem = new WeaponItemBuilder();	
 		newItem.setName("dagger");
 		newItem.setDescription("It's a dagger!");
-		newItem.setComponents(Arrays.asList("ingot"));
+		newItem.setComponents(Arrays.asList(itemTemplates.get("ingot").getNonexistentFinishedItem()));
 		newItem.setSalvageable(true);
 		newItem.setAllowedSlots(EquipmentEnum.LEFTHAND);
 		newItem.setAllowedSlots(EquipmentEnum.RIGHTHAND);
@@ -217,7 +241,7 @@ public class CreateWorld {
 		WeaponItemBuilder newItem = new WeaponItemBuilder();			
 		newItem.setName("sword");
 		newItem.setDescription("It's a sword!");
-		newItem.setComponents(Arrays.asList("ingot","ingot"));
+		newItem.setComponents(Arrays.asList(itemTemplates.get("ingot").getNonexistentFinishedItem(), itemTemplates.get("ingot").getNonexistentFinishedItem()));
 		newItem.setSalvageable(true);
 		newItem.setDamageMult(1.5);
 		newItem.setBalanceMult(1.2);
@@ -242,41 +266,20 @@ public class CreateWorld {
 		WeaponItemBuilder newItem = new WeaponItemBuilder();
 		newItem.setName("pike");
 		newItem.setDescription("It's a pike!");
-		newItem.setComponents(Arrays.asList("dagger","stick"));
+		newItem.setComponents(Arrays.asList(itemTemplates.get("dagger").getNonexistentFinishedItem(),itemTemplates.get("stick").getNonexistentFinishedItem()));
 		newItem.setDamageMult(1.8);
 		newItem.setBalanceMult(1.5);
 		newItem.setSalvageable(true);
 		itemTemplates.put("pike", newItem);
 	}
-	
-	public static void makeIngot() {
-		ItemBuilder newItem = new ItemBuilder();
-		
-		newItem.setName("ingot");
-		newItem.setDescription("An iron ingot.");
-		newItem.setComponents(Arrays.asList("iron","iron")); //TODO should use the object iron instead of string
-		newItem.setDamageMult(0.4);
-		newItem.setSalvageable(true);
-		itemTemplates.put("ingot", newItem);
-	}
-	
-	public static void addOre() {
-		StackableItemBuilder newItem = new StackableItemBuilder();
-		newItem.setName("iron");
-		newItem.setDescription("A pile of iron ore chunks.");
-		newItem.setDescriptionSingle("A piece of iron ore.");
-		newItem.setDamageMult(0.2);
-		newItem.setQuantity(5);
-		itemTemplates.put("iron", newItem); // not sure it should be in itemTemplates
-		newItem.complete();
-//		WorldServer.gameState.addItem("ore", newItem.getFinishedItem()); //added here instead of templates, not a craftable item
-	}
+
+
 	
 	public static void addIronPotion() {
 		DrinkableItemBuilder newItem = new DrinkableItemBuilder();	
 		newItem.setName("ironpotion");
 		newItem.setDescription("A potion made from iron.");
-		newItem.setComponents(Arrays.asList("iron"));
+		newItem.setComponents(Arrays.asList(itemTemplates.get("iron").getNonexistentFinishedItem()));
 		newItem.setDamageMult(0.2);
 		newItem.setMaxSips(2);
 		newItem.setDefenseMult(10); //wtf is this for?
@@ -288,7 +291,7 @@ public class CreateWorld {
 		DrinkableItemBuilder newItem = new DrinkableItemBuilder();	
 		newItem.setName("healpotion");
 		newItem.setDescription("A potion made from sticks.");
-		newItem.setComponents(Arrays.asList("stick"));
+		newItem.setComponents(Arrays.asList(itemTemplates.get("stick").getNonexistentFinishedItem()));
 		newItem.setDamageMult(0.2);
 		newItem.setMaxSips(2);
 		newItem.setDrinkType(DrinkType.HEALTH);
@@ -354,11 +357,11 @@ public class CreateWorld {
 		itemTemplates.put("ginseng", newItem);
 		}
 	
-	public static void addHerbPouch() {
+	public static void addPouch() {
 		PouchItemBuilder newItem = new PouchItemBuilder();
-		newItem.setName("herbpouch");
+		newItem.setName("pouch");
 		newItem.complete();
-		itemTemplates.put("herbpouch", newItem);
+		itemTemplates.put("pouch", newItem);
 	}
 	
 	public static void makeBag() {

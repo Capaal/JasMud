@@ -23,7 +23,7 @@ public class ItemBuilder {
 	protected int currentDurability = 1;
 	protected Container itemContainer = WorldServer.gameState.viewLocations().get(1);		
 	protected EnumSet<EquipmentEnum> allowedSlots = EnumSet.of(EquipmentEnum.RIGHTHAND, EquipmentEnum.LEFTHAND);// EnumSet.noneOf(EquipmentEnum.class);
-	protected List<String> components = new ArrayList<String>();
+	protected List<StdItem> components = new ArrayList<StdItem>();
 	protected boolean salvageable = false;
 	protected static Map<String, Integer> idMap = new HashMap<String, Integer>();
 	protected StdItem finishedItem =  null;
@@ -117,12 +117,12 @@ public class ItemBuilder {
 		return EnumSet.copyOf(allowedSlots);
 	}
 	
-	public void setComponents(List<String> allComponent) {
+	public void setComponents(List<StdItem> allComponent) {
 		this.components = allComponent;
 	}
 
 	
-	public List<String> getComponents() {
+	public List<StdItem> getComponents() {
 		return components;
 	}
 	
@@ -160,6 +160,12 @@ public class ItemBuilder {
 	
 	public StdItem getFinishedItem() {
 		return finishedItem;
+	}
+	
+	public StdItem getNonexistentFinishedItem() {
+		handleId();
+		StdItem notFinishedItem = produceType();
+		return notFinishedItem;
 	}
 
 	
