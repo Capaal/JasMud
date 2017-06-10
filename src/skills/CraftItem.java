@@ -53,12 +53,11 @@ public class CraftItem extends Skills {
 				andCreate();
 			}
 		}
-		
 	}
 	
 	
 	private boolean checkRemoveCreate(Iterator<StdItem> it, TreeMap<String, Holdable> copyPlayerInv) {
-		StdItem componentToTest = null;
+		StdItem componentToTest;
 		if (it.hasNext()) {
 			componentToTest = it.next();
 			//check if component in inv
@@ -74,17 +73,16 @@ public class CraftItem extends Skills {
 					copyPlayerInv.remove(componentToTest.getName());
 				}
 				//if yes, check the next component
-				if (it.hasNext()) {
-					checkRemoveCreate(it, copyPlayerInv);
-				}
+				boolean success = checkRemoveCreate(it, copyPlayerInv);
+				//once checked
+				if (success) {thenRemove(componentToTest);}
 			} else {
 				messageSelf("You are missing the component: " + componentToTest.getName());
 				return false; //else return false? does this even end the recursion?
 			}
+		} else {
+			andCreate();
 		}
-		//when empty, remove components from inventory
-		thenRemove(componentToTest);
-		andCreate();
 		return true;
 	}
 	
