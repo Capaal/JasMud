@@ -41,6 +41,7 @@ public class TakeOut extends Skills {
 		if (!preSkillChecks()) {return;}
 		Iterator<Holdable> i = containerList.iterator();
 		int origQty = qty;
+		ContainerErrors error = null;
 		while (i.hasNext() && qty > 0) {
 			Container c = (Container) i.next();
 			Holdable item = c.getHoldableFromString(itemName);		
@@ -48,11 +49,16 @@ public class TakeOut extends Skills {
 				if (item instanceof StackableItem) { 
 					StackableItem sItem = (StackableItem) item; 
 					int qtyAvailable = sItem.getQuantity();
-					sItem.moveHoldable(currentPlayer, qty); 				
-					qty = qty - (qtyAvailable - sItem.getQuantity());
+					error = sItem.moveHoldable(currentPlayer, qty); 					
+					if (sItem.getContainer() == c) {
+						qty -= (qtyAvailable - sItem.getQuantity());
+					} else {
+						qty -= qtyAvailable;
+					}
+					
 				} else {					
 					while (qty > 0) { // Loops through putting away items.
-						item.moveHoldable(c);
+						error = item.moveHoldable(c);
 						messageSelf("You take " + itemName + " from your " + c.getName() + ".");
 						qty --;	
 						item = c.getHoldableFromString(itemName);	
@@ -71,7 +77,11 @@ public class TakeOut extends Skills {
 			messageSelf("You take  " +  (origQty - qty) + " " + itemName + " from your " + containerName + "."); 
 		//if all containers are full to begin with or wrong type
 		} else { 
-			messageSelf("You can't find " + itemName + " anywhere.");
+			if (error != null) {
+				messageSelf(error.display(containerName));
+			} else {
+				messageSelf("You can't find " + itemName + " anywhere.");
+			}
 		}
 	}
 		
@@ -97,9 +107,9 @@ public class TakeOut extends Skills {
 		} 
 		// Tries to set containerList.
 		containerList = currentPlayer.getListMatchingString(containerName);
-		if (containerList == null) { // If not in player's inventory
+		if (containerList.size() == 0) { // If not in player's inventory
 			containerList = currentPlayer.getContainer().getListMatchingString(containerName);
-			if (containerList == null) { // If also not on the ground.
+			if (containerList.size() == 0) { // If also not on the ground.
 				messageSelf("You don't see a \"" + containerName + "\".");
 				return false;
 			}

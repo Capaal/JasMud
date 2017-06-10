@@ -131,8 +131,11 @@ public class Put extends Skills {
 			Container c = (Container) i.next();		
 			int startQty = sItem.getQuantity();
 			error = sItem.moveHoldable(c,qty);
-			qty -= (startQty - sItem.getQuantity());
-			System.out.println("Put: moveStack while loop qty: " + qty);
+			if (sItem.getContainer() == c) {
+				qty -= startQty;
+			} else {
+				qty -= (startQty - sItem.getQuantity());
+			}
 		}
 		if (qty == 0) {
 			messageSelf("You put " + origQty + " " + sItem.getName() + " in your " + possibleContainer + ".");
@@ -142,7 +145,7 @@ public class Put extends Skills {
 		//if all containers are full to begin with or wrong type
 		} else { 
 			// BUG: returned: "That aloe is full." when the bag was full.
-		//	messageSelf(error.display(possibleContainer));
+			messageSelf(error.display(possibleContainer));
 		}
 	}	
 }

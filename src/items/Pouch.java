@@ -1,9 +1,14 @@
 package items;
 
+import java.awt.List;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.NavigableMap;
+import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import interfaces.Container;
 import interfaces.Holdable;
@@ -11,14 +16,16 @@ import items.Bag.BagItemBuilder;
 import processes.ContainerErrors;
 
 //Pouches for easy accessibility - can eat/rub/use directly out of a pouch as though in hand.
-public class Pouch extends StdItem implements Container {
+public class Pouch extends Bag {
 	
-	private int maxPlants = 1000; //variable for different sizes of pouches	  NOT currently in use.
-	private Plant inventory; //includes qty (stackableitem)
+	private final ArrayList<Class<? extends Holdable>> allowedTypes;
+	private final Lock lock = new ReentrantLock();
+	
+	private StackableItem inventory;
 
-	public Pouch(ItemBuilder build) {
+	public Pouch(PouchItemBuilder build) {
 		super(build);
-		this.inventory = null;
+		allowedTypes = build.getTypes();
 	}
 	
 	@Override public String getInfo() {
@@ -33,20 +40,23 @@ public class Pouch extends StdItem implements Container {
 		if (this.inventory == null) {
 			return "empty herbpouch";
 		} else {
-			return this.inventory.getPlantType().toString().toLowerCase() + " pouch";
+			return this.inventory.getName().toLowerCase() + " pouch";
 		}
-	}
-	@Override
-	public double getMaxWeight() {
-		return this.maxPlants;
 	}
 	
 	@Override
-	public double getCurrentWeight() {
-		if (inventory == null) {
-			return 0;
+	public Holdable getHoldableFromString(String holdableString) {
+		if (inventory != null && inventory.getName().equalsIgnoreCase(holdableString)) {
+			return inventory;
 		}
-		return this.inventory.getQuantity();
+		return null;
+	}
+	
+	@Override
+	public Collection<Holdable> getListMatchingString(String holdableString) {	
+		Collection<Holdable> set = new ArrayList<Holdable>();
+		set.add(getHoldableFromString(holdableString));		
+		return set;
 	}
 
 	@Override
@@ -57,69 +67,82 @@ public class Pouch extends StdItem implements Container {
 		}
 		return newLook;
 	}
-
+	
 	@Override
 	public ContainerErrors acceptItem(Holdable newItem) {
-		if (newItem instanceof Plant) {
-			if (inventory == null) {
-				inventory = (Plant) newItem;
-				return null;
-			} else if (inventory != null && (((Plant)newItem).getPlantType() != inventory.getPlantType())) {
+		lock.lock();
+		try {
+			if (!allowedTypes.contains(newItem.getClass())) {
 				return ContainerErrors.WRONGTYPE;
-			} else if (inventory.getQuantity() == maxPlants) {
+			}
+			if (inventory != null || newItem.getWeight() > this.maxWeight) {
 				return ContainerErrors.QTYFULL;
-			} 
-		} 
-		return ContainerErrors.WRONGTYPE;
+			}
+			inventory = (Plant) newItem;
+			changeWeight(newItem.getWeight());
+			return null;
+		} finally {
+			lock.unlock();
+		}
 	}
 	
-
 	@Override
 	public void removeItemFromLocation(Holdable oldItem) {
-		if (oldItem != null && oldItem.equals(inventory)) {
-			inventory = null;
-			System.out.println("HerbPouch inv removed.");
-		}		
-	}
-
-	@Override
-	public Holdable getHoldableFromString(String holdableString) {
-		if (holdableString != null && inventory != null && 
-				(holdableString.equalsIgnoreCase(inventory.getName() + inventory.getId()) || holdableString.equalsIgnoreCase(inventory.getName()))) {
-			return inventory;
+		lock.lock();
+		try {
+			if (inventory == oldItem) {
+				inventory = null;
+			}
+			changeWeight(-oldItem.getWeight());
+		} finally {
+			lock.unlock();
 		}
-		return null;
 	}
-
-	@Override //useless method for pouch
-	public Collection<Holdable> getListMatchingString(String holdableString) {
-		Collection<Holdable> set = new HashSet<Holdable>();
-		boolean setCheck = set.add(inventory);
-		System.out.println("HerbPouch getList (true expected): " + setCheck);
-		return set;
-	}	
 	
-	@Override public ItemBuilder newBuilder() {
+	@Override
+	public String getExamine() {
+		StringBuilder s = new StringBuilder();
+		if (this.inventory != null) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("This pouch Contains ");
+			sb.append(inventory.getQuantity());
+			sb.append(" ");
+			sb.append(inventory.getName());
+			sb.append(".");
+			return sb.toString();
+		} else
+			return ("There is nothing in the pouch.");
+	}
+	
+	@Override public ItemBuilder newBuilder() {		
 		return newBuilder(new PouchItemBuilder());
 	}
 	
 	protected ItemBuilder newBuilder(PouchItemBuilder newBuild) {
 		super.newBuilder(newBuild);
+		newBuild.allowedTypes = this.allowedTypes;
 		return newBuild;
 	}
 	
-	public static class PouchItemBuilder extends BagItemBuilder {
+	public static class PouchItemBuilder extends BagItemBuilder {	
 		
+		private ArrayList<Class<? extends Holdable>> allowedTypes = new ArrayList<Class<? extends Holdable>>();
 		
+		public PouchItemBuilder() {
+			addType(Plant.class);
+			setMaxWeight(100);
+		}
+		
+		public void addType(Class<? extends Holdable> newType) {
+			this.allowedTypes.add(newType);
+		}
+		
+		public ArrayList<Class<? extends Holdable>> getTypes() {
+			return new ArrayList<Class<? extends Holdable>>(allowedTypes);
+		}
 		
 		@Override public StdItem produceType() {
 			return new Pouch(this);
 		} 
-	}
-
-	@Override
-	public void changeWeight(double change) {
-		// TODO Auto-generated method stub
-		
 	}
 }

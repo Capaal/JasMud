@@ -114,7 +114,7 @@ public class CreateWorld {
 		makeComfreyHerb();
 		makeOleander();
 		addHerbPouch();
-		addHerbPouch();
+	//	addHerbPouch();
 		makeGinsengHerb();
 		makeBag();
 	}

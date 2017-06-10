@@ -15,10 +15,10 @@ public class Bag extends StdItem implements Container { //wearable
 
 	protected TreeMap<String, Holdable> inventory = new TreeMap<String, Holdable>();	
 	
-	private final double maxWeight;	
+	protected final double maxWeight;	
 	private final Lock lock = new ReentrantLock();
 	
-	private double currentWeight;
+	protected double currentWeight;
 	
 	public Bag(BagItemBuilder build) {
 		super(build);
@@ -34,9 +34,7 @@ public class Bag extends StdItem implements Container { //wearable
 		return getCurrentWeight() + weight;
 	}
 	
-	private void changeCurrentWeight(double change) {
-		currentWeight += change;
-	}
+	@Override
 	public String getExamine() {
 		StringBuilder s = new StringBuilder();
 		if (this.inventory != null) {
@@ -67,7 +65,7 @@ public class Bag extends StdItem implements Container { //wearable
 				return ContainerErrors.QTYFULL;
 			}
 			inventory.put(newItem.getName().toLowerCase() + newItem.getId(), newItem);
-			changeCurrentWeight(newItem.getWeight());
+			changeWeight(newItem.getWeight());
 			return null; // TODO should actually check from return
 		} finally {
 			lock.unlock();
@@ -81,7 +79,7 @@ public class Bag extends StdItem implements Container { //wearable
 			if ((inventory.remove(oldItem.getName().toLowerCase() + oldItem.getId()) == null)) {
 				System.out.println("Failed to remove item from a bag (MAJOR BUG): " + oldItem);
 			}
-			changeCurrentWeight(-oldItem.getWeight());
+			changeWeight(-oldItem.getWeight());
 		} finally {
 			lock.unlock();
 		}
@@ -129,7 +127,6 @@ public class Bag extends StdItem implements Container { //wearable
 		holdableString = holdableString.toLowerCase();		
 		SortedMap<String, Holdable> subMap = inventory.subMap(holdableString, true, holdableString + Character.MAX_VALUE, true);		
 		Collection<Holdable> set = subMap.values();
-		System.out.println(set.toString());		
 		if (set.isEmpty() || set == null) {
 			Holdable h = getHoldableFromString(holdableString);
 			if (h != null) {

@@ -155,11 +155,6 @@ public class StdMob implements Mobile, Container{
 	
 	@Override
 	public ContainerErrors acceptItem(Holdable item) {
-	//	if (inventory.put(item.getName().toLowerCase() + item.getId(), item) == null) {
-	//		return null;
-	//	}
-	//	return null;
-		
 		lock.lock();
 		try {
 			if ((getCurrentWeight() + item.getWeight()) > getMaxWeight()) {
@@ -172,6 +167,27 @@ public class StdMob implements Mobile, Container{
 			lock.unlock();
 		}
 	}
+	
+	// Put in Container AND remove from Container is complicated, but should be GUARANTEED in ONE LINE TODO
+		@Override
+		public void removeItemFromLocation(Holdable oldItem) {
+			lock.lock();
+			try {
+				if (inventory.containsValue(oldItem)) {
+					String key = oldItem.getName() + oldItem.getId();
+					inventory.remove(key);
+					changeCurrentWeight(-oldItem.getWeight());
+				} else if (equipment.hasItem(oldItem)){
+					equipment.remove(oldItem);
+					removeItemFromLocation(oldItem);
+					changeCurrentWeight(-oldItem.getWeight());
+				} else {
+					System.out.println("StdMob removeItemFromLocation: An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
+				}
+			} finally {
+				lock.unlock();
+			}
+		}
 	
 	@Override
 	public synchronized void moveHoldable(Location finalLocation) {
@@ -249,26 +265,7 @@ public class StdMob implements Mobile, Container{
 		}	
 	}
 	
-	// Put in Container AND remove from Container is complicated, but should be GUARANTEED in ONE LINE TODO
-	@Override
-	public void removeItemFromLocation(Holdable oldItem) {
-		lock.lock();
-		try {
-			if (inventory.containsValue(oldItem)) {
-				String key = oldItem.getName() + oldItem.getId();
-				inventory.remove(key);
-				changeCurrentWeight(oldItem.getWeight());
-			} else if (equipment.hasItem(oldItem)){
-				equipment.remove(oldItem);
-				removeItemFromLocation(oldItem);
-				changeCurrentWeight(oldItem.getWeight());
-			} else {
-				System.out.println("StdMob removeItemFromLocation: An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
-			}
-		} finally {
-			lock.unlock();
-		}
-	}
+	
 	
 	private void changeCurrentWeight(double change) {
 		currentWeight += change;
