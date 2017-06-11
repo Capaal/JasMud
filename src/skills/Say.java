@@ -15,7 +15,10 @@ public class Say extends Skills {
 	protected void performSkill() {
 		if (canTalk()) {
 			String words = Syntax.LIST.getStringInfo(fullCommand, this);
-			if(!words.equals("")) {
+			System.out.println("Say: " + words);
+			if (words.equals("")) {
+				messageSelf("You utter nothing.");
+			} else {
 				messageSelf("You say: \"" + words + "\".");
 				messageOthers(currentPlayer.getName() + " says, \"" + Syntax.LIST.getStringInfo(fullCommand, this) + "\".", Arrays.asList(currentPlayer));
 			}

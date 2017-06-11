@@ -33,7 +33,7 @@ public class Punch extends Skills {
 		if (brokenArms()) {return;}
 		finalTarget = setTarget();
 		if (finalTarget == null) {
-			messageSelf("There is no " + targetName + " here for you to punch.");
+			messageSelf("Invalid target.");
 			return;
 		}
 		if (isBlocking(finalTarget)) {  // Probably not complete still

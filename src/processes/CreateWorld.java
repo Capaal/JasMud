@@ -101,6 +101,7 @@ public class CreateWorld {
 		makeASword();
 		makeAStick();
 		makeAPike();
+		makeAShield();
 		addIronPotion();
 		makeGoblin();
 		makeFarmerJames();
@@ -276,6 +277,18 @@ public class CreateWorld {
 		newItem.setBalanceMult(1.5);
 		newItem.setSalvageable(true);
 		itemTemplates.put("pike", newItem);
+	}
+	
+	public static void makeAShield() {
+		WeaponItemBuilder newItem = new WeaponItemBuilder();
+		newItem.setName("shield");
+		newItem.setDescription("It's a shield!");
+		newItem.setComponents(Arrays.asList(itemTemplates.get("ingot").getNonexistentFinishedItem(),itemTemplates.get("ingot").getNonexistentFinishedItem()));
+		newItem.setDamageMult(1);
+		newItem.setWeight(4);
+		newItem.setBalanceMult(1.5);
+		newItem.setSalvageable(true);
+		itemTemplates.put("shield", newItem);
 	}
 	
 	public static void addIronPotion() {

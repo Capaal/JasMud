@@ -25,6 +25,10 @@ public class BreakLimb extends Skills {
 	@Override
 	protected void performSkill() {
 		String targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
+		if (targetName.equals("")) {
+			messageSelf("What are you trying to attack?");
+			return;
+		}
 		if (!hasBalance()) {return;}
 		finalTarget = setTarget(targetName);
 		if (finalTarget == null) {
