@@ -43,14 +43,14 @@ public class Eat extends Skills{
 			try {
 				PlantType.valueOf(itemName.toUpperCase()); 
 			} catch (IllegalArgumentException e) {
-				messageSelf(itemName + " is not something you can eat.");
+				messageSelf("You don't see a \"" + itemName + "\" to eat.");
 				return false; //not an herb
 			}
 			
 			// Tries to set containerList.
-			containerList = currentPlayer.getListMatchingString("herbpouch");
+			containerList = currentPlayer.getListMatchingString("pouch");
 			if (containerList == null) { // If not in player's inventory
-				containerList = currentPlayer.getContainer().getListMatchingString("herbpouch");
+				containerList = currentPlayer.getContainer().getListMatchingString("pouch");
 				if (containerList == null) { // If also not on the ground.
 					messageSelf("You can't find a " + itemName + " anywhere.");
 					return false;
@@ -64,7 +64,7 @@ public class Eat extends Skills{
 					return true;
 				}
 			}	
-			messageSelf("You have no " + itemName);
+			messageSelf("You have no " + itemName + ".");
 			return false;
 		//if item is in inv and is an herb
 		} else if (itemToEat instanceof Plant) { 

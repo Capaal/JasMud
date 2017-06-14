@@ -33,8 +33,6 @@ public class Plant extends StackableItem {
 	}
 	
 	
-	
-	
 	public enum PlantType {
 		ALOE {
 			@Override public String use(Mobile currentPlayer) {

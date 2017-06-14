@@ -2,6 +2,8 @@ package skills.Mercenary;
 
 import java.util.Arrays;
 import effects.PassiveCondition;
+import interfaces.Holdable;
+import items.StdItem;
 import processes.Equipment;
 import processes.InductionSkill;
 
@@ -21,22 +23,27 @@ public class Shieldblock extends InductionSkill {
 
 	// On activation, begins blocking.
 	// Requires a shield and balance
-	// Inturruption by action, or opponent's action stops channeling block
+	// Interruption by action, or opponent's action stops channeling block
+	// should be interrupted if shield unwielded (or force unwielded/dropped) TODO
 	@Override
 	protected void performSkill() {
 		if (!hasBalance()) {return;}
 		if (!weaponWielded()) {return;}		
-		scheduleSkillRepeatNTimesOverXMilliseconds(1, 2000); // Triggers this skill's "run()" in 2 seconds. Interruptible.
+		scheduleSkillRepeatNTimesOverXMilliseconds(1, 4000); // Triggers this skill's "run()" in 2 seconds. Interruptible.
 		currentPlayer.setInduction(this);
 		changeBlocking(true);
 		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
 	}
 	
-	// TODO Needs to find a SHIELD, which we can't handle yet.
 	private boolean weaponWielded() {
-		if (currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.LEFTHAND) == null && currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND) == null) {
-			messageSelf("You are not wielding a weapon.");
-			return false;
+		//tests left hand first
+		Holdable possShield = currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.LEFTHAND);
+		if (possShield == null || (!possShield.getName().equals("shield"))) {
+			possShield = currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND);
+			if (possShield == null || (!possShield.getName().equals("shield"))) {
+				messageSelf("You are not wielding a shield.");
+				return false;
+			}
 		}
 		return true;
 	}
