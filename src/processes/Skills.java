@@ -24,9 +24,11 @@ public abstract class Skills {
 			messageSelf("You are dead, you may be better off praying.");
 			return;
 		}
-		if (currentPlayer.hasAllConditions(PassiveCondition.SLEEP)) {
-			messageSelf("You are asleep and can't do anything.");
-			return;
+		if (!fullCommand.equals("wake")) { //this is ugly TODO
+			if (currentPlayer.hasAllConditions(PassiveCondition.SLEEP)) {
+				messageSelf("You are asleep and can't do anything.");
+				return;
+			}
 		}
 		testForInduction();
 		performSkill();

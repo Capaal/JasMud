@@ -22,7 +22,7 @@ public class Fear extends TickingEffect {
 	
 	public Fear(Mobile currentPlayer) {
 		this.currentPlayer = currentPlayer;
-		this.interval = 1000;
+		this.interval = 2000;
 		this.move = new MoveFear();
 	}	
 

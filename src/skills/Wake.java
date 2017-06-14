@@ -4,10 +4,11 @@ import java.util.Arrays;
 import java.util.Random;
 
 import effects.PassiveCondition;
+import interfaces.Mobile;
 import processes.InductionSkill;
+import processes.Skills.Syntax;
 
-// Does sleep regen life, exhaustion, mana, etc?
-// Is sleep woken quickly or slowly like struggle? Does damage instantly wake?
+
 public class Wake extends InductionSkill {
 	
 	Random r = new Random();
@@ -15,19 +16,37 @@ public class Wake extends InductionSkill {
 	public Wake() {
 		super.name = "wake";
 		super.syntaxList.add(Syntax.SKILL);
+		super.syntaxList.add(Syntax.TARGET);
 	}
 
 	@Override
 	protected void performSkill() {
-		if (currentPlayer.hasAllConditions(PassiveCondition.SLEEP)) {
-			messageSelf("You start trying to wake yourself up.");
-			scheduleSkillRepeatNTimesOverXMilliseconds(1, 2000);
-			currentPlayer.setInduction(this);
+		String target = Syntax.TARGET.getStringInfo(fullCommand, this);
+		if (target.equals("")) {
+			if (currentPlayer.hasAllConditions(PassiveCondition.SLEEP)) {
+				messageSelf("You start trying to wake yourself up.");
+				scheduleSkillRepeatNTimesOverXMilliseconds(1, 2000);
+				currentPlayer.setInduction(this);
+			} else {
+				currentPlayer.addAllConditions(PassiveCondition.SLEEP);
+				messageSelf("You're not asleep.");
+			}
 		} else {
-			currentPlayer.addAllConditions(PassiveCondition.SLEEP);
-			messageSelf("You're not asleep.");
+			Mobile mob = currentPlayer.getContainer().getMobileFromString(target);
+			if (mob == null) {
+				messageSelf("You don't see a \"" + target + "\".");
+				return;
+			} 
+			//test if rooted, paralyzed?
+			if (mob.hasAllConditions(PassiveCondition.SLEEP)) {
+				mob.removeAllConditions(PassiveCondition.SLEEP);
+				messageSelf("You shake " + mob.getName() + " awake.");
+				messageTarget(currentPlayer.getName() + " wakes you up.", Arrays.asList(mob));
+				messageOthers(currentPlayer.getName() + " shakes " + mob.getName() + " awake.", Arrays.asList(currentPlayer, mob));
+			}
 		}
 		
+
 	}
 	
 	@Override

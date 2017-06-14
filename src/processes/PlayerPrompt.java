@@ -53,7 +53,6 @@ public class PlayerPrompt implements Runnable {
 			}
 			currentPlayer.displayPrompt();
 			String str = sendBack.getMessage();
-			System.out.println(currentPlayer.getName() + " typed: " + str);
 			if (str != null) {
 				// This is what breaks the infinite loop and kills connection.
 				if (str.trim().equalsIgnoreCase("quit")) {

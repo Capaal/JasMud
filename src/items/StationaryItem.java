@@ -17,6 +17,7 @@ public class StationaryItem extends StdItem {
 		// TODO Auto-generated constructor stub
 	}
 	
+	//not a containererror but ok TODO
 	@Override
 	public ContainerErrors moveHoldable(Container finalLocation) {
 		return ContainerErrors.STATIONARY;

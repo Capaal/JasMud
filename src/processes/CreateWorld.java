@@ -68,6 +68,8 @@ public class CreateWorld {
 		generalSkills.addSkill(new Examine());
 		generalSkills.addSkill(new Mine());
 		generalSkills.addSkill(new Chop()); //same as mine except for many messages..
+		generalSkills.addSkill(new Sleep());
+		generalSkills.addSkill(new Wake());
 		//crafting
 		generalSkills.addSkill(new CraftItem());
 		generalSkills.addSkill(new Salvage());

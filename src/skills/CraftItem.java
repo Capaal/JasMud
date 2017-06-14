@@ -148,6 +148,7 @@ public class CraftItem extends Skills {
 		return true;
 	}
 	
+	//TODO needs fenceposting for the first component and commas
 	private void listCraftables() {
 		for (String s : allItemTemplates.keySet()) {
 			StringBuilder display = new StringBuilder();

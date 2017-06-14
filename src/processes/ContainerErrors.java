@@ -23,6 +23,13 @@ public enum ContainerErrors {
 		}
 	},
 	
+	TOOHEAVY() {
+		@Override
+		public String display(String name) {
+			return "That " + name + " is too heavy.";
+		}
+	},
+	
 	WEIGHTFULL() {
 		@Override
 		public String display(String name) {

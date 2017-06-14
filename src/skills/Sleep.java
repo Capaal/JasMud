@@ -4,8 +4,9 @@ import effects.PassiveCondition;
 import processes.Skills;
 import processes.Skills.Syntax;
 
-// Does sleep regen life, exhaustion, mana, etc?
+// Does sleep regen life, exhaustion, mana, etc? Periodically snore?
 // Is sleep woken quickly or slowly like struggle? Does damage instantly wake?
+// Display to others in 'look' that you are asleep?
 public class Sleep extends Skills {
 	
 	public Sleep() {
