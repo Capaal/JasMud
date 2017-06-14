@@ -168,10 +168,7 @@ public class StackableItem extends StdItem {
 		return this;
 	}
 	
-	private void delete() {
-		File file = new File(this.getName() + this.getId());
-		file.delete();		
-	}
+	
 	
 	@Override
 	public String getInfo() {

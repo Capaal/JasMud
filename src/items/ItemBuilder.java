@@ -34,7 +34,9 @@ public class ItemBuilder {
 	}
 	
 	public void setQuantity(int quantity) {
-		throw new IllegalArgumentException("Cannot set quantity on StdItem.");
+		if (quantity != this.quantity) {
+			throw new IllegalArgumentException("Cannot set quantity on StdItem.");
+		}
 	}
 	
 	

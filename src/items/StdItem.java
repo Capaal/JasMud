@@ -1,5 +1,6 @@
 package items;
 
+import java.io.File;
 import java.util.*;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -199,6 +200,12 @@ public class StdItem implements Holdable{
 			throw new IllegalArgumentException("StdItems cannot be anything but quantity 1.");
 		}
 		return moveHoldable(container);		
+	}
+
+	@Override
+	public void delete() {
+		File file = new File(this.getName() + this.getId());
+		file.delete();		
 	}
 
 }

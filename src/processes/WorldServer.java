@@ -35,10 +35,10 @@ public class WorldServer {
 		loadSavedItems(); // DANGEROUS JUST FOR TEST
 		ServerSocket s = null;
 		try {
-			// Sets the port for others to connect to (23)
+			// Sets the port for others to connect to (2587)
 			// Host is personal IP at the moment, right now = 192.168.1.101..
 			// External IP MIGHT BE : 50.132.32.174
-			s = new ServerSocket(23);							
+			s = new ServerSocket(2587);							
 			executor = Executors.newCachedThreadPool();
 			while (true) {
 				Socket incoming = s.accept();

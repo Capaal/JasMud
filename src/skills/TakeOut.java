@@ -13,8 +13,6 @@ public class TakeOut extends Skills {
 	private String itemName;
 	private String containerName;
 	private Collection<Holdable> containerList;
-
-//	private Container endContainer;
 	private int origQty; 
 	private int qty;
 
@@ -31,8 +29,7 @@ public class TakeOut extends Skills {
 	@Override
 	protected void performSkill() {
 		if (!preSkillChecks()) {return;}
-		takeOut();
-		
+		takeOut();		
 	}
 		
 	//checks all syntax is valid and finds container
@@ -82,36 +79,10 @@ public class TakeOut extends Skills {
 		return true;
 	}
 	
-	private String takeOutRecursion(Iterator<Holdable> containersIterator) {
-		if (containersIterator.hasNext() && qty != 0) {			
-			Container c = (Container) containersIterator.next();
-			Holdable item = c.getHoldableFromString(itemName);		
-			if (item != null) {	
-				int qtyAvailable = item.getQuantity();
-				int qtyToTry = qty;
-				if (qty > qtyAvailable) {
-					qtyToTry = qtyAvailable;
-				}
-				ContainerErrors error = item.moveHoldable(currentPlayer, qtyToTry); 	
-				if (error != null) {
-					return error.display(c.getName());					
-				} else {
-		//			messageSelf("You take " + itemName + " from your " + c.getName() + ".");
-					if (qtyToTry == qtyAvailable) {
-						// TODO Get a new item to keep taking more out
-					}
-					qty -= qtyToTry;	
-					return takeOutRecursion(containersIterator);
-				}				
-			}		
-		}
-		return null;		
-	}
-	
 	private void takeOut() {
 		Iterator<Holdable> containersIterator = containerList.iterator();
 		qty = origQty;
-		String error = takeOutRecursion(containersIterator);
+		String error = takeOutRecursion(containersIterator, (Container)containersIterator.next());
 		if (error != null) {
 			messageSelf(error);
 		}
@@ -125,4 +96,32 @@ public class TakeOut extends Skills {
 			messageSelf("You can't find " + itemName + " anywhere.");			
 		}
 	}
+	
+	private String takeOutRecursion(Iterator<Holdable> containersIterator, Container c) {
+		if (qty != 0) {			
+			Holdable item = c.getHoldableFromString(itemName);		
+			if (item != null) {	
+				int qtyAvailable = item.getQuantity();
+				int qtyToTry = qty;
+				if (qty > qtyAvailable) {
+					qtyToTry = qtyAvailable;
+				}
+				ContainerErrors error = item.moveHoldable(currentPlayer, qtyToTry); 	
+				if (error != null) {
+					return error.display(c.getName());					
+				} else {
+					qty -= qtyToTry;	
+					return takeOutRecursion(containersIterator, c);
+				}				
+			} else {
+				if (containersIterator.hasNext()) {
+					c = (Container) containersIterator.next();
+					return takeOutRecursion(containersIterator, c);
+				}
+			}
+		}
+		return null;		
+	}
+	
+	
 }

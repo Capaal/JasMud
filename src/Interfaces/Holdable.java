@@ -23,5 +23,7 @@ public interface Holdable extends Comparable<Holdable> {
 	public double getWeight();
 	public int getQuantity();
 	public ContainerErrors moveHoldable(Container container, int quantity);
+	public void delete();
+	public void removeFromStack(int qty);
 
 }

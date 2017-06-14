@@ -6,7 +6,6 @@ import interfaces.Container;
 import interfaces.Holdable;
 import processes.ContainerErrors;
 import processes.Skills;
-import items.StackableItem;
 
 public class Put extends Skills {
 
@@ -31,36 +30,30 @@ public class Put extends Skills {
 	protected void performSkill() {
 		//sets item, container, qty
 		if (!preSkillChecks()) {return;}
-		//check qty/space/weight of container - errors?	
 		putItem();
-		
-	/*	if (item instanceof StackableItem) {
-			moveStack();		
+	}
+	
+
+	
+	private void putItem() {		
+		Iterator<Holdable> containerIterator = containerList.iterator();
+		qty = originalQty;
+		String error = moveItemRecursion(containerIterator, (Container)containerIterator.next());
+		if (error != null) {
+			messageSelf(error);
 		} else {
-			Iterator<Holdable> i = containerList.iterator();
-			while (i.hasNext() && qty > 0) { // Loops through containers
-				Container c = (Container) i.next();			
-				while (qty > 0) { // Loops through putting away items.
-					if(!checkItem()) { // If out of things to put away
-						messageSelf("You don't have any more " + itemName + " to put away.");
-						return;
-					}
-					ContainerErrors error = item.moveHoldable(c);
-					if (error != null) {
-						messageSelf(error.display(c.getName()));
-						break;
-					} else {
-						messageSelf("You put " + itemName + " in your " + c.getName() + ".");
-						qty --;		
-					}
-				}	
-			}				
-		}*/
+			if (qty == 0) {
+				messageSelf("You put " + originalQty + " " + itemName + " in your " + possibleContainer + ".");
+			//if exited out of while loop and still has not put away all herbs
+			} else if (qty > 0 && qty != originalQty) {
+				messageSelf("You put " +  (originalQty - qty) + " " + itemName + " in your " + possibleContainer + "."); 
+			//if all containers are full to begin with or wrong type
+			}
+		}
 	}
 	
 	private String moveItemRecursion(Iterator<Holdable> containerIterator, Container c) {
 		if (qty != 0) {	
-	//		Container c = (Container) containerIterator.next();	
 			double spaceAvailable = (c.getMaxWeight() - c.getCurrentWeight());
 			int allowedQty = (int) (spaceAvailable * item.getWeight());
 			int qtyToTry = qty;
@@ -79,7 +72,6 @@ public class Put extends Skills {
 					return error.display(c.getName());
 				}
 			} else {
-		//		messageSelf("You put " + qtyToTry + " " + itemName + " into your " + c.getName() + ".");
 				qty -= qtyToTry;	
 				if (qtyToTry == qtyAvailable) {
 					if (!checkItem()) {
@@ -91,69 +83,6 @@ public class Put extends Skills {
 			}
 		}
 		return null;			
-	}
-	
-	private void putItem() {		
-		Iterator<Holdable> containerIterator = containerList.iterator();
-		qty = originalQty;
-		String error = moveItemRecursion(containerIterator, (Container)containerIterator.next());
-		if (error != null) {
-			messageSelf(error);
-		} else {
-			if (qty == 0) {
-				messageSelf("You put " + originalQty + " " + itemName + " in your " + possibleContainer + ".");
-			//if exited out of while loop and still has not put away all herbs
-			} else if (qty > 0 && qty != originalQty) {
-				messageSelf("You put " +  (originalQty - qty) + " " + itemName + " in your " + possibleContainer + "."); 
-			//if all containers are full to begin with or wrong type
-			}
-		}
-		
-		
-	/*	while (containerIterator.hasNext() && originalQty > 0) { // Loops through containers
-			Container c = (Container) containerIterator.next();			
-			while (originalQty > 0) { // Loops through putting away items.
-				if(!checkItem()) { // If out of things to put away
-					messageSelf("You don't have any more " + itemName + " to put away.");
-					return;
-				}
-				ContainerErrors error = item.moveHoldable(c);
-				if (error != null) {
-					messageSelf(error.display(c.getName()));
-					break;
-				} else {
-					messageSelf("You put " + itemName + " in your " + c.getName() + ".");
-					originalQty --;		
-				}
-			}	
-		}
-		StackableItem sItem = (StackableItem) item;				
-		Iterator<Holdable> i = containerList.iterator();
-		if (sItem.getQuantity() < originalQty) { // If the current stack is smaller than the desired quantity.
-			originalQty = sItem.getQuantity();
-		}
-		int origQty = originalQty;		
-		ContainerErrors error = null;
-		while (i.hasNext() && originalQty > 0) {
-			Container c = (Container) i.next();		
-			int startQty = sItem.getQuantity();
-			error = sItem.moveHoldable(c,originalQty);
-			if (sItem.getContainer() == c) {
-				originalQty -= startQty;
-			} else {
-				originalQty -= (startQty - sItem.getQuantity());
-			}
-		}
-		if (originalQty == 0) {
-			messageSelf("You put " + origQty + " " + sItem.getName() + " in your " + possibleContainer + ".");
-		//if exited out of while loop and still has not put away all herbs
-		} else if (originalQty > 0 && originalQty != origQty) {
-			messageSelf("You put " +  (origQty - originalQty) + " " + sItem.getName() + " in your " + possibleContainer + "."); 
-		//if all containers are full to begin with or wrong type
-		} else { 
-			// BUG: returned: "That aloe is full." when the bag was full.
-			messageSelf(error.display(possibleContainer));
-		}*/
 	}
 	
 	private boolean preSkillChecks() {
@@ -219,34 +148,4 @@ public class Put extends Skills {
 		}
 		return true;
 	}
-	
-	/*private void moveStack() {
-		StackableItem sItem = (StackableItem) item;				
-		Iterator<Holdable> i = containerList.iterator();
-		if (sItem.getQuantity() < qty) { // If the current stack is smaller than the desired quantity.
-			qty = sItem.getQuantity();
-		}
-		int origQty = qty;		
-		ContainerErrors error = null;
-		while (i.hasNext() && qty > 0) {
-			Container c = (Container) i.next();		
-			int startQty = sItem.getQuantity();
-			error = sItem.moveHoldable(c,qty);
-			if (sItem.getContainer() == c) {
-				qty -= startQty;
-			} else {
-				qty -= (startQty - sItem.getQuantity());
-			}
-		}
-		if (qty == 0) {
-			messageSelf("You put " + origQty + " " + sItem.getName() + " in your " + possibleContainer + ".");
-		//if exited out of while loop and still has not put away all herbs
-		} else if (qty > 0 && qty != origQty) {
-			messageSelf("You put " +  (origQty - qty) + " " + sItem.getName() + " in your " + possibleContainer + "."); 
-		//if all containers are full to begin with or wrong type
-		} else { 
-			// BUG: returned: "That aloe is full." when the bag was full.
-			messageSelf(error.display(possibleContainer));
-		}
-	}	*/
 }
