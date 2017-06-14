@@ -3,10 +3,12 @@ package skills;
 import java.util.Arrays;
 
 import interfaces.Holdable;
-import items.StackableItem;
 import processes.Skills;
 
 public class Drop extends Skills {
+	
+	int quantity;
+	Holdable itemToMove;
 	
 	public Drop() {
 		super.name = "drop";
@@ -20,37 +22,63 @@ public class Drop extends Skills {
 	@Override
 	protected void performSkill() {
 		if (!hasBalance()) {return;}
-		Holdable itemToMove = currentPlayer.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
+		itemToMove = currentPlayer.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
 		if (itemToMove == null) {
 			messageSelf("You can't find that item.");
 			return;
-		}		
-		if (itemToMove instanceof StackableItem) {	
-			moveStackableItem((StackableItem)itemToMove);			
-		} else {
-			standardDropItem(itemToMove);
-		}
-	}
+		}	
+		dropItem(itemToMove);
+	}	
 	
-	//TODO does stackable not handle some of these cases?
-	private void moveStackableItem(StackableItem itemToMove) {
+	private void dropItem(Holdable itemToDrop) {
 		String quantityToMove = Syntax.QUANTITY.getStringInfo(fullCommand, this);
+		quantity = 1;
 		if (!quantityToMove.isEmpty()) {
-			int quantity = Integer.parseInt(quantityToMove);
-			if (quantity > itemToMove.getQuantity()) {
-				quantity = itemToMove.getQuantity();
+			quantity = Integer.parseInt(quantityToMove);
+			if (quantity > itemToDrop.getQuantity()) {
+				quantity = itemToDrop.getQuantity();
 			}
-			((StackableItem)itemToMove).moveHoldable(currentPlayer.getContainer(), quantity);
-			messageSelf("You drop " + quantity + " " + itemToMove.getName() + ".");
-			messageOthers(currentPlayer.getName() + " drops " + quantity + " " + itemToMove.getName() + ".", Arrays.asList(currentPlayer));
-		} else {
-			standardDropItem(itemToMove);
 		}
+		itemToDrop.moveHoldable(currentPlayer.getContainer(), quantity);
+		displayMessages();		
 	}
 	
-	private void standardDropItem(Holdable itemToMove) {
-		itemToMove.moveHoldable(currentPlayer.getContainer());
-		messageSelf("You drop " + itemToMove.getName() + ".");
-		messageOthers(currentPlayer.getName() + " drops " + itemToMove.getName() + ".", Arrays.asList(currentPlayer));
+	private void displayMessages() {	
+		displaySelf();
+		displayOthers();
+	
+	}
+	
+	private void displaySelf() {
+		StringBuilder selfSB = new StringBuilder();
+		selfSB.append("You drop ");
+		if (quantity == 1) {
+			selfSB.append("a ");
+			selfSB.append(itemToMove.getName());
+		} else {
+			selfSB.append(quantity);
+			selfSB.append(" ");
+			selfSB.append(itemToMove.getName());
+			selfSB.append("s");
+		}		
+		selfSB.append(".");	
+		messageSelf(selfSB.toString());
+	}
+	
+	private void displayOthers() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(currentPlayer.getName());
+		sb.append(" drops ");
+		if (quantity == 1) {
+			sb.append("a ");
+			sb.append(itemToMove.getName());
+		} else {
+			sb.append(quantity);
+			sb.append(" ");
+			sb.append(itemToMove.getName());
+			sb.append("s");
+		}
+		sb.append(".");	
+		messageOthers(sb.toString(), Arrays.asList(currentPlayer));	
 	}
 }

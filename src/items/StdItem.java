@@ -3,6 +3,7 @@ package items;
 import java.util.*;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import interfaces.*;
 import processes.*;
 import processes.Equipment.EquipmentEnum;
@@ -12,6 +13,7 @@ public class StdItem implements Holdable{
 	
 	protected final String name;
 	protected final int id;	
+	protected int quantity = 1;
 	protected final String description;
 	protected final double physicalMult;
 	protected final double balanceMult; 
@@ -54,6 +56,8 @@ public class StdItem implements Holdable{
 	@Override public Container getContainer() {return itemLocation;}	
 	public void doOnAttack() {}; //for my mercenary attack skill
 	
+	public int getQuantity() {return quantity;}
+	
 //	public int getMaxDurability() {return maxDurability;}
 	
 //	public synchronized int getCurrentDurability() {return currentDurability;}
@@ -81,14 +85,6 @@ public class StdItem implements Holdable{
 		}
 		getContainer().removeItemFromLocation(this);		
 		this.itemLocation = finalLocation;
-		System.out.println(itemLocation + " " + itemLocation.getId());
-		System.out.println(itemLocation.getHoldableFromString(this.getName()).getContainer().getName() + itemLocation.getHoldableFromString(this.getName()).getContainer().getId());
-		Set<StdItem> allItems = WorldServer.gameState.viewAllItems();
-		for (StdItem s : allItems) {
-			if (s.getName().equals(this.getName())) {
-				System.out.println(s.getContainer().getName() + s.getContainer().getId());
-			}
-		}
 		return error;
 	}
 	
@@ -171,12 +167,6 @@ public class StdItem implements Holdable{
 		this.itemLocation = container;
 	}
 	
-
-	@Override
-	public boolean canPickup() {
-		return true;
-	}
-	
 	@Override 
 	public String getInfo() { 
 		StringBuilder s = new StringBuilder();
@@ -193,6 +183,22 @@ public class StdItem implements Holdable{
 	@ Override
 	public String getShortDesc() {
 		return this.getName();
+	}
+	
+	public  void addToStack(int quantity) {
+		throw new IllegalStateException("StdItems cannot add to quantity.");
+	}
+	
+	public void removeFromStack(int qty) {
+		throw new IllegalStateException("StdItems cannot remove from quantity.");
+	}
+
+	@Override
+	public ContainerErrors moveHoldable(Container container, int quantity) {
+		if (quantity != 1) {
+			throw new IllegalArgumentException("StdItems cannot be anything but quantity 1.");
+		}
+		return moveHoldable(container);		
 	}
 
 }

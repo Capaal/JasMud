@@ -19,13 +19,7 @@ public class StationaryItem extends StdItem {
 	
 	@Override
 	public ContainerErrors moveHoldable(Container finalLocation) {
-		System.out.println("Error: StationaryItem moveHoldable activated: " + finalLocation + " " + this.getName() + this.getId());
-		return null;
-	}
-	
-	@Override
-	public boolean canPickup() {
-		return false;
+		return ContainerErrors.STATIONARY;
 	}
 
 

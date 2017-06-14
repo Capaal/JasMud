@@ -27,6 +27,15 @@ public class ItemBuilder {
 	protected boolean salvageable = false;
 	protected static Map<String, Integer> idMap = new HashMap<String, Integer>();
 	protected StdItem finishedItem =  null;
+	protected int quantity = 1;
+	
+	public int getQuantity() {
+		return quantity;
+	}
+	
+	public void setQuantity(int quantity) {
+		throw new IllegalArgumentException("Cannot set quantity on StdItem.");
+	}
 	
 	
 	

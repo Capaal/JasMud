@@ -17,22 +17,21 @@ import interfaces.Holdable;
 public class StackableItem extends StdItem {
 	
 	// Probably handle recovering IDs at some point
-	private int quantity;
+//	private int quantity;
 	
-	private final String descriptionSingle;
+//	private final String descriptionSingle;
 	private final String descriptionMany;
 	private final Lock lock = new ReentrantLock();
 
 	public StackableItem(StackableItemBuilder build) {
 		super(build);
 		this.quantity = build.getQuantity();
-		this.descriptionMany = build.getDescription();
-		this.descriptionSingle = build.getDescriptionSingle();
+		this.descriptionMany = build.getDescriptionMany();
 	}
 	
 	@Override public String getDescription() {
 		if (quantity == 1) {
-			return descriptionSingle;
+			return description;
 		}
 		return descriptionMany;
 	}
@@ -45,7 +44,7 @@ public class StackableItem extends StdItem {
 		return moveHoldable(finalLocation, this.quantity);
 	}
 	
-	public int getQuantity() {return quantity;}
+	
 	
 	// TODO NEEDS to watch for a FALSE return from ACCEPTITEM, then handle the failed insertion.
 	//should return true/false or case (ok or why can't go in - wrong (herb) type, too full)
@@ -140,29 +139,23 @@ public class StackableItem extends StdItem {
 		super.newBuilder(newBuild);
 		newBuild.setQuantity(this.quantity);
 		newBuild.setDescription(this.description);
-		newBuild.setDescriptionSingle(this.descriptionSingle);
 		return newBuild;
 	}
 	
-	public static class StackableItemBuilder extends ItemBuilder {
+	public static class StackableItemBuilder extends ItemBuilder {	
 		
-		private int quantity = 1;
-		private String descriptionSingle = "";
+		private String descriptionMany = "";
 		
-		public void setDescriptionSingle(String desc) {
-			this.descriptionSingle = desc;
-		}
-		
-		public String getDescriptionSingle() {
-			return descriptionSingle;
-		}
-		
-		public int getQuantity() {
-			return quantity;
-		}
-		
-		public void setQuantity(int quantity) {
+		@Override public void setQuantity(int quantity) {
 			this.quantity = quantity;
+		}
+		
+		public void setDescriptionMany(String desc) {
+			descriptionMany = desc;
+		}
+		
+		public String getDescriptionMany() {
+			return descriptionMany;
 		}
 		
 		@Override public StdItem produceType() {

@@ -204,8 +204,8 @@ public class CreateWorld {
 	public static void addOre() {
 		StackableItemBuilder newItem = new StackableItemBuilder();
 		newItem.setName("iron");
-		newItem.setDescription("A pile of iron ore chunks.");
-		newItem.setDescriptionSingle("A piece of iron ore.");
+		newItem.setDescriptionMany("A pile of iron ore chunks.");
+		newItem.setDescription("A piece of iron ore.");
 		newItem.setDamageMult(0.2);
 		newItem.setQuantity(1);
 		itemTemplates.put("iron", newItem); // not sure it should be in itemTemplates

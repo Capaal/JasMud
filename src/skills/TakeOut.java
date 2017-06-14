@@ -2,20 +2,11 @@ package skills;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.NavigableMap;
 
 import interfaces.Container;
 import interfaces.Holdable;
-import items.Plant;
-import items.Pouch;
-import items.ItemBuilder;
-import items.StackableItem;
-import items.StdItem;
 import processes.ContainerErrors;
-import processes.CreateWorld;
 import processes.Skills;
-import processes.Skills.Syntax;
 
 public class TakeOut extends Skills {
 	
@@ -24,7 +15,8 @@ public class TakeOut extends Skills {
 	private Collection<Holdable> containerList;
 
 //	private Container endContainer;
-	private int qty; 
+	private int origQty; 
+	private int qty;
 
 	public TakeOut() {
 		super.name = "take";
@@ -39,50 +31,8 @@ public class TakeOut extends Skills {
 	@Override
 	protected void performSkill() {
 		if (!preSkillChecks()) {return;}
-		Iterator<Holdable> i = containerList.iterator();
-		int origQty = qty;
-		ContainerErrors error = null;
-		while (i.hasNext() && qty > 0) {
-			Container c = (Container) i.next();
-			Holdable item = c.getHoldableFromString(itemName);		
-			if (item != null) {				
-				if (item instanceof StackableItem) { 
-					StackableItem sItem = (StackableItem) item; 
-					int qtyAvailable = sItem.getQuantity();
-					error = sItem.moveHoldable(currentPlayer, qty); 					
-					if (sItem.getContainer() == c) {
-						qty -= (qtyAvailable - sItem.getQuantity());
-					} else {
-						qty -= qtyAvailable;
-					}
-					
-				} else {					
-					while (qty > 0) { // Loops through putting away items.
-						error = item.moveHoldable(c);
-						messageSelf("You take " + itemName + " from your " + c.getName() + ".");
-						qty --;	
-						item = c.getHoldableFromString(itemName);	
-						if (item == null) {
-							messageSelf("You don't have any more " + itemName + " to take out.");
-							return;
-						}								
-					}			
-				}
-			}					
-		}
-		if (qty == 0) {
-			messageSelf("You take " + origQty + " " + itemName + " from your " + containerName + ".");
-		//if exited out of while loop and still has not put away all herbs
-		} else if (qty > 0 && qty != origQty) {
-			messageSelf("You take  " +  (origQty - qty) + " " + itemName + " from your " + containerName + "."); 
-		//if all containers are full to begin with or wrong type
-		} else { 
-			if (error != null) {
-				messageSelf(error.display(containerName));
-			} else {
-				messageSelf("You can't find " + itemName + " anywhere.");
-			}
-		}
+		takeOut();
+		
 	}
 		
 	//checks all syntax is valid and finds container
@@ -121,10 +71,10 @@ public class TakeOut extends Skills {
 			}
 		}
 		//checks optional qty
-		qty = 1;
+		origQty = 1;
 		if (!Syntax.QUANTITY.getStringInfo(fullCommand, this).equals("")) {
 			try {
-				qty = Integer.parseInt(Syntax.QUANTITY.getStringInfo(fullCommand, this)); 
+				origQty = Integer.parseInt(Syntax.QUANTITY.getStringInfo(fullCommand, this)); 
 			} catch (NumberFormatException fail) {
 				System.out.println("User error: 'Put' optional qty not a number. Optional ignored.");
 			}
@@ -132,6 +82,47 @@ public class TakeOut extends Skills {
 		return true;
 	}
 	
-
-
+	private String takeOutRecursion(Iterator<Holdable> containersIterator) {
+		if (containersIterator.hasNext() && qty != 0) {			
+			Container c = (Container) containersIterator.next();
+			Holdable item = c.getHoldableFromString(itemName);		
+			if (item != null) {	
+				int qtyAvailable = item.getQuantity();
+				int qtyToTry = qty;
+				if (qty > qtyAvailable) {
+					qtyToTry = qtyAvailable;
+				}
+				ContainerErrors error = item.moveHoldable(currentPlayer, qtyToTry); 	
+				if (error != null) {
+					return error.display(c.getName());					
+				} else {
+		//			messageSelf("You take " + itemName + " from your " + c.getName() + ".");
+					if (qtyToTry == qtyAvailable) {
+						// TODO Get a new item to keep taking more out
+					}
+					qty -= qtyToTry;	
+					return takeOutRecursion(containersIterator);
+				}				
+			}		
+		}
+		return null;		
+	}
+	
+	private void takeOut() {
+		Iterator<Holdable> containersIterator = containerList.iterator();
+		qty = origQty;
+		String error = takeOutRecursion(containersIterator);
+		if (error != null) {
+			messageSelf(error);
+		}
+		if (qty == 0) {
+			messageSelf("You take " + origQty + " " + itemName + " from your " + containerName + ".");
+		//if exited out of while loop and still has not put away all herbs
+		} else if (qty > 0 && qty != origQty) {
+			messageSelf("You take  " +  (origQty - qty) + " " + itemName + " from your " + containerName + "."); 
+		//if all containers are full to begin with or wrong type
+		} else { 
+			messageSelf("You can't find " + itemName + " anywhere.");			
+		}
+	}
 }

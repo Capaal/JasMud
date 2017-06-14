@@ -3,24 +3,24 @@ package skills;
 import java.util.Arrays;
 
 import effects.PassiveCondition;
-import interfaces.Container;
 import interfaces.Holdable;
 import items.StackableItem;
-import items.StationaryItem;
+import processes.ContainerErrors;
 import processes.Location;
 import processes.Skills;
-import processes.UsefulCommands;
 
 public class Get extends Skills {
+	
+	private String possItem;
+	private int quantity;
+	private Holdable itemToMove;
 	
 	public Get() {
 		super.name = "get";
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 		super.syntaxList.add(Syntax.QUANTITY);
-	}
-
-	String possItem;
+	}	
 	
 	// Moves a HOLDABLE from the LOCATION of the CURRENTPLAYER into their INVENTORY.
 	// Requires Balance, Syntax = "get sword" or "get dagger1234" or "get gold 26"
@@ -34,19 +34,63 @@ public class Get extends Skills {
 		if (!hasBalance()) {return;}
 		if (brokenArms()) {return;}
 		Location here = currentPlayer.getContainer();
-		Holdable itemToMove = here.getHoldableFromString(possItem);
+		itemToMove = here.getHoldableFromString(possItem);
 		if (itemToMove == null) {
 			messageSelf("You can't find that item.");
 			return;
+		}	
+		getItem();
+	}
+	
+	private void getItem() {
+		String quantityToMove = Syntax.QUANTITY.getStringInfo(fullCommand, this);
+		quantity = 1;
+		if (!quantityToMove.isEmpty()) {
+			quantity = Integer.parseInt(quantityToMove); 
+			if (quantity > itemToMove.getQuantity()) {
+				quantity = itemToMove.getQuantity();
+			}
 		}		
-		if (itemToMove instanceof StackableItem) {	
-			moveStackableItem((StackableItem)itemToMove);			
-		} else if(!itemToMove.canPickup()) {
-			messageSelf("That's not an item you can pickup.");
-			return;
-		}	else {
-			standardGetItem(itemToMove);
+		ContainerErrors error = itemToMove.moveHoldable(currentPlayer, quantity);
+		if (error != null) {
+			messageSelf(error.display(currentPlayer.getName()));
+		} else {
+			messageSelf();
+			messageOthers();
 		}
+	}
+	
+	private void messageSelf() {
+		StringBuilder selfSB = new StringBuilder();
+		selfSB.append("You get ");
+		if (quantity == 1) {
+			selfSB.append("a ");
+			selfSB.append(itemToMove.getName());
+		} else {
+			selfSB.append(quantity);
+			selfSB.append(" ");
+			selfSB.append(itemToMove.getName());
+			selfSB.append("s");
+		}		
+		selfSB.append(".");	
+		messageSelf(selfSB.toString());
+	}
+	
+	private void messageOthers() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(currentPlayer.getName());
+		sb.append(" gets ");
+		if (quantity == 1) {
+			sb.append("a ");
+			sb.append(itemToMove.getName());
+		} else {
+			sb.append(quantity);
+			sb.append(" ");
+			sb.append(itemToMove.getName());
+			sb.append("s");
+		}
+		sb.append(".");	
+		messageOthers(sb.toString(), Arrays.asList(currentPlayer));	
 	}
 	
 	private boolean brokenArms() {
@@ -55,27 +99,5 @@ public class Get extends Skills {
 			return true;
 		} 
 		return false;
-	}
-	
-	// TODO Doesn't stackable item handle most of these cases?
-	private void moveStackableItem(StackableItem itemToMove) {
-		String quantityToMove = Syntax.QUANTITY.getStringInfo(fullCommand, this);
-		if (!quantityToMove.isEmpty()) {
-			int quantity = Integer.parseInt(quantityToMove); 
-			if (quantity > itemToMove.getQuantity()) {
-				quantity = itemToMove.getQuantity();
-			}
-			((StackableItem)itemToMove).moveHoldable(currentPlayer, quantity);
-			messageSelf("You get " + quantity + " " + itemToMove.getName() + ".");
-			messageOthers(currentPlayer.getName() + " picks up " + quantity + " " + itemToMove.getName() + ".", Arrays.asList(currentPlayer));
-		} else {
-			standardGetItem(itemToMove);
-		}
-	}
-	
-	private void standardGetItem(Holdable itemToMove) {
-		itemToMove.moveHoldable(currentPlayer);
-		messageSelf("You get " + itemToMove.getName() + ".");
-		messageOthers(currentPlayer.getName() + " picks up " + itemToMove.getName() + ".", Arrays.asList(currentPlayer));
 	}
 }

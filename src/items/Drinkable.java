@@ -129,6 +129,10 @@ public class Drinkable extends StdItem {
 		public DrinkType getDrinkType() {return drinkType;}
 		public void setDrinkType(DrinkType drinkType) {this.drinkType = drinkType;}
 		
+		@Override public StdItem produceType() {
+			return new Drinkable(this);
+		} 
+		
 		
 	}
 	

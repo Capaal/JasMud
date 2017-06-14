@@ -9,6 +9,13 @@ public enum ContainerErrors {
 		}
 	},
 	
+	STATIONARY() { // TODO NOT A CONTAINER
+		@Override
+		public String display(String name) {
+			return "That " + name + " is too stationary to move.";
+		}
+	},
+	
 	WRONGTYPE() {
 		@Override
 		public String display(String name) {
