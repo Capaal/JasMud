@@ -1,18 +1,13 @@
 package skills.Mercenary;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import effects.PassiveCondition;
 import effects.Fear;
-import processes.Skills;
-import processes.WorldServer;
+import processes.InductionSkill;
 
 // TODO move to induction skills to handle cooldowns
-public class Clearmind extends Skills {
+public class Clearmind extends InductionSkill {
 	
-	private boolean offCooldown = true;
+//	private boolean offCooldown = true;
 	
 	public Clearmind() {
 		super.name = "clearmind";
@@ -30,18 +25,18 @@ public class Clearmind extends Skills {
 		if (currentPlayer.hasAllConditions(PassiveCondition.DIZZY)) {
 			currentPlayer.removeAllConditions(PassiveCondition.DIZZY);
 			messageSelf("Dizzy cured.");
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 1000);
 			triggerCooldown();
 		} else if (currentPlayer.hasCondition(new Fear(currentPlayer))) {
 			currentPlayer.removeCondition(new Fear(currentPlayer));
 			messageSelf("Fear cured.");
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 1000);
 			triggerCooldown();
 		} else {
 			messageSelf("Your mind is already clear.");
 		}
 	}
-	
+	/*
 	private void triggerCooldown() {
 		offCooldown = false;
 		offCooldownIn(5000);
@@ -59,27 +54,34 @@ public class Clearmind extends Skills {
 		if (duration <= 0) {
 			throw new IllegalArgumentException("Invalid duration " + duration);
 		}
-		schedule(duration);				
+		scheduleOnce(duration);				
 	}
 	
-	public void shutDown() {
-		WorldServer.shutdownAndAwaitTermination(effectExecutor);
-		WorldServer.shutdownAndAwaitTermination(wrapperExecutor);
-	}
-	
-	private void schedule(int duration) {
-		SkillWrapper wrapper = new SkillWrapper(this);
+	private void scheduleOnce(int duration) {
+		CooldownWrapper wrapper = new CooldownWrapper(this);
 		effectExecutor.schedule(wrapper, duration, TimeUnit.MILLISECONDS);
 	}
 	
-	private class SkillWrapper implements Runnable {		
-		Clearmind skill;		
-		public SkillWrapper(Clearmind s) {
-			skill = s;
+	private class CooldownWrapper implements Runnable {		
+		InductionSkill wrappedSkill;		
+		public CooldownWrapper(InductionSkill s) {
+			wrappedSkill = s;
 		}
 		
 		public void run() {
-			skill.setOffCooldown();			
+			wrappedSkill.setOffCooldown();			
 		}
+	}*/
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void inductionKilled() {
+		// TODO Auto-generated method stub
+		
 	}
 }

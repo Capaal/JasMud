@@ -5,6 +5,9 @@ import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 import interfaces.Mobile;
 import processes.CreateWorld;
 
@@ -18,7 +21,11 @@ public class Harvestable extends StationaryItem {
 	private HarvestType type;
 	private boolean running = false;
 	private int timeToReset = 5;
-	private Map<String, ItemBuilder> allItemTemplates = CreateWorld.viewItemTemplates();
+	@XStreamOmitField
+	private Map<String, ItemBuilder> allItemTemplates;
+	//timer stuff
+	@XStreamOmitField
+	private ScheduledExecutorService effectExecutor;
 
 	//add timeToRegen
 	public Harvestable(HarvestableItemBuilder build) {
@@ -26,6 +33,8 @@ public class Harvestable extends StationaryItem {
 		this.maxQuantity = build.getMaxQuantity();
 		this.remainingQuantity = maxQuantity;
 		this.type = build.getHarvestType();
+		CreateWorld.viewItemTemplates();
+		Executors.newScheduledThreadPool(1);
 	}
 	
 	public int getRemainingQty() {
@@ -59,8 +68,7 @@ public class Harvestable extends StationaryItem {
 		return true;
 	} 
 	
-	//timer stuff
-	private ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(1);
+	
 
 	private class SkillWrapper implements Runnable {
 		public SkillWrapper() {}

@@ -45,6 +45,12 @@ public class PlayerPrompt implements Runnable {
 		// The following is the User's infinite loop they play inside.	
 		boolean stayInsideLoop = true;
 		while (stayInsideLoop) {
+			if (incoming.isClosed()) {
+				stayInsideLoop = false;
+				currentPlayer.removeFromWorld();
+				destroyConnection();
+				break;
+			}
 			currentPlayer.displayPrompt();
 			String str = sendBack.getMessage();
 			if (str != null) {
@@ -63,6 +69,7 @@ public class PlayerPrompt implements Runnable {
 				//	for (Location loc : WorldServer.gameState.viewLocations().values()) {
 				//		loc.removeFromWorld();
 				//	}
+					
 					for (StdItem item : WorldServer.gameState.viewAllItems()) {
 						item.save();
 						item.removeFromWorld();
@@ -88,7 +95,7 @@ public class PlayerPrompt implements Runnable {
 						WorldServer.gameState.addToQueue(com, str, currentPlayer);
 					} else {		
 						printFailMessages();
-					}	
+					}
 				}
 			}
 		}

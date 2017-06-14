@@ -81,6 +81,14 @@ public class StdItem implements Holdable{
 		}
 		getContainer().removeItemFromLocation(this);		
 		this.itemLocation = finalLocation;
+		System.out.println(itemLocation + " " + itemLocation.getId());
+		System.out.println(itemLocation.getHoldableFromString(this.getName()).getContainer().getName() + itemLocation.getHoldableFromString(this.getName()).getContainer().getId());
+		Set<StdItem> allItems = WorldServer.gameState.viewAllItems();
+		for (StdItem s : allItems) {
+			if (s.getName().equals(this.getName())) {
+				System.out.println(s.getContainer().getName() + s.getContainer().getId());
+			}
+		}
 		return error;
 	}
 	

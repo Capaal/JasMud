@@ -9,9 +9,11 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class InductionSkill extends Skills implements Runnable {
 		
-	private ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(1);
-	private ExecutorService wrapperExecutor = Executors.newCachedThreadPool();
-	private SkillWrapper wrapper;
+	protected ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(1);
+	protected static ExecutorService wrapperExecutor = Executors.newCachedThreadPool();
+	protected InductionWrapper wrapper;
+	
+	protected boolean offCooldown = true;
 	
 	public void scheduleSkillRepeatNTimesOverXMilliseconds(int times, int duration) {
 		if (times == 0 || duration / times <= 50 || duration <= 0) {
@@ -38,20 +40,20 @@ public abstract class InductionSkill extends Skills implements Runnable {
 		WorldServer.shutdownAndAwaitTermination(wrapperExecutor);
 	}
 	
-	private void schedule(int times, int duration) {
+	protected void schedule(int times, int duration) {
 		int timeGaps = duration / times;
-		wrapper = new SkillWrapper(this, times);
+		wrapper = new InductionWrapper(this, times);
 		ScheduledFuture<?> future = effectExecutor.scheduleWithFixedDelay(wrapper, timeGaps, timeGaps, TimeUnit.MILLISECONDS);
 		wrapper.setOwnFuture(future);
 	}
 	
-	private class SkillWrapper implements Runnable {
+	protected class InductionWrapper implements Runnable {
 		private final InductionSkill wrappedSkill;	
 		private int timesToRun;
 		private int totalTimesRan = 0;
 		private Future<?> future;
 		
-		public SkillWrapper(InductionSkill skill, int times) {
+		public InductionWrapper(InductionSkill skill, int times) {
 			this.wrappedSkill = skill;
 			this.timesToRun = times;
 		}
@@ -79,4 +81,38 @@ public abstract class InductionSkill extends Skills implements Runnable {
 	}
 
 	public abstract void inductionKilled();
+
+
+	public void offCooldownIn(int duration) {
+		if (duration <= 0) {
+			throw new IllegalArgumentException("Invalid duration " + duration);
+		}
+		scheduleOnce(duration);				
+	}
+	
+	protected void scheduleOnce(int duration) {
+		CooldownWrapper wrapper = new CooldownWrapper(this);
+		effectExecutor.schedule(wrapper, duration, TimeUnit.MILLISECONDS);
+	}
+	
+	protected class CooldownWrapper implements Runnable {		
+		InductionSkill wrappedSkill;		
+		public CooldownWrapper(InductionSkill s) {
+			wrappedSkill = s;
+		}
+		
+		public void run() {
+			wrappedSkill.setOffCooldown();			
+		}
+	}
+	
+	protected void triggerCooldown() {
+		offCooldown = false;
+		offCooldownIn(5000);
+	}
+	
+	protected void setOffCooldown() {
+		offCooldown = true;
+		messageSelf("You are again able to clear your mind.");
+	}
 }

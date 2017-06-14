@@ -37,6 +37,7 @@ public class WorldServer {
 		try {
 			// Sets the port for others to connect to (23)
 			// Host is personal IP at the moment, right now = 192.168.1.101..
+			// External IP MIGHT BE : 50.132.32.174
 			s = new ServerSocket(23);							
 			executor = Executors.newCachedThreadPool();
 			while (true) {

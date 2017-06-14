@@ -6,8 +6,8 @@ public class MoveFollow extends Move {
 		// Blank, we do not want to stop following.
 	}
 	
-	@Override
-	public void removeFollower(Follow follow) {
+	//@Override
+//	public void removeFollower(Follow follow) {
 		// Blank because we don't want to remove our followers.
-	}
+//	}
 }

@@ -9,11 +9,9 @@ import processes.Skills.Syntax;
 public class MoveShove extends Move {
 	
 	public MoveShove() {
-		super.name = "move";
-		super.description = "Move around.";
-		super.syntaxList.add(Syntax.SKILL);
-		super.syntaxList.add(Syntax.DIRECTION);
+		super();
 		super.syntaxList.add(Syntax.TARGET);
+		followers = null;
 	}
 	
 	//shove ignores these conditions
@@ -27,6 +25,7 @@ public class MoveShove extends Move {
 	Mobile shoverP;
 	
 	public void setShover(Mobile shoverPlayer) {
+		
 		shoverP = shoverPlayer;
 	}
 	
@@ -38,6 +37,15 @@ public class MoveShove extends Move {
 	}
 	
 	@Override protected void displayEnterMsg() {
+		if (followers == null) {
+			followers = ((Move)currentPlayer.getCommand("move")).followers;
+		}
 		messageOthersAway(currentPlayer.getName() + "is suddenly shoved into this location.", Arrays.asList(currentPlayer), endContainer);
+	}
+	
+	@Override protected void moveFollowers() {
+		for (Follow f : followers) {
+			f.move("move " + dir);
+		}
 	}
 }

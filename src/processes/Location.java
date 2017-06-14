@@ -102,7 +102,8 @@ public class Location implements Container {
 	
 	public void removeItemFromLocation(Holdable oldItem) {
 		if ((inventory.remove(oldItem.getName().toLowerCase() + oldItem.getId()) == null)) {
-			throw new IllegalStateException("removeItemFromLocation failed to remove item: " + oldItem.getName() + oldItem.getId());
+			System.out.println(inventory);
+			System.out.println("removeItemFromLocation failed to remove item: " + oldItem.getName() + oldItem.getId());
 		}
 	}
 	

@@ -40,8 +40,14 @@ public class SendMessage {
 		}
 		catch (IOException e) {
 			System.out.println("Sendback error: BufferedReader.");
+			try {
+				incoming.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
-		return null;
+		return "";
 	}
 	
 	// Just a method to easily print a blank line to the user.

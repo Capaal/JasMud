@@ -11,7 +11,14 @@ import processes.Location.Direction;
 
 public class MoveFear extends Move {
 	
+	public MoveFear() {
+		followers = null;
+	}
+	
 	@Override protected boolean findDirection() {
+		if (followers == null) {
+			followers = ((Move)currentPlayer.getCommand("move")).followers;
+		}
 		startContainer = currentPlayer.getContainer();
 		endContainer = null;
 		Map<Direction, LocationConnection> availDir = currentPlayer.getContainer().getLocationMap();
@@ -48,9 +55,10 @@ public class MoveFear extends Move {
 		return true;
 	}
 	
-	@Override
-	public void removeFollower(Follow follow) {
-		// Blank because we don't want to remove our followers.
+	@Override protected void moveFollowers() {
+		for (Follow f : followers) {
+			f.move("move " + dir);
+		}
 	}
 }
 
