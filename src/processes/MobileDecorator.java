@@ -272,8 +272,8 @@ public enum DecoratorType {
 	}
 
 	@Override
-	public void dropItemsOnDeath() {
-		decoratedMobile.dropItemsOnDeath();
+	public void spawnDeathLoot() {
+		decoratedMobile.spawnDeathLoot();
 	}
 
 	@Override

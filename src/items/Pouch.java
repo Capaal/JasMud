@@ -38,7 +38,7 @@ public class Pouch extends Bag {
 	
 	@Override public String getShortDesc() {
 		if (this.inventory == null) {
-			return "empty herbpouch";
+			return "empty pouch";
 		} else {
 			return this.inventory.getName().toLowerCase() + " pouch";
 		}
@@ -104,7 +104,7 @@ public class Pouch extends Bag {
 		StringBuilder s = new StringBuilder();
 		if (this.inventory != null) {
 			StringBuilder sb = new StringBuilder();
-			sb.append("This pouch Contains ");
+			sb.append("This pouch contains :");
 			sb.append(inventory.getQuantity());
 			sb.append(" ");
 			sb.append(inventory.getName());

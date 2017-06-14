@@ -127,6 +127,7 @@ public class Move extends Skills {
 		followers.add(follow);
 	}
 	
+	//A follows B, A stops following B, B removes A here - wtf?
 	public void removeFollower(Follow follow) {
 		followers.remove(follow);
 	}

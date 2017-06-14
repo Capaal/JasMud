@@ -69,7 +69,7 @@ public interface Mobile extends Container {
 	public void killInduction();
 	public void setInduction(InductionSkill skill);
 	public Map<SkillBook, Integer> viewSkillBooks();
-	public void dropItemsOnDeath();
+	public void spawnDeathLoot();
 	public Equipment getEquipment();
 	public void addAllConditions(PassiveCondition conditions);
 	public void createNewEffectManager();

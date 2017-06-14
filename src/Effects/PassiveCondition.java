@@ -25,6 +25,10 @@ public enum PassiveCondition {
 			
 		},
 		
+		SLEEP() {
+			//maybe should be active condition that regens? or regens sleepiness?
+		},
+		
 		DEFENCE() {
 			@Override
 			public void doOnCreation(Mobile currentPlayer) {

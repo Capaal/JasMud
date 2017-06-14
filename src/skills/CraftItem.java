@@ -35,8 +35,6 @@ public class CraftItem extends Skills {
 		allItemTemplates = CreateWorld.viewItemTemplates(); //maybe list of only craftable items?
 		
 		if (!preSkillChecks()) {return;}
-		
-
 
 		//attempting recursion for the find/do sections below
 		for (int i=0; i<quantity; i++) {
@@ -73,7 +71,8 @@ public class CraftItem extends Skills {
 					copyPlayerInv.remove(componentToTest.getName());
 				}
 				//if yes, check the next component
-				boolean success = checkRemoveCreate(it, copyPlayerInv);
+				boolean success = false;
+				success = checkRemoveCreate(it, copyPlayerInv);
 				//once checked
 				if (success) {thenRemove(componentToTest);}
 			} else {
@@ -155,7 +154,14 @@ public class CraftItem extends Skills {
 			display.append(s + ":");
 			List<StdItem> componentsNeeded = allItemTemplates.get(s).getComponents(); 
 			for (StdItem c : componentsNeeded) {
-				display.append(" " + c);
+				if (c instanceof StackableItem) {
+					display.append(" ");
+					display.append(((StackableItem)c).getQuantity());
+					display.append(" ");
+					display.append(c.getName());
+				} else {
+					display.append(" " + c.getName());
+				}
 			}
 			if (componentsNeeded.isEmpty()) {
 				display.append(" no components needed.");

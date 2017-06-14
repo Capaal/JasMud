@@ -5,6 +5,7 @@ import items.Door;
 
 import java.util.*;
 
+import effects.PassiveCondition;
 import processes.Location.Direction;
 
 public abstract class Skills {
@@ -18,8 +19,13 @@ public abstract class Skills {
 	public void perform(String fullCommand, Mobile currentPlayer) {
 		this.currentPlayer = currentPlayer;
 		this.fullCommand = fullCommand;
+		//method for checking conditions that prevent any skills
 		if (currentPlayer.isDead()) {
 			messageSelf("You are dead, you may be better off praying.");
+			return;
+		}
+		if (currentPlayer.hasAllConditions(PassiveCondition.SLEEP)) {
+			messageSelf("You are asleep and can't do anything.");
 			return;
 		}
 		testForInduction();

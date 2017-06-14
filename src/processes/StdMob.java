@@ -182,6 +182,7 @@ public class StdMob implements Mobile, Container{
 					removeItemFromLocation(oldItem);
 					changeCurrentWeight(-oldItem.getWeight());
 				} else {
+					//TODO make this bug comment better
 					System.out.println("StdMob removeItemFromLocation: An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
 				}
 			} finally {
@@ -202,6 +203,7 @@ public class StdMob implements Mobile, Container{
 	}
 	
 	@Override
+	//TODO should be two methods or rename to changeLife
 	public synchronized void takeDamage(Type type, int damage) {
 		if(!(damage < 0)) {  //healing ignores defense
 			damage = damage - defense;
@@ -227,7 +229,7 @@ public class StdMob implements Mobile, Container{
 					((Mobile)m).tell(getName() + " drops to the floor, dead.");
 				}
 			}
-			dropItemsOnDeath();
+			spawnDeathLoot();
 		}
 	}	
 	
@@ -241,7 +243,7 @@ public class StdMob implements Mobile, Container{
 	
 	// Triggers only on death, used to spawn NEW items, not to drop held items.
 	@Override
-	public void dropItemsOnDeath() {
+	public void spawnDeathLoot() {
 		if (dropsOnDeath != null) {
 			for (ItemBuilder ib : dropsOnDeath) {
 				ib.setItemContainer(getContainer());

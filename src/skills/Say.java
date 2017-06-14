@@ -15,7 +15,6 @@ public class Say extends Skills {
 	protected void performSkill() {
 		if (canTalk()) {
 			String words = Syntax.LIST.getStringInfo(fullCommand, this);
-			System.out.println("Say: " + words);
 			if (words.equals("")) {
 				messageSelf("You utter nothing.");
 			} else {
