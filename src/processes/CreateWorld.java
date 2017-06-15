@@ -80,6 +80,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new Heal());
 		generalSkills.addSkill(new Root());
 		generalSkills.addSkill(new VineTrip());
+		generalSkills.addSkill(new LightningWhip());
 		//mercenary only
 		generalSkills.addSkill(new Headshot());
 		generalSkills.addSkill(new BreakLimb());

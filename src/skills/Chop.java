@@ -44,7 +44,7 @@ public class Chop extends InductionSkill {
 		}
 		
 		tree = (Harvestable) treeItem;		
-		scheduleSkillRepeatNTimesOverXMilliseconds(1, 5000); // Triggers this skill's "run()" in 5 seconds. Interruptible.
+		scheduleInduction(1, 5000); // Triggers this skill's "run()" in 5 seconds. Interruptible.
 		currentPlayer.setInduction(this);
 		messageSelf("You begin chopping.");
 		messageOthers(currentPlayer.getName() + " begins chopping.", Arrays.asList(currentPlayer));

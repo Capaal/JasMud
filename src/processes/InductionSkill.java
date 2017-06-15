@@ -9,28 +9,11 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class InductionSkill extends Skills implements Runnable {
 		
-	protected ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(1);
+	protected static ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(1);
 	protected static ExecutorService wrapperExecutor = Executors.newCachedThreadPool();
 	protected InductionWrapper wrapper;
 	
 	protected boolean offCooldown = true;
-	
-	public void scheduleSkillRepeatNTimesOverXMilliseconds(int times, int duration) {
-		if (times == 0 || duration / times <= 50 || duration <= 0) {
-			throw new IllegalArgumentException("Invalid duration or times: " + duration + " " + times);
-		}
-		schedule(times, duration);	
-			
-	}
-	
-	public void kill() {
-		wrapper.kill();	
-		currentPlayer.setInduction(null);
-	}
-	
-	public void endInduction() {
-		currentPlayer.setInduction(null);
-	}
 	
 	@Override
 	public abstract void run();
@@ -40,11 +23,30 @@ public abstract class InductionSkill extends Skills implements Runnable {
 		WorldServer.shutdownAndAwaitTermination(wrapperExecutor);
 	}
 	
-	protected void schedule(int times, int duration) {
+	protected abstract void inductionEnded();
+	
+	public void scheduleInduction(int times, int duration) {
+		scheduleInduction(times, duration, (duration/times));
+	}
+	
+	public void scheduleInduction(int times, int duration, int initialWait) {
+		if (times == 0 || duration / times <= 50 || duration <= 0 || initialWait < 0) {
+			throw new IllegalArgumentException("Invalid duration or times: " + duration + " " + times);
+		}
 		int timeGaps = duration / times;
 		wrapper = new InductionWrapper(this, times);
-		ScheduledFuture<?> future = effectExecutor.scheduleWithFixedDelay(wrapper, timeGaps, timeGaps, TimeUnit.MILLISECONDS);
-		wrapper.setOwnFuture(future);
+		ScheduledFuture<?> future = effectExecutor.scheduleWithFixedDelay(wrapper, initialWait, timeGaps, TimeUnit.MILLISECONDS);
+		wrapper.setOwnFuture(future);			
+	}
+	
+	public void kill() {
+		wrapper.kill();	
+		currentPlayer.setInduction(null);
+	}
+	
+	public void endInduction() {
+		currentPlayer.setInduction(null);
+		inductionEnded();
 	}
 	
 	protected class InductionWrapper implements Runnable {
@@ -87,10 +89,10 @@ public abstract class InductionSkill extends Skills implements Runnable {
 		if (duration <= 0) {
 			throw new IllegalArgumentException("Invalid duration " + duration);
 		}
-		scheduleOnce(duration);				
+		scheduleCooldown(duration);				
 	}
 	
-	protected void scheduleOnce(int duration) {
+	protected void scheduleCooldown(int duration) {
 		CooldownWrapper wrapper = new CooldownWrapper(this);
 		effectExecutor.schedule(wrapper, duration, TimeUnit.MILLISECONDS);
 	}
@@ -106,13 +108,12 @@ public abstract class InductionSkill extends Skills implements Runnable {
 		}
 	}
 	
-	protected void triggerCooldown() {
+	protected void triggerCooldown(int length) {
 		offCooldown = false;
-		offCooldownIn(5000);
+		offCooldownIn(length);
 	}
 	
 	protected void setOffCooldown() {
 		offCooldown = true;
-		messageSelf("You are again able to clear your mind.");
-	}
+	}	
 }

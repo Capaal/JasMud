@@ -1,12 +1,14 @@
 package skills;
 
 import java.util.Arrays;
+
 import Quests.Quest;
 import Quests.Quest.Trigger;
 import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Skills;
+import processes.Skills.Syntax;
 
 public class Give extends Skills {
 	
@@ -14,7 +16,8 @@ public class Give extends Skills {
 		super.name = "give";
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
-		super.syntaxList.add(Syntax.ITEM);		
+		super.syntaxList.add(Syntax.ITEM);	
+		super.syntaxList.add(Syntax.QUANTITY);
 	}
 	
 	String possItem;
@@ -40,10 +43,25 @@ public class Give extends Skills {
 			messageSelf("You can't find that person to give " + itemToMove.getName() + ".");
 			return;
 		}
-		itemToMove.moveHoldable((Mobile)mobileToGive);
-		messageSelf("You give " + itemToMove.getName() + " to " + mobileToGive.getName() + ".");
-		messageTarget(currentPlayer.getName() + " gives you " + itemToMove + ".", Arrays.asList((Mobile)mobileToGive));
-		messageOthers(currentPlayer.getName() + " gives " + itemToMove.getName() + " to " + (Mobile)mobileToGive + ".", Arrays.asList(currentPlayer));
+		int qty = -1;
+		if (!Syntax.QUANTITY.getStringInfo(fullCommand, this).equals("")) {			
+			try {
+				qty = Integer.parseInt(Syntax.QUANTITY.getStringInfo(fullCommand, this)); 
+			} catch (NumberFormatException fail) {
+				System.out.println("User error: 'Give' optional qty not a number. Optional ignored.");
+			}
+		}
+		if (qty == -1) { // defaults to full stack
+			itemToMove.moveHoldable((Mobile)mobileToGive);
+			messageSelf("You give " + itemToMove.getName() + " to " + mobileToGive.getName() + ".");
+			messageTarget(currentPlayer.getName() + " gives you " + itemToMove + ".", Arrays.asList((Mobile)mobileToGive));
+			messageOthers(currentPlayer.getName() + " gives " + itemToMove.getName() + " to " + (Mobile)mobileToGive + ".", Arrays.asList(currentPlayer));
+		} else {
+			itemToMove.moveHoldable((Mobile)mobileToGive, qty);
+			messageSelf("You give " + qty + " " + itemToMove.getName() + " to " + mobileToGive.getName() + ".");
+			messageTarget(currentPlayer.getName() + " gives you " + qty + " " + itemToMove + ".", Arrays.asList((Mobile)mobileToGive));
+			messageOthers(currentPlayer.getName() + " gives " + itemToMove.getName() + " to " + (Mobile)mobileToGive + ".", Arrays.asList(currentPlayer));
+		}		
 		questCares(itemToMove, (Mobile)mobileToGive);		
 	}
 	

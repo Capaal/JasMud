@@ -26,15 +26,20 @@ public class Clearmind extends InductionSkill {
 			currentPlayer.removeAllConditions(PassiveCondition.DIZZY);
 			messageSelf("Dizzy cured.");
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 1000);
-			triggerCooldown();
+			triggerCooldown(5000);
 		} else if (currentPlayer.hasCondition(new Fear(currentPlayer))) {
 			currentPlayer.removeCondition(new Fear(currentPlayer));
 			messageSelf("Fear cured.");
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 1000);
-			triggerCooldown();
+			triggerCooldown(5000);
 		} else {
 			messageSelf("Your mind is already clear.");
 		}
+	}
+	
+	@Override protected void setOffCooldown() { 
+		super.setOffCooldown();
+		messageSelf("You are again able to clear your mind.");
 	}
 	/*
 	private void triggerCooldown() {
@@ -83,5 +88,12 @@ public class Clearmind extends InductionSkill {
 	public void inductionKilled() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected void inductionEnded() {
+		// TODO Auto-generated method stub
+		// Shouldn't happen, is not induction skill
+		System.out.println("Induction ended called on a cooldown skill. Should not happen.");
 	}
 }

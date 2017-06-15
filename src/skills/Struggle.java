@@ -27,7 +27,7 @@ public class Struggle extends InductionSkill {
 		if (currentPlayer.hasAllConditions(PassiveCondition.ROOT)) {
 			emote = false;
 			messageSelf("You being struggling against the bonds holding you.");
-			scheduleSkillRepeatNTimesOverXMilliseconds(1, 2000);
+			scheduleInduction(1, 2000);
 			currentPlayer.setInduction(this);
 		}
 		
@@ -47,7 +47,7 @@ public class Struggle extends InductionSkill {
 			return;
 		}
 		messageSelf("You continue to writhe against the bonds holding you.");
-		scheduleSkillRepeatNTimesOverXMilliseconds(1, 2000);  //effectively recursion since this calls run()
+		scheduleInduction(1, 2000);  //effectively recursion since this calls run()
 		currentPlayer.setInduction(this);
 	}
 

@@ -43,7 +43,7 @@ public class Mine extends InductionSkill {
 			}
 		}
 		rock = (Harvestable) oreItem;		
-		scheduleSkillRepeatNTimesOverXMilliseconds(1, 5000); // Triggers this skill's "run()" in 5 seconds. Interruptible.
+		scheduleInduction(1, 5000); // Triggers this skill's "run()" in 5 seconds. Interruptible.
 		currentPlayer.setInduction(this);
 		messageSelf("You begin mining.");
 		messageOthers(currentPlayer.getName() + " begins mining.", Arrays.asList(currentPlayer));

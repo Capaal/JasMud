@@ -29,7 +29,7 @@ public class Shieldblock extends InductionSkill {
 	protected void performSkill() {
 		if (!hasBalance()) {return;}
 		if (!weaponWielded()) {return;}		
-		scheduleSkillRepeatNTimesOverXMilliseconds(1, 4000); // Triggers this skill's "run()" in 2 seconds. Interruptible.
+		scheduleInduction(1, 4000); // Triggers this skill's "run()" in 2 seconds. Interruptible.
 		currentPlayer.setInduction(this);
 		changeBlocking(true);
 		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());

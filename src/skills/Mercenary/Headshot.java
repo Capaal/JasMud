@@ -56,7 +56,7 @@ public class Headshot extends InductionSkill {
 		if (!weaponWielded()) {return;}
 		if (!findAllLocations()) {return;}		
 		if (!findTarget()) {return;}	
-		scheduleSkillRepeatNTimesOverXMilliseconds(1, 2000); // Triggers this skill's "run()" in 2 seconds. Interruptible.
+		scheduleInduction(1, 2000); // Triggers this skill's "run()" in 2 seconds. Interruptible.
 		currentPlayer.setInduction(this);
 		messageSelf("You begin aiming at " + finalTarget.getName() + ".");
 		messageTarget(currentPlayer.getName() + " begins aiming at your head.", Arrays.asList(finalTarget));
@@ -140,5 +140,11 @@ public class Headshot extends InductionSkill {
 	//	double damageMult = item.getBalanceMult();  Item not required yet.
 	//	return (int) (damageMult * intensity);
 		return 3000;
+	}
+
+	@Override
+	protected void inductionEnded() {
+		// TODO Auto-generated method stub
+		// Nothing extra, run handles
 	}
 }
