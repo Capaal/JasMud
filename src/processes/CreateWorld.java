@@ -216,6 +216,17 @@ public class CreateWorld {
 //		WorldServer.gameState.addItem("ore", newItem.getFinishedItem()); //added here instead of templates, not a craftable item
 	}
 	
+	public static void addLog() {
+		StackableItemBuilder newItem = new StackableItemBuilder();
+		newItem.setName("log");
+		newItem.setDescriptionMany("A pile of wood.");
+		newItem.setDescription("Previously part of a tree.");
+		newItem.setDamageMult(0.2);
+		newItem.setQuantity(1);
+		itemTemplates.put("log", newItem); // not sure it should be in itemTemplates
+		newItem.complete();
+	}
+	
 	public static void makeIngot() {
 		ItemBuilder newItem = new ItemBuilder();
 		newItem.setWeight(2);

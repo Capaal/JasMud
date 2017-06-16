@@ -80,6 +80,11 @@ public abstract class InductionSkill extends Skills implements Runnable {
 			totalTimesRan = timesToRun;
 			wrappedSkill.inductionKilled();
 		}
+		
+		public void endSuccess() {
+			totalTimesRan = timesToRun;
+			wrappedSkill.endInduction();
+		}
 	}
 
 	public abstract void inductionKilled();

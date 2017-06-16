@@ -33,7 +33,7 @@ public class Harvestable extends StationaryItem {
 		this.maxQuantity = build.getMaxQuantity();
 		this.remainingQuantity = maxQuantity;
 		this.type = build.getHarvestType();
-		CreateWorld.viewItemTemplates();
+		allItemTemplates = CreateWorld.viewItemTemplates();
 		Executors.newScheduledThreadPool(1);
 	}
 	

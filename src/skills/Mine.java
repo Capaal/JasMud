@@ -65,4 +65,10 @@ public class Mine extends InductionSkill {
 		
 	}
 
+	@Override
+	protected void inductionEnded() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -25,7 +25,7 @@ public class Wake extends InductionSkill {
 		if (target.equals("")) {
 			if (currentPlayer.hasAllConditions(PassiveCondition.SLEEP)) {
 				messageSelf("You start trying to wake yourself up.");
-				scheduleSkillRepeatNTimesOverXMilliseconds(1, 2000);
+				scheduleInduction(50, 100000);
 				currentPlayer.setInduction(this);
 			} else {
 				currentPlayer.addAllConditions(PassiveCondition.SLEEP);
@@ -56,16 +56,21 @@ public class Wake extends InductionSkill {
 			currentPlayer.removeAllConditions(PassiveCondition.SLEEP);
 			messageSelf("You wake up.");
 			messageOthers(currentPlayer.getName() + " wakes up.", Arrays.asList(currentPlayer));
+			wrapper.endSuccess();
 			return;
 		}
 		messageSelf("You continue trying to wake up.");
-		scheduleSkillRepeatNTimesOverXMilliseconds(1, 2000);  //effectively recursion since this calls run()
-		currentPlayer.setInduction(this);
 	}
 
 	@Override
 	public void inductionKilled() {
 		messageSelf("You settle back into sleep.");
+		
+	}
+
+	@Override
+	protected void inductionEnded() {
+		// TODO Auto-generated method stub
 		
 	}
 

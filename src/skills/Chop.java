@@ -11,7 +11,7 @@ public class Chop extends InductionSkill {
 	
 	private String treeName;
 	private Holdable treeItem;
-	Harvestable tree;
+	private Harvestable tree;
 
 	public Chop() {
 		super.name = "chop";
@@ -63,6 +63,12 @@ public class Chop extends InductionSkill {
 	@Override
 	public void inductionKilled() {
 		messageSelf("You suddenly look up from your labors.");
+		
+	}
+
+	@Override
+	protected void inductionEnded() {
+		// TODO Auto-generated method stub
 		
 	}
 
