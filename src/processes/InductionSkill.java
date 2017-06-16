@@ -23,28 +23,30 @@ public abstract class InductionSkill extends Skills implements Runnable {
 		WorldServer.shutdownAndAwaitTermination(wrapperExecutor);
 	}
 	
-	protected abstract void inductionEnded();
+	protected abstract void inductionEnded(); // Induction ends successfully.
+	protected abstract void inductionKilled(); // Induction stopped early.
 	
-	public void scheduleInduction(int times, int duration) {
-		scheduleInduction(times, duration, (duration/times));
+	public void scheduleInduction(int times, int interval) {
+		scheduleInduction(times, interval, interval);
 	}
 	
-	public void scheduleInduction(int times, int duration, int initialWait) {
-		if (times == 0 || duration / times <= 50 || duration <= 0 || initialWait < 0) {
-			throw new IllegalArgumentException("Invalid duration or times: " + duration + " " + times);
+	public void scheduleInduction(int times, int interval, int initialWait) {
+		if (times == 0 || interval / times <= 50 || interval <= 0 || initialWait < 0) {
+			throw new IllegalArgumentException("Invalid duration or times: " + interval + " " + times + " " + initialWait);
 		}
-		int timeGaps = duration / times;
 		wrapper = new InductionWrapper(this, times);
-		ScheduledFuture<?> future = effectExecutor.scheduleWithFixedDelay(wrapper, initialWait, timeGaps, TimeUnit.MILLISECONDS);
+		ScheduledFuture<?> future = effectExecutor.scheduleWithFixedDelay(wrapper, initialWait, interval, TimeUnit.MILLISECONDS);
 		wrapper.setOwnFuture(future);			
 	}
 	
-	public void kill() {
-		wrapper.kill();	
+	public void interrupt() {
+		wrapper.interrupt();	
 		currentPlayer.setInduction(null);
+		inductionKilled();
 	}
 	
-	public void endInduction() {
+	public void endSuccessfully() {
+		wrapper.interrupt();
 		currentPlayer.setInduction(null);
 		inductionEnded();
 	}
@@ -65,60 +67,50 @@ public abstract class InductionSkill extends Skills implements Runnable {
 				wrapperExecutor.execute(wrappedSkill);
 				totalTimesRan ++;
 				if (totalTimesRan == timesToRun) {
-					wrappedSkill.endInduction();
+					future.cancel(true);
+					wrappedSkill.endSuccessfully();
 				}
 			} else {
 				future.cancel(true);
-				wrappedSkill.endInduction();
+				wrappedSkill.endSuccessfully();
 			}
 		}		
 		public void setOwnFuture(Future<?> future) {
 			this.future = future;
 		}
 		
-		public void kill() {
-			totalTimesRan = timesToRun;
-			wrappedSkill.inductionKilled();
-		}
-		
-		public void endSuccess() {
-			totalTimesRan = timesToRun;
-			wrappedSkill.endInduction();
-		}
-	}
-
-	public abstract void inductionKilled();
-
-
-	public void offCooldownIn(int duration) {
-		if (duration <= 0) {
-			throw new IllegalArgumentException("Invalid duration " + duration);
-		}
-		scheduleCooldown(duration);				
-	}
-	
-	protected void scheduleCooldown(int duration) {
-		CooldownWrapper wrapper = new CooldownWrapper(this);
-		effectExecutor.schedule(wrapper, duration, TimeUnit.MILLISECONDS);
-	}
-	
-	protected class CooldownWrapper implements Runnable {		
-		InductionSkill wrappedSkill;		
-		public CooldownWrapper(InductionSkill s) {
-			wrappedSkill = s;
-		}
-		
-		public void run() {
-			wrappedSkill.setOffCooldown();			
+		public void interrupt() {
+			future.cancel(true);
+			totalTimesRan = timesToRun;			
 		}
 	}
 	
+	// Called to start cooldown period.
 	protected void triggerCooldown(int length) {
 		offCooldown = false;
 		offCooldownIn(length);
 	}
 	
+	// Called when cooldown period ends. Override to add messages. But call super.setOffCooldown()
 	protected void setOffCooldown() {
 		offCooldown = true;
-	}	
+	}
+
+	private void offCooldownIn(int duration) {
+		if (duration <= 0) {
+			throw new IllegalArgumentException("Invalid duration " + duration);
+		}
+		CooldownWrapper wrapper = new CooldownWrapper(this);
+		effectExecutor.schedule(wrapper, duration, TimeUnit.MILLISECONDS);				
+	}
+	
+		protected class CooldownWrapper implements Runnable {		
+			InductionSkill wrappedSkill;		
+			public CooldownWrapper(InductionSkill s) {
+				wrappedSkill = s;
+			}			
+			public void run() {
+				wrappedSkill.setOffCooldown();			
+			}
+		}			
 }

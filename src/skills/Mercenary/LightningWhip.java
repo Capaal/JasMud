@@ -32,7 +32,6 @@ public class LightningWhip extends InductionSkill {
 			return;
 		}		
 		finalTarget.takeDamage(Type.COLD, calculateDamage());
-//		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
 		messageSelf("Your lightning whip hits " + finalTarget.getName() + ".");
 		messageTarget(currentPlayer.getName() + " lightning lashes you.", Arrays.asList(finalTarget));
 		messageOthers(currentPlayer.getName() + " whips " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));	
@@ -43,14 +42,12 @@ public class LightningWhip extends InductionSkill {
 	@Override
 	protected void performSkill() {
 		if (!hasBalance()) {return;}	
-		findTarget();
-		
+		findTarget();		
 		if (finalTarget == null) {return;}	
-		scheduleInduction(4, 10000, 1500); // Triggers this skill's "run()" in 1.5 seconds. and ticks every 2.5 seconds. Interruptible.
+		scheduleInduction(4, 2500, 1500); // Triggers this skill's "run()" in 1.5 seconds. and ticks every 2.5 seconds. Interruptible.
 		currentPlayer.setInduction(this);
 		messageSelf("You begin whipping " + finalTarget.getName() + ".");
 		messageTarget(currentPlayer.getName() + " begins whipping you with lightning.", Arrays.asList(finalTarget));
-	//	currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, (calculateBalance()*5));
 	}		
 		
 	private int calculateDamage() {

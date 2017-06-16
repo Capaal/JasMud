@@ -13,7 +13,6 @@ import processes.Skills.Syntax;
 public class Struggle extends InductionSkill {
 	
 	Random r = new Random();
-	boolean emote = true;
 	
 	public Struggle() {
 		super.name = "struggle";
@@ -22,16 +21,12 @@ public class Struggle extends InductionSkill {
 	}
 
 	@Override
-	protected void performSkill() {
-		
+	protected void performSkill() {		
 		if (currentPlayer.hasAllConditions(PassiveCondition.ROOT)) {
-			emote = false;
 			messageSelf("You being struggling against the bonds holding you.");
-			scheduleInduction(50, 100000);
+			scheduleInduction(50, 2500);
 			currentPlayer.setInduction(this);
-		}
-		
-		if (emote) {
+		} else {
 			messageSelf("You struggle against the futility of the world.");
 		}
 		
@@ -44,22 +39,20 @@ public class Struggle extends InductionSkill {
 			currentPlayer.removeAllConditions(PassiveCondition.ROOT);
 			messageSelf("You are free to move about again.");
 			messageOthers(currentPlayer.getName() + " is no longer bound.", Arrays.asList(currentPlayer));
-			wrapper.endSuccess();
-			return;
+			endSuccessfully();
+		} else {
+			messageSelf("You continue to writhe against the bonds holding you.");
 		}
-		messageSelf("You continue to writhe against the bonds holding you.");
 	}
 
 	@Override
 	public void inductionKilled() {
-		messageSelf("You stop struggling.");
-		
+		messageSelf("You stop struggling.");		
 	}
 
 	@Override
 	protected void inductionEnded() {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 }

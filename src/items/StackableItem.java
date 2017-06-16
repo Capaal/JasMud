@@ -161,14 +161,7 @@ public class StackableItem extends StdItem {
 		@Override public StdItem produceType() {
 			return new StackableItem(this);
 		} 
-	}
-	
-	private Object readResolve() {
-		WorldServer.gameState.addItem(name + id, this);
-		return this;
-	}
-	
-	
+	}	
 	
 	@Override
 	public String getInfo() {

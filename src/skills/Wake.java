@@ -25,10 +25,9 @@ public class Wake extends InductionSkill {
 		if (target.equals("")) {
 			if (currentPlayer.hasAllConditions(PassiveCondition.SLEEP)) {
 				messageSelf("You start trying to wake yourself up.");
-				scheduleInduction(50, 100000);
+				scheduleInduction(50, 2500);
 				currentPlayer.setInduction(this);
 			} else {
-				currentPlayer.addAllConditions(PassiveCondition.SLEEP);
 				messageSelf("You're not asleep.");
 			}
 		} else {
@@ -45,8 +44,6 @@ public class Wake extends InductionSkill {
 				messageOthers(currentPlayer.getName() + " shakes " + mob.getName() + " awake.", Arrays.asList(currentPlayer, mob));
 			}
 		}
-		
-
 	}
 	
 	@Override
@@ -56,22 +53,20 @@ public class Wake extends InductionSkill {
 			currentPlayer.removeAllConditions(PassiveCondition.SLEEP);
 			messageSelf("You wake up.");
 			messageOthers(currentPlayer.getName() + " wakes up.", Arrays.asList(currentPlayer));
-			wrapper.endSuccess();
-			return;
-		}
-		messageSelf("You continue trying to wake up.");
+			endSuccessfully();
+		} else {
+			messageSelf("You continue trying to wake up.");
+		}		
 	}
 
 	@Override
 	public void inductionKilled() {
-		messageSelf("You settle back into sleep.");
-		
+		messageSelf("You settle back into sleep.");		
 	}
 
 	@Override
 	protected void inductionEnded() {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 }

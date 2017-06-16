@@ -3,7 +3,6 @@ package skills.Mercenary;
 import java.util.Arrays;
 import effects.PassiveCondition;
 import interfaces.Holdable;
-import items.StdItem;
 import processes.Equipment;
 import processes.InductionSkill;
 
@@ -17,7 +16,6 @@ public class Shieldblock extends InductionSkill {
 	// Runs POST INDUCTION.
 	@Override
 	public void run() {		
-		// TURN OFF DEFENDING
 		changeBlocking(false);	
 	}
 
@@ -29,7 +27,7 @@ public class Shieldblock extends InductionSkill {
 	protected void performSkill() {
 		if (!hasBalance()) {return;}
 		if (!weaponWielded()) {return;}		
-		scheduleInduction(1, 4000); // Triggers this skill's "run()" in 2 seconds. Interruptible.
+		scheduleInduction(1, 4000); // Triggers this skill's "run()" in 4 seconds. Interruptible.
 		currentPlayer.setInduction(this);
 		changeBlocking(true);
 		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
@@ -68,5 +66,11 @@ public class Shieldblock extends InductionSkill {
 	private int calculateBalance() {
 	//	double balanceMult = item.getBalanceMult();  Item not required yet.
 		return 2500;
+	}
+
+	@Override
+	protected void inductionEnded() {
+		// TODO Auto-generated method stub
+		
 	}
 }

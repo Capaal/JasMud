@@ -1,12 +1,14 @@
 package items;
 
 import interfaces.Container;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import processes.WorldServer;
 import processes.Equipment.EquipmentEnum;
 
@@ -177,6 +179,16 @@ public class ItemBuilder {
 		handleId();
 		StdItem notFinishedItem = produceType();
 		return notFinishedItem;
+	}
+	
+	public static Map<String, Integer> getIdMap() {
+		return idMap;
+	}
+
+	public static void setIdMap(Map<String, Integer> idMap2) {
+		idMap = idMap2;
+		// TODO Auto-generated method stub
+		
 	}
 
 	

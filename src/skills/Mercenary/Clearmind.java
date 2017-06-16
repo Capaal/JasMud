@@ -4,10 +4,7 @@ import effects.PassiveCondition;
 import effects.Fear;
 import processes.InductionSkill;
 
-// TODO move to induction skills to handle cooldowns
 public class Clearmind extends InductionSkill {
-	
-//	private boolean offCooldown = true;
 	
 	public Clearmind() {
 		super.name = "clearmind";
@@ -41,59 +38,19 @@ public class Clearmind extends InductionSkill {
 		super.setOffCooldown();
 		messageSelf("You are again able to clear your mind.");
 	}
-	/*
-	private void triggerCooldown() {
-		offCooldown = false;
-		offCooldownIn(5000);
-	}
 	
-	public void setOffCooldown() {
-		offCooldown = true;
-		messageSelf("You are again able to clear your mind.");
-	}
-	
-	private ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(1);
-	private ExecutorService wrapperExecutor = Executors.newCachedThreadPool();
-	
-	public void offCooldownIn(int duration) {
-		if (duration <= 0) {
-			throw new IllegalArgumentException("Invalid duration " + duration);
-		}
-		scheduleOnce(duration);				
-	}
-	
-	private void scheduleOnce(int duration) {
-		CooldownWrapper wrapper = new CooldownWrapper(this);
-		effectExecutor.schedule(wrapper, duration, TimeUnit.MILLISECONDS);
-	}
-	
-	private class CooldownWrapper implements Runnable {		
-		InductionSkill wrappedSkill;		
-		public CooldownWrapper(InductionSkill s) {
-			wrappedSkill = s;
-		}
-		
-		public void run() {
-			wrappedSkill.setOffCooldown();			
-		}
-	}*/
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Override
 	public void inductionKilled() {
-		// TODO Auto-generated method stub
-		
+		throw new IllegalStateException("Cooldown skills should not have induction called.");		
 	}
 
 	@Override
 	protected void inductionEnded() {
-		// TODO Auto-generated method stub
-		// Shouldn't happen, is not induction skill
-		System.out.println("Induction ended called on a cooldown skill. Should not happen.");
+		throw new IllegalStateException("Cooldown skills should not have induction called.");	
+	}
+
+	@Override
+	public void run() {
+		throw new IllegalStateException("Does not have a ticking effect.");
 	}
 }

@@ -86,6 +86,18 @@ public class StdItem implements Holdable{
 		}
 		getContainer().removeItemFromLocation(this);		
 		this.itemLocation = finalLocation;
+		
+		// TESTS: Problem with gamestate not updating locations.
+		System.out.println(getContainer().getId());
+		Set<StdItem> items = WorldServer.gameState.viewAllItems();
+		for (StdItem i : items) {
+			if (i == this) {
+				System.out.println(i.getContainer().getId());
+				break;
+			}
+		}
+		
+		
 		return error;
 	}
 	
@@ -114,7 +126,9 @@ public class StdItem implements Holdable{
 	}
 	
 	private Object readResolve() {
-		WorldServer.gameState.addItem(name + id, this);
+		if (getContainer() == null) {
+			WorldServer.gameState.addItem(name + id, this);
+		}
 	//	getContainer().acceptItem(this);
 		return this;
 	}

@@ -74,6 +74,7 @@ public class PlayerPrompt implements Runnable {
 						item.save();
 						item.removeFromWorld();
 					}
+					WorldServer.saveIdMaps();
 					destroyConnection();
 					WorldServer.shutdownAndAwaitTermination(WorldServer.executor);
 				} else {						

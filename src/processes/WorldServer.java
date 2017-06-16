@@ -2,6 +2,7 @@ package processes;
 
 import interfaces.Holdable;
 import interfaces.Mobile;
+import items.ItemBuilder;
 import items.StackableItem;
 import items.StdItem;
 
@@ -10,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.*;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -23,15 +25,16 @@ public class WorldServer {
 	public static ExecutorService executor;
 	public static ServerSocket s;
 	public static XStream xstream;
-	//private static XStream xstream = new XStream();
 	
 	public static void main(String[] args) {
 		setGameState(new GameState());
 		createXStream();
-	//	xstream.registerConverter(new LocationConverter(gameState));
 		SkillExecutor skillExecutor = new SkillExecutor();
-		skillExecutor.start();		
-		CreateWorld.createWorld(); // CREATES EVERYTHING until loading and saveing work.
+		skillExecutor.start();
+		if (!loadIdMaps()) {
+			CreateWorld.createWorldWithItems(); // CREATES EVERYTHING until loading and saving work.
+		}		
+		CreateWorld.createWorld();
 		loadSavedItems(); // DANGEROUS JUST FOR TEST
 		ServerSocket s = null;
 		try {
@@ -48,7 +51,7 @@ public class WorldServer {
 			}
 		}
 		catch (IOException e) {
-			System.out.println(e);			
+			System.out.println("Attempt to connect a socket failed: " + e);			
 			shutdown();
 		}
 	}
@@ -152,7 +155,7 @@ public class WorldServer {
 			        Object item = xstream.fromXML(file);  
 			        ((StdItem)item).getContainer().acceptItem((StdItem)item);
 			    }catch(Exception e){
-			        System.err.println("Error in XML Read: " + e.getMessage());
+			        System.err.println("Error in XML Read item: " + file.getName() + e.getMessage());
 			    }
         	}
         }
@@ -169,6 +172,39 @@ public class WorldServer {
 		xstream.processAnnotations(Equipment.class);
 		xstream.processAnnotations(StdItem.class);
 		xstream.processAnnotations(StdMob.class);	
+	}
+	
+	public static void saveIdMaps() {
+		FileOutputStream fos = null;
+		try {
+			xstream.toXML(ItemBuilder.getIdMap(), new FileWriter(new File("./idmaps.xml")));
+		} catch(Exception e) {
+		    e.printStackTrace(); // this obviously needs to be refined.
+		} finally {
+		    if(fos!=null) {
+		        try{ 
+		            fos.close();
+		        } catch (IOException e) {
+		            e.printStackTrace(); // this obviously needs to be refined.
+		        }
+		    }
+		}
+	}
+	
+	private static boolean loadIdMaps() {
+		try{		    	
+	        File xmlFile = new File("./idmaps.xml");
+	        if (!xmlFile.exists()) {
+	        	System.out.println("Missing idmaps.");
+	        	return false;
+	    //    	throw new IllegalStateException("Critical Error, missing IDMAPS.");
+	        }
+	        Map<String, Integer> idMap = (Map<String,Integer>) WorldServer.xstream.fromXML(xmlFile);   
+	        ItemBuilder.setIdMap(idMap);
+	    } catch(Exception e){
+	        System.err.println("Error in XML Read idMaps: " + e.getMessage());
+	    }
+		return true;
 	}
 }
 

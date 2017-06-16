@@ -33,10 +33,15 @@ public class CreateWorld {
 	public static SkillBook generalSkills = new SkillBook("generalSkills", 1);
 	private static Map<String, ItemBuilder> itemTemplates = new TreeMap<String, ItemBuilder>(); //list of all template items
 	
-	public static void createWorld() {
+	public static void createWorldWithItems() {
 		makeWorldFromNowhere();
 		makeSkills();
 		makeItems();
+	}
+	
+	public static void createWorld() {
+		makeWorldFromNowhere();
+		makeSkills();
 	}
 	
 	//Hardcoded skill list
@@ -214,7 +219,7 @@ public class CreateWorld {
 		newItem.setDamageMult(0.2);
 		newItem.setQuantity(1);
 		itemTemplates.put("iron", newItem); // not sure it should be in itemTemplates
-		newItem.complete();
+	//	newItem.complete();
 //		WorldServer.gameState.addItem("ore", newItem.getFinishedItem()); //added here instead of templates, not a craftable item
 	}
 	
@@ -226,7 +231,7 @@ public class CreateWorld {
 		newItem.setDamageMult(0.2);
 		newItem.setQuantity(1);
 		itemTemplates.put("log", newItem); // not sure it should be in itemTemplates
-		newItem.complete();
+	//	newItem.complete();
 	}
 	
 	public static void makeIngot() {
@@ -340,7 +345,7 @@ public class CreateWorld {
 		newItem.setWeight(.5);
 		newItem.setMaxSips(2);
 		newItem.setDrinkType(DrinkType.BLEED);
-		newItem.complete();
+	//	newItem.complete();
 		itemTemplates.put("bleedpotion", newItem);
 	}
 	
@@ -351,7 +356,7 @@ public class CreateWorld {
 		newItem.setMaxSips(2);
 		newItem.setWeight(.5);
 		newItem.setDrinkType(DrinkType.REGEN);
-		newItem.complete();
+	//	newItem.complete();
 		itemTemplates.put("regenpotion", newItem);
 	}
 	
@@ -362,7 +367,7 @@ public class CreateWorld {
 		newItem.setPlantType(PlantType.ALOE);
 		newItem.setWeight(.1);
 		newItem.setQuantity(100);
-		newItem.complete();
+	//	newItem.complete();
 		itemTemplates.put("aloe", newItem);
 	}
 	
@@ -420,7 +425,7 @@ public class CreateWorld {
 		PouchItemBuilder newItem = new PouchItemBuilder();
 		newItem.setName("pouch");
 		newItem.setWeight(.5);
-		newItem.complete();
+	//	newItem.complete();
 		itemTemplates.put("pouch", newItem);
 	}
 	
@@ -428,7 +433,7 @@ public class CreateWorld {
 		BagItemBuilder newItem = new BagItemBuilder();
 		newItem.setName("bag");
 		newItem.setWeight(2);
-		newItem.complete();
+	//	newItem.complete();
 		itemTemplates.put("bag", newItem);
 	}
 

@@ -540,7 +540,7 @@ public class StdMob implements Mobile, Container{
 
 	@Override
 	public void killInduction() {
-		inductionSkill.kill();
+		inductionSkill.interrupt();
 		inductionSkill = null;
 	}
 	
@@ -580,11 +580,8 @@ public class StdMob implements Mobile, Container{
 	}
 	
 	private Object readResolve() {
-	//	setLocation();
-		System.out.println(skillBookList);
     	addBook(CreateWorld.generalSkills.duplicate(),100);
     	WorldServer.gameState.addMob(name + id, this);
-    //	buildSkillList();
     	getContainer().acceptItem(this);
     	createNewEffectManager();	 
     	controlStatus(true);
