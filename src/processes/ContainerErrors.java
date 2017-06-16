@@ -12,7 +12,7 @@ public enum ContainerErrors {
 	STATIONARY() { // TODO NOT A CONTAINER
 		@Override
 		public String display(String name) {
-			return "That " + name + " is too stationary to move.";
+			return "That " + name + " is a stationary item and can't be moved.";
 		}
 	},
 	

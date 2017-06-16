@@ -3,6 +3,7 @@ package skills;
 import java.util.Arrays;
 
 import interfaces.Holdable;
+import processes.ContainerErrors;
 import processes.Skills;
 
 public class Drop extends Skills {
@@ -39,8 +40,13 @@ public class Drop extends Skills {
 				quantity = itemToDrop.getQuantity();
 			}
 		}
-		itemToDrop.moveHoldable(currentPlayer.getContainer(), quantity);
-		displayMessages();		
+		ContainerErrors err = itemToDrop.moveHoldable(currentPlayer.getContainer(), quantity);
+		if (err == null) {
+			displayMessages();	
+		} else {
+			System.out.println(currentPlayer.getName() + " is holding an item that can't be dropped: " + itemToDrop.getName());
+			messageSelf(err.display(itemToDrop.getName()));
+		}
 	}
 	
 	private void displayMessages() {	

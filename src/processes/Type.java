@@ -38,6 +38,18 @@ public enum Type {
 	
 	MERCREGEN() {
 		
+	}, 
+	
+	BELLADONNA() {
+		
+	}, 
+	
+	HALLUCINATION() {
+		
+	}, 
+	
+	UNBALANCED() {
+		
 	},
 	
 	;

@@ -116,6 +116,8 @@ public class CreateWorld {
 		makeAloeHerb();	
 		makeComfreyHerb();
 		makeOleander();
+		makeValerianPoison();
+		makeBelladonnaPoison();
 		addPouch();
 		makeGinsengHerb();
 		makeBag();
@@ -390,9 +392,29 @@ public class CreateWorld {
 		newItem.setDamageMult(0.1);
 		newItem.setWeight(.1);
 		newItem.setPlantType(PlantType.GINSENG);
-		newItem.complete();
+	//	newItem.complete();
 		itemTemplates.put("ginseng", newItem);
-		}
+	}
+	
+	public static void makeValerianPoison() {
+		PlantItemBuilder newItem = new PlantItemBuilder();
+		newItem.setName("valerian");
+		newItem.setDamageMult(0.1);
+		newItem.setWeight(.1);
+		newItem.setPlantType(PlantType.VALERIAN);
+	//	newItem.complete();
+		itemTemplates.put("valerian", newItem);
+	}
+	
+	public static void makeBelladonnaPoison() {
+		PlantItemBuilder newItem = new PlantItemBuilder();
+		newItem.setName("belladonna");
+		newItem.setDamageMult(0.1);
+		newItem.setWeight(.1);
+		newItem.setPlantType(PlantType.BELLADONNA);
+	//	newItem.complete();
+		itemTemplates.put("belladonna", newItem);
+	}
 	
 	public static void addPouch() {
 		PouchItemBuilder newItem = new PouchItemBuilder();

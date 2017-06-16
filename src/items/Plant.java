@@ -1,5 +1,6 @@
 package items;
 
+import effects.Belladonna;
 import effects.PassiveCondition;
 import effects.Regen;
 import interfaces.Container;
@@ -52,9 +53,24 @@ public class Plant extends StackableItem {
 				} else if (currentPlayer.hasAllConditions(PassiveCondition.BROKENRIGHTARM)) {
 					currentPlayer.removeAllConditions(PassiveCondition.BROKENRIGHTARM);
 					return("The herbs quickly knits your bones together and fixes your right arm.");
-				} else {
-					return failMsg;
-				}
+				} else { return failMsg; }
+			}
+		},
+		
+		VALERIAN {
+			@Override public String use(Mobile currentPlayer) {
+				if (!(currentPlayer.hasAllConditions(PassiveCondition.SLEEP))) {
+					currentPlayer.addAllConditions(PassiveCondition.SLEEP);
+					return "The root causes a sudden lethargy and you fall asleep.";
+				} else { return failMsg; }
+			}
+		},
+		
+		BELLADONNA {
+			@Override public String use(Mobile currentPlayer) {
+				//if need different msg per stage, check if player has belladonna - then check stage and display
+				currentPlayer.addActiveCondition(new Belladonna(currentPlayer), 1);
+				return "Your vision becomes a bit bright and blurry."; 
 			}
 		},
 			
@@ -70,9 +86,7 @@ public class Plant extends StackableItem {
 				if (!(currentPlayer.hasAllConditions(PassiveCondition.DIZZY))) {
 					currentPlayer.addAllConditions(PassiveCondition.DIZZY);
 					return "You feel dizzy.";
-				} else {
-					return failMsg;
-				}
+				} else { return failMsg; }
 			}		
 			
 		};

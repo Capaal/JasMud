@@ -18,7 +18,7 @@ public class MercRegenSkill extends Skills {
 	protected void performSkill() {
 		if (!hasBalance()) {return;}
 
-		currentPlayer.addActiveCondition(new MercRegen(currentPlayer, -10), 20);
+		currentPlayer.addActiveCondition(new MercRegen(currentPlayer, -5), 5);
 		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
 		messageSelf("You gain regeneration.");
 	}

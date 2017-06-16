@@ -207,7 +207,6 @@ public class StdMob implements Mobile, Container{
 	public synchronized void takeDamage(Type type, int damage) {
 		if(!(damage < 0)) {  //healing ignores defense
 			damage = damage - defense;
-			System.out.println(this.getName() + " heals " + damage);
 		}
 		if (currentHp < damage) {
 			damage = currentHp;
@@ -216,6 +215,7 @@ public class StdMob implements Mobile, Container{
 			currentHp = maxHp;
 		} else {
 			this.currentHp = currentHp - damage;
+			System.out.println(this.getName() + " damage: " + damage);
 		}
 		checkHp();
 		displayPrompt();
