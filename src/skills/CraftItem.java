@@ -90,7 +90,7 @@ public class CraftItem extends Skills {
 		quantity -= copyThis.getQuantity();
 	}
 	
-	private boolean preSkillChecks() {
+	protected boolean preSkillChecks() {
 		if (itemToMake == "") {
 			messageSelf("What are you trying to make? CRAFT LIST for all craftables."); //fail from no item specified
 			return false;

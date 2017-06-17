@@ -25,4 +25,9 @@ public class SkillList extends Skills {
 
 	}
 
+	@Override
+	protected boolean preSkillChecks() {
+		return true;
+	}
+
 }

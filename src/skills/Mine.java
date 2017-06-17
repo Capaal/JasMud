@@ -11,7 +11,7 @@ public class Mine extends InductionSkill {
 	
 	private String oreName;
 	private Holdable oreItem;
-	Harvestable rock;
+	private Harvestable rock;
 
 	public Mine() {
 		super.name = "mine";
@@ -40,30 +40,13 @@ public class Mine extends InductionSkill {
 	@Override
 	protected void performSkill() {
 		oreName = Syntax.ITEM.getStringInfo(fullCommand, this);
-		//check if already mining
-		if (oreName.equals("")) {
-			messageSelf("What are you trying to mine?");
-			return;
+		if (preSkillChecks()) {
+			rock = (Harvestable) oreItem;		
+			scheduleInduction(1, 5000); // Triggers this skill's "run()" in 5 seconds. Interruptible.
+			currentPlayer.setInduction(this);
+			messageSelf("You begin mining.");
+			messageOthers(currentPlayer.getName() + " begins mining.", Arrays.asList(currentPlayer));
 		}
-		//find the item
-		oreItem = currentPlayer.getContainer().getHoldableFromString(oreName);
-		if (oreItem == null) {
-			messageSelf("You don't see a \"" + oreName + "\".");
-			return;
-		}
-		//check if the item is a rock
-		if (oreItem instanceof Harvestable) { 
-			Harvestable item = (Harvestable) oreItem;
-			if (!(item.getType().equals(HarvestType.IRON))) {
-				messageSelf("You cannot mine " + oreName + ".");
-				return;
-			}
-		}
-		rock = (Harvestable) oreItem;		
-		scheduleInduction(1, 5000); // Triggers this skill's "run()" in 5 seconds. Interruptible.
-		currentPlayer.setInduction(this);
-		messageSelf("You begin mining.");
-		messageOthers(currentPlayer.getName() + " begins mining.", Arrays.asList(currentPlayer));
 		
 	}
 
@@ -77,6 +60,30 @@ public class Mine extends InductionSkill {
 	protected void inductionEnded() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		//check if already mining
+		if (oreName.equals("")) {
+			messageSelf("What are you trying to mine?");
+			return false;
+		}
+		//find the item
+		oreItem = currentPlayer.getContainer().getHoldableFromString(oreName);
+		if (oreItem == null) {
+			messageSelf("You don't see a \"" + oreName + "\".");
+			return false;
+		}
+		//check if the item is a rock
+		if (oreItem instanceof Harvestable) { 
+			Harvestable item = (Harvestable) oreItem;
+			if (!(item.getType().equals(HarvestType.IRON))) {
+				messageSelf("You cannot mine " + oreName + ".");
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

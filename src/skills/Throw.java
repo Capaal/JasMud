@@ -41,7 +41,8 @@ public class Throw extends Skills {
 		messageOthersAway(finalTarget.getName() + "is hit with a thrown " +  itemToThrow.getName() + ".", Arrays.asList(finalTarget), finalLoc);
 	}	
 	
-	private boolean preSkillChecks() {
+	@Override
+	protected boolean preSkillChecks() {
 		if (!hasBalance()) {return false;}
 		if (!findThrownItem()) {return false;}				
 		if (!findLocation()) {return false;}

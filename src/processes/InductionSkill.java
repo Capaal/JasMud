@@ -48,6 +48,8 @@ public abstract class InductionSkill extends Skills {
 			// Do not want to test for induction.
 		}
 		@Override
+		protected boolean preSkillChecks() { return true; }
+		@Override
 		protected abstract void performSkill();
 		
 		public void endSuccessfully() {

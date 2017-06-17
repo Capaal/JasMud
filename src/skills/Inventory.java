@@ -59,4 +59,9 @@ public class Inventory extends Skills {
 		
 		//should do short descriptions?
 	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		return true;
+	}
 }

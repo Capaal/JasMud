@@ -33,7 +33,8 @@ public class TakeOut extends Skills {
 	}
 		
 	//checks all syntax is valid and finds container
-	private boolean preSkillChecks() {
+	@Override
+	protected boolean preSkillChecks() {
 		//checks item word
 		itemName = Syntax.ITEM.getStringInfo(fullCommand, this);
 		if (itemName.equals("")) {

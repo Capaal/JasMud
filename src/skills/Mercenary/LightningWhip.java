@@ -49,13 +49,12 @@ public class LightningWhip extends InductionSkill {
 	// Target MUST be targettable BOTH at the START and at the END of induction.
 	@Override
 	protected void performSkill() {
-		if (!hasBalance()) {return;}	
-		findTarget();		
-		if (finalTarget == null) {return;}	
-		scheduleInduction(4, 2500, 1500); // Triggers this skill's "run()" in 1.5 seconds. and ticks every 2.5 seconds. Interruptible.
-		currentPlayer.setInduction(this);
-		messageSelf("You begin whipping " + finalTarget.getName() + ".");
-		messageTarget(currentPlayer.getName() + " begins whipping you with lightning.", Arrays.asList(finalTarget));
+		if (preSkillChecks()) {
+			scheduleInduction(4, 2500, 1500); // Triggers this skill's "run()" in 1.5 seconds. and ticks every 2.5 seconds. Interruptible.
+			currentPlayer.setInduction(this);
+			messageSelf("You begin whipping " + finalTarget.getName() + ".");
+			messageTarget(currentPlayer.getName() + " begins whipping you with lightning.", Arrays.asList(finalTarget));
+		}
 	}		
 		
 	private int calculateDamage() {
@@ -90,6 +89,14 @@ public class LightningWhip extends InductionSkill {
 	@Override
 	protected void inductionEnded() {
 		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());		
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		if (!hasBalance()) {return false;}	
+		findTarget();		
+		if (finalTarget == null) {return false;}
+		return true;
 	}
 
 	

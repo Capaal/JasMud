@@ -54,7 +54,8 @@ public class Unwield extends Skills {
 		currentPlayer.unEquip(EquipmentEnum.LEFTHAND);
 	}
 	
-	private boolean preSkillChecks() {
+	@Override
+	protected boolean preSkillChecks() {
 		wantSlot = Syntax.SLOT.getStringInfo(fullCommand, this);
 		//if (!hasBalance()) {return;} - don't need balance to unwield, shrug
 		if (currentPlayer.getEquipment().getValue(EquipmentEnum.RIGHTHAND) == null && currentPlayer.getEquipment().getValue(EquipmentEnum.LEFTHAND) == null) {

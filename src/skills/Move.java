@@ -29,30 +29,25 @@ public class Move extends Skills {
 		if (follow == null) {
 			follow = (Follow) currentPlayer.getCommand("follow");
 		}
-		if (!hasBalance()) {return;}
-		if (!legsOk()) {return;}
-		if (isRooted()) {return;};
-		
-		startContainer = currentPlayer.getContainer();
-		endContainer = null;
-		if (!findDirection()) {return;}
-		
-		ifDizzy(); //if dizzy, sets a new random direction, ok to run into walls
+		if (preSkillChecks()) {
 
-		if (endContainer == null) {
-			messageSelf("You can't go that way!");
-			return;
+			ifDizzy(); //if dizzy, sets a new random direction, ok to run into walls
+	
+			if (endContainer == null) {
+				messageSelf("You can't go that way!");
+				return;
+			}
+			if (!checkDoor()) {return;}
+			
+			displayLeaveMsg();
+			currentPlayer.moveHoldable(endContainer);
+			displayEnterMsg();
+			
+			Look look = new Look();
+			look.perform("", currentPlayer);
+			moveFollowers();
+			stopFollowing();
 		}
-		if (!checkDoor()) {return;}
-		
-		displayLeaveMsg();
-		currentPlayer.moveHoldable(endContainer);
-		displayEnterMsg();
-		
-		Look look = new Look();
-		look.perform("", currentPlayer);
-		moveFollowers();
-		stopFollowing();
 	}
 	
 	protected boolean findDirection() {
@@ -130,5 +125,17 @@ public class Move extends Skills {
 	//A follows B, A stops following B, B removes A here - wtf?
 	public void removeFollower(Follow follow) {
 		followers.remove(follow);
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		if (!hasBalance()) {return false;}
+		if (!legsOk()) {return false;}
+		if (isRooted()) {return false;};
+		startContainer = currentPlayer.getContainer();
+		endContainer = null;
+		if (!findDirection()) {return false;}
+		
+		return true;
 	}
 }

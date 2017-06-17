@@ -21,17 +21,15 @@ public class Greet extends Skills {
 	@Override
 	public void performSkill() {
 		target = setTarget();
-		if (target == null) {
-			messageSelf("Whom do you wish to greet?");
-			return;
-		}
-		if (canTalk()) {
-			messageSelf("You greet " + target.getName() + " in a friendly manner.");
-			messageOthers(currentPlayer.getName() + " greets " + target.getName() + " in a friendly manner.", Arrays.asList(currentPlayer, target));
-			messageTarget(currentPlayer.getName() + " greets you in a friendly manner.", Arrays.asList(target));
-			((Location)currentPlayer.getContainer()).notifyQuest(Quest.Trigger.GREETS);
-		} else {
-			messageSelf("You can't talk.");
+		if (preSkillChecks()) {
+			if (canTalk()) {
+				messageSelf("You greet " + target.getName() + " in a friendly manner.");
+				messageOthers(currentPlayer.getName() + " greets " + target.getName() + " in a friendly manner.", Arrays.asList(currentPlayer, target));
+				messageTarget(currentPlayer.getName() + " greets you in a friendly manner.", Arrays.asList(target));
+				((Location)currentPlayer.getContainer()).notifyQuest(Quest.Trigger.GREETS);
+			} else {
+				messageSelf("You can't talk.");
+			}
 		}
 	}
 	
@@ -42,6 +40,15 @@ public class Greet extends Skills {
 	
 	//checks for dumb, silence, etc
 	public boolean canTalk() {
+		return true;
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		if (target == null) {
+			messageSelf("Whom do you wish to greet?");
+			return false;
+		}
 		return true;
 	}
 

@@ -1,12 +1,12 @@
 package skills;
 
-import interfaces.Container;
 import interfaces.Holdable;
 import processes.Skills;
 
 public class Examine extends Skills {
 	
 	private Holdable possibleItem;
+	private String toExamine;
 	
 	public Examine() {
 		super.name = "examine";
@@ -16,24 +16,21 @@ public class Examine extends Skills {
 
 	@Override
 	protected void performSkill() {
-		String toExamine = Syntax.TARGET.getStringInfo(fullCommand, this);
-		if (toExamine.equals("")) {
-			messageSelf("Examine what?");
-		return;
+		if (preSkillChecks()) {
+			if (searchForItem()) {
+				messageSelf(possibleItem.getExamine());
+				return;
+			}
+			
+			messageSelf("You can't find that item."); 
 		}
-		if (searchForItem()) {
-			messageSelf(possibleItem.getExamine());
-			return;
-		}
-		
-		messageSelf("You can't find that item."); 
 	}
 
 	private boolean searchForItem() {
 		//check inv
-		possibleItem = currentPlayer.getHoldableFromString(Syntax.TARGET.getStringInfo(fullCommand, this));
+		possibleItem = currentPlayer.getHoldableFromString(toExamine);
 		//check location
-		if (possibleItem == null) {possibleItem = currentPlayer.getContainer().getHoldableFromString(Syntax.TARGET.getStringInfo(fullCommand, this));}
+		if (possibleItem == null) {possibleItem = currentPlayer.getContainer().getHoldableFromString(toExamine);}
 		//not found anywhere
 		if (possibleItem == null) {return false;}
 	/*	//do if found
@@ -56,6 +53,16 @@ public class Examine extends Skills {
 			}
 		
 		messageSelf(s.toString()); */
+		return true;
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		toExamine = Syntax.TARGET.getStringInfo(fullCommand, this);
+		if (toExamine.equals("")) {
+			messageSelf("Examine what?");
+			return false;
+		}
 		return true;
 	}
 }

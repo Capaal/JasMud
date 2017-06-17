@@ -16,11 +16,17 @@ public class MercRegenSkill extends Skills {
 
 	@Override
 	protected void performSkill() {
-		if (!hasBalance()) {return;}
+		if (preSkillChecks()) {
+			currentPlayer.addActiveCondition(new MercRegen(currentPlayer, -5), 5);
+			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+			messageSelf("You gain regeneration.");
+		}
+	}
 
-		currentPlayer.addActiveCondition(new MercRegen(currentPlayer, -5), 5);
-		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
-		messageSelf("You gain regeneration.");
+	@Override
+	protected boolean preSkillChecks() {
+		if (!hasBalance()) {return false;}
+		return true;
 	}
 
 

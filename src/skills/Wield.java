@@ -12,6 +12,8 @@ import processes.Skills;
 public class Wield extends Skills {
 
 	private String wantSlot;
+	private StdItem itemToWield;
+	private Set<Equipment.EquipmentEnum> equippableSlots;
 	
 	public Wield() {
 		super.name = "wield";
@@ -23,47 +25,52 @@ public class Wield extends Skills {
 	@Override
 	protected void performSkill() {
 		wantSlot = Syntax.SLOT.getStringInfo(fullCommand, this);
-		if (!hasBalance()) {return;}
+		if (preSkillChecks()) {		
+			for (Equipment.EquipmentEnum s : equippableSlots) {
+				if (wantSlot.equalsIgnoreCase(s.toString())) {
+					currentPlayer.equip(s, itemToWield);
+					messageSelf("You are now wielding the " + itemToWield.getName() + " in your " + s.toString().toLowerCase() + ".");
+					return;
+				}
+			}
+			messageSelf("You can't wield that item there.");
+		}
+	//	Equipment.valueof(Syntax.SLOT.getStringInfo(fullCommand, this));
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		if (!hasBalance()) {return false;}
 		if(wantSlot.equals("")) {wantSlot = "righthand";} //defaulting righthand
 		//find if item exists in inv
-		StdItem itemToWield = (StdItem)currentPlayer.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
+		itemToWield = (StdItem)currentPlayer.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
 		if (itemToWield == null) {
 			messageSelf("You can't find that item.");
-			return;
+			return false;
 		}		
 		if (!(itemToWield instanceof StdItem)) {
 			messageSelf("You can't wield that. Not StdItem.");
-			return;
+			return false;
 		}
 		//find if item can be wielded in slot specified
-		Set<Equipment.EquipmentEnum> equippableSlots = itemToWield.getAllowedEquipSlots();
+		equippableSlots = itemToWield.getAllowedEquipSlots();
 		if (equippableSlots == null) {
 			messageSelf("You can't wield that. Not equippable.");
-			return;
+			return false;
 		}
 		//is bodypart broken/wieldable
 		if (wantSlot.equals("righthand")) {
 			if (currentPlayer.hasAllConditions(PassiveCondition.BROKENRIGHTARM)) {
 				messageSelf("Your arm is broken, you can't wield right now.");
-				return;
+				return false;
 			}
 		} else if (wantSlot.equals("lefthand")) {
 			if (currentPlayer.hasAllConditions(PassiveCondition.BROKENLEFTARM)) {
 				messageSelf("Your arm is broken, you can't wield right now.");
-				return;
+				return false;
 			}
 		}
-		
-		for (Equipment.EquipmentEnum s : equippableSlots) {
-			if (wantSlot.equalsIgnoreCase(s.toString())) {
-				currentPlayer.equip(s, itemToWield);
-				messageSelf("You are now wielding the " + itemToWield.getName() + " in your " + s.toString().toLowerCase() + ".");
-				return;
-			}
-		}
-		messageSelf("You can't wield that item there.");
-		
-	//	Equipment.valueof(Syntax.SLOT.getStringInfo(fullCommand, this));
+		return true;
 	}
 
 }

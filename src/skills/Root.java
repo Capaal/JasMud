@@ -5,12 +5,10 @@ import java.util.Arrays;
 import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Skills;
-import processes.Skills.Syntax;
 
 public class Root extends Skills{
 
 	private Mobile finalTarget;
-	private String possibleTarg;
 	
 	public Root() {
 		super.name = "root";
@@ -21,17 +19,17 @@ public class Root extends Skills{
 	
 	@Override
 	protected void performSkill() {
-		if(!preSkillChecks()) {return;}
-		
-		finalTarget.addAllConditions(PassiveCondition.ROOT);
-		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 2000);
-		messageSelf("Strong, ropey vines curl out of your hands towards " + finalTarget.getName() + " and wrap themselves tightly around " + "their feet."); //finalTarget.getGenderHimHer()
-		messageTarget("Vines suddenly encircle your feet and root you to the spot.", Arrays.asList(finalTarget));
-		messageOthers("Living vines fly out from " + currentPlayer.getName() + "'s hands and firmly binds " + finalTarget.getName() + " to the ground.", Arrays.asList(currentPlayer, finalTarget)); 
-		
+		if(preSkillChecks()) {
+			finalTarget.addAllConditions(PassiveCondition.ROOT);
+			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 2000);
+			messageSelf("Strong, ropey vines curl out of your hands towards " + finalTarget.getName() + " and wrap themselves tightly around " + "their feet."); //finalTarget.getGenderHimHer()
+			messageTarget("Vines suddenly encircle your feet and root you to the spot.", Arrays.asList(finalTarget));
+			messageOthers("Living vines fly out from " + currentPlayer.getName() + "'s hands and firmly binds " + finalTarget.getName() + " to the ground.", Arrays.asList(currentPlayer, finalTarget)); 
+		}
 	}
 	
-	private boolean preSkillChecks() {
+	@Override
+	protected boolean preSkillChecks() {
 		if (!hasBalance()) {return false;}
 		if (!findTarget()) {return false;}
 		if (hasCondition()) {return false;}

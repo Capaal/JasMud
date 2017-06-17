@@ -153,4 +153,10 @@ public class Headshot extends InductionSkill {
 	public InnerSkill getInnerSkill() {
 		return new InnerHeadshot();
 	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }

@@ -10,6 +10,7 @@ public class Open extends Skills {
 	
 	private Door door;
 	private Direction dir;
+	private String dirString;
 	
 	public Open() {
 		super.name = "open";
@@ -20,23 +21,30 @@ public class Open extends Skills {
 
 	@Override
 	protected void performSkill() {
-		String dirString = Syntax.DIRECTION.getStringInfo(fullCommand, this);
+		dirString = Syntax.DIRECTION.getStringInfo(fullCommand, this);
+		if (preSkillChecks()) {
+			door.alterDoor(true);
+			messageSelf("You open the door to your " + dir.toString().toLowerCase() + ".");
+			messageOthers(currentPlayer.getName() + " opens the door to the " + dir.toString().toLowerCase() + ".", Arrays.asList(currentPlayer));
+		}
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
 		dir = Direction.getDirectionName(dirString);
 		if (dir == null) {
 			messageSelf("There is not a direction that way, nor a door.");
-			return;
+			return false;
 		}
 		door = currentPlayer.getContainer().getDoor(dir);
 		if (door == null) {
 			messageSelf("There is no door in that direction.");
-			return;
+			return false;
 		}
 		if (door.isOpen()) {
 			messageSelf("The door is already open.");
-			return;
+			return false;
 		}
-		door.alterDoor(true);
-		messageSelf("You open the door to your " + dir.toString().toLowerCase() + ".");
-		messageOthers(currentPlayer.getName() + " opens the door to the " + dir.toString().toLowerCase() + ".", Arrays.asList(currentPlayer));
+		return true;
 	}
 }

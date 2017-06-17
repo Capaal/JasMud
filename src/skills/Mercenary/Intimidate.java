@@ -20,13 +20,12 @@ public class Intimidate extends Skills {
 
 	@Override
 	protected void performSkill() {
-		if (!hasBalance()) {return;}
-		if (!setTarget()) {return;}
-
-		mobileToFear.addActiveCondition(new Fear(mobileToFear), 20);
-		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 2000);
-		messageSelf("You fear someone.");
-		messageTarget("Someone fears you.", Arrays.asList(mobileToFear));
+		if (preSkillChecks()) {
+			mobileToFear.addActiveCondition(new Fear(mobileToFear), 20);
+			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 2000);
+			messageSelf("You fear someone.");
+			messageTarget("Someone fears you.", Arrays.asList(mobileToFear));
+		}
 	}
 
 	
@@ -37,6 +36,13 @@ public class Intimidate extends Skills {
 			messageSelf("There is no \"" + targetName + "\" here for you to intimidate.");	
 			return false;
 		}
+		return true;
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		if (!hasBalance()) {return false;}
+		if (!setTarget()) {return false;}
 		return true;
 	}
 }

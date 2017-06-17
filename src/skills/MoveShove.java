@@ -3,8 +3,6 @@ package skills;
 import java.util.Arrays;
 
 import interfaces.Mobile;
-import processes.Location;
-import processes.Skills.Syntax;
 
 public class MoveShove extends Move {
 	
@@ -25,7 +23,6 @@ public class MoveShove extends Move {
 	Mobile shoverP;
 	
 	public void setShover(Mobile shoverPlayer) {
-		
 		shoverP = shoverPlayer;
 	}
 	

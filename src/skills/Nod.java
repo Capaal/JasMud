@@ -37,4 +37,9 @@ public class Nod extends Skills {
 		}			
 		return null;
 	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		return true;
+	}
 }

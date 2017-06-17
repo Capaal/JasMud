@@ -21,24 +21,30 @@ public abstract class Skills {
 	public void perform(String fullCommand, Mobile currentPlayer) {	
 		this.currentPlayer = currentPlayer;
 		this.fullCommand = fullCommand;
-		//method for checking conditions that prevent any skills
+		if (preAllSkills()) {
+		//	currentPlayer.tell("\n");
+			performSkill();
+		}
+	}
+	
+	//method for checking conditions that prevent any skills
+	protected boolean preAllSkills() {
 		if (currentPlayer.isDead()) {
 			messageSelf("You are dead, you may be better off praying.");
-			return;
+			return false;
 		}
 		if (!fullCommand.equals("wake")) { //this is ugly TODO
 			if (currentPlayer.hasAllConditions(PassiveCondition.SLEEP)) {
 				messageSelf("You are asleep and can't do anything.");
-				return;
+				return false;
 			}
 		}
 		testForInduction();
-	//	currentPlayer.tell("\n");
-		performSkill();
+		return true;
 	}
 	
 	protected abstract void performSkill();
-//	protected abstract void preSkillChecks();
+	protected abstract boolean preSkillChecks();
 	
 	protected void testForInduction() {
 		if (currentPlayer.isInducting()) {

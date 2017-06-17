@@ -2,11 +2,11 @@ package skills;
 
 import interfaces.Container;
 import interfaces.Holdable;
-import items.Pouch;
-import items.Harvestable;
 import processes.Skills;
 
 public class Info extends Skills {
+	
+	private String toInfo;
 	
 	public Info() {
 		super.name = "info";
@@ -16,28 +16,26 @@ public class Info extends Skills {
 	
 	@Override
 	protected void performSkill() {
-		String toInfo = Syntax.ITEM.getStringInfo(fullCommand, this);
-		if (toInfo.equals("")) {
-			messageSelf("Info what/where?");
-			return;
-		}
-		if (toInfo.equals("here")) {
-			if (currentPlayer.getContainer().getInventory().keySet().isEmpty()) {
-				messageSelf("There is nothing on the ground.");
-			} else {
-				listAllInfo(currentPlayer.getContainer());
-			}
-		} else if (toInfo.equals("inventory")) {
-			if (currentPlayer.getInventory().keySet().isEmpty()) {
-				messageSelf("You are holding nothing.");
-			} else {
-				listAllInfo(currentPlayer);
-			}
-		} else { //specific item			
-			if (searchForItem(currentPlayer.getContainer())) {return;} // Search on ground.
-			else if (searchForItem(currentPlayer)) {return;} // Search in inventory.
-			else {
-				messageSelf("You can't find that item."); 
+		toInfo = Syntax.ITEM.getStringInfo(fullCommand, this);
+		if (preSkillChecks()) {
+			if (toInfo.equals("here")) {
+				if (currentPlayer.getContainer().getInventory().keySet().isEmpty()) {
+					messageSelf("There is nothing on the ground.");
+				} else {
+					listAllInfo(currentPlayer.getContainer());
+				}
+			} else if (toInfo.equals("inventory")) {
+				if (currentPlayer.getInventory().keySet().isEmpty()) {
+					messageSelf("You are holding nothing.");
+				} else {
+					listAllInfo(currentPlayer);
+				}
+			} else { //specific item			
+				if (searchForItem(currentPlayer.getContainer())) {return;} // Search on ground.
+				else if (searchForItem(currentPlayer)) {return;} // Search in inventory.
+				else {
+					messageSelf("You can't find that item."); 
+				}
 			}
 		}
 	}
@@ -57,5 +55,14 @@ public class Info extends Skills {
 			return true;
 		} 
 		return false;
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		if (toInfo.equals("")) {
+			messageSelf("Info what/where?");
+			return false;
+		}
+		return true;
 	}	
 }

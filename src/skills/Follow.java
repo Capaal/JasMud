@@ -20,10 +20,11 @@ public class Follow extends Skills {
 
 	@Override
 	protected void performSkill() {		
-		if (!findTarget()) {return;}		
-		startFollowing();
-		messageSelf("You are now following " + finalTarget.getName());
-		messageTarget(currentPlayer.getName() + " has started following you.", Arrays.asList(finalTarget));
+		if (preSkillChecks()) {		
+			startFollowing();
+			messageSelf("You are now following " + finalTarget.getName());
+			messageTarget(currentPlayer.getName() + " has started following you.", Arrays.asList(finalTarget));
+		}
 	}
 	
 	private void startFollowing() {
@@ -46,7 +47,7 @@ public class Follow extends Skills {
 		}
 	}
 	
-	private boolean findTarget() {
+	protected boolean preSkillChecks() {
 		String possibleTarg = Syntax.TARGET.getStringInfo(fullCommand, this);
 		if (possibleTarg == "") {
 			messageSelf("Who are you trying to follow?");
@@ -63,4 +64,5 @@ public class Follow extends Skills {
 		}
 		return true;
 	}
+
 }

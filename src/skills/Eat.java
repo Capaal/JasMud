@@ -24,13 +24,15 @@ public class Eat extends Skills{
 
 	@Override
 	protected void performSkill() {
-		if(!preSkillChecks()) {return;}		
-		messageSelf(finalHerb.use(currentPlayer));
-		messageOthers(currentPlayer.getName() + "eats a " + finalHerb.getName() + ".", Arrays.asList(currentPlayer));
-		finalHerb.removeFromStack(1); 			 		
+		if(preSkillChecks()) {		
+			messageSelf(finalHerb.use(currentPlayer));
+			messageOthers(currentPlayer.getName() + "eats a " + finalHerb.getName() + ".", Arrays.asList(currentPlayer));
+			finalHerb.removeFromStack(1); 	
+		}
 	}
 	
-	private boolean preSkillChecks() {
+	@Override
+	protected boolean preSkillChecks() {
 		itemName = Syntax.ITEM.getStringInfo(fullCommand, this);
 		if (itemName.equals("")) {
 			messageSelf("What are you trying to eat?");

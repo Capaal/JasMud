@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import effects.Levitate;
 import effects.PassiveCondition;
-import interfaces.Mobile;
 import processes.Skills;
 
 public class Float extends Skills {
@@ -17,16 +16,23 @@ public class Float extends Skills {
 
 	@Override
 	protected void performSkill() {
-		if (!hasBalance()) {return;}
-		if (currentPlayer.hasCondition(new Levitate(currentPlayer))) {
-			messageSelf("You are already levitating.");
-			return;
+		if (preSkillChecks()) {
+			if (currentPlayer.hasCondition(new Levitate(currentPlayer))) {
+				messageSelf("You are already levitating.");
+				return;
+			}
+	
+			currentPlayer.addActiveCondition(new Levitate(currentPlayer), 4);
+			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+		//	messageSelf("You float up a foot above the ground."); //done in levitate effect
+			messageOthers(currentPlayer.getName() + "floats into the air.", Arrays.asList(currentPlayer));
 		}
+	}
 
-		currentPlayer.addActiveCondition(new Levitate(currentPlayer), 4);
-		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
-	//	messageSelf("You float up a foot above the ground."); //done in levitate effect
-		messageOthers(currentPlayer.getName() + "floats into the air.", Arrays.asList(currentPlayer));
+	@Override
+	protected boolean preSkillChecks() {
+		if (!hasBalance()) {return false;}
+		return true;
 	}
 
 	

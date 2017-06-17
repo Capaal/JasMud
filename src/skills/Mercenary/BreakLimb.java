@@ -12,6 +12,7 @@ public class BreakLimb extends Skills {
 	private Mobile finalTarget;
 	private EquipmentEnum slot;
 	private final int intensity = 8;
+	private String targetName;
 	
 	//check for: limb already broken, is item wielded, unwield item
 	public BreakLimb() {
@@ -24,40 +25,25 @@ public class BreakLimb extends Skills {
 	
 	@Override
 	protected void performSkill() {
-		String targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
-		if (targetName.equals("")) {
-			messageSelf("What are you trying to attack?");
-			return;
+		if (preSkillChecks()) {
+			//checks if slot specified is a hand, then checks if hand is already broken
+			//sets limb to broken, unwield if hand
+			if (slot.equals(EquipmentEnum.LEFTHAND)) {
+				breakarm(PassiveCondition.BROKENLEFTARM);
+			} else if (slot.equals(EquipmentEnum.RIGHTHAND)) {
+				breakarm(PassiveCondition.BROKENRIGHTARM);
+			} else if (slot.equals(EquipmentEnum.LEGS)) {
+			//	messageTarget("Your legs are broken.", Arrays.asList(finalTarget));
+				finalTarget.addAllConditions(PassiveCondition.BROKENLEGS);
+			}
+			//the regular stuff a damaging atk does
+			finalTarget.informLastAggressor(currentPlayer);
+			finalTarget.takeDamage(Type.BLUNT, calculateDamage());
+			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+			messageSelf("You target a specific limb and hit " + finalTarget.getName() + " really hard.");
+			messageTarget(currentPlayer.getName() + " hits you with a targetted punch.", Arrays.asList(finalTarget));
+			messageOthers(currentPlayer.getName() + " punches " + finalTarget.getName() + " harder than usual.", Arrays.asList(currentPlayer, finalTarget));
 		}
-		if (!hasBalance()) {return;}
-		finalTarget = setTarget(targetName);
-		if (finalTarget == null) {
-			messageSelf("There is no " + targetName + " here for you to attack.");
-			return;
-		}
-		if (isBlocking(finalTarget)) {return;}  // Probably not complete still
-		if (!findSlotAndWeapon()) {
-			messageSelf("What are you trying to break?");
-			messageSelf("Syntax: BREAK <TARGET> <LEFTHAND/RIGHTHAND/LEG>");
-			return;
-		}
-		//checks if slot specified is a hand, then checks if hand is already broken
-		//sets limb to broken, unwield if hand
-		if (slot.equals(EquipmentEnum.LEFTHAND)) {
-			breakarm(PassiveCondition.BROKENLEFTARM);
-		} else if (slot.equals(EquipmentEnum.RIGHTHAND)) {
-			breakarm(PassiveCondition.BROKENRIGHTARM);
-		} else if (slot.equals(EquipmentEnum.LEGS)) {
-		//	messageTarget("Your legs are broken.", Arrays.asList(finalTarget));
-			finalTarget.addAllConditions(PassiveCondition.BROKENLEGS);
-		}
-		//the regular stuff a damaging atk does
-		finalTarget.informLastAggressor(currentPlayer);
-		finalTarget.takeDamage(Type.BLUNT, calculateDamage());
-		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
-		messageSelf("You target a specific limb and hit " + finalTarget.getName() + " really hard.");
-		messageTarget(currentPlayer.getName() + " hits you with a targetted punch.", Arrays.asList(finalTarget));
-		messageOthers(currentPlayer.getName() + " punches " + finalTarget.getName() + " harder than usual.", Arrays.asList(currentPlayer, finalTarget));
 	}
 	
 	private Mobile setTarget(String targetName) {
@@ -89,6 +75,28 @@ public class BreakLimb extends Skills {
 	
 	private int calculateDamage() {
 		return intensity;
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
+		if (targetName.equals("")) {
+			messageSelf("What are you trying to attack?");
+			return false;
+		}
+		if (!hasBalance()) {return false;}
+		finalTarget = setTarget(targetName);
+		if (finalTarget == null) {
+			messageSelf("There is no " + targetName + " here for you to attack.");
+			return false;
+		}
+		if (isBlocking(finalTarget)) {return false;}  // Probably not complete still
+		if (!findSlotAndWeapon()) {
+			messageSelf("What are you trying to break?");
+			messageSelf("Syntax: BREAK <TARGET> <LEFTHAND/RIGHTHAND/LEG>");
+			return false;
+		}
+		return true;
 	}
 
 }

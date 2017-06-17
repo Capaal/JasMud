@@ -99,5 +99,10 @@ public class Look extends Skills {
 		} 
 		messageSelf(UsefulCommands.ANSI.CYAN + toSay + UsefulCommands.ANSI.SANE);
 	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		return true;
+	}
 }
 

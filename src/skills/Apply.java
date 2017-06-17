@@ -6,7 +6,6 @@ import interfaces.Holdable;
 import items.Plant;
 import items.Weapon;
 import processes.Skills;
-import processes.Skills.Syntax;
 
 public class Apply extends Skills {
 	
@@ -41,7 +40,7 @@ public class Apply extends Skills {
 	}
 	
 	//checks all syntax and sets all starting variables
-	private boolean preSkillChecks() {
+	protected boolean preSkillChecks() {
 		itemToApplyName = Syntax.ITEM.getStringInfo(fullCommand, this);
 		if (itemToApplyName.equals("")) {
 			messageSelf("Apply what?");

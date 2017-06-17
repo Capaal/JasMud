@@ -23,23 +23,17 @@ public class Heal extends Skills {
 		String targetName = Syntax.TARGET.getStringInfo(fullCommand, this).toLowerCase();
 		if (!hasBalance()) {return;}
 		finalTarget = setTarget(targetName);
-		if (finalTarget == null) {
-			messageSelf("You can't heal that.");
-			return;
-		}
-		if (finalTarget.isDead()) {
-			messageSelf("You can't heal dead people.");
-			return;
-		}		
-		finalTarget.takeDamage(Type.BLUNT, calculateDamage());
-		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
-		if (finalTarget == currentPlayer) {
-			messageSelf("You heal yourself a bit.");
-			messageOthers(currentPlayer.getName() + " heals a bit.", Arrays.asList(currentPlayer, finalTarget));
-		} else {
-			messageSelf("You heal " + finalTarget.getName());
-			messageTarget(currentPlayer.getName() + " heals you.", Arrays.asList(finalTarget));
-			messageOthers(currentPlayer.getName() + " heals " + finalTarget.getName() + ".", Arrays.asList(currentPlayer, finalTarget));
+		if (preSkillChecks()) {
+			finalTarget.takeDamage(Type.BLUNT, calculateDamage());
+			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+			if (finalTarget == currentPlayer) {
+				messageSelf("You heal yourself a bit.");
+				messageOthers(currentPlayer.getName() + " heals a bit.", Arrays.asList(currentPlayer, finalTarget));
+			} else {
+				messageSelf("You heal " + finalTarget.getName());
+				messageTarget(currentPlayer.getName() + " heals you.", Arrays.asList(finalTarget));
+				messageOthers(currentPlayer.getName() + " heals " + finalTarget.getName() + ".", Arrays.asList(currentPlayer, finalTarget));
+			}
 		}
 	}
 
@@ -53,5 +47,18 @@ public class Heal extends Skills {
 		}
 		Mobile h = currentPlayer.getContainer().getMobileFromString(targetName);
 		return h;
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		if (finalTarget == null) {
+			messageSelf("You can't heal that.");
+			return false;
+		}
+		if (finalTarget.isDead()) {
+			messageSelf("You can't heal dead people.");
+			return false;
+		}		
+		return true;
 	}
 }

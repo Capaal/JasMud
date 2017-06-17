@@ -8,9 +8,11 @@ import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Skills;
-import processes.Skills.Syntax;
 
 public class Give extends Skills {
+	
+	private Holdable itemToMove;
+	private Mobile mobileToGive;
 	
 	public Give() {
 		super.name = "give";
@@ -20,49 +22,35 @@ public class Give extends Skills {
 		super.syntaxList.add(Syntax.QUANTITY);
 	}
 	
-	String possItem;
+	private String possItem;
 	
 	// Moves a HOLDABLE from the CURRENTPLAYER's INVENTORY to the MOBILE who is in currentPlayer's LOCATION.
 	// Requires balance, syntax = "give goblin2334 dagger " or "give andrew sword1532 "
 	@Override
 	protected void performSkill() {
 		possItem = Syntax.ITEM.getStringInfo(fullCommand, this);
-		if (possItem.equals("")) {
-			messageSelf("Give what to who? Syntax: GIVE [item] [player]");
-			return;
-		}
-		if (!hasBalance()) {return;}
-		if (brokenArms()) {return;}
-		Holdable itemToMove = currentPlayer.getHoldableFromString(possItem);
-		if (itemToMove == null) {
-			messageSelf("You can't find that item.");
-			return;
-		}
-		Mobile mobileToGive = currentPlayer.getContainer().getMobileFromString(Syntax.TARGET.getStringInfo(fullCommand, this));
-		if (mobileToGive == null) {
-			messageSelf("You can't find that person to give " + itemToMove.getName() + ".");
-			return;
-		}
-		int qty = -1;
-		if (!Syntax.QUANTITY.getStringInfo(fullCommand, this).equals("")) {			
-			try {
-				qty = Integer.parseInt(Syntax.QUANTITY.getStringInfo(fullCommand, this)); 
-			} catch (NumberFormatException fail) {
-				System.out.println("User error: 'Give' optional qty not a number. Optional ignored.");
+		if (preSkillChecks()) {
+			int qty = -1;
+			if (!Syntax.QUANTITY.getStringInfo(fullCommand, this).equals("")) {			
+				try {
+					qty = Integer.parseInt(Syntax.QUANTITY.getStringInfo(fullCommand, this)); 
+				} catch (NumberFormatException fail) {
+					System.out.println("User error: 'Give' optional qty not a number. Optional ignored.");
+				}
 			}
+			if (qty == -1) { // defaults to full stack
+				itemToMove.moveHoldable((Mobile)mobileToGive);
+				messageSelf("You give " + itemToMove.getName() + " to " + mobileToGive.getName() + ".");
+				messageTarget(currentPlayer.getName() + " gives you " + itemToMove + ".", Arrays.asList((Mobile)mobileToGive));
+				messageOthers(currentPlayer.getName() + " gives " + itemToMove.getName() + " to " + (Mobile)mobileToGive + ".", Arrays.asList(currentPlayer));
+			} else {
+				itemToMove.moveHoldable((Mobile)mobileToGive, qty);
+				messageSelf("You give " + qty + " " + itemToMove.getName() + " to " + mobileToGive.getName() + ".");
+				messageTarget(currentPlayer.getName() + " gives you " + qty + " " + itemToMove + ".", Arrays.asList((Mobile)mobileToGive));
+				messageOthers(currentPlayer.getName() + " gives " + itemToMove.getName() + " to " + (Mobile)mobileToGive + ".", Arrays.asList(currentPlayer));
+			}		
+			questCares(itemToMove, (Mobile)mobileToGive);		
 		}
-		if (qty == -1) { // defaults to full stack
-			itemToMove.moveHoldable((Mobile)mobileToGive);
-			messageSelf("You give " + itemToMove.getName() + " to " + mobileToGive.getName() + ".");
-			messageTarget(currentPlayer.getName() + " gives you " + itemToMove + ".", Arrays.asList((Mobile)mobileToGive));
-			messageOthers(currentPlayer.getName() + " gives " + itemToMove.getName() + " to " + (Mobile)mobileToGive + ".", Arrays.asList(currentPlayer));
-		} else {
-			itemToMove.moveHoldable((Mobile)mobileToGive, qty);
-			messageSelf("You give " + qty + " " + itemToMove.getName() + " to " + mobileToGive.getName() + ".");
-			messageTarget(currentPlayer.getName() + " gives you " + qty + " " + itemToMove + ".", Arrays.asList((Mobile)mobileToGive));
-			messageOthers(currentPlayer.getName() + " gives " + itemToMove.getName() + " to " + (Mobile)mobileToGive + ".", Arrays.asList(currentPlayer));
-		}		
-		questCares(itemToMove, (Mobile)mobileToGive);		
 	}
 	
 	private boolean brokenArms() {
@@ -80,5 +68,26 @@ public class Give extends Skills {
 				locationQuest.triggered(Trigger.GIVES);	
 			}
 		}
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		if (possItem.equals("")) {
+			messageSelf("Give what to who? Syntax: GIVE [item] [player]");
+			return false;
+		}
+		if (!hasBalance()) {return false;}
+		if (brokenArms()) {return false;}
+		itemToMove = currentPlayer.getHoldableFromString(possItem);
+		if (itemToMove == null) {
+			messageSelf("You can't find that item.");
+			return false;
+		}
+		mobileToGive = currentPlayer.getContainer().getMobileFromString(Syntax.TARGET.getStringInfo(fullCommand, this));
+		if (mobileToGive == null) {
+			messageSelf("You can't find that person to give " + itemToMove.getName() + ".");
+			return false;
+		}
+		return true;
 	}
 }

@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import effects.PassiveCondition;
 import interfaces.Holdable;
-import items.StackableItem;
 import processes.ContainerErrors;
 import processes.Location;
 import processes.Skills;
@@ -27,19 +26,15 @@ public class Get extends Skills {
 	@Override
 	protected void performSkill() {
 		possItem = Syntax.ITEM.getStringInfo(fullCommand, this);
-		if (possItem.equals("")) {
-			messageSelf("Get what?");
-			return;
+		if (preSkillChecks()) {
+			Location here = currentPlayer.getContainer();
+			itemToMove = here.getHoldableFromString(possItem);
+			if (itemToMove == null) {
+				messageSelf("You can't find that item.");
+				return;
+			}	
+			getItem();
 		}
-		if (!hasBalance()) {return;}
-		if (brokenArms()) {return;}
-		Location here = currentPlayer.getContainer();
-		itemToMove = here.getHoldableFromString(possItem);
-		if (itemToMove == null) {
-			messageSelf("You can't find that item.");
-			return;
-		}	
-		getItem();
 	}
 	
 	private void getItem() {
@@ -99,5 +94,16 @@ public class Get extends Skills {
 			return true;
 		} 
 		return false;
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		if (possItem.equals("")) {
+			messageSelf("Get what?");
+			return false;
+		}
+		if (!hasBalance()) {return false;}
+		if (brokenArms()) {return false;}
+		return true;
 	}
 }

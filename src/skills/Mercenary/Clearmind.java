@@ -13,26 +13,22 @@ public class Clearmind extends InductionSkill {
 	}	
 	
 	
-	
 	@Override
 	protected void performSkill() {
-		if (!offCooldown) {
-			messageSelf("You must wait a moment to clear your mind again.");
-			return;
-		}
-		if (!hasBalance()) {return;}
-		if (currentPlayer.hasAllConditions(PassiveCondition.DIZZY)) {
-			currentPlayer.removeAllConditions(PassiveCondition.DIZZY);
-			messageSelf("Dizzy cured.");
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 1000);
-			triggerCooldown(5000);
-		} else if (currentPlayer.hasCondition(new Fear(currentPlayer))) {
-			currentPlayer.removeCondition(new Fear(currentPlayer));
-			messageSelf("Fear cured.");
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 1000);
-			triggerCooldown(5000);
-		} else {
-			messageSelf("Your mind is already clear.");
+		if (preSkillChecks()) {
+			if (currentPlayer.hasAllConditions(PassiveCondition.DIZZY)) {
+				currentPlayer.removeAllConditions(PassiveCondition.DIZZY);
+				messageSelf("Dizzy cured.");
+				currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 1000);
+				triggerCooldown(5000);
+			} else if (currentPlayer.hasCondition(new Fear(currentPlayer))) {
+				currentPlayer.removeCondition(new Fear(currentPlayer));
+				messageSelf("Fear cured.");
+				currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 1000);
+				triggerCooldown(5000);
+			} else {
+				messageSelf("Your mind is already clear.");
+			}
 		}
 	}
 	
@@ -57,5 +53,17 @@ public class Clearmind extends InductionSkill {
 	public InnerSkill getInnerSkill() {
 		
 		return null;
+	}
+
+
+
+	@Override
+	protected boolean preSkillChecks() {
+		if (!offCooldown) {
+			messageSelf("You must wait a moment to clear your mind again.");
+			return false;
+		}
+		if (!hasBalance()) {return false;}
+		return true;
 	}
 }

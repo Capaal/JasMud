@@ -40,4 +40,9 @@ public class Close extends Skills {
 		messageOthers(currentPlayer.getName() + " closes the door to the " + dir.toString().toLowerCase() + ".", Arrays.asList(currentPlayer));
 		// TODO, get location on the other side of door and display message?
 	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		return true;
+	}
 }

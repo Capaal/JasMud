@@ -9,7 +9,7 @@ import processes.InductionSkill;
 //interruptible, repeating induction skill
 public class Struggle extends InductionSkill {
 	
-	Random r = new Random();
+	private Random r = new Random();
 	
 	public Struggle() {
 		super.name = "struggle";
@@ -58,6 +58,11 @@ public class Struggle extends InductionSkill {
 	@Override
 	protected void inductionEnded() {
 		// TODO Auto-generated method stub		
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		return true;
 	}
 
 }

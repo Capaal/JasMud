@@ -10,7 +10,7 @@ import processes.InductionSkill;
 
 public class Wake extends InductionSkill {
 	
-	Random r = new Random();
+	private Random r = new Random();
 	
 	public Wake() {
 		super.name = "wake";
@@ -73,6 +73,12 @@ public class Wake extends InductionSkill {
 	@Override
 	protected void inductionEnded() {
 		// TODO Auto-generated method stub		
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

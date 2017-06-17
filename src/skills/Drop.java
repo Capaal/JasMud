@@ -8,8 +8,8 @@ import processes.Skills;
 
 public class Drop extends Skills {
 	
-	int quantity;
-	Holdable itemToMove;
+	private int quantity;
+	private Holdable itemToMove;
 	
 	public Drop() {
 		super.name = "drop";
@@ -22,13 +22,14 @@ public class Drop extends Skills {
 	// Requires balance, syntax = "drop dagger" or "drop sword1532"
 	@Override
 	protected void performSkill() {
-		if (!hasBalance()) {return;}
-		itemToMove = currentPlayer.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
-		if (itemToMove == null) {
-			messageSelf("You can't find that item.");
-			return;
-		}	
-		dropItem(itemToMove);
+		if (preSkillChecks()) {
+			itemToMove = currentPlayer.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
+			if (itemToMove == null) {
+				messageSelf("You can't find that item.");
+				return;
+			}	
+			dropItem(itemToMove);
+		}
 	}	
 	
 	private void dropItem(Holdable itemToDrop) {
@@ -86,5 +87,11 @@ public class Drop extends Skills {
 		}
 		sb.append(".");	
 		messageOthers(sb.toString(), Arrays.asList(currentPlayer));	
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		if (!hasBalance()) {return false;}
+		return true;
 	}
 }

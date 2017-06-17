@@ -24,8 +24,8 @@ public class DualAttack extends Skills {
     private StdItem rmercWeapon;
     private StdItem lmercWeapon;
     private double balAdjust = 1;   
-    private int totalDmg;
-    String possibleTarg;
+ //   private int totalDmg;
+ //   private String possibleTarg;
     private Collection<Mobile> targets = null;
     private List<Weapon.MercEffect> effectsToApply = null;
     
@@ -46,7 +46,8 @@ public class DualAttack extends Skills {
     	currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance()); 
     }
 
-    private boolean preSkillChecks() {
+    @Override
+    protected boolean preSkillChecks() {
         if (!hasBalance()) {return false;}
         if (!findTarget()) {return false;}
         if (!weaponWielded()) {return false;}

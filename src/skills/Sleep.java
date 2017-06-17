@@ -25,4 +25,9 @@ public class Sleep extends Skills {
 		
 	}
 
+	@Override
+	protected boolean preSkillChecks() {
+		return true;
+	}
+
 }

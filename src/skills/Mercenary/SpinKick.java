@@ -21,21 +21,19 @@ public class SpinKick extends Skills {
 	
 	@Override
 	protected void performSkill() {
-		if (!hasBalance()) {return;}
-		if (!setTarget()) {return;}
-		if (isBlocking(finalTarget)) {return;}  // Probably not complete still
-		
-		if (!(finalTarget.hasAllConditions(PassiveCondition.DIZZY))) {
-			finalTarget.addAllConditions(PassiveCondition.DIZZY);
-			messageTarget("You feel dizzy.", Arrays.asList(finalTarget));
+		if (preSkillChecks()) {
+			if (!(finalTarget.hasAllConditions(PassiveCondition.DIZZY))) {
+				finalTarget.addAllConditions(PassiveCondition.DIZZY);
+				messageTarget("You feel dizzy.", Arrays.asList(finalTarget));
+			}
+			
+			finalTarget.informLastAggressor(currentPlayer);
+			finalTarget.takeDamage(Type.BLUNT, calculateDamage());
+			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+			messageSelf("You spin around really fast and kick " + finalTarget.getName() + ".");
+			messageTarget(currentPlayer.getName() + " makes you stumble with a dizzying kick.", Arrays.asList(finalTarget));
+			messageOthers(currentPlayer.getName() + " spins and kicks " + finalTarget.getName() + ".", Arrays.asList(currentPlayer, finalTarget));
 		}
-		
-		finalTarget.informLastAggressor(currentPlayer);
-		finalTarget.takeDamage(Type.BLUNT, calculateDamage());
-		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
-		messageSelf("You spin around really fast and kick " + finalTarget.getName() + ".");
-		messageTarget(currentPlayer.getName() + " makes you stumble with a dizzying kick.", Arrays.asList(finalTarget));
-		messageOthers(currentPlayer.getName() + " spins and kicks " + finalTarget.getName() + ".", Arrays.asList(currentPlayer, finalTarget));
 	}
 	
 	private boolean setTarget() {
@@ -55,6 +53,15 @@ public class SpinKick extends Skills {
 	
 	private int calculateDamage() {
 		return intensity;
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		if (!hasBalance()) {return false;}
+		if (!setTarget()) {return false;}
+		if (isBlocking(finalTarget)) {return false;}  // Probably not complete still
+		
+		return true;
 	}
 
 }

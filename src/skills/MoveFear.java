@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
 
-import processes.Location;
 import processes.LocationConnection;
 import processes.Location.Direction;
 

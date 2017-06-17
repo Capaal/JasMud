@@ -32,12 +32,12 @@ public class Shieldblock extends InductionSkill {
 	// should be interrupted if shield unwielded (or force unwielded/dropped) TODO
 	@Override
 	protected void performSkill() {
-		if (!hasBalance()) {return;}
-		if (!weaponWielded()) {return;}		
-		scheduleInduction(1, 4000); // Triggers this skill's "run()" in 4 seconds. Interruptible.
-		currentPlayer.setInduction(this);
-		changeBlocking(true);
-		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
+		if (preSkillChecks()) {
+			scheduleInduction(1, 4000); // Triggers this skill's "run()" in 4 seconds. Interruptible.
+			currentPlayer.setInduction(this);
+			changeBlocking(true);
+			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
+		}
 	}
 	
 	private boolean weaponWielded() {
@@ -79,6 +79,13 @@ public class Shieldblock extends InductionSkill {
 	protected void inductionEnded() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		if (!hasBalance()) {return false;}
+		if (!weaponWielded()) {return false;}	
+		return true;
 	}
 
 	

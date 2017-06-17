@@ -32,20 +32,16 @@ public class Shove extends Skills {
 	
 	@Override
 	protected void performSkill() {
-		if (!hasBalance()) {return;}
-		startContainer = currentPlayer.getContainer();
-		targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
-		if (!setTarget()) {return;}
-		if (!setDirection()) {return;}
-		
-
-	//	messageSelf("You shove " + finalTarget.getName() + " to the " + dir + ".");
-	//	messageTarget(currentPlayer.getName() + " shoves you away.", Arrays.asList(finalTarget));
-	//	messageOthers(currentPlayer.getName() + " shoves " + finalTarget.getName() + " away.", Arrays.asList(currentPlayer, finalTarget));
-		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
-		move.setShover(currentPlayer);
-		move.perform("move " + dir + " " + currentPlayer.getName(), finalTarget);
-	//	messageOthersAway(targetName + "is suddenly shoved into this location.", Arrays.asList(finalTarget), endContainer);
+	
+		if (preSkillChecks()) {
+		//	messageSelf("You shove " + finalTarget.getName() + " to the " + dir + ".");
+		//	messageTarget(currentPlayer.getName() + " shoves you away.", Arrays.asList(finalTarget));
+		//	messageOthers(currentPlayer.getName() + " shoves " + finalTarget.getName() + " away.", Arrays.asList(currentPlayer, finalTarget));
+			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+			move.setShover(currentPlayer);
+			move.perform("move " + dir + " " + currentPlayer.getName(), finalTarget);
+		//	messageOthersAway(targetName + "is suddenly shoved into this location.", Arrays.asList(finalTarget), endContainer);
+		}
 		
 	}
 	
@@ -79,6 +75,17 @@ public class Shove extends Skills {
 			messageSelf("You can't shove through closed doors.");
 			return false;
 		}
+		return true;
+	}
+
+
+	@Override
+	protected boolean preSkillChecks() {
+		if (!hasBalance()) {return false;}
+		startContainer = currentPlayer.getContainer();
+		targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
+		if (!setTarget()) {return false;}
+		if (!setDirection()) {return false;}
 		return true;
 	}
 

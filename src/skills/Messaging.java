@@ -21,9 +21,16 @@ public class Messaging extends Skills {
 	@Override
 	protected void performSkill() {
 		String player = Syntax.TARGET.getStringInfo(fullCommand, this);
+		//code/internal system to hold messages that only a specific player can access
 		//need list of all existing players
 		//can't have list of existing players without save states
 
+	}
+
+	@Override
+	protected boolean preSkillChecks() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 }

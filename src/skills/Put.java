@@ -29,11 +29,10 @@ public class Put extends Skills {
 	@Override //checks each container if previous is full
 	protected void performSkill() {
 		//sets item, container, qty
-		if (!preSkillChecks()) {return;}
-		putItem();
+		if (preSkillChecks()) {
+			putItem();
+		}
 	}
-	
-
 	
 	private void putItem() {		
 		Iterator<Holdable> containerIterator = containerList.iterator();
@@ -85,7 +84,7 @@ public class Put extends Skills {
 		return null;			
 	}
 	
-	private boolean preSkillChecks() {
+	protected boolean preSkillChecks() {
 		itemName = Syntax.ITEM.getStringInfo(fullCommand, this);
 		if (itemName.equals("")) {
 			messageSelf("What are you trying to put?");
