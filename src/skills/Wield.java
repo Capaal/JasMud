@@ -4,12 +4,10 @@ import java.util.Set;
 
 import effects.PassiveCondition;
 import interfaces.Container;
-import interfaces.Holdable;
 import items.StdItem;
 import processes.Equipment;
 import processes.Skills;
-import processes.Equipment.EquipmentEnum;
-import processes.Skills.Syntax;
+
 
 public class Wield extends Skills {
 
@@ -26,10 +24,9 @@ public class Wield extends Skills {
 	protected void performSkill() {
 		wantSlot = Syntax.SLOT.getStringInfo(fullCommand, this);
 		if (!hasBalance()) {return;}
-		if(wantSlot.equals("")) {messageSelf("Specify where to wield."); return;}
+		if(wantSlot.equals("")) {wantSlot = "righthand";} //defaulting righthand
 		//find if item exists in inv
-		Container here = currentPlayer;
-		StdItem itemToWield = (StdItem)here.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
+		StdItem itemToWield = (StdItem)currentPlayer.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
 		if (itemToWield == null) {
 			messageSelf("You can't find that item.");
 			return;

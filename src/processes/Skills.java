@@ -31,6 +31,7 @@ public abstract class Skills {
 			}
 		}
 		testForInduction();
+	//	currentPlayer.tell("\n");
 		performSkill();
 	}
 	

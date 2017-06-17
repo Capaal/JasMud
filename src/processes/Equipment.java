@@ -2,7 +2,6 @@ package processes;
 
 import interfaces.Holdable;
 import interfaces.Mobile;
-import items.StackableItem;
 
 import java.util.*;
 
@@ -47,6 +46,7 @@ public class Equipment {
 		
 	// Replaces whatever was in slot with new Holdable.
 	// MAJOR METHOD. Is the ACTUAL do-er of this object!
+	// Actually this doesn't work. MoveHoldable moves item location to another (equipment is not a loc)
 	public void forceEquip(EquipmentEnum slot, Holdable item) {
 		handleOutgoingItem(slot);
 		handleIncomingItem(slot, item);
@@ -55,11 +55,7 @@ public class Equipment {
 	private void handleOutgoingItem(EquipmentEnum slot) {
 		Holdable outgoing = equipmentToItemMap.get(slot);
 		if (outgoing != null) {
-			if (outgoing instanceof StackableItem) {
-				((StackableItem)outgoing).moveAllHoldable(currentPlayer);
-			} else {
-				outgoing.moveHoldable(currentPlayer);
-			}
+			outgoing.moveHoldable(currentPlayer);
 			itemToEquipmentMap.remove(outgoing);	
 		}
 		equipmentToItemMap.put(slot, null);
@@ -101,8 +97,12 @@ public class Equipment {
 		return values;
 	}
 	
-	private Map<EquipmentEnum, Holdable> getKeyToValMap() {
+	public Map<EquipmentEnum, Holdable> getKeyToValMap() {
 		return equipmentToItemMap;
+	}
+	
+	public Map<Holdable, EquipmentEnum> getValToKeyMap() {
+		return this.itemToEquipmentMap;
 	}
 	
 	public static enum EquipmentEnum {

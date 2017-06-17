@@ -50,7 +50,7 @@ public class Chop extends InductionSkill {
 		messageOthers(currentPlayer.getName() + " begins chopping.", Arrays.asList(currentPlayer));
 		
 	}
-
+	
 	@Override
 	public void run() {
 		if(!tree.changeRemaining(1)) {
