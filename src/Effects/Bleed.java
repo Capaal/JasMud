@@ -13,28 +13,18 @@ import interfaces.*;
 // So it counts down as it deals damage until it goes away.
 public class Bleed extends TickingEffect {
 	
-	private final Mobile currentPlayer;
-	private final Type type;
 	private int intensity;
-//	private final int interval = 2000; // Milliseconds
 
 	public Bleed(Mobile currentPlayer, int initialIntensity) {
-		this.currentPlayer = currentPlayer;
-		this.interval = 2000;
-		type = Type.BLEED;
+		super(currentPlayer, 2000);
 		intensity = initialIntensity;
 	}
 	
-	// How to handle time and interval? is bleed ALWAYS a certain rate?
-	@Override
-	public void run() {
-		currentPlayer.takeDamage(type, intensity);	
-		changeIntensity(-5);
-	}
 	
 	@Override
-	public int getInterval() {
-		return interval;
+	public void run() {
+		currentPlayer.takeDamage(Type.BLEED, intensity);	
+		changeIntensity(-5);
 	}
 	
 	@Override
@@ -43,7 +33,7 @@ public class Bleed extends TickingEffect {
 		return true;
 	}
 	
-	public void changeIntensity(int change) {
+	public synchronized void changeIntensity(int change) {
 		this.intensity += change;
 		if (intensity <= 0) {
 			currentPlayer.removeCondition(this);

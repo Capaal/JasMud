@@ -27,7 +27,7 @@ public abstract class InductionSkill extends Skills {
 	public abstract InnerSkill getInnerSkill();
 	
 	public void scheduleInduction(int times, int interval, int initialWait) {
-		if (times == 0 || interval / times <= 50 || interval <= 0 || initialWait < 0) {
+		if (times == 0 || interval <= 50 || interval <= 0 || initialWait < 0) {
 			throw new IllegalArgumentException("Invalid duration or times: " + interval + " " + times + " " + initialWait);
 		}
 		InnerSkill innerSkill = getInnerSkill();
