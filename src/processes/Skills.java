@@ -16,7 +16,9 @@ public abstract class Skills {
 	protected Mobile currentPlayer;
 	protected String fullCommand;
 	
-	public void perform(String fullCommand, Mobile currentPlayer) {
+	
+	
+	public void perform(String fullCommand, Mobile currentPlayer) {	
 		this.currentPlayer = currentPlayer;
 		this.fullCommand = fullCommand;
 		//method for checking conditions that prevent any skills

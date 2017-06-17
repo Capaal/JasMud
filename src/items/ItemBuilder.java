@@ -20,10 +20,9 @@ public class ItemBuilder {
 	protected String description = "default";
 	protected double weight = 1;
 	protected double balanceMult = 1.0;
-	protected double defenseMult = 0;
 	protected int maxDurability = 1;
 	protected int currentDurability = 1;
-	protected Container itemContainer = WorldServer.gameState.viewLocations().get(1);		
+	protected Container itemContainer;		
 	protected EnumSet<EquipmentEnum> allowedSlots = EnumSet.of(EquipmentEnum.RIGHTHAND, EquipmentEnum.LEFTHAND);// EnumSet.noneOf(EquipmentEnum.class);
 	protected List<StdItem> components = new ArrayList<StdItem>();
 	protected boolean salvageable = false;
@@ -87,14 +86,6 @@ public class ItemBuilder {
 		return balanceMult;
 	}
 	
-	public void setDefenseMult(double defenseMult) {
-		this.defenseMult = defenseMult;
-	}
-	
-	public double getDefenseMult() {
-		return defenseMult;
-	}
-	
 	public void setMaxDurability(int maxDurability) {
 		this.maxDurability = maxDurability;
 	}
@@ -152,7 +143,6 @@ public class ItemBuilder {
 	public void complete() {
 		handleId();
 		finishedItem = produceType();
-		WorldServer.gameState.addItem(finishedItem.getName() + finishedItem.getId(), finishedItem);
 		finishedItem.getContainer().acceptItem(finishedItem);
 	}
 	

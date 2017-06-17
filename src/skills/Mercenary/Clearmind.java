@@ -12,6 +12,8 @@ public class Clearmind extends InductionSkill {
 		super.syntaxList.add(Syntax.SKILL);
 	}	
 	
+	
+	
 	@Override
 	protected void performSkill() {
 		if (!offCooldown) {
@@ -49,8 +51,11 @@ public class Clearmind extends InductionSkill {
 		throw new IllegalStateException("Cooldown skills should not have induction called.");	
 	}
 
+
+
 	@Override
-	public void run() {
-		throw new IllegalStateException("Does not have a ticking effect.");
+	public InnerSkill getInnerSkill() {
+		
+		return null;
 	}
 }

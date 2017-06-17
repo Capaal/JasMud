@@ -33,6 +33,10 @@ public class CreateWorld {
 	public static SkillBook generalSkills = new SkillBook("generalSkills", 1);
 	private static Map<String, ItemBuilder> itemTemplates = new TreeMap<String, ItemBuilder>(); //list of all template items
 	
+	public static void setTemplates(Map<String, ItemBuilder> newTemplates) {
+		itemTemplates = newTemplates;
+	}
+	
 	public static void createWorldWithItems() {
 		makeWorldFromNowhere();
 		makeSkills();
@@ -241,7 +245,7 @@ public class CreateWorld {
 		newItem.setName("ingot");
 		newItem.setDescription("An iron ingot.");
 		StdItem iron = itemTemplates.get("iron").getNonexistentFinishedItem();
-		((StackableItem) iron).addToStack(1);
+		iron.addToStack(1);
 		newItem.setComponents(Arrays.asList(iron)); //TODO should use the object iron instead of string
 		newItem.setDamageMult(0.4);
 		newItem.setSalvageable(true);
@@ -251,6 +255,7 @@ public class CreateWorld {
 	public static void makeADagger() {
 		WeaponItemBuilder newItem = new WeaponItemBuilder();	
 		newItem.setName("dagger");
+		newItem.setItemContainer(WorldServer.gameState.viewLocations().get(1));
 		newItem.setDescription("It's a dagger!");
 		newItem.setComponents(Arrays.asList(itemTemplates.get("ingot").getNonexistentFinishedItem()));
 		newItem.setSalvageable(true);
@@ -321,7 +326,6 @@ public class CreateWorld {
 		newItem.setComponents(Arrays.asList(itemTemplates.get("iron").getNonexistentFinishedItem()));
 		newItem.setDamageMult(0.2);
 		newItem.setMaxSips(2);
-		newItem.setDefenseMult(10); //wtf is this for?
 		newItem.setDrinkType(DrinkType.DEFENSE);
 		itemTemplates.put("ironpotion", newItem);
 	}
@@ -443,6 +447,7 @@ public class CreateWorld {
 		newItem.setName("ironrock");
 		newItem.setMaxQuantity(8);
 		newItem.setHarvestType(HarvestType.IRON);
+		newItem.setCurrentQuantity(8);
 		newItem.setItemContainer(WorldServer.gameState.viewLocations().get(7));
 		newItem.complete();
 		itemTemplates.put("ironrock", newItem);
@@ -453,6 +458,7 @@ public class CreateWorld {
 		newItem.setName("tree");
 		newItem.setMaxQuantity(8);
 		newItem.setHarvestType(HarvestType.WOOD);
+		newItem.setCurrentQuantity(8);
 		newItem.setItemContainer(WorldServer.gameState.viewLocations().get(6));
 		newItem.complete();
 		itemTemplates.put("tree", newItem);
@@ -464,6 +470,7 @@ public class CreateWorld {
 		newGoblin.addDecorator(MobileDecorator.DecoratorType.CHASING);
 		newGoblin.addDecorator(MobileDecorator.DecoratorType.AGGRESSIVE);
 		newGoblin.setName("goblin");
+		newGoblin.setLocation(WorldServer.gameState.viewLocations().get(1));
 		newGoblin.setDescription("An ugly goblin.");
 		newGoblin.setLoadOnStartUp(true);
 		newGoblin.complete();

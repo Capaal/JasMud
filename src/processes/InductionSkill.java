@@ -1,26 +1,20 @@
 package processes;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public abstract class InductionSkill extends Skills implements Runnable {
+public abstract class InductionSkill extends Skills {
 		
 	protected static ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(1);
-	protected static ExecutorService wrapperExecutor = Executors.newCachedThreadPool();
 	protected InductionWrapper wrapper;
 	
 	protected boolean offCooldown = true;
 	
-	@Override
-	public abstract void run();
-	
 	public void shutDown() {
 		WorldServer.shutdownAndAwaitTermination(effectExecutor);
-		WorldServer.shutdownAndAwaitTermination(wrapperExecutor);
 	}
 	
 	protected abstract void inductionEnded(); // Induction ends successfully.
@@ -30,11 +24,14 @@ public abstract class InductionSkill extends Skills implements Runnable {
 		scheduleInduction(times, interval, interval);
 	}
 	
+	public abstract InnerSkill getInnerSkill();
+	
 	public void scheduleInduction(int times, int interval, int initialWait) {
 		if (times == 0 || interval / times <= 50 || interval <= 0 || initialWait < 0) {
 			throw new IllegalArgumentException("Invalid duration or times: " + interval + " " + times + " " + initialWait);
 		}
-		wrapper = new InductionWrapper(this, times);
+		InnerSkill innerSkill = getInnerSkill();
+		wrapper = new InductionWrapper(innerSkill, times);
 		ScheduledFuture<?> future = effectExecutor.scheduleWithFixedDelay(wrapper, initialWait, interval, TimeUnit.MILLISECONDS);
 		wrapper.setOwnFuture(future);			
 	}
@@ -43,36 +40,47 @@ public abstract class InductionSkill extends Skills implements Runnable {
 		wrapper.interrupt();	
 		currentPlayer.setInduction(null);
 		inductionKilled();
-	}
+	}	
 	
-	public void endSuccessfully() {
-		wrapper.interrupt();
-		currentPlayer.setInduction(null);
-		inductionEnded();
+	protected abstract class InnerSkill extends Skills {		
+		@Override
+		protected void testForInduction() {
+			// Do not want to test for induction.
+		}
+		@Override
+		protected abstract void performSkill();
+		
+		public void endSuccessfully() {
+			wrapper.interrupt();
+			currentPlayer.setInduction(null);
+			inductionEnded();
+		}
 	}
 	
 	protected class InductionWrapper implements Runnable {
-		private final InductionSkill wrappedSkill;	
+		private final InnerSkill wrappedInnerSkill;	
 		private int timesToRun;
 		private int totalTimesRan = 0;
 		private Future<?> future;
 		
-		public InductionWrapper(InductionSkill skill, int times) {
-			this.wrappedSkill = skill;
+		public InductionWrapper(InnerSkill skill, int times) {
+			this.wrappedInnerSkill = skill;
 			this.timesToRun = times;
 		}
 		
 		public void run() {
 			if (totalTimesRan < timesToRun) {
-				wrapperExecutor.execute(wrappedSkill);
+				WorldServer.gameState.addToQueue(wrappedInnerSkill, "", currentPlayer); // Calls perform, but we want to call run();
+		//		wrapperExecutor.execute(wrappedSkill);
+		//		wrappedSkill.secondaryRun();
 				totalTimesRan ++;
 				if (totalTimesRan == timesToRun) {
 					future.cancel(true);
-					wrappedSkill.endSuccessfully();
+					wrappedInnerSkill.endSuccessfully();
 				}
 			} else {
 				future.cancel(true);
-				wrappedSkill.endSuccessfully();
+				wrappedInnerSkill.endSuccessfully();
 			}
 		}		
 		public void setOwnFuture(Future<?> future) {
@@ -86,13 +94,13 @@ public abstract class InductionSkill extends Skills implements Runnable {
 	}
 	
 	// Called to start cooldown period.
-	protected void triggerCooldown(int length) {
+	protected  void triggerCooldown(int length) {
 		offCooldown = false;
 		offCooldownIn(length);
 	}
 	
 	// Called when cooldown period ends. Override to add messages. But call super.setOffCooldown()
-	protected void setOffCooldown() {
+	protected  void setOffCooldown() {
 		offCooldown = true;
 	}
 

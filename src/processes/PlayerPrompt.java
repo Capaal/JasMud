@@ -66,15 +66,14 @@ public class PlayerPrompt implements Runnable {
 					for (PlayerPrompt player : WorldServer.gameState.viewActiveClients()) {
 						player.currentPlayer.removeFromWorld();
 					}
-				//	for (Location loc : WorldServer.gameState.viewLocations().values()) {
-				//		loc.removeFromWorld();
-				//	}
-					
-					for (StdItem item : WorldServer.gameState.viewAllItems()) {
-						item.save();
-						item.removeFromWorld();
+					for (Location l : WorldServer.gameState.viewLocations().values()) {
+						for (Holdable h : l.inventory.values()) {
+							h.save();
+							h.removeFromWorld();
+						}
 					}
 					WorldServer.saveIdMaps();
+					WorldServer.saveTemplates();
 					destroyConnection();
 					WorldServer.shutdownAndAwaitTermination(WorldServer.executor);
 				} else {						

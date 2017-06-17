@@ -13,22 +13,19 @@ import processes.Equipment.EquipmentEnum;
 public class StdItem implements Holdable{
 	
 	protected final String name;
-	protected final int id;	
-	protected int quantity = 1;
+	protected final int id;		
 	protected final String description;
 	protected final double physicalMult;
 	protected final double balanceMult; 
-	protected final double defenseMult; //for my iron potion
-//	@XStreamOmitField
-	protected Container itemLocation;	
-//	protected final int maxDurability;
-//  protected int currentDurability;
 	protected final List<StdItem> components; // Add to weapon interface? Make a craftable interface?
-	protected final boolean salvageable; // same as components?
-	
-	protected final double weight;
-	
+	protected final boolean salvageable;
+	protected final double weight;	
 	protected final Set<EquipmentEnum> allowedEquipSlots;
+//	protected final int maxDurability;
+	
+//  protected int currentDurability;
+	protected int quantity = 1;
+	protected Container itemLocation;
 
 	public StdItem(ItemBuilder build) {
 		this.id = build.getId();
@@ -36,7 +33,6 @@ public class StdItem implements Holdable{
 		this.physicalMult = build.getDamageMult();
 		this.description = build.getDescription();
 		this.balanceMult = build.getBalanceMult();
-		this.defenseMult = build.getDefenseMult();
 		this.itemLocation = build.getItemContainer();		
 //		this.maxDurability = build.getMaxDurability();
 //		this.currentDurability = build.getCurrentDurability();
@@ -52,7 +48,6 @@ public class StdItem implements Holdable{
 	@Override public String getDescription() {return description;}	
 	public double getPhysicalMult() {return physicalMult;}
 	public double getBalanceMult() {return balanceMult;}
-	public double getDefenseMult() {return defenseMult;}
 	public double getWeight() {return weight;}
 	@Override public Container getContainer() {return itemLocation;}	
 	public void doOnAttack() {}; //for my mercenary attack skill
@@ -87,15 +82,21 @@ public class StdItem implements Holdable{
 		getContainer().removeItemFromLocation(this);		
 		this.itemLocation = finalLocation;
 		
-		// TESTS: Problem with gamestate not updating locations.
-		System.out.println(getContainer().getId());
-		Set<StdItem> items = WorldServer.gameState.viewAllItems();
-		for (StdItem i : items) {
-			if (i == this) {
-				System.out.println(i.getContainer().getId());
-				break;
-			}
-		}
+				// TESTS: Problem with gamestate not updating locations.
+				System.out.println("TI: " + getContainer().getId());
+	/*			Set<StdItem> items = WorldServer.gameState.viewAllItems();
+				System.out.println(items);
+				boolean found = false;
+				for (StdItem i : items) {
+					if (i == this) {				
+						System.out.println("AI: " + i.getContainer().getId());
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					System.out.println("Did not find item: " + getName());
+				}*/
 		
 		
 		return error;
@@ -110,12 +111,7 @@ public class StdItem implements Holdable{
 	
 	@Override
 	public void removeFromWorld() {
-	//	save();
 		this.getContainer().removeItemFromLocation(this);
-		// Below triggered when I picked up a single ore??? TODO
-		if (!WorldServer.gameState.removeItem(this.getName() + this.getId())) {
-			System.out.println("Item tried to be removed that cannot be: " + this.getName() + this.getId());
-		}
 		this.itemLocation = null;
 	}
 	
@@ -123,14 +119,6 @@ public class StdItem implements Holdable{
 	@Override
 	public void save() {
 		WorldServer.saveItem(this);		
-	}
-	
-	private Object readResolve() {
-		if (getContainer() == null) {
-			WorldServer.gameState.addItem(name + id, this);
-		}
-	//	getContainer().acceptItem(this);
-		return this;
 	}
 
 	@Override
@@ -168,7 +156,6 @@ public class StdItem implements Holdable{
 		newBuilder.setDamageMult(physicalMult);
 		newBuilder.setDescription(description);
 		newBuilder.setBalanceMult(balanceMult);
-		newBuilder.setDefenseMult(defenseMult);
 		newBuilder.setItemContainer(itemLocation);
 	//	newBuilder.setAllowedSlots(allowedEquipSlots);
 		newBuilder.setComponents(components);
@@ -218,8 +205,12 @@ public class StdItem implements Holdable{
 
 	@Override
 	public void delete() {
-		File file = new File(this.getName() + this.getId());
-		file.delete();		
+		File file = new File("./Items/" + this.getName() + this.getId() + ".xml");
+		if (file.exists()) {
+			file.delete();	
+		} else {
+			System.out.println("error deleteing item " + this.getName() + this.getId());
+		}
 	}
 
 }

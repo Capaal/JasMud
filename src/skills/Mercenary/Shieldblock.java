@@ -1,6 +1,7 @@
 package skills.Mercenary;
 
 import java.util.Arrays;
+
 import effects.PassiveCondition;
 import interfaces.Holdable;
 import processes.Equipment;
@@ -13,10 +14,16 @@ public class Shieldblock extends InductionSkill {
 		super.syntaxList.add(Syntax.SKILL);
 	}
 	
-	// Runs POST INDUCTION.
+	public class InnerShieldBlock extends InnerSkill {		
+		@Override
+		public void performSkill() {
+			changeBlocking(false);	
+		}
+	}
+	
 	@Override
-	public void run() {		
-		changeBlocking(false);	
+	public InnerSkill getInnerSkill() {
+		return new InnerShieldBlock();
 	}
 
 	// On activation, begins blocking.
@@ -73,4 +80,6 @@ public class Shieldblock extends InductionSkill {
 		// TODO Auto-generated method stub
 		
 	}
+
+	
 }

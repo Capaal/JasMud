@@ -102,7 +102,7 @@ public class Plant extends StackableItem {
 	
 
 	public static class PlantItemBuilder extends StackableItemBuilder {
-		private PlantType herbType;
+		private PlantType herbType = PlantType.ALOE;
 		public PlantType getPlantType() {return herbType;}
 		public void setPlantType(PlantType herbType) {this.herbType = herbType;}
 		

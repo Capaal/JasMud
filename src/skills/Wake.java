@@ -6,7 +6,6 @@ import java.util.Random;
 import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.InductionSkill;
-import processes.Skills.Syntax;
 
 
 public class Wake extends InductionSkill {
@@ -17,6 +16,26 @@ public class Wake extends InductionSkill {
 		super.name = "wake";
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
+	}
+	
+	public class InnerWake extends InnerSkill {		
+		@Override
+		public void performSkill() {
+			int n = r.nextInt(5);
+			if (n > 2) {  //20% change success
+				currentPlayer.removeAllConditions(PassiveCondition.SLEEP);
+				messageSelf("You wake up.");
+				messageOthers(currentPlayer.getName() + " wakes up.", Arrays.asList(currentPlayer));
+				endSuccessfully();
+			} else {
+				messageSelf("You continue trying to wake up.");
+			}	
+		}
+	}
+	
+	@Override
+	public InnerSkill getInnerSkill() {
+		return new InnerWake();
 	}
 
 	@Override
@@ -44,19 +63,6 @@ public class Wake extends InductionSkill {
 				messageOthers(currentPlayer.getName() + " shakes " + mob.getName() + " awake.", Arrays.asList(currentPlayer, mob));
 			}
 		}
-	}
-	
-	@Override
-	public void run() {
-		int n = r.nextInt(5);
-		if (n > 2) {  //20% change success
-			currentPlayer.removeAllConditions(PassiveCondition.SLEEP);
-			messageSelf("You wake up.");
-			messageOthers(currentPlayer.getName() + " wakes up.", Arrays.asList(currentPlayer));
-			endSuccessfully();
-		} else {
-			messageSelf("You continue trying to wake up.");
-		}		
 	}
 
 	@Override

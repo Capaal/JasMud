@@ -1,7 +1,6 @@
 package processes;
 
 import interfaces.Mobile;
-import items.StdItem;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -19,9 +18,6 @@ public class GameState {
 	// Mob list name + id
 	private Map<String, Mobile> mobList = new TreeMap<String, Mobile>();
 	
-	// List of all items name + id
-	private Map<String, StdItem> allItems = new TreeMap<String, StdItem>();
-	
 	// Collection of all skill books, Mobs then load a copy of each skill book. id/book
 	private HashMap<Integer, SkillBook> AllSkillBooks = new HashMap<Integer, SkillBook>();
 	
@@ -35,18 +31,6 @@ public class GameState {
 	
 	public Set<PlayerPrompt> viewActiveClients() {
 		return new HashSet<PlayerPrompt>(activeClients);
-	}
-	
-	public Set<StdItem> viewAllItems() {
-		return new HashSet<StdItem>(allItems.values());
-	}
-	
-	public void addItem(String nameId, StdItem newItem) {
-		allItems.put(nameId, newItem);
-	}
-	
-	public boolean removeItem(String nameId) {
-		return (allItems.remove(nameId) != null);
 	}
 	
 	public Set<SkillBook> viewAllBooks() {

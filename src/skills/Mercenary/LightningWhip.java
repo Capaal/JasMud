@@ -19,22 +19,30 @@ public class LightningWhip extends InductionSkill {
 		super.syntaxList.add(Syntax.TARGET);
 	}
 	
-	// Runs each channel tick.
+
+	public class InnerLightningWhip extends InnerSkill {
+		
+		@Override
+		public void performSkill() {
+			findTarget(); // Performs finding target again to ensure target is valid.
+			if (finalTarget == null) {
+				messageSelf("There is no \"" + possibleTarg + "\" for you to attack.");
+				return;
+			}	
+			if (isBlocking(finalTarget)) {  // Probably not complete still
+				messageSelf(finalTarget.getName() + " blocks a whip strike.");
+				return;
+			}		
+			finalTarget.takeDamage(Type.COLD, calculateDamage());
+			messageSelf("Your lightning whip hits " + finalTarget.getName() + ".");
+			messageTarget(currentPlayer.getName() + " lightning lashes you.", Arrays.asList(finalTarget));
+			messageOthers(currentPlayer.getName() + " whips " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));	
+		}
+	}
+	
 	@Override
-	public void run() {		
-		findTarget(); // Performs finding target again to ensure target is valid.
-		if (finalTarget == null) {
-			messageSelf("There is no \"" + possibleTarg + "\" for you to attack.");
-			return;
-		}	
-		if (isBlocking(finalTarget)) {  // Probably not complete still
-			messageSelf(finalTarget.getName() + " blocks a whip strike.");
-			return;
-		}		
-		finalTarget.takeDamage(Type.COLD, calculateDamage());
-		messageSelf("Your lightning whip hits " + finalTarget.getName() + ".");
-		messageTarget(currentPlayer.getName() + " lightning lashes you.", Arrays.asList(finalTarget));
-		messageOthers(currentPlayer.getName() + " whips " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));	
+	public InnerSkill getInnerSkill() {
+		return new InnerLightningWhip();
 	}
 	
 	// Deals damage to a single target in currentPlayer's location 
@@ -83,4 +91,6 @@ public class LightningWhip extends InductionSkill {
 	protected void inductionEnded() {
 		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());		
 	}
+
+	
 }

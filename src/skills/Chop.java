@@ -20,6 +20,23 @@ public class Chop extends InductionSkill {
 		super.syntaxList.add(Syntax.ITEM);
 	}	
 	
+public class InnerChop extends InnerSkill {
+		
+		@Override
+		public void performSkill() {
+			if(!tree.changeRemaining(1)) {
+				messageSelf("The tree needs time to regrow.");
+				return;
+			}
+			tree.harvest(currentPlayer);
+		}
+	}
+	
+	@Override
+	public InnerSkill getInnerSkill() {
+		return new InnerChop();
+	}
+	
 	@Override
 	protected void performSkill() {
 		treeName = Syntax.ITEM.getStringInfo(fullCommand, this);
@@ -51,15 +68,6 @@ public class Chop extends InductionSkill {
 		
 	}
 	
-	@Override
-	public void run() {
-		if(!tree.changeRemaining(1)) {
-			messageSelf("The tree needs time to regrow.");
-			return;
-		}
-		tree.harvest(currentPlayer);
-	}
-
 	@Override
 	public void inductionKilled() {
 		messageSelf("You suddenly look up from your labors.");

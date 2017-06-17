@@ -20,6 +20,23 @@ public class Mine extends InductionSkill {
 		super.syntaxList.add(Syntax.ITEM);
 	}	
 	
+	public class InnerMine extends InnerSkill {
+		
+		@Override
+		public void performSkill() {
+			if(!rock.changeRemaining(1)) {
+				messageSelf("There are no more ores left in this rock.");
+				return;
+			}
+			rock.harvest(currentPlayer);	
+		}
+	}
+	
+	@Override
+	public InnerSkill getInnerSkill() {
+		return new InnerMine();
+	}
+	
 	@Override
 	protected void performSkill() {
 		oreName = Syntax.ITEM.getStringInfo(fullCommand, this);
@@ -48,15 +65,6 @@ public class Mine extends InductionSkill {
 		messageSelf("You begin mining.");
 		messageOthers(currentPlayer.getName() + " begins mining.", Arrays.asList(currentPlayer));
 		
-	}
-
-	@Override
-	public void run() {
-		if(!rock.changeRemaining(1)) {
-			messageSelf("There are no more ores left in this rock.");
-			return;
-		}
-		rock.harvest(currentPlayer);
 	}
 
 	@Override

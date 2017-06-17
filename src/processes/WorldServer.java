@@ -31,6 +31,7 @@ public class WorldServer {
 		createXStream();
 		SkillExecutor skillExecutor = new SkillExecutor();
 		skillExecutor.start();
+		loadTemplates();
 		if (!loadIdMaps()) {
 			CreateWorld.createWorldWithItems(); // CREATES EVERYTHING until loading and saving work.
 		}		
@@ -83,19 +84,21 @@ public class WorldServer {
 	}
 	
 	public static void saveItem(Holdable item) {
-		FileOutputStream fos = null;
-		try {
-			xstream.toXML(item, new FileWriter(new File("./Items/" + item.getName()+item.getId()+ ".xml")));
-		} catch(Exception e) {
-		    e.printStackTrace(); // this obviously needs to be refined.
-		} finally {
-		    if(fos!=null) {
-		        try{ 
-		            fos.close();
-		        } catch (IOException e) {
-		            e.printStackTrace(); // this obviously needs to be refined.
-		        }
-		    }
+		if (item.getContainer() != null) {
+			FileOutputStream fos = null;
+			try {
+				xstream.toXML(item, new FileWriter(new File("./Items/" + item.getName()+item.getId()+ ".xml")));
+			} catch(Exception e) {
+			    e.printStackTrace(); // this obviously needs to be refined.
+			} finally {
+			    if(fos!=null) {
+			        try{ 
+			            fos.close();
+			        } catch (IOException e) {
+			            e.printStackTrace(); // this obviously needs to be refined.
+			        }
+			    }
+			}
 		}
 	}
 	/* Unused, load via hard-code, same with mobs (because we want both to defaults anyway on a full restart.)
@@ -123,6 +126,9 @@ public class WorldServer {
 		FileOutputStream fos = null;
 		try {		
 			xstream.toXML(player, new FileWriter(new File("./Players/" + player.getName() + player.getPassword() + ".xml")));
+			for (Holdable s : player.getInventory().values()) {
+				s.delete();
+			}
 		} catch(Exception e) {
 		    e.printStackTrace(); // this obviously needs to be refined.
 		} finally {
@@ -205,6 +211,37 @@ public class WorldServer {
 	        System.err.println("Error in XML Read idMaps: " + e.getMessage());
 	    }
 		return true;
+	}
+	
+	private static void loadTemplates() {
+		try{		    	
+	        File xmlFile = new File("./templates.xml");
+	        if (!xmlFile.exists()) {
+	        	System.out.println("Missing templates.");
+	    //    	throw new IllegalStateException("Critical Error, missing templates.");
+	        }
+	        Map<String, ItemBuilder> itemTemplates = (Map<String, ItemBuilder>) WorldServer.xstream.fromXML(xmlFile);   
+	        CreateWorld.setTemplates(itemTemplates);
+	    } catch(Exception e){
+	        System.err.println("Error in XML Read templates: " + e.getMessage());
+	    }
+	}
+
+	public static void saveTemplates() {
+		FileOutputStream fos = null;
+		try {
+			xstream.toXML(CreateWorld.viewItemTemplates(),  new FileWriter(new File("./templates.xml")));
+		} catch(Exception e) {
+		    e.printStackTrace(); // this obviously needs to be refined.
+		} finally {
+		    if(fos!=null) {
+		        try{ 
+		            fos.close();
+		        } catch (IOException e) {
+		            e.printStackTrace(); // this obviously needs to be refined.
+		        }
+		    }
+		}
 	}
 }
 

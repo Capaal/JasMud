@@ -26,23 +26,24 @@ public class Headshot extends InductionSkill {
 		super.syntaxList.add(Syntax.DIRECTION);
 	}
 	
-	// Runs POST INDUCTION.
-	@Override
-	public void run() {		
-		finalTarget = getTarget(); // Performs finding target again to ensure target is valid.
-		if (finalTarget == null) {
-			messageSelf("There is no \"" + possibleTarg + "\" for you to attack.");
-			return;
-		}	
-		if (isBlocking(finalTarget)) {  // Probably not complete still
-			return;
+	public class InnerHeadshot extends InnerSkill {	
+		@Override
+		protected void performSkill() {
+			finalTarget = getTarget(); // Performs finding target again to ensure target is valid.
+			if (finalTarget == null) {
+				messageSelf("There is no \"" + possibleTarg + "\" for you to attack.");
+				return;
+			}	
+			if (isBlocking(finalTarget)) {  // Probably not complete still
+				return;
+			}		
+			finalTarget.takeDamage(Type.SHARP, calculateDamage());
+			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
+			messageSelf("You headshot " + finalTarget.getName() + ".");
+			messageTarget(currentPlayer.getName() + " headshots you.", Arrays.asList(finalTarget));
+			messageOthers(currentPlayer.getName() + " headshots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));	
+			messageOthersAway(currentPlayer.getName() + " headshots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget), finalTarget.getContainer());	
 		}		
-		finalTarget.takeDamage(Type.SHARP, calculateDamage());
-		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
-		messageSelf("You headshot " + finalTarget.getName() + ".");
-		messageTarget(currentPlayer.getName() + " headshots you.", Arrays.asList(finalTarget));
-		messageOthers(currentPlayer.getName() + " headshots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));	
-		//TODO message for others in TARGET's location.
 	}
 	
 	// Deals damage to a single target in currentPlayer's location or infinitately away in one direction.
@@ -146,5 +147,10 @@ public class Headshot extends InductionSkill {
 	protected void inductionEnded() {
 		// TODO Auto-generated method stub
 		// Nothing extra, run handles
+	}
+
+	@Override
+	public InnerSkill getInnerSkill() {
+		return new InnerHeadshot();
 	}
 }

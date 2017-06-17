@@ -10,6 +10,7 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 import interfaces.Mobile;
 import processes.CreateWorld;
+import processes.WorldServer;
 
 
 //almost same as stackable, except can't split quantity
@@ -21,11 +22,9 @@ public class Harvestable extends StationaryItem {
 	private HarvestType type;
 	private boolean running = false;
 	private int timeToReset = 5;
-	@XStreamOmitField
-	private Map<String, ItemBuilder> allItemTemplates;
 	//timer stuff
-	@XStreamOmitField
-	private ScheduledExecutorService effectExecutor;
+//	@XStreamOmitField
+//	private ScheduledExecutorService effectExecutor;
 
 	//add timeToRegen
 	public Harvestable(HarvestableItemBuilder build) {
@@ -33,8 +32,7 @@ public class Harvestable extends StationaryItem {
 		this.maxQuantity = build.getMaxQuantity();
 		this.remainingQuantity = maxQuantity;
 		this.type = build.getHarvestType();
-		allItemTemplates = CreateWorld.viewItemTemplates();
-		Executors.newScheduledThreadPool(1);
+//		effectExecutor = Executors.newScheduledThreadPool(1);
 	}
 	
 	public int getRemainingQty() {
@@ -80,7 +78,7 @@ public class Harvestable extends StationaryItem {
 	
 	private void schedule() {
 		SkillWrapper wrapper = new SkillWrapper();
-		effectExecutor.schedule(wrapper, timeToReset, TimeUnit.SECONDS); //20s for test
+//		effectExecutor.schedule(wrapper, timeToReset, TimeUnit.SECONDS); //20s for test
 	}
 	//end timer stuff
 	
@@ -93,7 +91,7 @@ public class Harvestable extends StationaryItem {
 	
 	//not sure this is correct, why not just use an arraylist to store the type?
 	public void harvest(Mobile currentPlayer) {
-		ItemBuilder toCopy = allItemTemplates.get(type.harvest(currentPlayer)); 
+		ItemBuilder toCopy = CreateWorld.viewItemTemplates().get(type.harvest(currentPlayer)); 
 		toCopy.setItemContainer(currentPlayer);
 		toCopy.complete();
 	}
@@ -112,7 +110,7 @@ public class Harvestable extends StationaryItem {
 	
 	public static class HarvestableItemBuilder extends ItemBuilder {		
 		
-		private HarvestType type;
+		private HarvestType type = HarvestType.IRON;
 		private int maxQuantity = 0;
 		private int remainingQuantity = 0;
 		
@@ -186,7 +184,7 @@ public class Harvestable extends StationaryItem {
 			
 		};
 	
-		Map<String, ItemBuilder> allItemTemplates = CreateWorld.viewItemTemplates();
+		
 		private HarvestType() {}
 		
 		public String failedHarvest() {
@@ -199,7 +197,7 @@ public class Harvestable extends StationaryItem {
 		}
 		
 		public void createHarvestedItem(Mobile currentPlayer, String itemToCreate) {
-			ItemBuilder toCopy = allItemTemplates.get(itemToCreate); 
+			ItemBuilder toCopy = CreateWorld.viewItemTemplates().get(itemToCreate); 
 			toCopy.setItemContainer(currentPlayer);
 			toCopy.complete();
 		}
@@ -210,7 +208,5 @@ public class Harvestable extends StationaryItem {
 		}
 		
 	}
-	
-	
 	
 }
