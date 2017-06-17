@@ -9,7 +9,6 @@ import items.Plant.PlantItemBuilder;
 import items.Plant.PlantType;
 import items.ItemBuilder;
 import items.Pouch.PouchItemBuilder;
-import items.StackableItem;
 import items.StackableItem.StackableItemBuilder;
 import items.StdItem;
 import items.Weapon.MercEffect;
@@ -41,11 +40,13 @@ public class CreateWorld {
 		makeWorldFromNowhere();
 		makeSkills();
 		makeItems();
+		spawnMobs();
 	}
 	
 	public static void createWorld() {
 		makeWorldFromNowhere();
 		makeSkills();
+		spawnMobs();
 	}
 	
 	//Hardcoded skill list
@@ -107,6 +108,12 @@ public class CreateWorld {
 
 	}
 	
+	public static void spawnMobs() {
+		makeGoblin();
+		makeFarmerJames();
+		makeHorse();
+	}
+	
 	public static void makeItems() {
 		addOre();
 		makeIngot();
@@ -116,8 +123,7 @@ public class CreateWorld {
 		makeAPike();
 		makeAShield();
 		addIronPotion();
-		makeGoblin();
-		makeFarmerJames();
+		
 		addHealPotion();
 		addBleedPotion();
 		addRegenPotion();

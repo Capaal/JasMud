@@ -10,12 +10,9 @@ import skills.Look;
 
 public class Levitate extends TickingEffect {
 	
-	private final Mobile currentPlayer;
-//	private final int interval = 2500; // milliseconds between running
-	
+	//TODO Doesn't do anything
 	public Levitate(Mobile currentPlayer) {
-		this.currentPlayer = currentPlayer;
-		this.interval = 60000;
+		super(currentPlayer, 60000);
 	}	
 
 	@Override

@@ -1,13 +1,11 @@
 package processes;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import interfaces.Mobile;
 
 public class AggresiveMobileDecorator extends MobileDecorator {
 
-	private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+	
 	private Mobile lastAggressor;
 	private Boolean hasTask = false;
 	

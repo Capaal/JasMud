@@ -9,21 +9,18 @@ import processes.EffectManager;
 
 public abstract class TickingEffect implements Runnable {
 	
-	protected int interval;
-	protected ConditionWrapper wrapper;
-	protected static ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(4);
+	protected static ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(1);
+	
+	protected final int interval;
+	protected final Mobile currentPlayer;
+	
+	protected ConditionWrapper wrapper;	
 	protected EffectManager linkedManager;
 	
-/*	@Override
-	public int compareTo(TickingEffect other) {
-		if (other == null) {
-			return -1;
-		}
-		if (other.getClass() == this.getClass()) {
-			return 0;
-		}
-		return this.toString().compareTo(other.toString());
-	}*/
+	public TickingEffect(Mobile currentPlayer, int interval) {
+		this.currentPlayer = currentPlayer;
+		this.interval = interval;
+	}
 	
 	@Override
 	public boolean equals(Object other) {
@@ -64,13 +61,13 @@ public abstract class TickingEffect implements Runnable {
 		this.linkedManager = manager;
 	}
 	
-	public void kill() {
+	public synchronized void kill() {
 		wrapper.kill();
 	}
 	
 	public class ConditionWrapper implements Runnable {
 		private final TickingEffect wrappedEffect;	
-		private int timesToRun;
+		private final int timesToRun;
 		private int totalTimesRan = 0;
 		private Future<?> future;
 		
@@ -89,20 +86,15 @@ public abstract class TickingEffect implements Runnable {
 				totalTimesRan ++;
 			} else {
 				kill();
-		//		future.cancel(true);
-		//		wrappedEffect.unRegisterActiveCondition();
 			}
 		}
 		
-		public void modifyTimes(int times) {
-			timesToRun = times;
-		}
-		
-		public void modifyTimesRan(int newTimes) {
+	//	public void modifyTimes(int times) {
+	//		timesToRun = times;
+	//	}		
+		public synchronized void modifyTimesRan(int newTimes) {
 			totalTimesRan = newTimes;
-		}
-
-		
+		}	
 		
 		public void setOwnFuture(Future<?> future) {
 			this.future = future;

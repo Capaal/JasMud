@@ -3,18 +3,12 @@ package effects;
 import interfaces.TickingEffect;
 
 import java.util.Random;
-
 import interfaces.Mobile;
-import processes.Type;
 
 public class Unbalanced extends TickingEffect {
-	private final Mobile currentPlayer;
-	private final Type type;
 	
 	public Unbalanced (Mobile currentPlayer) {
-		this.currentPlayer = currentPlayer;
-		this.interval = 3000;
-		type = Type.UNBALANCED;
+		super(currentPlayer, 3000);
 	}
 	
 	@Override

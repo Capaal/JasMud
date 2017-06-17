@@ -1,17 +1,13 @@
 package processes;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import processes.Location.Direction;
-import processes.MobileDecorator.AITask;
 import interfaces.Container;
 import interfaces.Mobile;
 
 public class ChasingMobileDecorator extends MobileDecorator {
 
-	private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 	private Mobile lastAggressor;
 	private Boolean hasTask = false;
 	

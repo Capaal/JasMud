@@ -5,14 +5,11 @@ import interfaces.TickingEffect;
 import processes.Type;
 
 public class Belladonna extends TickingEffect {
-	private final Mobile currentPlayer;
-	private final Type type;
+	
 	private int stack;
 	
 	public Belladonna(Mobile currentPlayer) {
-		this.currentPlayer = currentPlayer;
-		this.interval = 3000;
-		type = Type.BELLADONNA;
+		super(currentPlayer, 3000);
 	}
 
 	@Override

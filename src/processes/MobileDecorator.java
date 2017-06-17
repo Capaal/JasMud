@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import effects.PassiveCondition;
 import processes.Equipment.EquipmentEnum;
@@ -16,6 +18,7 @@ import items.StdItem;
 public class MobileDecorator implements Mobile {
 
 	protected final Mobile decoratedMobile;
+	protected static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 	
 	public MobileDecorator(Mobile decoratedMobile) {
 		this.decoratedMobile = decoratedMobile;
