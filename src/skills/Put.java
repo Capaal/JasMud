@@ -128,6 +128,7 @@ public class Put extends Skills {
 				return false;
 			}
 		}		
+		possibleContainer = containerList.iterator().next().getName();
 		//checks optional qty
 		originalQty = 1;
 		if (!Syntax.QUANTITY.getStringInfo(fullCommand, this).equals("")) {			

@@ -118,4 +118,8 @@ public class EffectManager {
 			unRegisterEffect(effectToBeRemoved);			
 		}
 	}
+	
+	public Set<TickingEffect> getAllActiveEffects() {
+		return activeEffects;
+	}
 }

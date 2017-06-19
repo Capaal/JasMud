@@ -18,8 +18,8 @@ public class MobileBuilder {
 	private String name = "";
 	private int id = -1;	
 	private String password = "";
-	private String description = "Generic.";
-	private String shortDescription = "Short and Generic.";
+	private String description = "This is a mob.";
+	private String shortDescription = ""; //blank for real players?
 	private int maxHp = 100;
 	private int currentHp = 100; //probably don't need this
 	private int defense = 0;

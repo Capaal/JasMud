@@ -5,7 +5,6 @@ import effects.PassiveCondition;
 import effects.Regen;
 import interfaces.Container;
 import interfaces.Mobile;
-import items.StackableItem.StackableItemBuilder;
 import processes.Type;
 
 public class Plant extends StackableItem {
@@ -76,7 +75,7 @@ public class Plant extends StackableItem {
 			
 		GINSENG {
 				@Override public String use(Mobile currentPlayer) {
-					currentPlayer.addActiveCondition(new Regen(currentPlayer, -10), 4);
+					currentPlayer.addActiveCondition(new Regen(currentPlayer, -5), 4);
 					return "The root revitalizes and energizes you.";
 				}
 		},

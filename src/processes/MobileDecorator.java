@@ -362,4 +362,10 @@ public enum DecoratorType {
 		decoratedMobile.changeWeight(change);
 	}
 
+	@Override
+	public Set<TickingEffect> getAllActiveConditions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

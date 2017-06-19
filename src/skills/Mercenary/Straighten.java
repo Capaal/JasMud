@@ -12,9 +12,9 @@ import processes.Skills.Syntax;
 
 public class Straighten extends Skills {
 	
-	String slot;
-	PassiveCondition broken;
-	Map<String,PassiveCondition> affectedList = new HashMap<String,PassiveCondition>();
+	private String slot;
+//	private PassiveCondition broken;
+	private Map<String,PassiveCondition> affectedList = new HashMap<String,PassiveCondition>();
 	
 	public Straighten() {
 		super.name = "straighten";

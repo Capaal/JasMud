@@ -67,7 +67,11 @@ public class TakeOut extends Skills {
 				messageSelf("That \"" + containerName + "\" is not a valid container.");
 				return false;
 			}
+			containerName = "";
+			if (containerName.equals("")) {containerName = h.getName();};
 		}
+		
+		
 		//checks optional qty
 		origQty = 1;
 		if (!Syntax.QUANTITY.getStringInfo(fullCommand, this).equals("")) {

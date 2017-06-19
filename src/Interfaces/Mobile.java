@@ -82,5 +82,6 @@ public interface Mobile extends Container {
 //	public void setGender();
 //	public String getGenderHimHer();
 //	public String getGenderHeShe();
+	public Set<TickingEffect> getAllActiveConditions();
 	
 }

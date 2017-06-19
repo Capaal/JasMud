@@ -104,5 +104,13 @@ public abstract class TickingEffect implements Runnable {
 			future.cancel(true);
 			linkedManager.unRegisterActiveCondition(wrappedEffect);
 		}
+		
+		public int remainingTime() {
+			return (timesToRun-totalTimesRan)*interval;
+		}
+	}
+
+	public String getInfo() {
+		return "" + wrapper.remainingTime();
 	}
 }

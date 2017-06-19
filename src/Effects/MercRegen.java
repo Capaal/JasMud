@@ -3,6 +3,7 @@ package effects;
 import processes.Type;
 import interfaces.*;
 
+//does not extend Regen because can't figure out good way to change interval
 public class MercRegen extends TickingEffect {
 	
 	private int intensity;	
@@ -14,6 +15,7 @@ public class MercRegen extends TickingEffect {
 		}		
 		this.intensity = intensity;
 	}
+	
 	@Override
 	public void run() {
 		currentPlayer.takeDamage(Type.REGEN, intensity);		
@@ -24,6 +26,10 @@ public class MercRegen extends TickingEffect {
 	//useless for this skill
 	public boolean stackedInstance(TickingEffect stackedInstance, int times) {
 		return true;
+	}
+	
+	@Override public String getInfo() {
+		return intensity + "/tick. Infinite.";
 	}
 	
 	@Override

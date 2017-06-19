@@ -84,7 +84,7 @@ public class Drinkable extends StdItem {
 		
 		REGEN() {
 			@Override public String drink(Mobile currentPlayer) {
-				currentPlayer.addActiveCondition(new Regen(currentPlayer, -10), 5); // 10 intensity, 5 times.
+				currentPlayer.addActiveCondition(new Regen(currentPlayer, -10), 10); // 10 intensity, 5 times.
 //				currentPlayer.addActiveCondition(new Regen(currentPlayer, 10, 5)); // Heals 10 hitpoints every tick for 5 ticks.
 				return "The potion gives you a warm, healthy glow."; // Should this be on Regen's doOnCreation()?
 			}

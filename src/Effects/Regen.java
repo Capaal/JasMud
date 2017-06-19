@@ -5,7 +5,7 @@ import interfaces.*;
 
 public class Regen extends TickingEffect {
 	
-	private int intensity;	
+	protected int intensity;	
 
 	public Regen(Mobile currentPlayer, int intensity) {
 		super(currentPlayer, 7000);
@@ -24,13 +24,12 @@ public class Regen extends TickingEffect {
 		// set to maxIntensity in case the new regen is better? Or just replace?
 		// then changes countdown wrapper's remaining times to run and resets counter.
 		// OR should we just re-create the wrapper??? we've practically re-made it.
-	//	int incomingIntensity = ((Regen)stackedInstance).intensity;
-	//	if (intensity < incomingIntensity) {
-	//		this.intensity = incomingIntensity;
-	//	}
-	//	wrapper.modifyTimes(times);
 		wrapper.modifyTimesRan(0);
 		return true;
+	}
+	
+	@Override public String getInfo() {
+		return intensity + "/tick for " + wrapper.remainingTime() + " milliseconds.";
 	}
 	
 	@Override

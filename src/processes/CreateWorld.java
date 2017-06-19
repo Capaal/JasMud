@@ -81,6 +81,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new Sleep());
 		generalSkills.addSkill(new Wake());
 		generalSkills.addSkill(new Unwield());
+		generalSkills.addSkill(new Diagnose());
 		//crafting
 		generalSkills.addSkill(new CraftItem());
 		generalSkills.addSkill(new Salvage());
@@ -477,7 +478,8 @@ public class CreateWorld {
 		newGoblin.addDecorator(MobileDecorator.DecoratorType.AGGRESSIVE);
 		newGoblin.setName("goblin");
 		newGoblin.setLocation(WorldServer.gameState.viewLocations().get(1));
-		newGoblin.setDescription("An ugly goblin.");
+		newGoblin.setDescription("A short, ugly goblin glares at you.");
+		newGoblin.setShortDescription(", an ugly goblin");
 		newGoblin.setLoadOnStartUp(true);
 		newGoblin.complete();
 	}
@@ -489,6 +491,7 @@ public class CreateWorld {
 		newFarmerJames.setLocation(WorldServer.gameState.viewLocations().get(4));
 		newFarmerJames.setName("FarmerJames");
 		newFarmerJames.setDescription("A farmer who looks down on his luck. (try GREETing him)");
+		newFarmerJames.setShortDescription(", a poor, tired farmer");
 		newFarmerJames.setLoadOnStartUp(true);
 		newFarmerJames.complete();
 	}
@@ -500,6 +503,7 @@ public class CreateWorld {
 		newGoblin.addDecorator(MobileDecorator.DecoratorType.AGGRESSIVE);
 		newGoblin.setName("horse");
 		newGoblin.setDescription("A horse stands here.");
+		newGoblin.setShortDescription(", a chestnut mare");
 		newGoblin.setLoadOnStartUp(true);
 		newGoblin.complete();
 	}

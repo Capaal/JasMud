@@ -38,9 +38,9 @@ public class StdMob implements Mobile, Container{
 	protected boolean isBlocking = false;
 	protected final Equipment equipment;	
 	protected int defense;
-	protected String description;
+	protected String description; //displays on examine
 	protected int xpWorth;
-	protected String shortDescription;
+	protected String shortDescription; //displays on look as (name + shortDesc)
 	protected int experience;
 	protected int level;
 	protected int age; 
@@ -113,7 +113,7 @@ public class StdMob implements Mobile, Container{
 	}
 	
 	@Override public String getShortDescription() {
-		return shortDescription;
+		return name + shortDescription;
 	}
 	
 	@Override public void addAllConditions(PassiveCondition condition) {
@@ -366,6 +366,11 @@ public class StdMob implements Mobile, Container{
 		return effectManager.hasCondition(effect);
 	}
 
+	@Override
+	public Set<TickingEffect> getAllActiveConditions() {
+		return effectManager.getAllActiveEffects();
+	}
+	
 	@Override 
 	public void equip(EquipmentEnum slot, StdItem item) {		
 		item.equip(this);
