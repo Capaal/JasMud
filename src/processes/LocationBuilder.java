@@ -30,10 +30,10 @@ public class LocationBuilder {
 	private Location finishedLocation;	
 	private boolean buildComplete = false;
 	private Quest bondedQuest = null;
-	private static int maxId;
+	private static int maxId = 0;
 	
 	public LocationBuilder() {
-		id = -1;
+		id = 0;
 		this.name = "Default name";
 		this.description = "default description.";
 		this.locationMap = new HashMap<Direction, LocationConnection>();

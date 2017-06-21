@@ -586,8 +586,8 @@ public class StdMob implements Mobile, Container{
 	
 	private Object readResolve() {
     	addBook(WorldServer.gameState.getBook(1), 100);
-    	addBook(WorldServer.gameState.getBook(2), 100);
-    	addBook(WorldServer.gameState.getBook(3), 100);
+   // 	addBook(WorldServer.gameState.getBook(2), 100);
+   // 	addBook(WorldServer.gameState.getBook(3), 100);
     	WorldServer.gameState.addMob(name + id, this);
     	getContainer().acceptItem(this);
     	createNewEffectManager();	 
