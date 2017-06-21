@@ -47,8 +47,8 @@ public class Move extends Skills {
 			
 			Look look = new Look(currentPlayer, "");
 			look.run();
-			moveFollowers();
-			stopFollowing();
+	//		moveFollowers();
+	//		stopFollowing();
 		}
 	}
 	

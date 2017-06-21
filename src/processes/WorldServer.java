@@ -34,8 +34,9 @@ public class WorldServer {
 		loadTemplates();
 		if (!loadIdMaps()) {
 			CreateWorld.createWorldWithItems(); // CREATES EVERYTHING until loading and saving work.
-		}		
-		CreateWorld.createWorld();
+		} else {	
+			CreateWorld.createWorld();
+		}
 		loadSavedItems(); // DANGEROUS JUST FOR TEST
 		ServerSocket s = null;
 		try {

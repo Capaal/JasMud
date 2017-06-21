@@ -13,7 +13,7 @@ public class Fear extends TickingEffect {
 
 	@Override
 	public void run() {
-		WorldServer.gameState.addToQueue(new MoveFear(currentPlayer, "");
+		WorldServer.gameState.addToQueue(new MoveFear(currentPlayer, ""));
 	}
 	
 	@Override
