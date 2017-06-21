@@ -1,11 +1,13 @@
 package skills.Mercenary;
 
 import java.util.Arrays;
+
 import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Skills;
 import processes.Type;
 import processes.Equipment.EquipmentEnum;
+import skills.Sleep;
 
 public class BreakLimb extends Skills {
 
@@ -15,9 +17,8 @@ public class BreakLimb extends Skills {
 	private String targetName;
 	
 	//check for: limb already broken, is item wielded, unwield item
-	public BreakLimb() {
-		super.name = "break";
-		super.description = "Break an arm or leg.";
+	public BreakLimb(Mobile currentPlayer, String fullCommand) {
+		super("break", "Break an arm or leg.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 		super.syntaxList.add(Syntax.SLOT);
@@ -97,6 +98,11 @@ public class BreakLimb extends Skills {
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new BreakLimb(currentPlayer, fullCommand);
 	}
 
 }

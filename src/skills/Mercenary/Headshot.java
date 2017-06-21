@@ -9,8 +9,10 @@ import interfaces.Mobile;
 import processes.Equipment;
 import processes.InductionSkill;
 import processes.Location;
+import processes.Skills;
 import processes.Type;
 import processes.Location.Direction;
+import skills.Sleep;
 
 public class Headshot extends InductionSkill {
 	
@@ -19,14 +21,18 @@ public class Headshot extends InductionSkill {
 	private String possibleTarg;
 	private Mobile finalTarget;
 	
-	public Headshot() {
-		super.name = "headshot";
+	public Headshot(Mobile currentPlayer, String fullCommand) {
+		super("headshot", "Careful aim with a ranged weapon.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 		super.syntaxList.add(Syntax.DIRECTION);
 	}
 	
 	public class InnerHeadshot extends InnerSkill {	
+		public InnerHeadshot(Mobile currentPlayer, String fullCommand) {
+			super(currentPlayer, fullCommand);
+		}
+
 		@Override
 		protected void performSkill() {
 			finalTarget = getTarget(); // Performs finding target again to ensure target is valid.
@@ -43,6 +49,11 @@ public class Headshot extends InductionSkill {
 			messageTarget(currentPlayer.getName() + " headshots you.", Arrays.asList(finalTarget));
 			messageOthers(currentPlayer.getName() + " headshots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));	
 			messageOthersAway(currentPlayer.getName() + " headshots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget), finalTarget.getContainer());	
+		}
+
+		@Override
+		public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+			return new InnerHeadshot(currentPlayer, fullCommand);
 		}		
 	}
 	
@@ -150,13 +161,18 @@ public class Headshot extends InductionSkill {
 	}
 
 	@Override
-	public InnerSkill getInnerSkill() {
-		return new InnerHeadshot();
+	public InnerSkill getInnerSkill(Mobile currentPlayer, String fullCommand) {
+		return new InnerHeadshot(currentPlayer, fullCommand);
 	}
 
 	@Override
 	protected boolean preSkillChecks() {
 		// TODO Auto-generated method stub
 		return true;
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Headshot(currentPlayer, fullCommand);
 	}
 }

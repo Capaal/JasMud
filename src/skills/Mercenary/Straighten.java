@@ -9,6 +9,7 @@ import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Skills;
 import processes.Skills.Syntax;
+import skills.Sleep;
 
 public class Straighten extends Skills {
 	
@@ -16,9 +17,8 @@ public class Straighten extends Skills {
 //	private PassiveCondition broken;
 	private Map<String,PassiveCondition> affectedList = new HashMap<String,PassiveCondition>();
 	
-	public Straighten() {
-		super.name = "straighten";
-		super.description = "Fix a broken arm or leg.";
+	public Straighten(Mobile currentPlayer, String fullCommand) {
+		super("straighten", "Splinting of a broken arm or leg.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.SLOT);
 		affectedList.put("righthand", PassiveCondition.BROKENRIGHTARM);
@@ -68,5 +68,8 @@ public class Straighten extends Skills {
 		// TODO Auto-generated method stub
 		return true;
 	}
-
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Straighten(currentPlayer, fullCommand);
+	}
 }

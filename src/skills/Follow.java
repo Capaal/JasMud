@@ -12,8 +12,8 @@ public class Follow extends Skills {
 	Move following;
 	MoveFollow fm;
 	
-	public Follow() {	
-		super.name = "follow";
+	public Follow(Mobile currentPlayer, String fullCommand) {
+		super("follow", "Following others around.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 	}
@@ -33,11 +33,7 @@ public class Follow extends Skills {
 	}
 	
 	public void move(String fullCommand) {
-		if (fm == null) {
-			fm = new MoveFollow();
-		}
-		WorldServer.gameState.addToQueue(fm, fullCommand, currentPlayer);
-	//	fm.perform(fullCommand, currentPlayer);
+		WorldServer.gameState.addToQueue(new MoveFollow(currentPlayer, fullCommand));
 	}
 	
 	public void stopFollowing() {
@@ -64,5 +60,8 @@ public class Follow extends Skills {
 		}
 		return true;
 	}
-
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Follow(currentPlayer, fullCommand);
+	}
 }

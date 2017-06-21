@@ -10,9 +10,8 @@ public class Root extends Skills{
 
 	private Mobile finalTarget;
 	
-	public Root() {
-		super.name = "root";
-		super.description = "Roots the target in place.";
+	public Root(Mobile currentPlayer, String fullCommand) {
+		super("root", "Roots the target in place.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 	}
@@ -57,6 +56,11 @@ public class Root extends Skills{
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Root(currentPlayer, fullCommand);
 	}
 
 }

@@ -1,5 +1,6 @@
 package skills;
 
+import interfaces.Mobile;
 import processes.Skills;
 import processes.Equipment.EquipmentEnum;
 
@@ -7,8 +8,8 @@ public class Unwield extends Skills {
 
 	private String wantSlot;
 	
-	public Unwield () {
-		super.name = "unwield";
+	public Unwield (Mobile currentPlayer, String fullCommand) {
+		super("unwield", "Unwielding items in your hands.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 		super.syntaxList.add(Syntax.SLOT);
@@ -63,5 +64,10 @@ public class Unwield extends Skills {
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Unwield(currentPlayer, fullCommand);
 	}
 }

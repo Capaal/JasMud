@@ -1,5 +1,7 @@
 package processes;
 
+import interfaces.Mobile;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
@@ -8,6 +10,10 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class InductionSkill extends Skills {
 		
+	public InductionSkill(String name, String description, Mobile currentPlayer, String fullCommand) {
+		super(name, description, currentPlayer, fullCommand);
+	}
+
 	protected static ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(1);
 	protected InductionWrapper wrapper;
 	
@@ -24,13 +30,13 @@ public abstract class InductionSkill extends Skills {
 		scheduleInduction(times, interval, interval);
 	}
 	
-	public abstract InnerSkill getInnerSkill();
+	public abstract InnerSkill getInnerSkill(Mobile currentPlayer, String fullCommand);
 	
 	public void scheduleInduction(int times, int interval, int initialWait) {
 		if (times == 0 || interval <= 50 || interval <= 0 || initialWait < 0) {
 			throw new IllegalArgumentException("Invalid duration or times: " + interval + " " + times + " " + initialWait);
 		}
-		InnerSkill innerSkill = getInnerSkill();
+		InnerSkill innerSkill = getInnerSkill(currentPlayer, fullCommand);
 		wrapper = new InductionWrapper(innerSkill, times);
 		ScheduledFuture<?> future = effectExecutor.scheduleWithFixedDelay(wrapper, initialWait, interval, TimeUnit.MILLISECONDS);
 		wrapper.setOwnFuture(future);			
@@ -43,6 +49,9 @@ public abstract class InductionSkill extends Skills {
 	}	
 	
 	protected abstract class InnerSkill extends Skills {		
+		public InnerSkill(Mobile currentPlayer, String fullCommand) {
+			super("", "", currentPlayer, fullCommand);
+		}
 		@Override
 		protected void testForInduction() {
 			// Do not want to test for induction.
@@ -72,7 +81,7 @@ public abstract class InductionSkill extends Skills {
 		
 		public void run() {
 			if (totalTimesRan < timesToRun) {
-				WorldServer.gameState.addToQueue(wrappedInnerSkill, "", currentPlayer); // Calls perform, but we want to call run();
+				WorldServer.gameState.addToQueue(wrappedInnerSkill.getNewInstance(currentPlayer, "")); 
 		//		wrapperExecutor.execute(wrappedSkill);
 		//		wrappedSkill.secondaryRun();
 				totalTimesRan ++;

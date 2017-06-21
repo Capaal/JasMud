@@ -2,7 +2,9 @@ package skills;
 
 import java.util.Arrays;
 import java.util.Collection;
+
 import interfaces.Holdable;
+import interfaces.Mobile;
 import items.Plant;
 import items.Plant.PlantType;
 import items.Pouch;
@@ -15,9 +17,8 @@ public class Eat extends Skills{
 	private Collection<Holdable> containerList;
 	private Plant finalHerb;
 	
-	public Eat() {
-		super.name = "eat";
-		super.description = "Eating things.";
+	public Eat(Mobile currentPlayer, String fullCommand) {
+		super("eat", "Eating things.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 	}	
@@ -76,5 +77,9 @@ public class Eat extends Skills{
 			messageSelf("You cannot eat the \"" + itemName + "\".");
 			return false;
 		}
+	}
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Eat(currentPlayer, fullCommand);
 	}
 }

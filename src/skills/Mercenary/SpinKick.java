@@ -1,10 +1,12 @@
 package skills.Mercenary;
 
 import java.util.Arrays;
+
 import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Skills;
 import processes.Type;
+import skills.Sleep;
 
 public class SpinKick extends Skills {
 
@@ -12,9 +14,8 @@ public class SpinKick extends Skills {
 	private final int intensity = 8;
 	
 	//check for: limb already broken, is item wielded, unwield item
-	public SpinKick() {
-		super.name = "spinkick";
-		super.description = "Make someone dizzy.";
+	public SpinKick(Mobile currentPlayer, String fullCommand) {
+		super("spinkick", "Dizzy causing kick.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 	}	
@@ -63,5 +64,8 @@ public class SpinKick extends Skills {
 		
 		return true;
 	}
-
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new SpinKick(currentPlayer, fullCommand);
+	}
 }

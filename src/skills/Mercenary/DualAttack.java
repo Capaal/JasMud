@@ -14,6 +14,7 @@ import processes.Location;
 import processes.Equipment;
 import processes.Skills;
 import processes.Type;
+import skills.Sleep;
 
 public class DualAttack extends Skills {
 
@@ -31,8 +32,8 @@ public class DualAttack extends Skills {
     
     //Mercenary class skill, probably needs better name. Attacks target using wielded weapon. If weapon has special effect, applies.
     //Uses right hand only - dual wield uses both hands+weapons
-    public DualAttack() {
-        super.name = "dualattack";
+    public DualAttack(Mobile currentPlayer, String fullCommand) {
+		super("dualattack", "Attacking with two weapons.", currentPlayer, fullCommand);
         super.syntaxList.add(Syntax.SKILL);
         super.syntaxList.add(Syntax.TARGET);
     }
@@ -146,6 +147,10 @@ public class DualAttack extends Skills {
 		return (int) (3000 * rmercWeapon.getBalanceMult() * balAdjust);
 	}
     
+    @Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new DualAttack(currentPlayer, fullCommand);
+	}
 }
 
 

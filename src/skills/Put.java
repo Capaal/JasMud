@@ -2,8 +2,10 @@ package skills;
 
 import java.util.Collection;
 import java.util.Iterator;
+
 import interfaces.Container;
 import interfaces.Holdable;
+import interfaces.Mobile;
 import processes.ContainerErrors;
 import processes.Skills;
 
@@ -16,9 +18,8 @@ public class Put extends Skills {
 	private int originalQty;
 	private int qty;
 
-	public Put() {
-		super.name = "put";
-		super.description = "Place an item in a container, such as a pouch.";
+	public Put(Mobile currentPlayer, String fullCommand) {
+		super("put", "Place an item in a container.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 		super.syntaxList.add(Syntax.FILLER);
@@ -147,5 +148,10 @@ public class Put extends Skills {
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Put(currentPlayer, fullCommand);
 	}
 }

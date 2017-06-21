@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import effects.PassiveCondition;
 import interfaces.Holdable;
+import interfaces.Mobile;
 import processes.ContainerErrors;
 import processes.Location;
 import processes.Skills;
@@ -14,8 +15,8 @@ public class Get extends Skills {
 	private int quantity;
 	private Holdable itemToMove;
 	
-	public Get() {
-		super.name = "get";
+	public Get(Mobile currentPlayer, String fullCommand) {
+		super("get", "Picking up items.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 		super.syntaxList.add(Syntax.QUANTITY);
@@ -105,5 +106,9 @@ public class Get extends Skills {
 		if (!hasBalance()) {return false;}
 		if (brokenArms()) {return false;}
 		return true;
+	}
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Get(currentPlayer, fullCommand);
 	}
 }

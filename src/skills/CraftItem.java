@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import interfaces.Holdable;
+import interfaces.Mobile;
 import items.ItemBuilder;
 import items.StackableItem;
 import items.StdItem;
@@ -19,8 +20,8 @@ public class CraftItem extends Skills {
 	private String itemToMake;
 	private Map<String, ItemBuilder> allItemTemplates;
 	
-	public CraftItem() {
-		super.name = "craft";
+	public CraftItem(Mobile currentPlayer, String fullCommand) {
+		super("craft", "Crafting all sorts of things.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 		super.syntaxList.add(Syntax.TIMES);
@@ -144,4 +145,9 @@ public class CraftItem extends Skills {
 			messageSelf(display.toString());
 		}
 	}	
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new CraftItem(currentPlayer, fullCommand);
+	}
 }

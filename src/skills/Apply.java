@@ -3,6 +3,7 @@ package skills;
 import java.util.Arrays;
 
 import interfaces.Holdable;
+import interfaces.Mobile;
 import items.Plant;
 import items.Weapon;
 import processes.Skills;
@@ -13,8 +14,8 @@ public class Apply extends Skills {
 	private Holdable itemToApply;
 	private Holdable target;
 	
-	public Apply() {
-		super.name = "apply";
+	public Apply(Mobile currentPlayer, String fullCommand) {
+		super("apply", "Applying herbs and the such.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 		super.syntaxList.add(Syntax.FILLER);
@@ -83,6 +84,11 @@ public class Apply extends Skills {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Apply(currentPlayer, fullCommand);
 	}
 
 }

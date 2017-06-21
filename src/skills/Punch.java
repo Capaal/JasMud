@@ -1,6 +1,7 @@
 package skills;
 
 import java.util.Arrays;
+
 import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
@@ -13,9 +14,8 @@ public class Punch extends Skills {
 	private String targetName;
 	private Mobile finalTarget;
 	
-	public Punch() {
-		super.name = "punch";
-		super.description = "Punching things.";
+	public Punch(Mobile currentPlayer, String fullCommand) {
+		super("punch", "Throwing a quick punch.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 	}	
@@ -72,5 +72,10 @@ public class Punch extends Skills {
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Punch(currentPlayer, fullCommand);
 	}
 }

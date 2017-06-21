@@ -1,14 +1,16 @@
 package skills.Mercenary;
 
+import interfaces.Mobile;
 import effects.PassiveCondition;
 import effects.Fear;
 import processes.InductionSkill;
+import processes.Skills;
+import skills.Sleep;
 
 public class Clearmind extends InductionSkill {
 	
-	public Clearmind() {
-		super.name = "clearmind";
-		super.description = "Cures mental afflictions.";
+	public Clearmind(Mobile currentPlayer, String fullCommand) {
+		super("clearmind", "Cures mental afflictions", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 	}	
 	
@@ -50,8 +52,7 @@ public class Clearmind extends InductionSkill {
 
 
 	@Override
-	public InnerSkill getInnerSkill() {
-		
+	public InnerSkill getInnerSkill(Mobile currentPlayer, String fullCommand) {
 		return null;
 	}
 
@@ -65,5 +66,10 @@ public class Clearmind extends InductionSkill {
 		}
 		if (!hasBalance()) {return false;}
 		return true;
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Clearmind(currentPlayer, fullCommand);
 	}
 }

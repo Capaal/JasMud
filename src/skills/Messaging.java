@@ -3,6 +3,7 @@ package skills;
 import java.util.Set;
 
 import interfaces.Holdable;
+import interfaces.Mobile;
 import processes.PlayerPrompt;
 import processes.Skills;
 import processes.Skills.Syntax;
@@ -10,8 +11,8 @@ import processes.WorldServer;
 
 public class Messaging extends Skills {
 	
-	public Messaging() {
-		super.name = "message";
+	public Messaging(Mobile currentPlayer, String fullCommand) {
+		super("message", "Long distance communication.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 		super.syntaxList.add(Syntax.LIST);
@@ -32,5 +33,8 @@ public class Messaging extends Skills {
 		// TODO Auto-generated method stub
 		return true;
 	}
-
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Messaging(currentPlayer, fullCommand);
+	}
 }

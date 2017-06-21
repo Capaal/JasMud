@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import interfaces.Container;
 import interfaces.Holdable;
+import interfaces.Mobile;
 import processes.ContainerErrors;
 import processes.Skills;
 
@@ -16,9 +17,8 @@ public class TakeOut extends Skills {
 	private int origQty; 
 	private int qty;
 
-	public TakeOut() {
-		super.name = "take";
-		super.description = "Take an item out of a container, such as a pouch.";
+	public TakeOut(Mobile currentPlayer, String fullCommand) {
+		super("take", "Taking items from containers.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 		super.syntaxList.add(Syntax.FILLER);
@@ -128,5 +128,8 @@ public class TakeOut extends Skills {
 		return null;		
 	}
 	
-	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new TakeOut(currentPlayer, fullCommand);
+	}
 }

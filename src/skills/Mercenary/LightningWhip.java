@@ -5,7 +5,9 @@ import java.util.Arrays;
 import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.InductionSkill;
+import processes.Skills;
 import processes.Type;
+import skills.Sleep;
 
 public class LightningWhip extends InductionSkill {
 	
@@ -13,8 +15,8 @@ public class LightningWhip extends InductionSkill {
 	private String possibleTarg;
 	private Mobile finalTarget;
 	
-	public LightningWhip() {
-		super.name = "whip";
+	public LightningWhip(Mobile currentPlayer, String fullCommand) {
+		super("whip", "Powerful magical whip attack.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 	}
@@ -22,6 +24,10 @@ public class LightningWhip extends InductionSkill {
 
 	public class InnerLightningWhip extends InnerSkill {
 		
+		public InnerLightningWhip(Mobile currentPlayer, String fullCommand) {
+			super(currentPlayer, fullCommand);
+		}
+
 		@Override
 		public void performSkill() {
 			findTarget(); // Performs finding target again to ensure target is valid.
@@ -38,11 +44,16 @@ public class LightningWhip extends InductionSkill {
 			messageTarget(currentPlayer.getName() + " lightning lashes you.", Arrays.asList(finalTarget));
 			messageOthers(currentPlayer.getName() + " whips " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));	
 		}
+
+		@Override
+		public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+			return new InnerLightningWhip(currentPlayer, fullCommand);
+		}
 	}
 	
 	@Override
-	public InnerSkill getInnerSkill() {
-		return new InnerLightningWhip();
+	public InnerSkill getInnerSkill(Mobile currentPlayer, String fullCommand) {
+		return new InnerLightningWhip(currentPlayer, fullCommand);
 	}
 	
 	// Deals damage to a single target in currentPlayer's location 
@@ -99,5 +110,8 @@ public class LightningWhip extends InductionSkill {
 		return true;
 	}
 
-	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new LightningWhip(currentPlayer, fullCommand);
+	}
 }

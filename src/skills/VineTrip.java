@@ -12,9 +12,8 @@ public class VineTrip extends Skills{
 	
 	private Mobile finalTarget;
 	
-	public VineTrip() {
-		super.name = "vinetrip";
-		super.description = "Unbalance your target briefly.";
+	public VineTrip(Mobile currentPlayer, String fullCommand) {
+		super("vinetrip", "Unbalance your target briefly.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 	}	
@@ -51,5 +50,8 @@ public class VineTrip extends Skills{
 		if (!setTarget()) {return false;}
 		return true;
 	}
-
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new VineTrip(currentPlayer, fullCommand);
+	}
 }

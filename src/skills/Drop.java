@@ -3,6 +3,7 @@ package skills;
 import java.util.Arrays;
 
 import interfaces.Holdable;
+import interfaces.Mobile;
 import processes.ContainerErrors;
 import processes.Skills;
 
@@ -11,8 +12,8 @@ public class Drop extends Skills {
 	private int quantity;
 	private Holdable itemToMove;
 	
-	public Drop() {
-		super.name = "drop";
+	public Drop(Mobile currentPlayer, String fullCommand) {
+		super("drop", "Dropping Items.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 		super.syntaxList.add(Syntax.QUANTITY);
@@ -93,5 +94,9 @@ public class Drop extends Skills {
 	protected boolean preSkillChecks() {
 		if (!hasBalance()) {return false;}
 		return true;
+	}
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Drop(currentPlayer, fullCommand);
 	}
 }

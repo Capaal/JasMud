@@ -7,9 +7,11 @@ import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Location;
 import processes.Skills;
+import processes.WorldServer;
 import processes.Location.Direction;
 import processes.Skills.Syntax;
 import skills.MoveShove;
+import skills.Sleep;
 
 public class Shove extends Skills {
 	
@@ -18,15 +20,12 @@ public class Shove extends Skills {
 	private Location endContainer;
 	private String targetName;
 	private Mobile finalTarget;
-	private MoveShove move;
 	
-	public Shove() {
-		super.name = "shove";
-		super.description = "Push someone forcefully into another location.";
+	public Shove(Mobile currentPlayer, String fullCommand) {
+		super("shove", "Push someone forcefull into another location.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 		super.syntaxList.add(Syntax.DIRECTION);
-		this.move = new MoveShove();
 	}
 
 	
@@ -38,8 +37,9 @@ public class Shove extends Skills {
 		//	messageTarget(currentPlayer.getName() + " shoves you away.", Arrays.asList(finalTarget));
 		//	messageOthers(currentPlayer.getName() + " shoves " + finalTarget.getName() + " away.", Arrays.asList(currentPlayer, finalTarget));
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+			MoveShove move = new MoveShove(finalTarget, "move " + dir + " " + currentPlayer.getName());
 			move.setShover(currentPlayer);
-			move.perform("move " + dir + " " + currentPlayer.getName(), finalTarget);
+			WorldServer.gameState.addToQueue(move);
 		//	messageOthersAway(targetName + "is suddenly shoved into this location.", Arrays.asList(finalTarget), endContainer);
 		}
 		
@@ -88,5 +88,8 @@ public class Shove extends Skills {
 		if (!setDirection()) {return false;}
 		return true;
 	}
-
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Shove(currentPlayer, fullCommand);
+	}
 }

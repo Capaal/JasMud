@@ -29,7 +29,7 @@ import skills.Mercenary.*;
 public class CreateWorld {
 	
 	
-	public static SkillBook generalSkills = new SkillBook("generalSkills", 1);
+	//public static SkillBook generalSkills = new SkillBook("generalSkills", 2);
 	private static Map<String, ItemBuilder> itemTemplates = new TreeMap<String, ItemBuilder>(); //list of all template items
 	
 	public static void setTemplates(Map<String, ItemBuilder> newTemplates) {
@@ -51,61 +51,70 @@ public class CreateWorld {
 	
 	//Hardcoded skill list
 	public static void makeSkills() {
-		WorldServer.gameState.addBook(1, generalSkills);
-		generalSkills.addSkill(new SkillList());
+		SkillBook moveSkills = new SkillBook("moveSkills", 1);
+		WorldServer.gameState.addBook(1, moveSkills);
+		moveSkills.addSkill(new Move(null, null));
+		
+		
+		SkillBook generalSkills = new SkillBook("generalSkills", 2);
+		WorldServer.gameState.addBook(2, generalSkills);		
+		generalSkills.addSkill(new SkillList(null, null));
 		//general
-		generalSkills.addSkill(new Punch());
-		generalSkills.addSkill(new Throw());
-		generalSkills.addSkill(new Get());
-		generalSkills.addSkill(new Move());
-		generalSkills.addSkill(new Inventory());
-		generalSkills.addSkill(new Shoot());
-		generalSkills.addSkill(new Give());
-		generalSkills.addSkill(new Look());
-		generalSkills.addSkill(new Drop());
-		generalSkills.addSkill(new Info());
-		generalSkills.addSkill(new Wield());
-		generalSkills.addSkill(new Drink());
-		generalSkills.addSkill(new Say());
-		generalSkills.addSkill(new Struggle());
-		generalSkills.addSkill(new Eat());
-		generalSkills.addSkill(new Put());
-		generalSkills.addSkill(new TakeOut());
-		generalSkills.addSkill(new Open());
-		generalSkills.addSkill(new Close());
-		generalSkills.addSkill(new Follow());
-		generalSkills.addSkill(new Apply());
-		generalSkills.addSkill(new Examine());
-		generalSkills.addSkill(new Mine());
-		generalSkills.addSkill(new Chop()); //same as mine except for many messages..
-		generalSkills.addSkill(new Sleep());
-		generalSkills.addSkill(new Wake());
-		generalSkills.addSkill(new Unwield());
-		generalSkills.addSkill(new Diagnose());
+		generalSkills.addSkill(new Punch(null, null));
+		generalSkills.addSkill(new Throw(null, null));
+		generalSkills.addSkill(new Get(null, null));
+		generalSkills.addSkill(new Move(null, null));
+		generalSkills.addSkill(new Inventory(null, null));
+		generalSkills.addSkill(new Shoot(null, null));
+		generalSkills.addSkill(new Give(null, null));
+		generalSkills.addSkill(new Look(null, null));
+		generalSkills.addSkill(new Drop(null, null));
+		generalSkills.addSkill(new Info(null, null));
+		generalSkills.addSkill(new Wield(null, null));
+		generalSkills.addSkill(new Drink(null, null));
+		generalSkills.addSkill(new Say(null, null));
+		generalSkills.addSkill(new Struggle(null, null));
+		generalSkills.addSkill(new Eat(null, null));
+		generalSkills.addSkill(new Put(null, null));
+		generalSkills.addSkill(new TakeOut(null, null));
+		generalSkills.addSkill(new Open(null, null));
+		generalSkills.addSkill(new Close(null, null));
+		generalSkills.addSkill(new Follow(null, null));
+		generalSkills.addSkill(new Apply(null, null));
+		generalSkills.addSkill(new Examine(null, null));
+		generalSkills.addSkill(new Mine(null, null));
+		generalSkills.addSkill(new Chop(null, null)); //same as mine except for many messages..
+		generalSkills.addSkill(new Sleep(null, null));
+		generalSkills.addSkill(new Wake(null, null));
+		generalSkills.addSkill(new Unwield(null, null));
+		generalSkills.addSkill(new Diagnose(null, null));
 		//crafting
-		generalSkills.addSkill(new CraftItem());
-		generalSkills.addSkill(new Salvage());
+		generalSkills.addSkill(new CraftItem(null, null));
+		generalSkills.addSkill(new Salvage(null, null));
 		//quest
-		generalSkills.addSkill(new Greet());
-		generalSkills.addSkill(new Nod());
+		generalSkills.addSkill(new Greet(null, null));
+		generalSkills.addSkill(new Nod(null, null));
 		//mage?
-		generalSkills.addSkill(new Heal());
-		generalSkills.addSkill(new Root());
-		generalSkills.addSkill(new VineTrip());
-		generalSkills.addSkill(new LightningWhip());
+		generalSkills.addSkill(new Heal(null, null));
+		generalSkills.addSkill(new Root(null, null));
+		generalSkills.addSkill(new VineTrip(null, null));
+		generalSkills.addSkill(new LightningWhip(null, null));
+		
+		SkillBook mercSkills = new SkillBook("mercskills", 3);
+		WorldServer.gameState.addBook(3, mercSkills);
 		//mercenary only
-		generalSkills.addSkill(new Headshot());
-		generalSkills.addSkill(new BreakLimb());
-		generalSkills.addSkill(new Intimidate());
-		generalSkills.addSkill(new Straighten());
-		generalSkills.addSkill(new SpinKick());
-		generalSkills.addSkill(new Clearmind());
-		generalSkills.addSkill(new Shove());
-		generalSkills.addSkill(new Attack());
-		generalSkills.addSkill(new DualAttack());
-		generalSkills.addSkill(new Staunch());
-		generalSkills.addSkill(new MercRegenSkill());
-		generalSkills.addSkill(new Shieldblock());
+		mercSkills.addSkill(new Headshot(null, null));
+		mercSkills.addSkill(new BreakLimb(null, null));
+		mercSkills.addSkill(new Intimidate(null, null));
+		mercSkills.addSkill(new Straighten(null, null));
+		mercSkills.addSkill(new SpinKick(null, null));
+		mercSkills.addSkill(new Clearmind(null, null));
+		mercSkills.addSkill(new Shove(null, null));
+		mercSkills.addSkill(new Attack(null, null));
+		mercSkills.addSkill(new DualAttack(null, null));
+		mercSkills.addSkill(new Staunch(null, null));
+		mercSkills.addSkill(new MercRegenSkill(null, null));
+		mercSkills.addSkill(new Shieldblock(null, null));
 
 	}
 	

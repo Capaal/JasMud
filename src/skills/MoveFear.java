@@ -1,16 +1,20 @@
 package skills;
 
+import interfaces.Mobile;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
 
 import processes.LocationConnection;
+import processes.Skills;
 import processes.Location.Direction;
 
 public class MoveFear extends Move {
 	
-	public MoveFear() {
+	public MoveFear(Mobile currentPlayer, String fullCommand) {
+		super(currentPlayer, fullCommand);
 		followers = null;
 	}
 	
@@ -58,6 +62,10 @@ public class MoveFear extends Move {
 		for (Follow f : followers) {
 			f.move("move " + dir);
 		}
+	}
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new MoveFear(currentPlayer, fullCommand);
 	}
 }
 

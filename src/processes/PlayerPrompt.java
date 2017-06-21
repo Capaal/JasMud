@@ -41,7 +41,8 @@ public class PlayerPrompt implements Runnable {
 
 	public void run() {	
 		LogIn();				
-		new Look().perform("",  currentPlayer);		
+		Look look = new Look(currentPlayer, "");
+		WorldServer.gameState.addToQueue(look);
 		// The following is the User's infinite loop they play inside.	
 		boolean stayInsideLoop = true;
 		while (stayInsideLoop) {
@@ -93,7 +94,7 @@ public class PlayerPrompt implements Runnable {
 						com = currentPlayer.getCommand(command);
 					}
 					if (com != null) {		
-						WorldServer.gameState.addToQueue(com, str, currentPlayer);
+						WorldServer.gameState.addToQueue(com.getNewInstance(currentPlayer, str));
 					} else {		
 						printFailMessages();
 					}
@@ -162,7 +163,10 @@ public class PlayerPrompt implements Runnable {
 	//	WorldServer.gameState.addMob(currentPlayer.getName() + currentPlayer.getId(), currentPlayer); This should be happening on mob creation.
 		
 		//adding hardcoded skillbook TEMP
-		currentPlayer.addBook(CreateWorld.generalSkills.duplicate(),100);		
+	//	currentPlayer.addBook(CreateWorld.generalSkills.duplicate(),100);	
+		currentPlayer.addBook(WorldServer.gameState.getBook(1), 100);	
+		currentPlayer.addBook(WorldServer.gameState.getBook(2), 100);
+		currentPlayer.addBook(WorldServer.gameState.getBook(3), 100);
 		currentPlayer.setSendBack(sendBack);
 		currentPlayer.controlStatus(true);
 		currentPlayer.save(); 

@@ -1,24 +1,31 @@
 package skills;
 
+import interfaces.Mobile;
+
 import java.util.Arrays;
 import java.util.Random;
 
 import effects.PassiveCondition;
 import processes.InductionSkill;
+import processes.Skills;
 
 //interruptible, repeating induction skill
 public class Struggle extends InductionSkill {
 	
 	private Random r = new Random();
 	
-	public Struggle() {
-		super.name = "struggle";
-		super.description = "Struggling out of bonds.";
+	public Struggle(Mobile currentPlayer, String fullCommand) {
+		super("struggle", "Struggling out of bonds.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 	}
 	
 	public class InnerStruggle extends InnerSkill {
 		
+		public InnerStruggle(Mobile currentPlayer, String fullCommand) {
+			super(currentPlayer, fullCommand);
+			// TODO Auto-generated constructor stub
+		}
+
 		@Override
 		public void performSkill() {
 			int n = r.nextInt(5);
@@ -31,11 +38,11 @@ public class Struggle extends InductionSkill {
 				messageSelf("You continue to writhe against the bonds holding you.");
 			}	
 		}
-	}
-	
-	@Override
-	public InnerSkill getInnerSkill() {
-		return new InnerStruggle();
+
+		@Override
+		public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+			return new InnerStruggle(currentPlayer, fullCommand);
+		}
 	}
 
 	@Override
@@ -64,5 +71,13 @@ public class Struggle extends InductionSkill {
 	protected boolean preSkillChecks() {
 		return true;
 	}
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Struggle(currentPlayer, fullCommand);
+	}
 
+	@Override
+	public InnerSkill getInnerSkill(Mobile currentPlayer, String fullCommand) {
+		return new InnerStruggle(currentPlayer, fullCommand);
+	}
 }

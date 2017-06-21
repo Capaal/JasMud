@@ -2,6 +2,7 @@ package skills;
 
 import java.util.Arrays;
 
+import interfaces.Mobile;
 import items.Door;
 import processes.Skills;
 import processes.Location.Direction;
@@ -12,8 +13,8 @@ public class Open extends Skills {
 	private Direction dir;
 	private String dirString;
 	
-	public Open() {
-		super.name = "open";
+	public Open(Mobile currentPlayer, String fullCommand) {
+		super("open", "Opening doors.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 		super.syntaxList.add(Syntax.DIRECTION);
@@ -46,5 +47,10 @@ public class Open extends Skills {
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Open(currentPlayer, fullCommand);
 	}
 }

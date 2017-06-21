@@ -8,19 +8,25 @@ import java.util.*;
 import effects.PassiveCondition;
 import processes.Location.Direction;
 
-public abstract class Skills {
+public abstract class Skills implements Runnable {
 	
-	protected String name;
-	protected String description;
-	protected List<Syntax> syntaxList = new ArrayList<Syntax>();		
-	protected Mobile currentPlayer;
-	protected String fullCommand;
+	protected final String name;
+	protected final String description;
+	protected final List<Syntax> syntaxList;		
+	protected final Mobile currentPlayer;
+	protected final String fullCommand;
 	
-	
-	
-	public void perform(String fullCommand, Mobile currentPlayer) {	
+	public Skills(String name, String description, Mobile currentPlayer, String fullCommand) {
+		this.name = name;
+		this.description = description;
 		this.currentPlayer = currentPlayer;
 		this.fullCommand = fullCommand;
+		this.syntaxList = new ArrayList<Syntax>();
+	}
+	
+	public void run() {	
+//		this.currentPlayer = currentPlayer;
+//		this.fullCommand = fullCommand;
 		if (preAllSkills()) {
 		//	currentPlayer.tell("\n");
 			performSkill();
@@ -222,4 +228,6 @@ public abstract class Skills {
 	public String getName() {
 		return name;
 	}
+
+	public abstract Skills getNewInstance(Mobile currentPlayer, String fullCommand);
 }

@@ -77,29 +77,17 @@ public class GameState {
 		return locationCollection.containsKey(id);
 	}
 	
-	public static BlockingQueue<QueueInformation> SkillQueue = new ArrayBlockingQueue<QueueInformation>(1024);
+	public static BlockingQueue<Runnable> SkillQueue = new ArrayBlockingQueue<Runnable>(1024);
 	
-	public class QueueInformation {
-		Skills skill;
-		String fullCommand;
-		Mobile currentPlayer;
-		
-		public QueueInformation(Skills skill, String fullCommand, Mobile currentPlayer) {
-			this.skill = skill;
-			this.fullCommand = fullCommand;
-			this.currentPlayer = currentPlayer;
-		}
-	}
-	
-	public void addToQueue(Skills skill, String fullCommand, Mobile currentPlayer) {
+	public void addToQueue(Runnable skill) {
 		try {
-			SkillQueue.put(new QueueInformation(skill, fullCommand, currentPlayer));
+			SkillQueue.put(skill);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public QueueInformation takeFromQueue() {
+	public Runnable takeFromQueue() {
 		try {
 			return SkillQueue.take();
 		} catch (InterruptedException e) {

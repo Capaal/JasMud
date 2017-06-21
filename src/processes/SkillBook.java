@@ -3,6 +3,8 @@ package processes;
 import java.util.HashSet;
 import java.util.Set;
 
+import skills.Move;
+
 public class SkillBook {
 
 	private Set<Skills> skillList;
@@ -15,9 +17,9 @@ public class SkillBook {
 		this.id = id;
 	}
 	
-	public void addSkill(Skills newSpell) {
+	public void addSkill(Skills newSkill) {
 		synchronized (skillList) {
-			skillList.add(newSpell);
+			skillList.add(newSkill);
 		}
 	}	
 	
@@ -28,10 +30,11 @@ public class SkillBook {
 		return findSkill(skill);
 	}
 	
+	// TODO change to find via name via how moveHoldable works.
 	private Skills findSkill(String skill) {
 		synchronized (skillList) {
 			for (Skills s : skillList) {
-				if (s.getName().equals(skill)) {
+				if (s.getName().equals(skill)) {			
 					return s;
 				}
 			}
@@ -47,26 +50,8 @@ public class SkillBook {
 		return id;
 	}
 	
-	public void save() {
-		synchronized (skillList) {
-			for (Skills s : skillList) {	
-				saveSkillBookLink(s);
-			}
-		}
-	}
-	
 	public Set<Skills> viewSkills() {
 		return new HashSet<Skills>(skillList);
-	}
-	
-	private void saveSkillBookLink(Skills s) {
-/*		String skillSelect = "SELECT * FROM skilltable WHERE SKILLID='" + s.getId() + "';";
-		HashMap<String, Object> skillView = WorldServer.databaseInterface.returnBlockView(skillSelect);
-		String skillInsert;
-		if (skillView.get("SKILLID") == null) {
-			skillInsert = "INSERT INTO skilltable (SKILLBOOKID, SKILLID) VALUES (" + this.id + ", " + s.getId() + ");";		
-			WorldServer.databaseInterface.saveAction(skillInsert);
-		}*/
 	}
 	
 	protected SkillBook duplicate() {

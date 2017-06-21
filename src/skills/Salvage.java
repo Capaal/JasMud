@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+
 import interfaces.Holdable;
+import interfaces.Mobile;
 import items.ItemBuilder;
 import items.StdItem;
 import processes.CreateWorld;
@@ -18,8 +20,8 @@ public class Salvage extends Skills {
 	private Map<String, ItemBuilder> allItemTemplates;
 	private ItemBuilder salvageThis;
 
-	public Salvage() {
-		super.name = "salvage";
+	public Salvage(Mobile currentPlayer, String fullCommand) {
+		super("salvage", "Salvaging components of an item.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 	}
@@ -70,4 +72,8 @@ public class Salvage extends Skills {
 		return true;
 	}
 	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Salvage(currentPlayer, fullCommand);
+	}
 }

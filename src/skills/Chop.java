@@ -3,7 +3,9 @@ package skills;
 import java.util.Arrays;
 
 import interfaces.Holdable;
+import interfaces.Mobile;
 import processes.InductionSkill;
+import processes.Skills;
 import items.Harvestable;
 import items.Harvestable.HarvestType;
 
@@ -13,15 +15,18 @@ public class Chop extends InductionSkill {
 	private Holdable treeItem;
 	private Harvestable tree;
 
-	public Chop() {
-		super.name = "chop";
-		super.description = "Chopping trees and maybe other things.";
+	public Chop(Mobile currentPlayer, String fullCommand) {
+		super("chop", "Chopping trees and maybe other things.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 	}	
 	
 	public class InnerChop extends InnerSkill {
 		
+		public InnerChop(Mobile currentPlayer, String fullCommand) {
+			super(currentPlayer, fullCommand);
+		}
+
 		@Override
 		public void performSkill() {
 			if(!tree.changeRemaining(1)) {
@@ -30,12 +35,12 @@ public class Chop extends InductionSkill {
 			}
 			tree.harvest(currentPlayer);
 		}
+
+		@Override
+		public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+			return new InnerChop(currentPlayer, fullCommand);
+		}
 		
-	}
-	
-	@Override
-	public InnerSkill getInnerSkill() {
-		return new InnerChop();
 	}
 	
 	@Override
@@ -84,6 +89,16 @@ public class Chop extends InductionSkill {
 	protected void inductionEnded() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Chop(currentPlayer, fullCommand);
+	}
+
+	@Override
+	public InnerSkill getInnerSkill(Mobile currentPlayer, String fullCommand) {
+		return new InnerChop(currentPlayer, fullCommand);
 	}
 
 }

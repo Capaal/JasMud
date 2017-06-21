@@ -6,14 +6,15 @@ import effects.Fear;
 import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Skills;
+import skills.Sleep;
 
 public class Intimidate extends Skills {
 	
 	private Mobile mobileToFear;
 	private String targetName;
 	
-	public Intimidate() {
-		super.name = "intimidate";
+	public Intimidate(Mobile currentPlayer, String fullCommand) {
+		super("intimidate", "Scaring others into fleeing.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);	
 	}
@@ -44,6 +45,11 @@ public class Intimidate extends Skills {
 		if (!hasBalance()) {return false;}
 		if (!setTarget()) {return false;}
 		return true;
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Intimidate(currentPlayer, fullCommand);
 	}
 }
 

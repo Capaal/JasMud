@@ -1,14 +1,17 @@
 package skills;
 
+import interfaces.Mobile;
+
 import java.util.Arrays;
+
 import processes.Skills;
 
 public class Say extends Skills {
 	
 	private String words;
 	
-	public Say() {
-		super.name = "say";
+	public Say(Mobile currentPlayer, String fullCommand) {
+		super("say", "Talking to others nearby.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.LIST);
 	}
@@ -39,6 +42,11 @@ public class Say extends Skills {
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Say(currentPlayer, fullCommand);
 	}
 
 }

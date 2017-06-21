@@ -1,13 +1,16 @@
 package skills;
 
+import interfaces.Mobile;
+
 import java.util.Map;
+
 import processes.SkillBook;
 import processes.Skills;
 
 public class SkillList extends Skills {
 
-	public SkillList() {
-		super.name = "skills";
+	public SkillList(Mobile currentPlayer, String fullCommand) {
+		super("skills", "Inventory of your knowledge.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 	}
 	
@@ -29,5 +32,8 @@ public class SkillList extends Skills {
 	protected boolean preSkillChecks() {
 		return true;
 	}
-
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new SkillList(currentPlayer, fullCommand);
+	}
 }

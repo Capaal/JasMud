@@ -1,5 +1,7 @@
 package skills;
 
+import interfaces.Mobile;
+
 import java.util.Arrays;
 
 import effects.Levitate;
@@ -8,8 +10,8 @@ import processes.Skills;
 
 public class Float extends Skills {
 	
-	public Float() {
-		super.name = "float";
+	public Float(Mobile currentPlayer, String fullCommand) {
+		super("float", "Floating above the ground.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);	
 	}
@@ -34,7 +36,10 @@ public class Float extends Skills {
 		if (!hasBalance()) {return false;}
 		return true;
 	}
-
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Float(currentPlayer, fullCommand);
+	}
 	
 }
 

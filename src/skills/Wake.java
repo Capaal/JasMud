@@ -6,19 +6,24 @@ import java.util.Random;
 import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.InductionSkill;
+import processes.Skills;
 
 
 public class Wake extends InductionSkill {
 	
 	private Random r = new Random();
 	
-	public Wake() {
-		super.name = "wake";
+	public Wake(Mobile currentPlayer, String fullCommand) {
+		super("wake", "Waking from sleep.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 	}
 	
 	public class InnerWake extends InnerSkill {		
+		public InnerWake(Mobile currentPlayer, String fullCommand) {
+			super(currentPlayer, fullCommand);
+		}
+
 		@Override
 		public void performSkill() {
 			int n = r.nextInt(5);
@@ -31,11 +36,16 @@ public class Wake extends InductionSkill {
 				messageSelf("You continue trying to wake up.");
 			}	
 		}
+
+		@Override
+		public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+			return new InnerWake(currentPlayer, fullCommand);
+		}
 	}
 	
 	@Override
-	public InnerSkill getInnerSkill() {
-		return new InnerWake();
+	public InnerSkill getInnerSkill(Mobile currentPlayer, String fullCommand) {
+		return new InnerWake(currentPlayer, description);
 	}
 
 	@Override
@@ -80,5 +90,8 @@ public class Wake extends InductionSkill {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Wake(currentPlayer, fullCommand);
+	}
 }

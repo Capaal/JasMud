@@ -4,26 +4,39 @@ import java.util.Arrays;
 
 import effects.PassiveCondition;
 import interfaces.Holdable;
+import interfaces.Mobile;
 import processes.Equipment;
 import processes.InductionSkill;
+import processes.Skills;
+import skills.Sleep;
 
 public class Shieldblock extends InductionSkill {
 	
-	public Shieldblock() {
-		super.name = "shieldblock";
+	public Shieldblock(Mobile currentPlayer, String fullCommand) {
+		super("shieldblock", "Careful guard against attacks.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 	}
 	
 	public class InnerShieldBlock extends InnerSkill {		
+		public InnerShieldBlock(Mobile currentPlayer, String fullCommand) {
+			super(currentPlayer, fullCommand);
+			// TODO Auto-generated constructor stub
+		}
+
 		@Override
 		public void performSkill() {
 			changeBlocking(false);	
 		}
+
+		@Override
+		public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+			return new InnerShieldBlock(currentPlayer, fullCommand);
+		}
 	}
 	
 	@Override
-	public InnerSkill getInnerSkill() {
-		return new InnerShieldBlock();
+	public InnerSkill getInnerSkill(Mobile currentPlayer, String fullCommand) {
+		return new InnerShieldBlock(currentPlayer, fullCommand);
 	}
 
 	// On activation, begins blocking.
@@ -88,5 +101,8 @@ public class Shieldblock extends InductionSkill {
 		return true;
 	}
 
-	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Shieldblock(currentPlayer, fullCommand);
+	}
 }

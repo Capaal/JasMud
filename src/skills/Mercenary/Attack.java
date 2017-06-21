@@ -1,6 +1,7 @@
 package skills.Mercenary;
 
 import java.util.Arrays;
+
 import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
@@ -10,6 +11,7 @@ import processes.Location;
 import processes.Equipment;
 import processes.Skills;
 import processes.Type;
+import skills.Sleep;
 
 public class Attack extends Skills {
 
@@ -24,8 +26,8 @@ public class Attack extends Skills {
     
     //Mercenary class skill, probably needs better name. Attacks target using wielded weapon. If weapon has special effect, applies.
     //Uses 1 hand only - dual wield uses both hands/weapons
-    public Attack() {
-        super.name = "attack";
+    public Attack(Mobile currentPlayer, String fullCommand) {
+		super("attack", "Attacking with style.", currentPlayer, fullCommand);
         super.syntaxList.add(Syntax.SKILL);
         super.syntaxList.add(Syntax.TARGET);
     }
@@ -147,6 +149,10 @@ public class Attack extends Skills {
 		return (int) (baseBalance * possWeapon.getBalanceMult() * balAdjust);
 	}
     
+    @Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Attack(currentPlayer, fullCommand);
+	}
 }
 
 

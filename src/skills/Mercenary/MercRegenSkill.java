@@ -6,11 +6,12 @@ import effects.MercRegen;
 import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Skills;
+import skills.Sleep;
 
 public class MercRegenSkill extends Skills {
 	
-	public MercRegenSkill() {
-		super.name = "regen";
+	public MercRegenSkill(Mobile currentPlayer, String fullCommand) {
+		super("regen", "Resisting damage.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 	}
 
@@ -29,6 +30,9 @@ public class MercRegenSkill extends Skills {
 		return true;
 	}
 
-
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new MercRegenSkill(currentPlayer, fullCommand);
+	}
 }
 

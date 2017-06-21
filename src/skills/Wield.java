@@ -4,6 +4,7 @@ import java.util.Set;
 
 import effects.PassiveCondition;
 import interfaces.Container;
+import interfaces.Mobile;
 import items.StdItem;
 import processes.Equipment;
 import processes.Skills;
@@ -15,8 +16,8 @@ public class Wield extends Skills {
 	private StdItem itemToWield;
 	private Set<Equipment.EquipmentEnum> equippableSlots;
 	
-	public Wield() {
-		super.name = "wield";
+	public Wield(Mobile currentPlayer, String fullCommand) {
+		super("wield", "Wielding items.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 		super.syntaxList.add(Syntax.SLOT);
@@ -72,5 +73,8 @@ public class Wield extends Skills {
 		}
 		return true;
 	}
-
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Wield(currentPlayer, fullCommand);
+	}
 }

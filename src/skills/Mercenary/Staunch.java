@@ -1,15 +1,16 @@
 package skills.Mercenary;
 
+import interfaces.Mobile;
 import effects.Bleed;
 import effects.PassiveCondition;
 import processes.Skills;
+import skills.Sleep;
 
 public class Staunch extends Skills { 
 	
 	//check for: limb already broken, is item wielded, unwield item
-	public Staunch() {
-		super.name = "staunch";
-		super.description = "Cures bleeding, 1 \"stack\" at a time.";
+	public Staunch(Mobile currentPlayer, String fullCommand) {
+		super("staunch", "Cures bleeding, a little at a time.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 	}	
 	
@@ -35,5 +36,10 @@ public class Staunch extends Skills {
 	protected boolean preSkillChecks() {
 		if (!hasBalance()) {return false;}
 		return true;
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Staunch(currentPlayer, fullCommand);
 	}
 }

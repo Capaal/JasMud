@@ -1,15 +1,17 @@
 package skills;
 
 import interfaces.Mobile;
+
 import java.util.Arrays;
+
 import Quests.Quest;
 import processes.Location;
 import processes.Skills;
 
 public class Nod extends Skills {
 	
-	public Nod() {
-		super.name = "nod";
+	public Nod(Mobile currentPlayer, String fullCommand) {
+		super("nod", "Nodding to others, to encourage more details.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 	}
@@ -41,5 +43,10 @@ public class Nod extends Skills {
 	@Override
 	protected boolean preSkillChecks() {
 		return true;
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Nod(currentPlayer, fullCommand);
 	}
 }

@@ -1,6 +1,7 @@
 package skills;
 
 import java.util.Arrays;
+
 import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Skills;
@@ -11,8 +12,8 @@ public class Heal extends Skills {
 	private final int intensity = -30;
 	private Mobile finalTarget;
 	
-	public Heal() {
-		super.name = "heal";
+	public Heal(Mobile currentPlayer, String fullCommand) {
+		super("heal", "A little bit of healing.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 	}	
@@ -60,5 +61,9 @@ public class Heal extends Skills {
 			return false;
 		}		
 		return true;
+	}
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Heal(currentPlayer, fullCommand);
 	}
 }

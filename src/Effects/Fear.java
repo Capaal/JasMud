@@ -5,18 +5,15 @@ import interfaces.TickingEffect;
 import processes.WorldServer;
 import skills.MoveFear;
 
-public class Fear extends TickingEffect {
-	
-	private MoveFear move;	
+public class Fear extends TickingEffect {	
 	
 	public Fear(Mobile currentPlayer) {
 		super(currentPlayer, 2000);
-		this.move = new MoveFear();
 	}	
 
 	@Override
 	public void run() {
-		WorldServer.gameState.addToQueue(move, "", currentPlayer);
+		WorldServer.gameState.addToQueue(new MoveFear(currentPlayer, "");
 	}
 	
 	@Override

@@ -2,15 +2,17 @@ package skills;
 
 import java.util.Collection;
 import java.util.Iterator;
+
 import interfaces.Holdable;
+import interfaces.Mobile;
 import processes.Equipment;
 import processes.Equipment.EquipmentEnum;
 import processes.Skills;
 
 public class Inventory extends Skills {
 
-	public Inventory() {
-		super.name = "inventory";
+	public Inventory(Mobile currentPlayer, String fullCommand) {
+		super("inventory", "Viewing your items.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 	}
 	
@@ -63,5 +65,10 @@ public class Inventory extends Skills {
 	@Override
 	protected boolean preSkillChecks() {
 		return true;
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Inventory(currentPlayer, fullCommand);
 	}
 }

@@ -10,8 +10,8 @@ public class Examine extends Skills {
 	private Mobile possibleMob;
 	private String toExamine;
 	
-	public Examine() {
-		super.name = "examine";
+	public Examine(Mobile currentPlayer, String fullCommand) {
+		super("examine", "Looking closly at things.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 	}
@@ -54,6 +54,10 @@ public class Examine extends Skills {
 		}
 		if (!searchForExamine()) {return false;}
 		return true;
+	}
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Examine(currentPlayer, fullCommand);
 	}
 }
 

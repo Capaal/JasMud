@@ -1,5 +1,6 @@
 package skills;
 
+import interfaces.Mobile;
 import effects.PassiveCondition;
 import processes.Skills;
 import processes.Skills.Syntax;
@@ -9,8 +10,8 @@ import processes.Skills.Syntax;
 // Display to others in 'look' that you are asleep?
 public class Sleep extends Skills {
 	
-	public Sleep() {
-		super.name = "sleep";
+	public Sleep(Mobile currentPlayer, String fullCommand) {
+		super("sleep", "Sleeping.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 	}
 
@@ -29,5 +30,8 @@ public class Sleep extends Skills {
 	protected boolean preSkillChecks() {
 		return true;
 	}
-
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Sleep(currentPlayer, fullCommand);
+	}
 }

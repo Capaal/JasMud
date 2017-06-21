@@ -3,6 +3,7 @@ package skills;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Location;
+
 import java.util.Arrays;
 
 import Quests.Quest;
@@ -10,8 +11,8 @@ import processes.Skills;
 
 public class Greet extends Skills {
 	
-	public Greet() {
-		super.name = "greet";
+	public Greet(Mobile currentPlayer, String fullCommand) {
+		super("greet", "Greeting others, an invitation to chat.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 	}
@@ -51,5 +52,8 @@ public class Greet extends Skills {
 		}
 		return true;
 	}
-
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Greet(currentPlayer, fullCommand);
+	}
 }

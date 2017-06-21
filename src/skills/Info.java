@@ -2,14 +2,15 @@ package skills;
 
 import interfaces.Container;
 import interfaces.Holdable;
+import interfaces.Mobile;
 import processes.Skills;
 
 public class Info extends Skills {
 	
 	private String toInfo;
 	
-	public Info() {
-		super.name = "info";
+	public Info(Mobile currentPlayer, String fullCommand) {
+		super("info", "Specific details for objects.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM); //could get item or target or location, is always the 2nd word
 	}
@@ -65,4 +66,8 @@ public class Info extends Skills {
 		}
 		return true;
 	}	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Info(currentPlayer, fullCommand);
+	}
 }

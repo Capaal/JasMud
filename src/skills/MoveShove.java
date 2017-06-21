@@ -2,12 +2,13 @@ package skills;
 
 import java.util.Arrays;
 
+import processes.Skills;
 import interfaces.Mobile;
 
 public class MoveShove extends Move {
 	
-	public MoveShove() {
-		super();
+	public MoveShove(Mobile currentPlayer, String fullCommand) {
+		super(currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.TARGET);
 		followers = null;
 	}
@@ -44,5 +45,10 @@ public class MoveShove extends Move {
 		for (Follow f : followers) {
 			f.move("move " + dir);
 		}
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new MoveShove(currentPlayer, fullCommand);
 	}
 }

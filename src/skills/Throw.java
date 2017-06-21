@@ -20,8 +20,8 @@ public class Throw extends Skills {
 	private Location finalLoc;
 	private String possibleItem;
 	
-	public Throw() {
-		super.name = "throw";
+	public Throw(Mobile currentPlayer, String fullCommand) {
+		super("throw", "Throwing items.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 		super.syntaxList.add(Syntax.TARGET);
@@ -126,5 +126,10 @@ public class Throw extends Skills {
 	private Location getLoc(String dir) {
 		Location mobLocation = currentPlayer.getContainer();
 		return mobLocation.getContainer(dir);
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Throw(currentPlayer, fullCommand);
 	}
 }

@@ -3,14 +3,14 @@ package skills;
 import java.util.Set;
 
 import effects.PassiveCondition;
+import interfaces.Mobile;
 import interfaces.TickingEffect;
 import processes.Skills;
 
 public class Diagnose extends Skills {
 	
-	public Diagnose() {
-		super.name = "diagnose";
-		super.description = "";
+	public Diagnose(Mobile currentPlayer, String fullCommand) {
+		super("diagnose", "Detect Diseases.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 	}	
 
@@ -32,5 +32,9 @@ public class Diagnose extends Skills {
 		// TODO Auto-generated method stub
 		return true;
 	}
-
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Diagnose(currentPlayer, fullCommand);
+	}
 }

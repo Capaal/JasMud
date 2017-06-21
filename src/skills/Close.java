@@ -2,6 +2,7 @@ package skills;
 
 import java.util.Arrays;
 
+import interfaces.Mobile;
 import items.Door;
 import processes.Skills;
 import processes.Location.Direction;
@@ -11,8 +12,8 @@ public class Close extends Skills {
 	private Door door;
 	private Direction dir;
 	
-	public Close() {
-		super.name = "close";
+	public Close(Mobile currentPlayer, String fullCommand) {
+		super("close", "Closing objects.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 		super.syntaxList.add(Syntax.DIRECTION);
@@ -44,5 +45,10 @@ public class Close extends Skills {
 	@Override
 	protected boolean preSkillChecks() {
 		return true;
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Close(currentPlayer, fullCommand);
 	}
 }

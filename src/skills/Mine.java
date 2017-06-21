@@ -3,7 +3,9 @@ package skills;
 import java.util.Arrays;
 
 import interfaces.Holdable;
+import interfaces.Mobile;
 import processes.InductionSkill;
+import processes.Skills;
 import items.Harvestable;
 import items.Harvestable.HarvestType;
 
@@ -13,15 +15,18 @@ public class Mine extends InductionSkill {
 	private Holdable oreItem;
 	private Harvestable rock;
 
-	public Mine() {
-		super.name = "mine";
-		super.description = "Mining ores and maybe other things.";
+	public Mine(Mobile currentPlayer, String fullCommand) {
+		super("mine", "Mining ores.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 	}	
 	
 	public class InnerMine extends InnerSkill {
 		
+		public InnerMine(Mobile currentPlayer, String fullCommand) {
+			super(currentPlayer, fullCommand);
+		}
+
 		@Override
 		public void performSkill() {
 			if(!rock.changeRemaining(1)) {
@@ -30,11 +35,16 @@ public class Mine extends InductionSkill {
 			}
 			rock.harvest(currentPlayer);	
 		}
+
+		@Override
+		public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+			return new InnerMine(currentPlayer, fullCommand);
+		}
 	}
 	
 	@Override
-	public InnerSkill getInnerSkill() {
-		return new InnerMine();
+	public InnerSkill getInnerSkill(Mobile currentPlayer, String fullCommand) {
+		return new InnerMine(currentPlayer, fullCommand);
 	}
 	
 	@Override
@@ -84,6 +94,11 @@ public class Mine extends InductionSkill {
 			}
 		}
 		return true;
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Mine(currentPlayer, fullCommand);
 	}
 
 }

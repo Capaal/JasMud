@@ -18,8 +18,8 @@ public class Shoot extends Skills {
 	private String possibleTarg;
 	private Mobile finalTarget;
 	
-	public Shoot() {
-		super.name = "shoot";
+	public Shoot(Mobile currentPlayer, String fullCommand) {
+		super("shoot", "A Quick shot or throw.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 		super.syntaxList.add(Syntax.DIRECTION);
@@ -106,4 +106,9 @@ public class Shoot extends Skills {
 		}
 		return true;
 	}	
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Shoot(currentPlayer, fullCommand);
+	}
 }

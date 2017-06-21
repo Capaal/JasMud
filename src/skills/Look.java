@@ -10,8 +10,8 @@ import processes.UsefulCommands;
 
 public class Look extends Skills {
 
-	public Look() {
-		super.name = "look";
+	public Look(Mobile currentPlayer, String fullCommand) {
+		super("look", "Look around.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.DIRECTION);
 	}
@@ -103,6 +103,11 @@ public class Look extends Skills {
 	@Override
 	protected boolean preSkillChecks() {
 		return true;
+	}
+
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Look(currentPlayer, fullCommand);
 	}
 }
 

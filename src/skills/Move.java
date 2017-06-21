@@ -1,8 +1,11 @@
 package skills;
 
+import interfaces.Mobile;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+
 import effects.PassiveCondition;
 import processes.Location;
 import processes.Location.Direction;
@@ -10,9 +13,8 @@ import processes.Skills;
 
 public class Move extends Skills {	
 	
-	public Move() {
-		super.name = "move";
-		super.description = "Move around.";
+	public Move(Mobile currentPlayer, String fullCommand) {
+		super("move", "Move around.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.DIRECTION);
 	}
@@ -43,8 +45,8 @@ public class Move extends Skills {
 			currentPlayer.moveHoldable(endContainer);
 			displayEnterMsg();
 			
-			Look look = new Look();
-			look.perform("", currentPlayer);
+			Look look = new Look(currentPlayer, "");
+			look.run();
 			moveFollowers();
 			stopFollowing();
 		}
@@ -137,5 +139,10 @@ public class Move extends Skills {
 		if (!findDirection()) {return false;}
 		
 		return true;
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Move(currentPlayer, fullCommand);
 	}
 }

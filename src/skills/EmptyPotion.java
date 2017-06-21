@@ -1,6 +1,7 @@
 package skills;
 
 import interfaces.Holdable;
+import interfaces.Mobile;
 import processes.Skills;
 import items.Drinkable;
 
@@ -9,9 +10,8 @@ public class EmptyPotion extends Skills {
 	private String potionName;
 	private Holdable potionItem;
 
-	public EmptyPotion() {
-		super.name = "empty";
-		super.description = "Empty a potion.";
+	public EmptyPotion(Mobile currentPlayer, String fullCommand) {
+		super("empty", "Empying potions and other containers.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 	}	
@@ -49,5 +49,8 @@ public class EmptyPotion extends Skills {
 		}
 		return true;
 	}
-
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new EmptyPotion(currentPlayer, fullCommand);
+	}
 }

@@ -14,8 +14,8 @@ public class Give extends Skills {
 	private Holdable itemToMove;
 	private Mobile mobileToGive;
 	
-	public Give() {
-		super.name = "give";
+	public Give(Mobile currentPlayer, String fullCommand) {
+		super("give", "Giving items to others.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 		super.syntaxList.add(Syntax.ITEM);	
@@ -89,5 +89,9 @@ public class Give extends Skills {
 			return false;
 		}
 		return true;
+	}
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new Give(currentPlayer, fullCommand);
 	}
 }
