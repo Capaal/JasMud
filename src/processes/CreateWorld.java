@@ -206,6 +206,8 @@ public class CreateWorld {
 		newLoc9.addLocationConnection(Direction.EAST, 1, Direction.WEST, null);
 		newLoc9.complete();	
 		
+		makeFloatingIsland();
+		
 		// map: 
 		//   [8](loops 5)
 		//   [5] - [6] - [7]
@@ -214,6 +216,147 @@ public class CreateWorld {
 		//   [2] - [7]
 	// [9] - [1]
 		
+	}
+	
+	private static void makeFloatingIsland() {
+		makeLandingPad();
+		makeMerchantRow();
+	}
+
+	private static void makeLandingPad() {
+		LocationBuilder newLoc1 = new LocationBuilder();
+		newLoc1.setName("Landing entrance.");
+		newLoc1.setDescription("This is the primary entrance to the floating island. It's an open platform jutting out into the air. A dock is visible to the north.");
+		newLoc1.addLocationConnection(Direction.SOUTH, 7);
+		newLoc1.complete();
+
+		LocationBuilder newLoc2 = new LocationBuilder();
+		newLoc2.setName("Dock.");
+		newLoc2.setDescription("A large dock with multiple receiving points. A few small airships hover nearby, next to two portal terminals. The wind occasionally brings misty water onto the east side of the dock, carried from the waterfall not far off. The westside of the dock offers a view of the busy merchant district, while northwards there is a sprawling, peaceful garden, and in the distance, the inner city dome is visible.");
+		newLoc2.addLocationConnection(Direction.SOUTH, 10);
+		newLoc2.complete();
+
+		LocationBuilder newLoc3 = new LocationBuilder();
+		newLoc3.setName("Landing Pad");
+		newLoc3.setDescription("A guardhouse is a few steps eastward, with a guard outside keeping an attentive eye towards the docks. A sign \"Landing's Tavern\" adorns a two-story building to the west.");
+		newLoc3.addLocationConnection(Direction.SOUTH, 11);
+		newLoc3.complete();
+
+		LocationBuilder newLoc4 = new LocationBuilder();
+		newLoc4.setName("Landing Guardhouse");
+		newLoc4.setDescription("A clean, grey, unassuming building. At least one guard is always present within.");
+		newLoc4.addLocationConnection(Direction.WEST, 12);
+		newLoc4.complete();
+
+		LocationBuilder newLoc5 = new LocationBuilder();
+		newLoc5.setName("Landing's Tavern");
+		newLoc5.setDescription("A well-stocked and clean tavern, serving a surprising variety of food and beverage.");
+		newLoc5.addLocationConnection(Direction.EAST, 12);
+		newLoc5.complete();
+
+		LocationBuilder newLoc6 = new LocationBuilder();
+		newLoc6.setName("Office");
+		newLoc6.setDescription("This is a typical office, with a large wooden table as the central fixture, and a chaotic array of too much paperwork.");
+		newLoc6.addLocationConnection(Direction.DOWN, 14);
+		newLoc6.complete();
+
+		LocationBuilder newLoc7 = new LocationBuilder();
+		newLoc7.setName("Landing Street by stables");
+		newLoc7.setDescription("The street passes by a stable to the west and nears Main Street. The road north looks older and worn, though still well maintained.");
+		newLoc7.addLocationConnection(Direction.SOUTH, 12);
+		newLoc7.complete();
+
+		LocationBuilder newLoc8 = new LocationBuilder();
+		newLoc8.setName("Stables");
+		newLoc8.setDescription("A small stable where travelers can borrow horses for their convenience.");
+		newLoc8.addLocationConnection(Direction.EAST, 16);
+		newLoc8.complete();
+	}
+
+	private static void makeMerchantRow() {
+		LocationBuilder newLoc9 = new LocationBuilder();
+		newLoc9.setName("South Main Street");
+		newLoc9.setDescription("The largest and best maintained road in the city. Lanterns line the street for all-day and all-weather illumination. The inner dome at the far northern end and the Landing Pad, the primary welcoming area for the floating city, to the south.");
+		newLoc9.addLocationConnection(Direction.SOUTH, 16);
+		newLoc9.complete();
+
+		LocationBuilder newLoc10 = new LocationBuilder();
+		newLoc10.setName("Main Street by Merchant Row");
+		newLoc10.setDescription("");
+		newLoc10.addLocationConnection(Direction.SOUTH, 18);
+		newLoc10.complete();
+
+		LocationBuilder newLoc11 = new LocationBuilder();
+		newLoc11.setName("Merchant Row");
+		newLoc11.setDescription("This road is crowded with small stalls and stores. A variety of smells flow through in the air - food, perfumes, flowers, leathers, and sometimes less appealing scents.");
+		newLoc11.addLocationConnection(Direction.EAST, 19);
+		newLoc11.complete();
+
+		LocationBuilder newLoc12 = new LocationBuilder();
+		newLoc12.setName("Merchant Row by the apothecary");
+		newLoc12.setDescription("");
+		newLoc12.addLocationConnection(Direction.EAST, 20);
+		newLoc12.complete();
+
+		LocationBuilder newLoc13 = new LocationBuilder();
+		newLoc13.setName("Apothecary");
+		newLoc13.setDescription("");
+		newLoc13.addLocationConnection(Direction.SOUTH, 21);
+		newLoc13.complete();
+
+		LocationBuilder newLoc14 = new LocationBuilder();
+		newLoc14.setName("Curve in Merchant Row");
+		newLoc14.setDescription("");
+		newLoc14.addLocationConnection(Direction.SOUTHEAST, 21);
+		newLoc14.complete();
+
+		LocationBuilder newLoc15 = new LocationBuilder();
+		newLoc15.setName("Shop");
+		newLoc15.setDescription("");
+		newLoc15.addLocationConnection(Direction.SOUTH, 23);
+		newLoc15.complete();
+
+		LocationBuilder newLoc16 = new LocationBuilder();
+		newLoc16.setName("Warehouse");
+		newLoc16.setDescription("");
+		newLoc16.addLocationConnection(Direction.SOUTHEAST, 23);
+		newLoc16.complete();
+
+		LocationBuilder newLoc17 = new LocationBuilder();
+		newLoc17.setName("Crescent Moon Tavern");
+		newLoc17.setDescription("");
+		newLoc17.addLocationConnection(Direction.EAST, 23);
+		newLoc17.complete();
+
+		LocationBuilder newLoc18 = new LocationBuilder();
+		newLoc18.setName("Merchant Row sideroad");
+		newLoc18.setDescription("");
+		newLoc18.addLocationConnection(Direction.NORTHEAST, 23);
+		newLoc18.complete();
+
+		LocationBuilder newLoc19 = new LocationBuilder();
+		newLoc19.setName("Merchant Row near apartements");
+		newLoc19.setDescription("");
+		newLoc19.addLocationConnection(Direction.SOUTHEAST, 27);
+		newLoc19.complete();
+
+		LocationBuilder newLoc20 = new LocationBuilder();
+		newLoc20.setName("Apartments south of Merchant Row");
+		newLoc20.setDescription("");
+		newLoc20.addLocationConnection(Direction.NORTH, 27);
+		newLoc20.complete();
+
+		LocationBuilder newLoc21 = new LocationBuilder();
+		newLoc21.setName("Apartments north of Merchant Row");
+		newLoc21.setDescription("");
+		newLoc21.addLocationConnection(Direction.SOUTH, 27);
+		newLoc21.complete();
+
+		LocationBuilder newLoc22 = new LocationBuilder();
+		newLoc22.setName("End of Merchant Row");
+		newLoc22.setDescription("");
+		newLoc22.addLocationConnection(Direction.SOUTHEAST, 27);
+		newLoc22.complete();
 	}
 	
 	public static Map<String, ItemBuilder> viewItemTemplates() {

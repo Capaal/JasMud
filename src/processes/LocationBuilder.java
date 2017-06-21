@@ -84,6 +84,11 @@ public class LocationBuilder {
 		}
 	}
 	
+	//overload of above method
+	public void addLocationConnection(Direction directionToOtherLocation, int otherLocationId) {
+		addLocationConnection(directionToOtherLocation, otherLocationId, Direction.getDirectionName(directionToOtherLocation.getOpp()), null);
+	}
+	
 	public class LocationConnectionDataBox {
 		
 		final Door door;
