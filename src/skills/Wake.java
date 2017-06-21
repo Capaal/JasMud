@@ -21,7 +21,7 @@ public class Wake extends InductionSkill {
 	
 	public class InnerWake extends InnerSkill {		
 		public InnerWake(Mobile currentPlayer, String fullCommand) {
-			super(currentPlayer, fullCommand);
+			super(currentPlayer, "wake");
 		}
 
 		@Override

@@ -285,6 +285,27 @@ public class StdMob implements Mobile, Container{
 	public Holdable getHoldableFromString(String holdableString) {
 		holdableString = holdableString.toLowerCase();
 		String ceiling = inventory.ceilingKey(holdableString);
+		String floor = inventory.floorKey(holdableString);			
+		String hasNum = UsefulCommands.getOnlyNumerics(holdableString);
+		if (ceiling != null) {
+			if (!hasNum.equals("") && ceiling.equalsIgnoreCase(holdableString)) {
+				return inventory.get(ceiling);				
+			} else if (ceiling.toLowerCase().startsWith(holdableString)) {
+				return inventory.get(ceiling);				
+			}
+		}
+		if (floor != null) {
+			if (!hasNum.equals("") && floor.equalsIgnoreCase(holdableString)) {
+				return inventory.get(floor);				
+			} else if (floor.toLowerCase().startsWith(holdableString)) {
+				return inventory.get(floor);				
+			}
+		}
+		return null;	
+		
+		/*
+		holdableString = holdableString.toLowerCase();
+		String ceiling = inventory.ceilingKey(holdableString);
 		String floor = inventory.floorKey(holdableString);
 //		NavigableMap<String, Holdable> subMap = null;
 //		if (ceiling != null && floor != null) {
@@ -312,7 +333,7 @@ public class StdMob implements Mobile, Container{
 	//			}
 	//		}
 	//	}
-		return null;
+		return null;*/
 	}	
 	
 	@Override

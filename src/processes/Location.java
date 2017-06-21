@@ -140,7 +140,28 @@ public class Location implements Container {
 	
 	@Override
 	public Holdable getHoldableFromString(String holdableString) {	
+		
 		holdableString = holdableString.toLowerCase();
+		String ceiling = inventory.ceilingKey(holdableString);
+		String floor = inventory.floorKey(holdableString);			
+		String hasNum = UsefulCommands.getOnlyNumerics(holdableString);
+		if (ceiling != null) {
+			if (!hasNum.equals("") && ceiling.equalsIgnoreCase(holdableString)) {
+				return inventory.get(ceiling);				
+			} else if (ceiling.toLowerCase().startsWith(holdableString)) {
+				return inventory.get(ceiling);				
+			}
+		}
+		if (floor != null) {
+			if (!hasNum.equals("") && floor.equalsIgnoreCase(holdableString)) {
+				return inventory.get(floor);				
+			} else if (floor.toLowerCase().startsWith(holdableString)) {
+				return inventory.get(floor);				
+			}
+		}
+		return null;		
+		
+	/*	holdableString = holdableString.toLowerCase();
 		String ceiling = inventory.ceilingKey(holdableString);
 		String floor = inventory.floorKey(holdableString);		
 		if (ceiling != null) {
@@ -153,7 +174,7 @@ public class Location implements Container {
 				return inventory.get(floor);
 			}
 		} 
-		return null;		
+		return null;	*/	
 	}
 
 	@Override public String getName() {return name;}

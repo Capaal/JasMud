@@ -14,6 +14,7 @@ import interfaces.Container;
 import interfaces.Holdable;
 import items.Bag.BagItemBuilder;
 import processes.ContainerErrors;
+import processes.UsefulCommands;
 
 //Pouches for easy accessibility - can eat/rub/use directly out of a pouch as though in hand.
 public class Pouch extends Bag {
@@ -46,10 +47,21 @@ public class Pouch extends Bag {
 	
 	@Override
 	public Holdable getHoldableFromString(String holdableString) {
+		holdableString = holdableString.toLowerCase();			
+		String hasNum = UsefulCommands.getOnlyNumerics(holdableString);
+		if (inventory != null) {
+			if (!hasNum.equals("") && (inventory.getName()+inventory.getId()).equalsIgnoreCase(holdableString)) {
+				return inventory;				
+			} else if ((inventory.getName()+inventory.getId()).startsWith(holdableString)) {
+				return inventory;				
+			}
+		}	
+		return null;
+		/*
 		if (inventory != null && inventory.getName().equalsIgnoreCase(holdableString)) {
 			return inventory;
 		}
-		return null;
+		return null;*/
 	}
 	
 	@Override

@@ -9,6 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import interfaces.Container;
 import interfaces.Holdable;
 import processes.ContainerErrors;
+import processes.UsefulCommands;
 
 //TODO LOCK access to currentWeight
 public class Bag extends StdItem implements Container { //wearable
@@ -89,18 +90,23 @@ public class Bag extends StdItem implements Container { //wearable
 	public Holdable getHoldableFromString(String holdableString) {
 		holdableString = holdableString.toLowerCase();
 		String ceiling = inventory.ceilingKey(holdableString);
-		String floor = inventory.floorKey(holdableString);		
+		String floor = inventory.floorKey(holdableString);			
+		String hasNum = UsefulCommands.getOnlyNumerics(holdableString);
 		if (ceiling != null) {
-			if ((ceiling.equalsIgnoreCase(holdableString) || inventory.get(ceiling).getName().equalsIgnoreCase(holdableString))) {
-				return inventory.get(ceiling);
+			if (!hasNum.equals("") && ceiling.equalsIgnoreCase(holdableString)) {
+				return inventory.get(ceiling);				
+			} else if (ceiling.toLowerCase().startsWith(holdableString)) {
+				return inventory.get(ceiling);				
 			}
 		}
 		if (floor != null) {
-			if ((floor.equalsIgnoreCase(holdableString) || inventory.get(floor).getName().equalsIgnoreCase(holdableString))) {
-				return inventory.get(floor);
+			if (!hasNum.equals("") && floor.equalsIgnoreCase(holdableString)) {
+				return inventory.get(floor);				
+			} else if (floor.toLowerCase().startsWith(holdableString)) {
+				return inventory.get(floor);				
 			}
-		} 
-		return null;
+		}
+		return null;	
 	}
 
 	@Override
