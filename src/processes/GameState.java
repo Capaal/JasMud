@@ -1,9 +1,12 @@
 package processes;
 
 import interfaces.Mobile;
+
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 // Collections.synchronizedSortedSet(new TreeSet<Holdable>());
 // Might need to synchronize some of these.
@@ -20,6 +23,8 @@ public class GameState {
 	
 	// Collection of all skill books, Mobs then load a copy of each skill book. id/book
 	private HashMap<Integer, SkillBook> AllSkillBooks = new HashMap<Integer, SkillBook>();
+	
+	public static ScheduledExecutorService effectExecutor  = Executors.newScheduledThreadPool(1);
 	
 	public boolean addClient(PlayerPrompt pp) {
 		return activeClients.add(pp);

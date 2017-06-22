@@ -12,8 +12,7 @@ import effects.PassiveCondition;
 
 // Contains methods to handle passive and ticking effects on a Mobile
 public class EffectManager {
-	
-	private static ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(1);
+
 	private Set<TickingEffect> activeEffects;
 	private EnumSet<PassiveCondition> passiveEffects;
 	private Mobile bondedMobile;
@@ -72,10 +71,6 @@ public class EffectManager {
 		return passiveEffects.contains(checkedEffect);
 	}
 	
-	public void shutDown() {
-		WorldServer.shutdownAndAwaitTermination(effectExecutor);
-	}
-	
 	private synchronized boolean registerPassiveEffect(PassiveCondition newEffect) {
 		if (passiveEffects.add(newEffect)) {
 			newEffect.doOnCreation(bondedMobile);
@@ -85,7 +80,7 @@ public class EffectManager {
 	}
 	
 	private void scheduleDestroyAfterXMilliseconds(PassiveCondition newEffect, int milliseconds) {
-		effectExecutor.schedule(new removeTask(newEffect), milliseconds, TimeUnit.MILLISECONDS);
+		WorldServer.gameState.effectExecutor.schedule(new removeTask(newEffect), milliseconds, TimeUnit.MILLISECONDS);
 	}
 	
 	// Removing an existing effect (curing and the such)

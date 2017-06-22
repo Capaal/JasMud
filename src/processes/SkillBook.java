@@ -34,7 +34,7 @@ public class SkillBook {
 	private Skills findSkill(String skill) {
 		synchronized (skillList) {
 			for (Skills s : skillList) {
-				if (s.getName().equals(skill)) {			
+				if (s.getName().toLowerCase().equals(skill.toLowerCase())) {			
 					return s;
 				}
 			}

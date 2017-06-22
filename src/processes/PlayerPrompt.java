@@ -165,8 +165,8 @@ public class PlayerPrompt implements Runnable {
 		//adding hardcoded skillbook TEMP
 	//	currentPlayer.addBook(CreateWorld.generalSkills.duplicate(),100);	
 		currentPlayer.addBook(WorldServer.gameState.getBook(1), 100);	
-//		currentPlayer.addBook(WorldServer.gameState.getBook(2), 100);
-//		currentPlayer.addBook(WorldServer.gameState.getBook(3), 100);
+		currentPlayer.addBook(WorldServer.gameState.getBook(2), 100);
+		currentPlayer.addBook(WorldServer.gameState.getBook(3), 100);
 		currentPlayer.setSendBack(sendBack);
 		currentPlayer.controlStatus(true);
 		currentPlayer.save(); 

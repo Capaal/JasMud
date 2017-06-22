@@ -145,6 +145,7 @@ public class WorldServer {
 	
 	public static void shutdown() {
 		shutdownAndAwaitTermination(executor);
+		shutdownAndAwaitTermination(gameState.effectExecutor);
 		try {
 			s.close();
 		} catch (IOException e) {

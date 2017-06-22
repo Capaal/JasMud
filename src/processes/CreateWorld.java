@@ -51,10 +51,10 @@ public class CreateWorld {
 	
 	//Hardcoded skill list
 	public static void makeSkills() {
-	//	SkillBook moveSkills = new SkillBook("moveSkills", 1);
-	//	WorldServer.gameState.addBook(1, moveSkills);
-	//	moveSkills.addSkill(new Move(null, null));
-		
+		SkillBook moveSkills = new SkillBook("moveSkills", 1);
+		WorldServer.gameState.addBook(1, moveSkills);
+		moveSkills.addSkill(new Move(null, null));
+		/*
 		SkillBook generalSkills = new SkillBook("generalSkills", 2);
 		WorldServer.gameState.addBook(1, generalSkills);
 		generalSkills.addSkill(new Move(null, null));
@@ -112,8 +112,9 @@ public class CreateWorld {
 		generalSkills.addSkill(new Staunch(null, null));
 		generalSkills.addSkill(new MercRegenSkill(null, null));
 		generalSkills.addSkill(new Shieldblock(null, null));
+		*/
 		
-/*		
+		
 		SkillBook generalSkills = new SkillBook("generalSkills", 2);
 		WorldServer.gameState.addBook(2, generalSkills);	
 		
@@ -174,7 +175,7 @@ public class CreateWorld {
 		mercSkills.addSkill(new Staunch(null, null));
 		mercSkills.addSkill(new MercRegenSkill(null, null));
 		mercSkills.addSkill(new Shieldblock(null, null));
-*/
+
 	}
 	
 	public static void spawnMobs() {
