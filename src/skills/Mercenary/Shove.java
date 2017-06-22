@@ -22,7 +22,7 @@ public class Shove extends Skills {
 	private Mobile finalTarget;
 	
 	public Shove(Mobile currentPlayer, String fullCommand) {
-		super("shove", "Push someone forcefull into another location.", currentPlayer, fullCommand);
+		super("shove", "Push someone forcefully into another location.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.TARGET);
 		super.syntaxList.add(Syntax.DIRECTION);

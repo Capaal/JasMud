@@ -41,7 +41,7 @@ public class Bleed extends TickingEffect {
 	}
 	@Override
 	public void doOnCreation() {
-		currentPlayer.displayPrompt();
+	//	currentPlayer.displayPrompt();
 		// TODO Auto-generated method stub
 		
 	}

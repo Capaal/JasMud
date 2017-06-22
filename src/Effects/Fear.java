@@ -24,7 +24,7 @@ public class Fear extends TickingEffect {
 	
 	@Override
 	public void doOnCreation() {		
-		currentPlayer.displayPrompt();
+	//	currentPlayer.displayPrompt();
 	}
 
 	@Override

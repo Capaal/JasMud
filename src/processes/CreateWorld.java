@@ -193,7 +193,6 @@ public class CreateWorld {
 		makeAPike();
 		makeAShield();
 		addIronPotion();
-		
 		addHealPotion();
 		addBleedPotion();
 		addRegenPotion();
@@ -214,7 +213,7 @@ public class CreateWorld {
 		//first location, north exit to 2
 		LocationBuilder firstLoc = new LocationBuilder();
 		firstLoc.setName("Start.");
-		firstLoc.setDescription("You have to start somewhere");
+		firstLoc.setDescription("You have to start somewhere.");
 		firstLoc.complete();	
 
 		//2nd location, south exit to 1, north exit to 3
@@ -228,7 +227,7 @@ public class CreateWorld {
 		LocationBuilder newLoc3 = new LocationBuilder();
 		newLoc3.setName("Road.");
 		newLoc3.setDescription("On the road to nowhere.");
-		newLoc3.addLocationConnection(Direction.SOUTH, 2, Direction.NORTH, null);
+		newLoc3.addLocationConnection(Direction.SOUTH, 2);
 		newLoc3.complete();	
 		
 		//4th location, south exit to 3
@@ -236,21 +235,21 @@ public class CreateWorld {
 		newLoc4.setName("Along the road.");
 		newLoc4.setDescription("A road passing by some farmlands.");		
 		newLoc4.setQuest(new FarmerQuest());
-		newLoc4.addLocationConnection(Direction.SOUTH, 3, Direction.NORTH, null);
+		newLoc4.addLocationConnection(Direction.SOUTH, 3);
 		newLoc4.complete();	
 		
 		//5th location, south exit to 4
 		LocationBuilder newLoc5 = new LocationBuilder();
 		newLoc5.setName("On a bridge.");
 		newLoc5.setDescription("A bridge over a dried creek.");
-		newLoc5.addLocationConnection(Direction.SOUTH, 4, Direction.NORTH, null);
+		newLoc5.addLocationConnection(Direction.SOUTH, 4);
 		newLoc5.complete();	
 		
 		//6th location, west exit to 5
 		LocationBuilder newLoc6 = new LocationBuilder();
 		newLoc6.setName("Forest trail.");
 		newLoc6.setDescription("Off the main path.");
-		newLoc6.addLocationConnection(Direction.WEST, 5, Direction.EAST, null);
+		newLoc6.addLocationConnection(Direction.WEST, 5);
 		newLoc6.complete();	
 		
 		//7th location, west exit to 6
@@ -272,13 +271,18 @@ public class CreateWorld {
 		LocationBuilder newLoc9 = new LocationBuilder();
 		newLoc9.setName("Bank.");
 		newLoc9.setDescription("Not the watery type.");
-		newLoc9.addLocationConnection(Direction.EAST, 1, Direction.WEST, null);
+		newLoc9.addLocationConnection(Direction.EAST, 1);
 		newLoc9.complete();	
 		
 		makeFloatingIsland();
 		
 		// map: 
-		//   [8](loops 5)
+		//				 [18]	
+		//		  [17] - [16]
+		//	(up15)[14] - [12] - [13]
+		//               [11]
+		//               [10]
+		//   [8](loops 5) |
 		//   [5] - [6] - [7]
 		//   [4]
 		//   [3]
@@ -290,6 +294,7 @@ public class CreateWorld {
 	private static void makeFloatingIsland() {
 		makeLandingPad();
 		makeMerchantRow();
+		makeGarden();
 	}
 
 	private static void makeLandingPad() {
@@ -427,6 +432,21 @@ public class CreateWorld {
 		newLoc22.addLocationConnection(Direction.SOUTHEAST, 27);
 		newLoc22.complete();
 	}
+	
+	private static void makeGarden() {
+		LocationBuilder newLoc32 = new LocationBuilder();
+		newLoc32.setName("Along Main Street");
+		newLoc32.setDescription("");
+		newLoc32.addLocationConnection(Direction.SOUTH, 19);
+		newLoc32.complete();
+		
+		LocationBuilder newLoc33 = new LocationBuilder();
+		newLoc33.setName("Garden Archway");
+		newLoc33.setDescription("");
+		newLoc33.addLocationConnection(Direction.WEST, 32);
+		newLoc33.complete();
+	}
+	
 	
 	public static Map<String, ItemBuilder> viewItemTemplates() {
 		return new HashMap<String, ItemBuilder>(itemTemplates);

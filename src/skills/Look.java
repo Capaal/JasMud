@@ -39,11 +39,11 @@ public class Look extends Skills {
 	
 	private void doLook (Location lookHere) {
 		messageSelf(UsefulCommands.ANSI.MAGENTA + lookHere.getName() + UsefulCommands.ANSI.SANE);
-		messageSelf(UsefulCommands.ANSI.GREEN + lookHere.getDescription() + UsefulCommands.ANSI.SANE);
+		messageSelf(lookHere.getDescription() + UsefulCommands.ANSI.SANE);
 		displayAll(lookHere);	//need to expand this so location doesn't do it anymore	
 		displayExits(lookHere);
 		
-		messageSelf("(God sight) Location number: " + lookHere.getId() + ".");  // GOD SIGHT
+		messageSelf("(Dev info) Location number: " + lookHere.getId() + ".");  
 	}
 	
 	private void displayAll(Location lookHere) {

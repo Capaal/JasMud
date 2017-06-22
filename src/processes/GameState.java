@@ -15,6 +15,9 @@ public class GameState {
 	// Contains transient sockets of each connected Player.
 	private Set<PlayerPrompt> activeClients = new HashSet<PlayerPrompt>();	
 	
+	// All players
+	private Map<String, Mobile> allPlayersList = new TreeMap<String, Mobile>();
+	
 	// Contains all Location objects. Location's id to location object.
 	private Map<Integer, Location> locationCollection = new TreeMap<Integer, Location>();
 	
@@ -36,6 +39,22 @@ public class GameState {
 	
 	public Set<PlayerPrompt> viewActiveClients() {
 		return new HashSet<PlayerPrompt>(activeClients);
+	}
+	
+	//make sure add doesn't override and can only add unique
+	public void addNewPlayer(String name, Mobile mob) {
+		allPlayersList.put(name, mob);
+	}
+	
+	private Map<String, Mobile> deletedPlayers = new TreeMap<String, Mobile>();
+	//maybe make this harder - add to a deleted playersList instead of just removed forever
+	public void deletePlayer(String name) {
+		deletedPlayers.put(name, allPlayersList.get(name));
+		allPlayersList.remove(name);
+	}
+	
+	public Map<String, Mobile> viewAllPlayers() {
+		return new TreeMap<String, Mobile>(allPlayersList);
 	}
 	
 	public Set<SkillBook> viewAllBooks() {

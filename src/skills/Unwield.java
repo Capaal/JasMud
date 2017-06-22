@@ -46,12 +46,12 @@ public class Unwield extends Skills {
 	}
 	
 	private void tryRight() {
-		messageSelf("You unwield a " + currentPlayer.getEquipment().getValue(EquipmentEnum.RIGHTHAND).toString() + ".");
+		messageSelf("You unwield a " + currentPlayer.getEquipment().getValue(EquipmentEnum.RIGHTHAND).getName() + ".");
 		currentPlayer.unEquip(EquipmentEnum.RIGHTHAND);
 	}
 	
 	private void tryLeft() {
-		messageSelf("You unwield a " + currentPlayer.getEquipment().getValue(EquipmentEnum.LEFTHAND).toString() + ".");
+		messageSelf("You unwield a " + currentPlayer.getEquipment().getValue(EquipmentEnum.LEFTHAND).getName() + ".");
 		currentPlayer.unEquip(EquipmentEnum.LEFTHAND);
 	}
 	

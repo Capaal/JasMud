@@ -24,6 +24,9 @@ public class Diagnose extends Skills {
 		for (TickingEffect t : activeC) {
 			messageSelf(t.getClass().getSimpleName() + " "+ t.getInfo());
 		}
+		if (passiveC.isEmpty() && activeC.isEmpty()) {
+			messageSelf("You have no conditions.");
+		}
 		
 	}
 

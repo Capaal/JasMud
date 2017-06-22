@@ -27,7 +27,7 @@ public class Nod extends Skills {
 			return;
 		}
 		messageSelf("You nod to " + target.getName() + " in agreement.");
-		messageOthers(currentPlayer.getName() + " nods to " + target.getName() + " .", Arrays.asList(currentPlayer, target));
+		messageOthers(currentPlayer.getName() + " nods to " + target.getName() + ".", Arrays.asList(currentPlayer, target));
 		messageTarget(currentPlayer.getName() + " nods to you in agreement.", Arrays.asList(target));
 		((Location)currentPlayer.getContainer()).notifyQuest(Quest.Trigger.NODS);	
 	}

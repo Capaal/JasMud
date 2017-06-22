@@ -47,8 +47,12 @@ public enum PassiveCondition {
 		
 		private PassiveCondition() {}
 		
-		public void doOnCreation(Mobile currentPlayer) {currentPlayer.displayPrompt();}
-		public void doOnDestruction(Mobile currentPlayer) {currentPlayer.displayPrompt();}
+		public void doOnCreation(Mobile currentPlayer) {
+		//	currentPlayer.displayPrompt();
+		}
+		public void doOnDestruction(Mobile currentPlayer) {
+		//	currentPlayer.displayPrompt();
+		}
 		
 		public String limbName() {return "";}
 		

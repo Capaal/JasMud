@@ -30,6 +30,7 @@ public abstract class Skills implements Runnable {
 		if (preAllSkills()) {
 		//	currentPlayer.tell("\n");
 			performSkill();
+			currentPlayer.displayPrompt();
 		}
 	}
 	
@@ -104,6 +105,7 @@ public abstract class Skills implements Runnable {
 				}
 				if (shouldTell) {
 					h.tell(msg);
+					h.displayPrompt();
 				}
 			}			
 		}

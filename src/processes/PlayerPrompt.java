@@ -52,7 +52,7 @@ public class PlayerPrompt implements Runnable {
 				destroyConnection();
 				break;
 			}
-			currentPlayer.displayPrompt();
+			//currentPlayer.displayPrompt();
 			String str = sendBack.getMessage();
 			if (str != null) {
 				// This is what breaks the infinite loop and kills connection.
@@ -170,12 +170,14 @@ public class PlayerPrompt implements Runnable {
 		currentPlayer.setSendBack(sendBack);
 		currentPlayer.controlStatus(true);
 		currentPlayer.save(); 
+		WorldServer.gameState.addNewPlayer(enteredName, currentPlayer);
 	}
 	
 	private void printFailMessages() {
 		Random rand = new Random();
 		int selection = rand.nextInt(failMessages.length);
 		sendBack.printMessage(failMessages[selection]);
+		currentPlayer.displayPrompt();
 	}
 	
 	private void destroyConnection() {

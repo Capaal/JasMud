@@ -31,7 +31,7 @@ public class MoveShove extends Move {
 		shover = Syntax.TARGET.getStringInfo(fullCommand, this);
 		messageTarget("You shove " + currentPlayer.getName() + " to the " + dir + ".", Arrays.asList(shoverP));
 		messageSelf(shoverP.getName() + " shoves you away.");
-		messageOthers(shover + " shoves " + currentPlayer.getName() + " away.", Arrays.asList(currentPlayer, shoverP));
+		messageOthers(shover + " shoves " + currentPlayer.getName() + " to the " + dir + ".", Arrays.asList(currentPlayer, shoverP));
 	}
 	
 	@Override protected void displayEnterMsg() {

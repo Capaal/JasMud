@@ -36,7 +36,7 @@ public class Levitate extends TickingEffect {
 	
 	@Override
 	public void doOnCreation() {		
-		currentPlayer.displayPrompt();
+	//	currentPlayer.displayPrompt();
 		currentPlayer.tell("You float up about a foot above the ground.");
 	}
 
