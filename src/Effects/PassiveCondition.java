@@ -15,14 +15,19 @@ public enum PassiveCondition {
 		
 		BROKENLEGS() {
 			@Override public String limbName() {return "legs";}
+			//doOnDestruction yes/no? could be different per skill, or consistent so it's easy to recognize
 		},
 		
 		BALANCE() {
-			
+			@Override public void doOnDestruction(Mobile currentPlayer) {
+				currentPlayer.tell("You regain balance.");
+			}
 		},
 		
 		ROOT() {
-			
+			@Override public void doOnDestruction(Mobile currentPlayer) {
+				currentPlayer.tell("You are no longer rooted.");
+			}
 		},
 		
 		SLEEP() {
@@ -51,7 +56,7 @@ public enum PassiveCondition {
 		//	currentPlayer.displayPrompt();
 		}
 		public void doOnDestruction(Mobile currentPlayer) {
-		//	currentPlayer.displayPrompt();
+		//	currentPlayer.tell("You regain balance.");
 		}
 		
 		public String limbName() {return "";}

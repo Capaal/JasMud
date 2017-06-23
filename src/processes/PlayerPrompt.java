@@ -43,6 +43,7 @@ public class PlayerPrompt implements Runnable {
 		LogIn();				
 		Look look = new Look(currentPlayer, "");
 		WorldServer.gameState.addToQueue(look);
+		messageOthers(currentPlayer.getName() + " appears before you.",Arrays.asList(currentPlayer));
 		// The following is the User's infinite loop they play inside.	
 		boolean stayInsideLoop = true;
 		while (stayInsideLoop) {
@@ -59,6 +60,7 @@ public class PlayerPrompt implements Runnable {
 				if (str.trim().equalsIgnoreCase("quit")) {
 					stayInsideLoop = false;
 					currentPlayer.tell("Leaving the World...");
+					messageOthers(currentPlayer.getName() + " has left the world.",Arrays.asList(currentPlayer));
 					currentPlayer.removeFromWorld();
 					destroyConnection();
 					break;
@@ -133,6 +135,7 @@ public class PlayerPrompt implements Runnable {
 		}
 	}
 	
+	//load needs to check gamestate TODO
 	private boolean lookForExistingPlayer(String enteredName, String enteredPass) {
 		StdMob person = null;
 		    try{		    	
@@ -192,6 +195,27 @@ public class PlayerPrompt implements Runnable {
 		WorldServer.gameState.removeClient(this);
 	}	
 	
+	//duplicate of messageOthers in Skills
+	private void messageOthers(String msg, List<Mobile> toIgnore) {
+		for (Mobile h : currentPlayer.getContainer().getMobiles().values()) {
+			if (h.isControlled()) {
+				Boolean shouldTell = true;
+				if (h.equals(currentPlayer)) {
+					shouldTell = false;
+				} else {
+					for (Mobile m : toIgnore) {
+						if (h.equals(m)) {
+							shouldTell = false;
+						}
+					}
+				}
+				if (shouldTell) {
+					h.tell(msg);
+					h.displayPrompt();
+				}
+			}			
+		}
+	}
 	
 	
 	

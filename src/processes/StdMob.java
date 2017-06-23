@@ -84,6 +84,7 @@ public class StdMob implements Mobile, Container{
 		this.allConditions = EnumSet.noneOf(PassiveCondition.class);
 		WorldServer.gameState.addMob(decoratedMob.getName() + decoratedMob.getId(), decoratedMob);
 		decoratedMob.getContainer().acceptItem(decoratedMob);
+		this.messages = new ArrayList<String>();
 	}
 	
 	private Mobile decorate(MobileBuilder build, Mobile m) {
@@ -521,8 +522,20 @@ public class StdMob implements Mobile, Container{
 		return currentHp;
 	}
 	
-	public ArrayList<String> getMessages() {
+	public ArrayList<String> getAllMessages() {
 		return messages;
+	}
+	
+	public void addMessage(String msg) {
+		messages.add(msg);
+	}
+	
+	public String readMessage(int i) {
+		return messages.get(i);
+	}
+	
+	public void deleteMessage(int i) {
+		messages.remove(i);
 	}
 
 	// TODO Should we even allow this?

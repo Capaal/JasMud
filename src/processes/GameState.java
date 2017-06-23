@@ -27,6 +27,9 @@ public class GameState {
 	// Collection of all skill books, Mobs then load a copy of each skill book. id/book
 	private HashMap<Integer, SkillBook> AllSkillBooks = new HashMap<Integer, SkillBook>();
 	
+//	// each player should hold their own list of messages - move when players are moved into a saved list
+//	private Map<String, ArrayList<String>> allMessages = new HashMap<String, ArrayList<String>>();
+	
 	public static ScheduledExecutorService effectExecutor  = Executors.newScheduledThreadPool(1);
 	
 	public boolean addClient(PlayerPrompt pp) {
