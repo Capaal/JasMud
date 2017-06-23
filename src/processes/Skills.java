@@ -52,6 +52,7 @@ public abstract class Skills implements Runnable {
 	
 	protected abstract void performSkill();
 	protected abstract boolean preSkillChecks();
+	public abstract Skills getNewInstance(Mobile currentPlayer, String fullCommand);
 	
 	protected void testForInduction() {
 		if (currentPlayer.isInducting()) {
@@ -163,7 +164,7 @@ public abstract class Skills implements Runnable {
 				if (syntaxPos != -1) { // Would be -1 IF the neededInfo Syntax was NOT defined by this Skill.					
 					StringBuffer sb = new StringBuffer();
 					for (int i = syntaxPos; i < fullCommandArray.size(); i++) {
-						sb.append(fullCommandArray.get(i));
+						sb.append(" " + fullCommandArray.get(i));
 					}
 					return sb.toString();					
 				}
@@ -230,6 +231,4 @@ public abstract class Skills implements Runnable {
 	public String getName() {
 		return name;
 	}
-
-	public abstract Skills getNewInstance(Mobile currentPlayer, String fullCommand);
 }

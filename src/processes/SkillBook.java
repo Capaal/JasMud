@@ -1,25 +1,24 @@
 package processes;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import skills.Move;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 public class SkillBook {
 
-	private Set<Skills> skillList;
+	private NavigableMap<String, Skills> skillList;
 	private final String name;
 	private final int id;
 	
 	public SkillBook(String name, int id) {
-		skillList = new HashSet<Skills>();
+		skillList = new TreeMap<String, Skills>();
 		this.name = name;
 		this.id = id;
 	}
 	
 	public void addSkill(Skills newSkill) {
 		synchronized (skillList) {
-			skillList.add(newSkill);
+			skillList.put(newSkill.name, newSkill);
 		}
 	}	
 	
@@ -33,11 +32,15 @@ public class SkillBook {
 	// TODO change to find via name via how moveHoldable works.
 	private Skills findSkill(String skill) {
 		synchronized (skillList) {
-			for (Skills s : skillList) {
-				if (s.getName().toLowerCase().startsWith(skill.toLowerCase())) {			
-					return s;
-				}
+			String s = skillList.ceilingKey(skill);
+			if (s != null && s.startsWith(skill)) {
+				return skillList.get(s);
 			}
+	//		for (Skills s : skillList) {
+	//			if (s.getName().toLowerCase().startsWith(skill.toLowerCase())) {			
+	//				return s;
+	//			}
+	//		}
 		}
 		return null;
 	}
@@ -50,8 +53,8 @@ public class SkillBook {
 		return id;
 	}
 	
-	public Set<Skills> viewSkills() {
-		return new HashSet<Skills>(skillList);
+	public Map<String, Skills> viewSkills() {
+		return new TreeMap<String, Skills>(skillList);
 	}
 	
 	protected SkillBook duplicate() {
@@ -60,15 +63,10 @@ public class SkillBook {
 		return newSkillBook;
 	}
 
-	private Set<Skills> copySkillList() {
-		Set<Skills> newList = new HashSet<Skills>();
-		for (Skills s : skillList) {
-			try {
-				newList.add(s.getClass().newInstance());
-			} catch (InstantiationException | IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	private NavigableMap<String, Skills> copySkillList() {
+		NavigableMap<String, Skills> newList = new TreeMap<String, Skills>();
+		for (Skills s : skillList.values()) {
+			newList.put(s.name, s.getNewInstance(null, null));
 		}
 		return newList;
 	}

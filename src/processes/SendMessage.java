@@ -15,7 +15,7 @@ public class SendMessage {
 		}
 		this.incoming = incoming;
 		this.in = new BufferedReader(new InputStreamReader(incoming.getInputStream()));
-		this.out = new PrintWriter(new OutputStreamWriter(incoming.getOutputStream()));	
+		this.out = new PrintWriter(new OutputStreamWriter(incoming.getOutputStream()), true);	
 	}
 	// Prints message to user, does not "return" to next line.
 	public void printMessageLine(String msg) {

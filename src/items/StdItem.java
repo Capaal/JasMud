@@ -125,7 +125,6 @@ public class StdItem implements Holdable{
 	public int compareTo(Holdable other) {
 		String thisItem = this.getName()+this.getId();
 		String otherItem = other.getName()+other.getId();
-		System.out.println(thisItem.compareToIgnoreCase(otherItem));
 		return thisItem.compareToIgnoreCase(otherItem);
 	}
 	

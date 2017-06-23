@@ -108,6 +108,8 @@ public class PlayerPrompt implements Runnable {
 		sendBack.printMessage("[ Welcome screen ]");
 		sendBack.printSpace();
 		sendBack.printMessage("Hello, and welcome!");
+		sendBack.printMessage("Please type anything just once.");
+		sendBack.getMessage();
 		sendBack.printMessage("Your name? ");
 		String enteredName = sendBack.getMessage();
 		sendBack.printMessage("Your password? ");

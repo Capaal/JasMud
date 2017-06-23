@@ -9,8 +9,6 @@ import processes.WorldServer;
 public class Follow extends Skills {
 	
 	Mobile finalTarget;
-	Move following;
-	MoveFollow fm;
 	
 	public Follow(Mobile currentPlayer, String fullCommand) {
 		super("follow", "Following others around.", currentPlayer, fullCommand);
@@ -28,8 +26,7 @@ public class Follow extends Skills {
 	}
 	
 	private void startFollowing() {
-		following = ((Move)finalTarget.getCommand("move"));
-		following.addFollower(this);
+		finalTarget.addFollower(this);
 	}
 	
 	public void move(String fullCommand) {

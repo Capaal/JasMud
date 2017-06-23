@@ -5,11 +5,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
 import processes.EffectManager;
+import processes.WorldServer;
 
 public abstract class TickingEffect implements Runnable {
-	
-	protected static ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(1);
 	
 	protected final int interval;
 	protected final Mobile currentPlayer;
@@ -49,7 +49,7 @@ public abstract class TickingEffect implements Runnable {
 	
 	private void buildWrapper(int times) {
 		wrapper = new ConditionWrapper(this, times);
-		ScheduledFuture<?> future = effectExecutor.scheduleWithFixedDelay(wrapper, this.interval, this.interval, TimeUnit.MILLISECONDS);
+		ScheduledFuture<?> future = WorldServer.gameState.effectExecutor.scheduleWithFixedDelay(wrapper, this.interval, this.interval, TimeUnit.MILLISECONDS);
 		wrapper.setOwnFuture(future);
 	}
 	
@@ -82,7 +82,8 @@ public abstract class TickingEffect implements Runnable {
 		
 		public void run() {
 			if (totalTimesRan < timesToRun) {
-				effectExecutor.execute(wrappedEffect);
+				WorldServer.gameState.addToQueue(wrappedEffect);
+	//			effectExecutor.execute(wrappedEffect);
 				totalTimesRan ++;
 			} else {
 				kill();

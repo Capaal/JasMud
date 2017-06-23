@@ -47,6 +47,7 @@ public class WorldServer {
 			executor = Executors.newCachedThreadPool();
 			while (true) {
 				Socket incoming = s.accept();
+				incoming.setTcpNoDelay(true);
 				PlayerPrompt newClient = new PlayerPrompt(incoming);
 				gameState.addClient(newClient);
 				executor.execute(newClient);
