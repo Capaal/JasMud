@@ -39,7 +39,7 @@ public class Shove extends Skills {
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
 			MoveShove move = new MoveShove(finalTarget, "move " + dir + " " + currentPlayer.getName());
 			move.setShover(currentPlayer);
-			WorldServer.gameState.addToQueue(move);
+			WorldServer.getGameState().addToQueue(move);
 		//	messageOthersAway(targetName + "is suddenly shoved into this location.", Arrays.asList(finalTarget), endContainer);
 		}
 		

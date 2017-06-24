@@ -20,7 +20,6 @@ import processes.Location.Direction;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import Quests.FarmerQuest;
 import skills.*;
@@ -29,22 +28,19 @@ import skills.Mercenary.*;
 public class CreateWorld {
 	
 	
-	//public static SkillBook generalSkills = new SkillBook("generalSkills", 2);
-	private static Map<String, ItemBuilder> itemTemplates = new TreeMap<String, ItemBuilder>(); //list of all template items
-	
-	public static void setTemplates(Map<String, ItemBuilder> newTemplates) {
-		itemTemplates = newTemplates;
+	public static void loadMap() {
+		makeWorldFromNowhere();
 	}
 	
 	public static void createWorldWithItems() {
-		makeWorldFromNowhere();
+//		makeWorldFromNowhere();
 		makeSkills();
 		makeItems();
 		spawnMobs();
 	}
 	
 	public static void createWorld() {
-		makeWorldFromNowhere();
+	//	makeWorldFromNowhere();
 		makeSkills();
 		spawnMobs();
 	}
@@ -52,71 +48,11 @@ public class CreateWorld {
 	//Hardcoded skill list
 	public static void makeSkills() {
 		SkillBook moveSkills = new SkillBook("moveSkills", 1);
-		WorldServer.gameState.addBook(1, moveSkills);
-		moveSkills.addSkill(new Move(null, null));
-		/*
-		SkillBook generalSkills = new SkillBook("generalSkills", 2);
-		WorldServer.gameState.addBook(1, generalSkills);
-		generalSkills.addSkill(new Move(null, null));
-		generalSkills.addSkill(new SkillList(null, null));
-		//general
-		generalSkills.addSkill(new Punch(null, null));
-		generalSkills.addSkill(new Throw(null, null));
-		generalSkills.addSkill(new Get(null, null));
-		generalSkills.addSkill(new Move(null, null));
-		generalSkills.addSkill(new Inventory(null, null));
-		generalSkills.addSkill(new Shoot(null, null));
-		generalSkills.addSkill(new Give(null, null));
-		generalSkills.addSkill(new Look(null, null));
-		generalSkills.addSkill(new Drop(null, null));
-		generalSkills.addSkill(new Info(null, null));
-		generalSkills.addSkill(new Wield(null, null));
-		generalSkills.addSkill(new Drink(null, null));
-		generalSkills.addSkill(new Say(null, null));
-		generalSkills.addSkill(new Struggle(null, null));
-		generalSkills.addSkill(new Eat(null, null));
-		generalSkills.addSkill(new Put(null, null));
-		generalSkills.addSkill(new TakeOut(null, null));
-		generalSkills.addSkill(new Open(null, null));
-		generalSkills.addSkill(new Close(null, null));
-		generalSkills.addSkill(new Follow(null, null));
-		generalSkills.addSkill(new Apply(null, null));
-		generalSkills.addSkill(new Examine(null, null));
-		generalSkills.addSkill(new Mine(null, null));
-		generalSkills.addSkill(new Chop(null, null)); //same as mine except for many messages..
-		generalSkills.addSkill(new Sleep(null, null));
-		generalSkills.addSkill(new Wake(null, null));
-		generalSkills.addSkill(new Unwield(null, null));
-		generalSkills.addSkill(new Diagnose(null, null));
-		//crafting
-		generalSkills.addSkill(new CraftItem(null, null));
-		generalSkills.addSkill(new Salvage(null, null));
-		//quest
-		generalSkills.addSkill(new Greet(null, null));
-		generalSkills.addSkill(new Nod(null, null));
-		//mage?
-		generalSkills.addSkill(new Heal(null, null));
-		generalSkills.addSkill(new Root(null, null));
-		generalSkills.addSkill(new VineTrip(null, null));
-		generalSkills.addSkill(new LightningWhip(null, null));
-		//mercenary only
-		generalSkills.addSkill(new Headshot(null, null));
-		generalSkills.addSkill(new BreakLimb(null, null));
-		generalSkills.addSkill(new Intimidate(null, null));
-		generalSkills.addSkill(new Straighten(null, null));
-		generalSkills.addSkill(new SpinKick(null, null));
-		generalSkills.addSkill(new Clearmind(null, null));
-		generalSkills.addSkill(new Shove(null, null));
-		generalSkills.addSkill(new Attack(null, null));
-		generalSkills.addSkill(new DualAttack(null, null));
-		generalSkills.addSkill(new Staunch(null, null));
-		generalSkills.addSkill(new MercRegenSkill(null, null));
-		generalSkills.addSkill(new Shieldblock(null, null));
-		*/
-		
+		WorldServer.getGameState().addBook(1, moveSkills);
+		moveSkills.addSkill(new Move(null, null));		
 		
 		SkillBook generalSkills = new SkillBook("generalSkills", 2);
-		WorldServer.gameState.addBook(2, generalSkills);	
+		WorldServer.getGameState().addBook(2, generalSkills);	
 		
 		generalSkills.addSkill(new SkillList(null, null));
 		//general
@@ -163,7 +99,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new LightningWhip(null, null));
 		
 		SkillBook mercSkills = new SkillBook("mercskills", 3);
-		WorldServer.gameState.addBook(3, mercSkills);
+		WorldServer.getGameState().addBook(3, mercSkills);
 		//mercenary only
 		mercSkills.addSkill(new Headshot(null, null));
 		mercSkills.addSkill(new BreakLimb(null, null));
@@ -507,15 +443,7 @@ public class CreateWorld {
 		newLoc42.addLocationConnection(Direction.WEST, 40);
 		newLoc42.addLocationConnection(Direction.NORTHWEST, 41);
 		newLoc42.complete();
-	}
-	
-	
-	public static Map<String, ItemBuilder> viewItemTemplates() {
-		return new HashMap<String, ItemBuilder>(itemTemplates);
-	}
-	
-	//template items should be stored as builders, not actually existing items
-	
+	}	
 	
 	public static void addOre() {
 		StackableItemBuilder newItem = new StackableItemBuilder();
@@ -524,7 +452,7 @@ public class CreateWorld {
 		newItem.setDescription("A piece of iron ore.");
 		newItem.setDamageMult(0.2);
 		newItem.setQuantity(1);
-		itemTemplates.put("iron", newItem); // not sure it should be in itemTemplates
+		WorldServer.getGameState().itemTemplates.put("iron", newItem); // not sure it should be in itemTemplates
 	//	newItem.complete();
 //		WorldServer.gameState.addItem("ore", newItem.getFinishedItem()); //added here instead of templates, not a craftable item
 	}
@@ -536,7 +464,7 @@ public class CreateWorld {
 		newItem.setDescription("Previously part of a tree.");
 		newItem.setDamageMult(0.2);
 		newItem.setQuantity(1);
-		itemTemplates.put("log", newItem); // not sure it should be in itemTemplates
+		WorldServer.getGameState().itemTemplates.put("log", newItem); // not sure it should be in itemTemplates
 	//	newItem.complete();
 	}
 	
@@ -545,39 +473,39 @@ public class CreateWorld {
 		newItem.setWeight(2);
 		newItem.setName("ingot");
 		newItem.setDescription("An iron ingot.");
-		StdItem iron = itemTemplates.get("iron").getNonexistentFinishedItem();
+		StdItem iron = WorldServer.getGameState().itemTemplates.get("iron").getNonexistentFinishedItem();
 		iron.addToStack(1);
 		newItem.setComponents(Arrays.asList(iron)); //TODO should use the object iron instead of string
 		newItem.setDamageMult(0.4);
 		newItem.setSalvageable(true);
-		itemTemplates.put("ingot", newItem);
+		WorldServer.getGameState().itemTemplates.put("ingot", newItem);
 	}
 	
 	public static void makeADagger() {
 		WeaponItemBuilder newItem = new WeaponItemBuilder();	
 		newItem.setName("dagger");
-		newItem.setItemContainer(WorldServer.gameState.viewLocations().get(1));
+		newItem.setItemContainer(WorldServer.getGameState().viewLocations().get(1));
 		newItem.setDescription("It's a dagger!");
-		newItem.setComponents(Arrays.asList(itemTemplates.get("ingot").getNonexistentFinishedItem()));
+		newItem.setComponents(Arrays.asList(WorldServer.getGameState().itemTemplates.get("ingot").getNonexistentFinishedItem()));
 		newItem.setSalvageable(true);
 		newItem.setWeight(1.5);
 		newItem.setAllowedSlots(EquipmentEnum.LEFTHAND);
 		newItem.setAllowedSlots(EquipmentEnum.RIGHTHAND);
 		newItem.setMercEffect(MercEffect.BLEED);
 		newItem.complete();
-		itemTemplates.put("dagger", newItem);
+		WorldServer.getGameState().itemTemplates.put("dagger", newItem);
 	}
 	
 	public static void makeASword() {
 		WeaponItemBuilder newItem = new WeaponItemBuilder();			
 		newItem.setName("sword");
 		newItem.setDescription("It's a sword!");
-		newItem.setComponents(Arrays.asList(itemTemplates.get("ingot").getNonexistentFinishedItem(), itemTemplates.get("ingot").getNonexistentFinishedItem()));
+		newItem.setComponents(Arrays.asList(WorldServer.getGameState().itemTemplates.get("ingot").getNonexistentFinishedItem(), WorldServer.getGameState().itemTemplates.get("ingot").getNonexistentFinishedItem()));
 		newItem.setSalvageable(true);
 		newItem.setWeight(5);
 		newItem.setDamageMult(1.5);
 		newItem.setBalanceMult(1.2);
-		itemTemplates.put("sword", newItem);
+		WorldServer.getGameState().itemTemplates.put("sword", newItem);
 	}
 	
 	public static void makeAStick() {	
@@ -588,7 +516,7 @@ public class CreateWorld {
 		newItem.setWeight(.5);
 		newItem.setMercEffect(MercEffect.FEAR);
 //		newItem.complete();
-		itemTemplates.put("stick", newItem);
+		WorldServer.getGameState().itemTemplates.put("stick", newItem);
 //		StdItem item = newItem.getFinishedItem();
 //		String xml = item.firstTimeSave(xstream);
 //		StdItem loaditem = (StdItem)xstream.fromXML(xml);
@@ -599,36 +527,36 @@ public class CreateWorld {
 		WeaponItemBuilder newItem = new WeaponItemBuilder();
 		newItem.setName("pike");
 		newItem.setDescription("It's a pike!");
-		newItem.setComponents(Arrays.asList(itemTemplates.get("dagger").getNonexistentFinishedItem(),itemTemplates.get("stick").getNonexistentFinishedItem()));
+		newItem.setComponents(Arrays.asList(WorldServer.getGameState().itemTemplates.get("dagger").getNonexistentFinishedItem(),WorldServer.getGameState().itemTemplates.get("stick").getNonexistentFinishedItem()));
 		newItem.setDamageMult(1.8);
 		newItem.setWeight(6);
 		newItem.setBalanceMult(1.5);
 		newItem.setSalvageable(true);
-		itemTemplates.put("pike", newItem);
+		WorldServer.getGameState().itemTemplates.put("pike", newItem);
 	}
 	
 	public static void makeAShield() {
 		WeaponItemBuilder newItem = new WeaponItemBuilder();
 		newItem.setName("shield");
 		newItem.setDescription("It's a shield!");
-		newItem.setComponents(Arrays.asList(itemTemplates.get("ingot").getNonexistentFinishedItem(),itemTemplates.get("ingot").getNonexistentFinishedItem()));
+		newItem.setComponents(Arrays.asList(WorldServer.getGameState().itemTemplates.get("ingot").getNonexistentFinishedItem(),WorldServer.getGameState().itemTemplates.get("ingot").getNonexistentFinishedItem()));
 		newItem.setDamageMult(1);
 		newItem.setWeight(4);
 		newItem.setBalanceMult(1.5);
 		newItem.setSalvageable(true);
-		itemTemplates.put("shield", newItem);
+		WorldServer.getGameState().itemTemplates.put("shield", newItem);
 	}
 	
 	public static void makeABow() {
 		WeaponItemBuilder newItem = new WeaponItemBuilder();
 		newItem.setName("bow");
 		newItem.setDescription("It's a bow!");
-		newItem.setComponents(Arrays.asList(itemTemplates.get("log").getNonexistentFinishedItem()));
+		newItem.setComponents(Arrays.asList(WorldServer.getGameState().itemTemplates.get("log").getNonexistentFinishedItem()));
 		newItem.setDamageMult(1);
 		newItem.setWeight(2);
 		newItem.setBalanceMult(1.5);
 		newItem.setSalvageable(true);
-		itemTemplates.put("bow", newItem);
+		WorldServer.getGameState().itemTemplates.put("bow", newItem);
 	}
 	
 	public static void addIronPotion() {
@@ -636,23 +564,23 @@ public class CreateWorld {
 		newItem.setName("ironpotion");
 		newItem.setDescription("A potion made from iron.");
 		newItem.setWeight(.5);
-		newItem.setComponents(Arrays.asList(itemTemplates.get("iron").getNonexistentFinishedItem()));
+		newItem.setComponents(Arrays.asList(WorldServer.getGameState().itemTemplates.get("iron").getNonexistentFinishedItem()));
 		newItem.setDamageMult(0.2);
 		newItem.setMaxSips(2);
 		newItem.setDrinkType(DrinkType.DEFENSE);
-		itemTemplates.put("ironpotion", newItem);
+		WorldServer.getGameState().itemTemplates.put("ironpotion", newItem);
 	}
 	
 	public static void addHealPotion() {
 		DrinkableItemBuilder newItem = new DrinkableItemBuilder();	
 		newItem.setName("healpotion");
 		newItem.setDescription("A potion made from sticks.");
-		newItem.setComponents(Arrays.asList(itemTemplates.get("stick").getNonexistentFinishedItem()));
+		newItem.setComponents(Arrays.asList(WorldServer.getGameState().itemTemplates.get("stick").getNonexistentFinishedItem()));
 		newItem.setDamageMult(0.2);
 		newItem.setWeight(.5);
 		newItem.setMaxSips(2);
 		newItem.setDrinkType(DrinkType.HEALTH);
-		itemTemplates.put("healpotion", newItem);
+		WorldServer.getGameState().itemTemplates.put("healpotion", newItem);
 	}
 	
 	public static void addBleedPotion() {
@@ -664,7 +592,7 @@ public class CreateWorld {
 		newItem.setMaxSips(2);
 		newItem.setDrinkType(DrinkType.BLEED);
 	//	newItem.complete();
-		itemTemplates.put("bleedpotion", newItem);
+		WorldServer.getGameState().itemTemplates.put("bleedpotion", newItem);
 	}
 	
 	public static void addRegenPotion() {
@@ -675,7 +603,7 @@ public class CreateWorld {
 		newItem.setWeight(.5);
 		newItem.setDrinkType(DrinkType.REGEN);
 	//	newItem.complete();
-		itemTemplates.put("regenpotion", newItem);
+		WorldServer.getGameState().itemTemplates.put("regenpotion", newItem);
 	}
 	
 	public static void makeAloeHerb() {
@@ -686,7 +614,7 @@ public class CreateWorld {
 		newItem.setWeight(.1);
 		newItem.setQuantity(100);
 	//	newItem.complete();
-		itemTemplates.put("aloe", newItem);
+		WorldServer.getGameState().itemTemplates.put("aloe", newItem);
 	}
 	
 	public static void makeComfreyHerb() {
@@ -696,7 +624,7 @@ public class CreateWorld {
 		newItem.setWeight(.1);
 		newItem.setPlantType(PlantType.COMFREY);
 	//	newItem.complete();
-		itemTemplates.put("comfrey", newItem);
+		WorldServer.getGameState().itemTemplates.put("comfrey", newItem);
 	}
 	
 	public static void makeOleander() {
@@ -706,7 +634,7 @@ public class CreateWorld {
 		newItem.setWeight(.1);
 		newItem.setPlantType(PlantType.OLEANDER);
 	//	newItem.complete();
-		itemTemplates.put("oleander", newItem);
+		WorldServer.getGameState().itemTemplates.put("oleander", newItem);
 	}
 	
 	public static void makeGinsengHerb() {
@@ -716,7 +644,7 @@ public class CreateWorld {
 		newItem.setWeight(.1);
 		newItem.setPlantType(PlantType.GINSENG);
 	//	newItem.complete();
-		itemTemplates.put("ginseng", newItem);
+		WorldServer.getGameState().itemTemplates.put("ginseng", newItem);
 	}
 	
 	public static void makeValerianPoison() {
@@ -726,7 +654,7 @@ public class CreateWorld {
 		newItem.setWeight(.1);
 		newItem.setPlantType(PlantType.VALERIAN);
 	//	newItem.complete();
-		itemTemplates.put("valerian", newItem);
+		WorldServer.getGameState().itemTemplates.put("valerian", newItem);
 	}
 	
 	public static void makeBelladonnaPoison() {
@@ -736,7 +664,7 @@ public class CreateWorld {
 		newItem.setWeight(.1);
 		newItem.setPlantType(PlantType.BELLADONNA);
 	//	newItem.complete();
-		itemTemplates.put("belladonna", newItem);
+		WorldServer.getGameState().itemTemplates.put("belladonna", newItem);
 	}
 	
 	public static void addPouch() {
@@ -744,7 +672,7 @@ public class CreateWorld {
 		newItem.setName("pouch");
 		newItem.setWeight(.5);
 	//	newItem.complete();
-		itemTemplates.put("pouch", newItem);
+		WorldServer.getGameState().itemTemplates.put("pouch", newItem);
 	}
 	
 	public static void makeBag() {
@@ -752,7 +680,7 @@ public class CreateWorld {
 		newItem.setName("bag");
 		newItem.setWeight(2);
 	//	newItem.complete();
-		itemTemplates.put("bag", newItem);
+		WorldServer.getGameState().itemTemplates.put("bag", newItem);
 	}
 
 	public static void addOreRock() {
@@ -761,9 +689,9 @@ public class CreateWorld {
 		newItem.setMaxQuantity(8);
 		newItem.setHarvestType(HarvestType.IRON);
 		newItem.setCurrentQuantity(8);
-		newItem.setItemContainer(WorldServer.gameState.viewLocations().get(7));
+		newItem.setItemContainer(WorldServer.getGameState().viewLocations().get(7));
 		newItem.complete();
-		itemTemplates.put("ironrock", newItem);
+		WorldServer.getGameState().itemTemplates.put("ironrock", newItem);
 	}
 	
 	public static void addTree() {
@@ -772,18 +700,18 @@ public class CreateWorld {
 		newItem.setMaxQuantity(8);
 		newItem.setHarvestType(HarvestType.WOOD);
 		newItem.setCurrentQuantity(8);
-		newItem.setItemContainer(WorldServer.gameState.viewLocations().get(6));
+		newItem.setItemContainer(WorldServer.getGameState().viewLocations().get(6));
 		newItem.complete();
-		itemTemplates.put("tree", newItem);
+		WorldServer.getGameState().itemTemplates.put("tree", newItem);
 	}
 	
 	public static void makeGoblin() {
 		MobileBuilder newGoblin = new MobileBuilder();
-		newGoblin.addSkillBook(WorldServer.gameState.getBook(1));
+	//	newGoblin.addSkillBook(WorldServer.gameState.getBook(1));
 		newGoblin.addDecorator(MobileDecorator.DecoratorType.CHASING);
 		newGoblin.addDecorator(MobileDecorator.DecoratorType.AGGRESSIVE);
 		newGoblin.setName("goblin");
-		newGoblin.setLocation(WorldServer.gameState.viewLocations().get(1));
+		newGoblin.setLocation(WorldServer.getGameState().viewLocations().get(1));
 		newGoblin.setDescription("A short, ugly goblin glares at you.");
 		newGoblin.setShortDescription(", an ugly goblin");
 		newGoblin.setLoadOnStartUp(true);
@@ -792,9 +720,9 @@ public class CreateWorld {
 	
 	public static void makeFarmerJames() {
 		MobileBuilder newFarmerJames = new MobileBuilder();
-		newFarmerJames.addSkillBook(WorldServer.gameState.getBook(1));
+	//	newFarmerJames.addSkillBook(WorldServer.getGameState().getBook(1));
 		newFarmerJames.addDecorator(MobileDecorator.DecoratorType.AGGRESSIVE);
-		newFarmerJames.setLocation(WorldServer.gameState.viewLocations().get(4));
+		newFarmerJames.setLocation(WorldServer.getGameState().viewLocations().get(4));
 		newFarmerJames.setName("FarmerJames");
 		newFarmerJames.setDescription("A farmer who looks down on his luck. (try GREETing him)");
 		newFarmerJames.setShortDescription(", a poor, tired farmer");
@@ -804,7 +732,7 @@ public class CreateWorld {
 	
 	public static void makeHorse() {
 		MobileBuilder newGoblin = new MobileBuilder();
-		newGoblin.addSkillBook(WorldServer.gameState.getBook(1));
+	//	newGoblin.addSkillBook(WorldServer.getGameState().getBook(1));
 		newGoblin.addDecorator(MobileDecorator.DecoratorType.CHASING);
 		newGoblin.addDecorator(MobileDecorator.DecoratorType.AGGRESSIVE);
 		newGoblin.setName("horse");

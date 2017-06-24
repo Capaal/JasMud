@@ -78,7 +78,7 @@ public class Harvestable extends StationaryItem {
 	
 	private void schedule() {
 		SkillWrapper wrapper = new SkillWrapper();
-		WorldServer.gameState.effectExecutor.schedule(wrapper, timeToReset, TimeUnit.SECONDS); //20s for test
+		WorldServer.getGameState().getEffectExecutor().schedule(wrapper, timeToReset, TimeUnit.SECONDS); //20s for test
 	}
 	//end timer stuff
 	
@@ -91,7 +91,7 @@ public class Harvestable extends StationaryItem {
 	
 	//not sure this is correct, why not just use an arraylist to store the type?
 	public void harvest(Mobile currentPlayer) {
-		ItemBuilder toCopy = CreateWorld.viewItemTemplates().get(type.harvest(currentPlayer)); 
+		ItemBuilder toCopy = WorldServer.getGameState().itemTemplates.get(type.harvest(currentPlayer)); 
 		toCopy.setItemContainer(currentPlayer);
 		toCopy.complete();
 	}
@@ -197,7 +197,7 @@ public class Harvestable extends StationaryItem {
 		}
 		
 		public void createHarvestedItem(Mobile currentPlayer, String itemToCreate) {
-			ItemBuilder toCopy = CreateWorld.viewItemTemplates().get(itemToCreate); 
+			ItemBuilder toCopy = WorldServer.getGameState().itemTemplates.get(itemToCreate); 
 			toCopy.setItemContainer(currentPlayer);
 			toCopy.complete();
 		}

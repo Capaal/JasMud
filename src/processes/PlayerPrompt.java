@@ -42,7 +42,7 @@ public class PlayerPrompt implements Runnable {
 	public void run() {	
 		LogIn();				
 		Look look = new Look(currentPlayer, "");
-		WorldServer.gameState.addToQueue(look);
+		WorldServer.getGameState().addToQueue(look);
 		messageOthers(currentPlayer.getName() + " appears before you.",Arrays.asList(currentPlayer));
 		// The following is the User's infinite loop they play inside.	
 		boolean stayInsideLoop = true;
@@ -66,18 +66,20 @@ public class PlayerPrompt implements Runnable {
 					break;
 				} else if (str.trim().equalsIgnoreCase("shutdown")) { // Starts FULL game shutdown. Probably doesn't work right.
 					stayInsideLoop = false;
-					for (PlayerPrompt player : WorldServer.gameState.viewActiveClients()) {
-						player.currentPlayer.removeFromWorld();
+					for (PlayerPrompt player : WorldServer.getGameState().viewActiveClients()) {
+			//			player.currentPlayer.save();
+			//			player.currentPlayer.removeFromWorld();
+						player.destroyConnection();
 					}
-					for (Location l : WorldServer.gameState.viewLocations().values()) {
+					for (Location l : WorldServer.getGameState().viewLocations().values()) {
 						for (Holdable h : l.inventory.values()) {
 							h.save();
 							h.removeFromWorld();
 						}
 					}
-					WorldServer.saveIdMaps();
-					WorldServer.saveTemplates();
-					destroyConnection();
+					WorldServer.saveGameState(WorldServer.GAMESTATEDEFAULTNAME);
+				//	WorldServer.getGameState().saveIdMaps();
+				//	WorldServer.getGameState().saveTemplates();					
 					WorldServer.shutdownAndAwaitTermination(WorldServer.executor);
 				} else {						
 					StringTokenizer st = new StringTokenizer(str);
@@ -96,7 +98,7 @@ public class PlayerPrompt implements Runnable {
 						com = currentPlayer.getCommand(command);
 					}
 					if (com != null) {		
-						WorldServer.gameState.addToQueue(com.getNewInstance(currentPlayer, str));
+						WorldServer.getGameState().addToQueue(com.getNewInstance(currentPlayer, str));
 					} else {		
 						printFailMessages();
 					}
@@ -137,7 +139,18 @@ public class PlayerPrompt implements Runnable {
 	
 	//load needs to check gamestate TODO
 	private boolean lookForExistingPlayer(String enteredName, String enteredPass) {
-		StdMob person = null;
+		Mobile m = WorldServer.getGameState().getPlayer(enteredName);
+		if (m != null && m.getPassword().equals(enteredPass)) {
+			currentPlayer = m;
+			currentPlayer.setSendBack(sendBack);
+			currentPlayer.getContainer().acceptItem(currentPlayer);
+			currentPlayer.controlStatus(true);
+			return true;
+		}
+		return false;
+		
+		
+		/*StdMob person = null;
 		    try{		    	
 		        File xmlFile = new File("./Players/" + enteredName + enteredPass + ".xml");
 		        if (!xmlFile.exists()) {
@@ -155,27 +168,27 @@ public class PlayerPrompt implements Runnable {
 	    	}
 	    	return true;
 	    }
-	    return false;
+	    return false;*/
 	}
 	
 	private void createNewPlayer(String enteredName, String enteredPass) {
 		MobileBuilder newPlayer = new MobileBuilder();		
 		newPlayer.setName(enteredName);					
 		newPlayer.setPassword(enteredPass);		
-		newPlayer.setLocation(WorldServer.gameState.viewLocations().get(1));  // Default starting location.	
+		newPlayer.setLocation(WorldServer.getGameState().viewLocations().get(1));  // Default starting location.	
 		newPlayer.complete();
 		this.currentPlayer = newPlayer.getFinishedMob();						
 	//	WorldServer.gameState.addMob(currentPlayer.getName() + currentPlayer.getId(), currentPlayer); This should be happening on mob creation.
 		
 		//adding hardcoded skillbook TEMP
 	//	currentPlayer.addBook(CreateWorld.generalSkills.duplicate(),100);	
-		currentPlayer.addBook(WorldServer.gameState.getBook(1), 100);	
-		currentPlayer.addBook(WorldServer.gameState.getBook(2), 100);
-		currentPlayer.addBook(WorldServer.gameState.getBook(3), 100);
+		currentPlayer.addBook(WorldServer.getGameState().getBook(1), 100);	
+		currentPlayer.addBook(WorldServer.getGameState().getBook(2), 100);
+		currentPlayer.addBook(WorldServer.getGameState().getBook(3), 100);
 		currentPlayer.setSendBack(sendBack);
 		currentPlayer.controlStatus(true);
-		currentPlayer.save(); 
-		WorldServer.gameState.addNewPlayer(enteredName, currentPlayer);
+	//	currentPlayer.save(); 
+	//	WorldServer.gameState.addNewPlayer(enteredName, currentPlayer);
 	}
 	
 	private void printFailMessages() {
@@ -192,7 +205,7 @@ public class PlayerPrompt implements Runnable {
 			System.out.println("Failed to close socket connection");
 			e.printStackTrace();
 		}
-		WorldServer.gameState.removeClient(this);
+		WorldServer.getGameState().removeClient(this);
 	}	
 	
 	//duplicate of messageOthers in Skills

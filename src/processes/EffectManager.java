@@ -2,12 +2,14 @@ package processes;
 
 import interfaces.Mobile;
 import interfaces.TickingEffect;
+
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
 import effects.PassiveCondition;
 
 // Contains methods to handle passive and ticking effects on a Mobile
@@ -80,7 +82,7 @@ public class EffectManager {
 	}
 	
 	private void scheduleDestroyAfterXMilliseconds(PassiveCondition newEffect, int milliseconds) {
-		WorldServer.gameState.effectExecutor.schedule(new removeTask(newEffect), milliseconds, TimeUnit.MILLISECONDS);
+		WorldServer.getGameState().getEffectExecutor().schedule(new removeTask(newEffect), milliseconds, TimeUnit.MILLISECONDS);
 	}
 	
 	// Removing an existing effect (curing and the such)

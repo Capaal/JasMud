@@ -4,12 +4,14 @@ import interfaces.Holdable;
 import interfaces.Mobile;
 import items.ItemBuilder;
 import items.StdItem;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.TreeMap;
+
 import processes.Equipment.EquipmentEnum;
 import processes.MobileDecorator.DecoratorType;
 
@@ -23,7 +25,7 @@ public class MobileBuilder {
 	private int maxHp = 100;
 	private int currentHp = 100; //probably don't need this
 	private int defense = 0;
-	private Location location = WorldServer.gameState.viewLocations().get(1);
+	private Location location = WorldServer.getGameState().viewLocations().get(1);
 	private boolean isDead = false;
 	private int xpWorth = 1;
 	private int experience = 1;

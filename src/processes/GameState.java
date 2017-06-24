@@ -1,36 +1,85 @@
 package processes;
 
+import interfaces.Holdable;
 import interfaces.Mobile;
+import items.ItemBuilder;
+import items.StdItem;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 // Collections.synchronizedSortedSet(new TreeSet<Holdable>());
 // Might need to synchronize some of these.
 
 public class GameState {
-	// Contains transient sockets of each connected Player.
-	private Set<PlayerPrompt> activeClients = new HashSet<PlayerPrompt>();	
+		
 	
 	// All players
+	
 	private Map<String, Mobile> allPlayersList = new TreeMap<String, Mobile>();
 	
+	public Map<String, Integer> idMap = new HashMap<String, Integer>();
+
+	public Map<String, ItemBuilder> itemTemplates = new TreeMap<String, ItemBuilder>(); //list of all template items
+	
+	private Map<String, Mobile> deletedPlayers = new TreeMap<String, Mobile>();
+	
+	private HashMap<Integer, SkillBook> AllSkillBooks = new HashMap<Integer, SkillBook>();
+	
+	public int maxLocationId;
+	
+	// Contains transient sockets of each connected Player.
+	@XStreamOmitField
+	private Set<PlayerPrompt> activeClients = new HashSet<PlayerPrompt>();
+	
 	// Contains all Location objects. Location's id to location object.
-	private Map<Integer, Location> locationCollection = new TreeMap<Integer, Location>();
+	@XStreamOmitField
+	public Map<Integer, Location> locationCollection = new TreeMap<Integer, Location>();
 	
 	// Mob list name + id
+	@XStreamOmitField // TODO Should load mobs or generate on createWorld? I vote generate
 	private Map<String, Mobile> mobList = new TreeMap<String, Mobile>();
 	
 	// Collection of all skill books, Mobs then load a copy of each skill book. id/book
-	private HashMap<Integer, SkillBook> AllSkillBooks = new HashMap<Integer, SkillBook>();
 	
-//	// each player should hold their own list of messages - move when players are moved into a saved list
-//	private Map<String, ArrayList<String>> allMessages = new HashMap<String, ArrayList<String>>();
 	
-	public static ScheduledExecutorService effectExecutor  = Executors.newScheduledThreadPool(1);
+	
+	@XStreamOmitField
+	private ScheduledExecutorService effectExecutor;
+	
+	@XStreamOmitField
+	public static BlockingQueue<Runnable> SkillQueue;	
+	
+	public GameState() {
+		effectExecutor  = Executors.newScheduledThreadPool(1);
+		SkillQueue = new ArrayBlockingQueue<Runnable>(1024);
+		maxLocationId = 0;
+	}
+	
+	private Object readResolve() {
+		effectExecutor  = Executors.newScheduledThreadPool(1);
+		SkillQueue = new ArrayBlockingQueue<Runnable>(1024);
+		activeClients = new HashSet<PlayerPrompt>();
+		locationCollection = new TreeMap<Integer, Location>();
+		mobList = new TreeMap<String, Mobile>();
+		AllSkillBooks = new HashMap<Integer, SkillBook>();
+		effectExecutor  = Executors.newScheduledThreadPool(1);
+		SkillQueue = new ArrayBlockingQueue<Runnable>(1024);
+		return this;
+	}
+	
+	public ScheduledExecutorService getEffectExecutor() {
+		return effectExecutor;
+	}
 	
 	public boolean addClient(PlayerPrompt pp) {
 		return activeClients.add(pp);
@@ -49,7 +98,6 @@ public class GameState {
 		allPlayersList.put(name, mob);
 	}
 	
-	private Map<String, Mobile> deletedPlayers = new TreeMap<String, Mobile>();
 	//maybe make this harder - add to a deleted playersList instead of just removed forever
 	public void deletePlayer(String name) {
 		deletedPlayers.put(name, allPlayersList.get(name));
@@ -58,6 +106,10 @@ public class GameState {
 	
 	public Map<String, Mobile> viewAllPlayers() {
 		return new TreeMap<String, Mobile>(allPlayersList);
+	}
+	
+	public Mobile getPlayer(String playerName) {
+		return allPlayersList.get(playerName);
 	}
 	
 	public Set<SkillBook> viewAllBooks() {
@@ -102,9 +154,7 @@ public class GameState {
 	
 	public boolean checkForLocation(int id) {
 		return locationCollection.containsKey(id);
-	}
-	
-	public static BlockingQueue<Runnable> SkillQueue = new ArrayBlockingQueue<Runnable>(1024);
+	}	
 	
 	public void addToQueue(Runnable skill) {
 		try {
@@ -122,4 +172,62 @@ public class GameState {
 			return null;
 		}
 	}	
+
+	// PLAYERS ONLY (Mobs should just load from hardcoding defaults)
+	public void saveMobile(Mobile player) {	
+		FileOutputStream fos = null;
+		try {		
+			WorldServer.xstream.toXML(player, new FileWriter(new File("./Players/" + player.getName() + player.getPassword() + ".xml")));
+			for (Holdable s : player.getInventory().values()) {
+				s.delete();
+			}
+		} catch(Exception e) {
+		    e.printStackTrace(); // this obviously needs to be refined.
+		} finally {
+		    if(fos!=null) {
+		        try{ 
+		            fos.close();
+		        } catch (IOException e) {
+		            e.printStackTrace(); // this obviously needs to be refined.
+		        }
+		    }
+		}
+	}
+	
+	public void saveItem(Holdable item) {
+		if (item.getContainer() != null) {
+			FileOutputStream fos = null;
+			try {
+				WorldServer.xstream.toXML(item, new FileWriter(new File("./Items/" + item.getName()+item.getId()+ ".xml")));
+			} catch(Exception e) {
+			    e.printStackTrace(); // this obviously needs to be refined.
+			} finally {
+			    if(fos!=null) {
+			        try{ 
+			            fos.close();
+			        } catch (IOException e) {
+			            e.printStackTrace(); // this obviously needs to be refined.
+			        }
+			    }
+			}
+		}
+	}
+
+	public boolean loadSavedItems() {		
+		File[] roots;
+		File fileDir = new File("./Items");
+		roots = fileDir.listFiles();       
+	    for (File file : roots) {
+	    	if(file.exists() && (file.getName().endsWith(".xml")||file.getName().endsWith(".XML"))) {
+	        	try{		    			       
+			        Object item = WorldServer.xstream.fromXML(file);  
+			        ((StdItem)item).getContainer().acceptItem((StdItem)item);
+			    }catch(Exception e){
+			        System.err.println("Error in XML Read item: " + file.getName() + e.getMessage());
+			        return false;
+			    }
+	    	}
+	    }
+	    return true;
+	}
 }

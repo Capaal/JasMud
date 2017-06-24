@@ -81,7 +81,7 @@ public abstract class InductionSkill extends Skills {
 		
 		public void run() {
 			if (totalTimesRan < timesToRun) {
-				WorldServer.gameState.addToQueue(wrappedInnerSkill.getNewInstance(currentPlayer, "")); 
+				WorldServer.getGameState().addToQueue(wrappedInnerSkill.getNewInstance(currentPlayer, "")); 
 		//		wrapperExecutor.execute(wrappedSkill);
 		//		wrappedSkill.secondaryRun();
 				totalTimesRan ++;

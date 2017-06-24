@@ -26,6 +26,7 @@ public class Move extends Skills {
 	
 	@Override
 	protected void performSkill() {
+		stopFollowing();
 		if (preSkillChecks()) {
 
 			ifDizzy(); //if dizzy, sets a new random direction, ok to run into walls

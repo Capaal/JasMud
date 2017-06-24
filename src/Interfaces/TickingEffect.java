@@ -49,7 +49,7 @@ public abstract class TickingEffect implements Runnable {
 	
 	private void buildWrapper(int times) {
 		wrapper = new ConditionWrapper(this, times);
-		ScheduledFuture<?> future = WorldServer.gameState.effectExecutor.scheduleWithFixedDelay(wrapper, this.interval, this.interval, TimeUnit.MILLISECONDS);
+		ScheduledFuture<?> future = WorldServer.getGameState().getEffectExecutor().scheduleWithFixedDelay(wrapper, this.interval, this.interval, TimeUnit.MILLISECONDS);
 		wrapper.setOwnFuture(future);
 	}
 	
@@ -82,7 +82,7 @@ public abstract class TickingEffect implements Runnable {
 		
 		public void run() {
 			if (totalTimesRan < timesToRun) {
-				WorldServer.gameState.addToQueue(wrappedEffect);
+				WorldServer.getGameState().addToQueue(wrappedEffect);
 	//			effectExecutor.execute(wrappedEffect);
 				totalTimesRan ++;
 			} else {

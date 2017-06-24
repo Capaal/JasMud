@@ -35,7 +35,7 @@ public class Messaging extends Skills {
 		msg = Syntax.LIST.getStringInfo(fullCommand, this);
 		if (preSkillChecks()) {
 			target = Syntax.TARGET.getStringInfo(fullCommand, this);
-			allPlayers = WorldServer.gameState.viewAllPlayers();
+			allPlayers = WorldServer.getGameState().viewAllPlayers();
 			ArrayList<String> allMsgs = ((StdMob)currentPlayer).getAllMessages();
 			switch (keyword) {
 			case "showall":

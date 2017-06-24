@@ -52,7 +52,7 @@ public class Location implements Container {
 		
 		
 	//	this.locationMap = builder.getlocationMap();
-		WorldServer.gameState.addLocation(this.id, this);		
+		WorldServer.getGameState().addLocation(this.id, this);		
 	/*	for (Location otherLocation : builder.locationConnections.keySet()){
 			if (otherLocation != null) {
 				Direction directionToHere = builder.locationConnections.get(otherLocation).otherLocationToCurrentDirection;

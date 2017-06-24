@@ -33,7 +33,7 @@ public class LocationBuilder {
 	private Location finishedLocation;	
 	private boolean buildComplete = false;
 	private Quest bondedQuest = null;
-	private static int maxId = 0;
+	
 	private ArrayList<LocationConnectionDataBox> locationBuildingBlocks;
 	
 	public LocationBuilder() {
@@ -54,8 +54,8 @@ public class LocationBuilder {
 	}
 	
 	private synchronized void handleId() {
-		maxId ++;
-		this.id = maxId;		
+		WorldServer.getGameState().maxLocationId ++;
+		this.id = WorldServer.getGameState().maxLocationId;		
 	}
 	
 	// If an instance of LocationBuilder has been completed via "complete()" then returns the generated Location.
@@ -78,8 +78,8 @@ public class LocationBuilder {
 	public void setDescription(String description) {this.description = description;}	
 
 	public void addLocationConnection(Direction directionToOtherLocation, int otherLocationId, Direction otherLocationToHereDirection, Door door) {			
-		if (WorldServer.gameState.checkForLocation(otherLocationId)) { // If otherLocation already exists, continue.	
-			Location otherLocation = WorldServer.gameState.viewLocations().get(otherLocationId);
+		if (WorldServer.getGameState().checkForLocation(otherLocationId)) { // If otherLocation already exists, continue.	
+			Location otherLocation = WorldServer.getGameState().viewLocations().get(otherLocationId);
 		
 			locationBuildingBlocks.add(new LocationConnectionDataBox(directionToOtherLocation, otherLocation, otherLocationToHereDirection, door));
 	}

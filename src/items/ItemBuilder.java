@@ -26,7 +26,7 @@ public class ItemBuilder {
 	protected EnumSet<EquipmentEnum> allowedSlots = EnumSet.of(EquipmentEnum.RIGHTHAND, EquipmentEnum.LEFTHAND);// EnumSet.noneOf(EquipmentEnum.class);
 	protected List<StdItem> components = new ArrayList<StdItem>();
 	protected boolean salvageable = false;
-	protected static Map<String, Integer> idMap = new HashMap<String, Integer>();
+	
 	protected StdItem finishedItem =  null;
 	protected int quantity = 1;
 	
@@ -151,12 +151,13 @@ public class ItemBuilder {
 	}
 	
 	private synchronized void handleId() {
-		if (idMap.containsKey(this.name)) {
-			this.id = idMap.get(this.name) + 1; 
-			idMap.put(this.name, this.id);					
+		
+		if (WorldServer.getGameState().idMap.containsKey(this.name)) {
+			this.id = WorldServer.getGameState().idMap.get(this.name) + 1; 
+			WorldServer.getGameState().idMap.put(this.name, this.id);					
 		} else {
 			this.id = 1;
-			idMap.put(this.name,  this.id);
+			WorldServer.getGameState().idMap.put(this.name,  this.id);
 		}
 	}
 
@@ -169,16 +170,6 @@ public class ItemBuilder {
 		handleId();
 		StdItem notFinishedItem = produceType();
 		return notFinishedItem;
-	}
-	
-	public static Map<String, Integer> getIdMap() {
-		return idMap;
-	}
-
-	public static void setIdMap(Map<String, Integer> idMap2) {
-		idMap = idMap2;
-		// TODO Auto-generated method stub
-		
 	}
 
 	

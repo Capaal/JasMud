@@ -73,7 +73,7 @@ public class FarmerQuest extends Quest {
 		
 		private void createSkeleton() {
 			questSkelly = new MobileBuilder();
-			questSkelly.addSkillBook(WorldServer.gameState.getBook(1));
+	//		questSkelly.addSkillBook(WorldServer.getGameState().getBook(1));
 			questSkelly.addDecorator(MobileDecorator.DecoratorType.CHASING);
 			questSkelly.addDecorator(MobileDecorator.DecoratorType.AGGRESSIVE);
 			questSkelly.setLocation(questLocation);

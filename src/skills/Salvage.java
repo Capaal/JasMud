@@ -53,7 +53,7 @@ public class Salvage extends Skills {
 			messageSelf("What are you trying to salvage?"); //fail from no item specified
 			return false;
 		}
-		allItemTemplates = CreateWorld.viewItemTemplates(); //maybe list of only craftable items?
+		allItemTemplates = WorldServer.getGameState().itemTemplates; //maybe list of only craftable items?
 		salvageThis = allItemTemplates.get(itemToSalvage);
 		if (salvageThis == null) {
 			messageSelf("This item can't be salvaged."); //fail from no template for item specified

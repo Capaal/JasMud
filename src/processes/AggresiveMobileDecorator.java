@@ -41,7 +41,7 @@ public class AggresiveMobileDecorator extends MobileDecorator {
 			sb.append("punch ");
 			sb.append(lastAggressor.getName());
 			Skills basicSkill = new Punch(this, sb.toString());			
-			WorldServer.gameState.addToQueue(basicSkill);
+			WorldServer.getGameState().addToQueue(basicSkill);
 			executor.schedule(new AITask(this), 900, TimeUnit.MILLISECONDS);
 		} else {
 			hasTask = false;

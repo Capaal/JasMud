@@ -118,7 +118,7 @@ public class StdItem implements Holdable{
 	// not sure how packs will work yet...
 	@Override
 	public void save() {
-		WorldServer.saveItem(this);		
+		WorldServer.getGameState().saveItem(this);		
 	}
 
 	@Override

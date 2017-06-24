@@ -8,11 +8,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class LocationConverter implements Converter {
 	
-	private GameState gameState;
-	
 	public LocationConverter(GameState gameState) {
 		super();
-		this.gameState = gameState;
 	}
 
 	@Override
@@ -31,7 +28,7 @@ public class LocationConverter implements Converter {
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		int id = Integer.parseInt(reader.getValue());
-		Location location = gameState.viewLocations().get(id);
+		Location location = WorldServer.getGameState().viewLocations().get(id);
 		return location;
 	}
 

@@ -11,7 +11,9 @@ import items.ItemBuilder;
 import items.StackableItem;
 import items.StdItem;
 import processes.CreateWorld;
+import processes.GameState;
 import processes.Skills;
+import processes.WorldServer;
 
 public class CraftItem extends Skills {
 
@@ -25,7 +27,7 @@ public class CraftItem extends Skills {
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.ITEM);
 		super.syntaxList.add(Syntax.TIMES);
-		allItemTemplates = CreateWorld.viewItemTemplates(); //maybe list of only craftable items?
+		allItemTemplates = WorldServer.getGameState().itemTemplates; //maybe list of only craftable items?
 	}
 	
 	protected void performSkill() {

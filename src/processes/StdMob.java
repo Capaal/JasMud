@@ -52,8 +52,9 @@ public class StdMob implements Mobile, Container{
 	protected boolean isControlled = false;
 //	protected boolean loadOnStartUp = false;
 	protected TreeMap<String, Holdable> inventory = new TreeMap<String, Holdable>();
-	protected InductionSkill inductionSkill = null;
 	@XStreamOmitField
+	protected InductionSkill inductionSkill = null;
+//	@XStreamOmitField
 	protected Map<SkillBook, Integer> skillBookList = new HashMap<SkillBook, Integer>();
 	protected List<ItemBuilder> dropsOnDeath;
 	@XStreamOmitField
@@ -62,7 +63,9 @@ public class StdMob implements Mobile, Container{
 	protected Mobile lastAggressor;
 	protected ArrayList<String> messages;
 	protected double currentWeight;
+	@XStreamOmitField
 	protected ArrayList<Mobile> followers = new ArrayList<Mobile>();
+	@XStreamOmitField
 	protected Mobile following;
 	
 	public StdMob(MobileBuilder build) {
@@ -84,7 +87,8 @@ public class StdMob implements Mobile, Container{
 		createNewEffectManager();		
 		this.skillBookList = build.getSkillBookList();		
 		this.equipment = build.getEquipment();
-		WorldServer.gameState.addMob(decoratedMob.getName() + decoratedMob.getId(), decoratedMob);
+		WorldServer.getGameState().addMob(decoratedMob.getName() + decoratedMob.getId(), decoratedMob);
+		WorldServer.getGameState().addNewPlayer(this.name, decoratedMob);
 		decoratedMob.getContainer().acceptItem(decoratedMob);
 		this.messages = new ArrayList<String>();
 	}
@@ -438,20 +442,20 @@ public class StdMob implements Mobile, Container{
 	
 	@Override
 	public void save() {
-		WorldServer.saveMobile(this);
+		WorldServer.getGameState().saveMobile(this);
 	}	
 
 	@Override
 	public void removeFromWorld() {	
-		save();
+//		save();
 		if (isInducting()) {
 			inductionSkill.shutDown();
 		}
-		for (Holdable h : new HashSet<Holdable>(inventory.values())) {
-			h.removeFromWorld();
-		}
+	//	for (Holdable h : new HashSet<Holdable>(inventory.values())) {
+	//		h.removeFromWorld();
+	//	}
 		mobLocation.removeItemFromLocation(this);
-		WorldServer.gameState.removeMob(this.getName() + this.getId());
+	//	WorldServer.gameState.removeMob(this.getName() + this.getId());
 	}
 	
 	@Override
@@ -604,10 +608,11 @@ public class StdMob implements Mobile, Container{
 	}
 	
 	private Object readResolve() {
-    	addBook(WorldServer.gameState.getBook(1), 100);
-    	addBook(WorldServer.gameState.getBook(2), 100);
-    	addBook(WorldServer.gameState.getBook(3), 100);
-    	WorldServer.gameState.addMob(name + id, this);
+		followers = new ArrayList<Mobile>();
+ //   	addBook(WorldServer.getGameState().getBook(1), 100);
+  //  	addBook(WorldServer.getGameState().getBook(2), 100);
+   // 	addBook(WorldServer.getGameState().getBook(3), 100);
+   // 	WorldServer.getGameState().addMob(name + id, this);
     	getContainer().acceptItem(this);
     	createNewEffectManager();	 
     	controlStatus(true);
@@ -648,7 +653,7 @@ public class StdMob implements Mobile, Container{
 	@Override
 	public void moveFollowers(String fullCommand) {
 		for (Mobile m : followers) {
-			WorldServer.gameState.addToQueue(new MoveFollow(m, fullCommand));
+			WorldServer.getGameState().addToQueue(new MoveFollow(m, fullCommand));
 		}
 	}
 

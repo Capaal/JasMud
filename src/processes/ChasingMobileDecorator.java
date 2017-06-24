@@ -39,7 +39,7 @@ public class ChasingMobileDecorator extends MobileDecorator {
 					sb.append("move ");
 					sb.append(toAggressor.toString());
 					Skills move = new Move(this, sb.toString());	
-					WorldServer.gameState.addToQueue(move);
+					WorldServer.getGameState().addToQueue(move);
 			//		move.perform(sb.toString(), this);
 					executor.schedule(new AITask(this), 900, TimeUnit.MILLISECONDS);					
 				} else {
