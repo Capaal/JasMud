@@ -104,6 +104,9 @@ public class Weapon extends StdItem {
 
 		BLEED() {
 			@Override public boolean applyEffect(Mobile target) {
+				if (target.hasCondition(new Bleed(target, 10))) {
+					return true;
+				}
 				if (target.addActiveCondition(new Bleed(target, 10), 5)) {
 					target.tell("Bleeding caused.");
 					return true;
@@ -118,6 +121,9 @@ public class Weapon extends StdItem {
 			
 		FEAR() {
 			@Override public boolean applyEffect(Mobile target) {
+				if (target.hasCondition(new Fear(target))) {
+					return true;
+				}
 				if (target.addActiveCondition(new Fear(target), 10)) {
 					target.tell("Fear applied.");
 					return true;

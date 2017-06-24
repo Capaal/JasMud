@@ -143,16 +143,20 @@ public class Location implements Container {
 		String ceiling = mobiles.ceilingKey(mobileString);
 		String floor = mobiles.floorKey(mobileString);
 		if (ceiling != null) {
-			if ((ceiling.equalsIgnoreCase(mobileString) || mobiles.get(ceiling).getName().equalsIgnoreCase(mobileString))) {
+			if (ceiling.equalsIgnoreCase(mobileString)) {
+				return mobiles.get(ceiling);
+			} else if (ceiling.toLowerCase().startsWith(mobileString)) {
 				return mobiles.get(ceiling);
 			}
-		}
+		} 
 		if (floor != null) {
-			if ((floor.equalsIgnoreCase(mobileString) || mobiles.get(floor).getName().equalsIgnoreCase(mobileString))) {
+			if (floor.equalsIgnoreCase(mobileString)) {
+				return mobiles.get(floor);
+			} else if (floor.toLowerCase().startsWith(mobileString)) {
 				return mobiles.get(floor);
 			}
-		} 
-		return null;		
+		}
+		return null;	
 	}
 	
 	@Override
@@ -177,21 +181,6 @@ public class Location implements Container {
 			}
 		}
 		return null;		
-		
-	/*	holdableString = holdableString.toLowerCase();
-		String ceiling = inventory.ceilingKey(holdableString);
-		String floor = inventory.floorKey(holdableString);		
-		if (ceiling != null) {
-			if ((ceiling.equalsIgnoreCase(holdableString) || inventory.get(ceiling).getName().equalsIgnoreCase(holdableString))) {
-				return inventory.get(ceiling);
-			}
-		}
-		if (floor != null) {
-			if ((floor.equalsIgnoreCase(holdableString) || inventory.get(floor).getName().equalsIgnoreCase(holdableString))) {
-				return inventory.get(floor);
-			}
-		} 
-		return null;	*/	
 	}
 
 	@Override public String getName() {return name;}
