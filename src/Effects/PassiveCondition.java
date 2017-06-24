@@ -1,6 +1,9 @@
 package effects;
 
+import java.util.Arrays;
+
 import interfaces.Mobile;
+import processes.UsefulCommands;
 
 
 public enum PassiveCondition {
@@ -32,6 +35,14 @@ public enum PassiveCondition {
 		
 		SLEEP() {
 			//maybe should be active condition that regens? or regens sleepiness?
+			@Override
+			public void doOnCreation(Mobile currentPlayer) {
+				UsefulCommands.messageOthers(currentPlayer, currentPlayer.getName() + " falls asleep.", Arrays.asList(currentPlayer));
+			}
+			@Override
+			public void doOnDestruction(Mobile currentPlayer) {
+				UsefulCommands.messageOthers(currentPlayer, currentPlayer.getName() + " wakes up.", Arrays.asList(currentPlayer));
+			}
 		},
 		
 		DEFENCE() {
@@ -42,7 +53,6 @@ public enum PassiveCondition {
 			@Override
 			public void doOnDestruction(Mobile currentPlayer) {
 				currentPlayer.addDefense(-10);
-				
 			}
 		},
 		

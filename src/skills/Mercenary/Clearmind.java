@@ -18,8 +18,8 @@ public class Clearmind extends InductionSkill {
 	@Override
 	protected void performSkill() {
 		if (preSkillChecks()) {
-			if (currentPlayer.hasAllConditions(PassiveCondition.DIZZY)) {
-				currentPlayer.removeAllConditions(PassiveCondition.DIZZY);
+			if (currentPlayer.hasCondition(PassiveCondition.DIZZY)) {
+				currentPlayer.removeCondition(PassiveCondition.DIZZY);
 				messageSelf("Dizzy cured.");
 				currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 1000);
 				triggerCooldown(5000);

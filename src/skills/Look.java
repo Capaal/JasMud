@@ -1,5 +1,6 @@
 package skills;
 
+import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import items.Door;
@@ -51,7 +52,7 @@ public class Look extends Skills {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Looking around you see: ");
 		for (Mobile h : lookHere.getMobiles().values()) {
-			sb.append(UsefulCommands.ANSI.YELLOW + h.getShortDescription() + ". " + UsefulCommands.ANSI.SANE);
+			sb.append(UsefulCommands.ANSI.YELLOW + h.getShortDescription() + descriptor(h) + UsefulCommands.ANSI.SANE);
 			anItem = true;
 		}
 		sb.append("Lying on the ground: ");
@@ -62,6 +63,14 @@ public class Look extends Skills {
 		if (anItem) {
 			currentPlayer.tell(sb.toString());
 		}
+	}
+	
+	//yeah this is ugly - condi should handle?
+	public String descriptor(Mobile m) {
+		if (m.hasCondition(PassiveCondition.SLEEP)) {
+			return " is asleep here. ";
+		}
+		return " is here. ";
 	}
 	
 	private void displayExits(Location lookHere) {

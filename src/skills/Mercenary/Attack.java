@@ -20,7 +20,7 @@ public class Attack extends Skills {
     private final int baseBalance = 3000;
     
     private StdItem possWeapon;
-    String possibleTarg;
+ // private String possibleTarg;
  // private Collection<Mobile> targets = null;
     private Mobile target;
     

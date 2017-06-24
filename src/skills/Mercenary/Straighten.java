@@ -44,8 +44,8 @@ public class Straighten extends Skills {
 		
 	
 	private boolean fixBroken(PassiveCondition thisLimb) {
-		if (currentPlayer.hasAllConditions(thisLimb)) {
-			currentPlayer.removeAllConditions(thisLimb);
+		if (currentPlayer.hasCondition(thisLimb)) {
+			currentPlayer.removeCondition(thisLimb);
 			messageSelf("You straighten your broken " + thisLimb.limbName() + " by force of will.");
 			messageOthers(currentPlayer.getName() + " straights a broken " + thisLimb.limbName() + ".", Arrays.asList(currentPlayer));
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);

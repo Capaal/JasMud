@@ -18,31 +18,20 @@ public class Inventory extends Skills {
 	
 	@Override
 	protected void performSkill() {
+		//wielded
 		StringBuilder inventoryMsg = new StringBuilder();
-	/*	Collection<Holdable> equippedItems = currentPlayer.getEquipment().getValToKeyMap().keySet();
-		Iterator<Holdable> i = equippedItems.iterator();
-		inventoryMsg.append("\n");
 		inventoryMsg.append("You are wielding: ");
 		inventoryMsg.append("\n");
-		//grab the 1st item for fenceposting
-		if (i.hasNext()) {
-			Holdable item = i.next();
-			if (item != null) {
-				inventoryMsg.append(currentPlayer.getEquipment().getKey(item).toString().toLowerCase());
-				inventoryMsg.append(" - ");
-				inventoryMsg.append(item.getName());
-				while (i.hasNext()) {
-					item = i.next();
-					if (item != null) {
-						inventoryMsg.append(", "); //all I wanted was this comma -.-
-						inventoryMsg.append(currentPlayer.getEquipment().getKey(item).toString().toLowerCase());
-						inventoryMsg.append(" - ");
-						inventoryMsg.append(item.getName());
-					}
-				}
-			}
-		} */
-
+		Holdable weapon = currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.LEFTHAND);
+		if (weapon != null) {
+			inventoryMsg.append("Lefthand: " + weapon.getName());
+		} else { inventoryMsg.append("Lefthand: empty. "); }
+		weapon = currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND);
+		if (weapon != null) {
+			inventoryMsg.append("Righthand: " + weapon.getName());
+		} else {  inventoryMsg.append("Righthand: empty. "); }
+		inventoryMsg.append("\n");
+		//inventory
 		inventoryMsg.append("You are holding: ");
 		Collection<Holdable> inv = currentPlayer.getInventory().values();
 		Iterator<Holdable> i = inv.iterator();

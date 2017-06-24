@@ -14,6 +14,7 @@ public class MoveShove extends Move {
 	}
 	
 	//shove ignores these conditions
+	@Override public boolean hasBalance() { return true;}
 	@Override protected boolean legsOk() { return true;}
 	@Override protected void ifDizzy() { return;}
 	@Override protected boolean isRooted() {return false;}

@@ -23,8 +23,8 @@ public class SpinKick extends Skills {
 	@Override
 	protected void performSkill() {
 		if (preSkillChecks()) {
-			if (!(finalTarget.hasAllConditions(PassiveCondition.DIZZY))) {
-				finalTarget.addAllConditions(PassiveCondition.DIZZY);
+			if (!(finalTarget.hasCondition(PassiveCondition.DIZZY))) {
+				finalTarget.addPassiveCondition((PassiveCondition.DIZZY),-1);
 				messageTarget("You feel dizzy.", Arrays.asList(finalTarget));
 			}
 			

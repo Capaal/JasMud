@@ -115,6 +115,10 @@ public class EffectManager {
 	}
 	
 	public Set<TickingEffect> getAllActiveEffects() {
-		return activeEffects;
+		return new HashSet<TickingEffect>(activeEffects);
+	}
+	
+	public EnumSet<PassiveCondition> getAllPassiveEffects() {
+		return EnumSet.copyOf(passiveEffects);
 	}
 }

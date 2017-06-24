@@ -32,10 +32,10 @@ public class CraftItem extends Skills {
 		itemToMake = Syntax.ITEM.getStringInfo(fullCommand, this);		
 		if (!preSkillChecks()) {return;}		
 		List<StdItem> componentsNeeded = copyThis.getComponents();
+		TreeMap<String, Holdable> copyPlayerInv = currentPlayer.getInventory();
 		while (quantity > 0) {			
 			Iterator<StdItem> it = componentsNeeded.iterator();
-			TreeMap<String, Holdable> copyPlayerInv = currentPlayer.getInventory();
-			if (!checkRemoveCreate(it, copyPlayerInv)) {
+				if (!checkRemoveCreate(it, copyPlayerInv)) {
 				return;
 			}
 		}
@@ -44,25 +44,30 @@ public class CraftItem extends Skills {
 	private boolean checkRemoveCreate(Iterator<StdItem> it, TreeMap<String, Holdable> copyPlayerInv) {
 		StdItem componentToTest;
 		if (it.hasNext()) {
-			componentToTest = it.next();
-			int qtyNeed = componentToTest.getQuantity();
-			Holdable posItem = copyPlayerInv.ceilingEntry(componentToTest.getName()).getValue();
-			if (posItem != null && posItem.getName().equalsIgnoreCase(componentToTest.getName())) {					
-				int qtyHave = posItem.getQuantity();
-				if ( qtyNeed > qtyHave ) {
-					messageSelf("You are missing the component: " + componentToTest.getQuantity() + " " + componentToTest.getName());
-					return false;
+			if (!copyPlayerInv.isEmpty()) {
+				componentToTest = it.next();
+				int qtyNeed = componentToTest.getQuantity();
+				Holdable posItem = copyPlayerInv.ceilingEntry(componentToTest.getName()).getValue();
+				if (posItem != null && posItem.getName().equalsIgnoreCase(componentToTest.getName())) {					
+					int qtyHave = posItem.getQuantity();
+					if ( qtyNeed > qtyHave ) {
+						messageSelf("You are missing the component: " + componentToTest.getQuantity() + " " + componentToTest.getName());
+						return false;
+					}
+					if (qtyNeed == qtyHave) {
+					//	copyPlayerInv.remove(posItem);
+						copyPlayerInv.remove(componentToTest.getName());
+					}
+					boolean success = checkRemoveCreate(it, copyPlayerInv);
+					//once checked
+					if (success) {thenRemove(posItem, qtyNeed);}
+				} else {
+					messageSelf("You are missing the component: " + componentToTest.getName());
+					return false; //else return false? does this even end the recursion?
 				}
-				if (qtyNeed == qtyHave) {
-				//	copyPlayerInv.remove(posItem);
-					copyPlayerInv.remove(componentToTest.getName());
-				}
-				boolean success = checkRemoveCreate(it, copyPlayerInv);
-				//once checked
-				if (success) {thenRemove(posItem, qtyNeed);}
 			} else {
-				messageSelf("You are missing the component: " + componentToTest.getName());
-				return false; //else return false? does this even end the recursion?
+				messageSelf("You aren't holding any components - or anything at all, actually.");
+				return false;
 			}
 		} else {
 			andCreate();

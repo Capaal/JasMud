@@ -23,6 +23,7 @@ public class VineTrip extends Skills{
 		if (preSkillChecks()) {
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 2000);
 			finalTarget.addPassiveCondition(PassiveCondition.BALANCE, 1700);
+			finalTarget.killInduction();
 			messageSelf("You encourage a vine to get in the way.");
 			messageTarget("A vine shoots out by your feet and trips you.", Arrays.asList(finalTarget));
 			messageOthers("A vine trips " + finalTarget + ".", Arrays.asList(currentPlayer, finalTarget));

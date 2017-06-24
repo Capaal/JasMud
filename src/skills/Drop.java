@@ -5,6 +5,7 @@ import java.util.Arrays;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.ContainerErrors;
+import processes.Equipment.EquipmentEnum;
 import processes.Skills;
 
 public class Drop extends Skills {
@@ -24,16 +25,25 @@ public class Drop extends Skills {
 	@Override
 	protected void performSkill() {
 		if (preSkillChecks()) {
+			EquipmentEnum slot = null;
 			itemToMove = currentPlayer.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
 			if (itemToMove == null) {
-				messageSelf("You can't find that item.");
-				return;
+				itemToMove = currentPlayer.getEquipmentInSlot(EquipmentEnum.RIGHTHAND);
+				slot = EquipmentEnum.RIGHTHAND;
+				if (itemToMove == null) {
+					itemToMove = currentPlayer.getEquipmentInSlot(EquipmentEnum.LEFTHAND);
+					slot = EquipmentEnum.LEFTHAND;
+					if (itemToMove == null) {
+						messageSelf("You can't find that item.");
+						return;	
+					}
+				}
 			}	
-			dropItem(itemToMove);
+			dropItem(itemToMove, slot);
 		}
 	}	
 	
-	private void dropItem(Holdable itemToDrop) {
+	private void dropItem(Holdable itemToDrop, EquipmentEnum slot) {
 		String quantityToMove = Syntax.QUANTITY.getStringInfo(fullCommand, this);
 		quantity = 1;
 		if (!quantityToMove.isEmpty()) {
@@ -42,12 +52,17 @@ public class Drop extends Skills {
 				quantity = itemToDrop.getQuantity();
 			}
 		}
-		ContainerErrors err = itemToDrop.moveHoldable(currentPlayer.getContainer(), quantity);
-		if (err == null) {
-			displayMessages();	
+		if (slot == null) {
+			ContainerErrors err = itemToDrop.moveHoldable(currentPlayer.getContainer(), quantity);
+			if (err == null) {
+				displayMessages();	
+			} else {
+				System.out.println(currentPlayer.getName() + " is holding an item that can't be dropped: " + itemToDrop.getName());
+				messageSelf(err.display(itemToDrop.getName()));
+			}
 		} else {
-			System.out.println(currentPlayer.getName() + " is holding an item that can't be dropped: " + itemToDrop.getName());
-			messageSelf(err.display(itemToDrop.getName()));
+			currentPlayer.getEquipment().unEquip(slot);
+			displayMessages();
 		}
 	}
 	

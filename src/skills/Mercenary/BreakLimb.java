@@ -35,7 +35,7 @@ public class BreakLimb extends Skills {
 				breakarm(PassiveCondition.BROKENRIGHTARM);
 			} else if (slot.equals(EquipmentEnum.LEGS)) {
 			//	messageTarget("Your legs are broken.", Arrays.asList(finalTarget));
-				finalTarget.addAllConditions(PassiveCondition.BROKENLEGS);
+				finalTarget.addPassiveCondition((PassiveCondition.BROKENLEGS),-1);
 			}
 			//the regular stuff a damaging atk does
 			finalTarget.informLastAggressor(currentPlayer);
@@ -65,12 +65,12 @@ public class BreakLimb extends Skills {
 	
 	private void breakarm(PassiveCondition brokenHand) {
 		String hand = slot.toString().toLowerCase();
-		if (finalTarget.hasAllConditions(brokenHand)) {
+		if (finalTarget.hasCondition(brokenHand)) {
 			messageSelf("That players " + hand + " is already broken.");
 		} else {
 			finalTarget.unEquip(slot);
 			messageTarget("Your arm breaks and you can no longer wield a weapon.", Arrays.asList(finalTarget));
-			finalTarget.addAllConditions(brokenHand);
+			finalTarget.addPassiveCondition((brokenHand),-1);
 		}
 	}
 	

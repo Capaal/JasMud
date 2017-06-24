@@ -61,7 +61,6 @@ public class StdMob implements Mobile, Container{
 	@XStreamOmitField
 	protected Mobile lastAggressor;
 	protected ArrayList<String> messages;
-	protected Set<PassiveCondition> allConditions;
 	protected double currentWeight;
 	protected ArrayList<Mobile> followers = new ArrayList<Mobile>();
 	protected Mobile following;
@@ -85,7 +84,6 @@ public class StdMob implements Mobile, Container{
 		createNewEffectManager();		
 		this.skillBookList = build.getSkillBookList();		
 		this.equipment = build.getEquipment();
-		this.allConditions = EnumSet.noneOf(PassiveCondition.class);
 		WorldServer.gameState.addMob(decoratedMob.getName() + decoratedMob.getId(), decoratedMob);
 		decoratedMob.getContainer().acceptItem(decoratedMob);
 		this.messages = new ArrayList<String>();
@@ -119,22 +117,6 @@ public class StdMob implements Mobile, Container{
 	
 	@Override public String getShortDescription() {
 		return name + shortDescription;
-	}
-	
-	@Override public void addAllConditions(PassiveCondition condition) {
-		allConditions.add(condition);
-	}
-	
-	@Override public void removeAllConditions(PassiveCondition condition) {
-		allConditions.remove(condition);
-	}
-	
-	@Override public Set<PassiveCondition> getAllConditions() {
-		return allConditions;
-	}
-	
-	public boolean hasAllConditions(PassiveCondition condition) {
-		return allConditions.contains(condition);
 	}
 	
 	public void addDefense(int i) {
@@ -202,19 +184,20 @@ public class StdMob implements Mobile, Container{
 	@Override
 	//TODO should be two methods or rename to changeLife
 	public synchronized void takeDamage(Type type, int damage) {
-		if(!(damage < 0)) {  //healing ignores defense
+		if(!(damage < 0)) {  
 			damage = damage - defense;
 		}
 		if (currentHp < damage) {
 			damage = currentHp;
 		} 
-		if ((currentHp - damage) > maxHp) {
+		if ((currentHp - damage) > maxHp) { //healing ignores defense
 			currentHp = maxHp;
 		} else {
 			this.currentHp = currentHp - damage;
 			System.out.println(this.getName() + " damage: " + damage);
 		}
 		checkHp();
+		//stop displaying prompt if no regen
 		displayPrompt();
 	}	
 
@@ -387,6 +370,11 @@ public class StdMob implements Mobile, Container{
 	@Override
 	public Set<TickingEffect> getAllActiveConditions() {
 		return effectManager.getAllActiveEffects();
+	}
+	
+	@Override
+	public EnumSet<PassiveCondition> getAllPassiveEffects() {
+		return effectManager.getAllPassiveEffects();
 	}
 	
 	@Override 
@@ -574,8 +562,10 @@ public class StdMob implements Mobile, Container{
 
 	@Override
 	public void killInduction() {
-		inductionSkill.interrupt();
-		inductionSkill = null;
+		if (inductionSkill != null) {
+			inductionSkill.interrupt();
+			inductionSkill = null;
+		}
 	}
 	
 	@Override

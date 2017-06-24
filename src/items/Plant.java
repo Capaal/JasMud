@@ -46,11 +46,11 @@ public class Plant extends StackableItem {
 		
 		COMFREY {
 			@Override public String use(Mobile currentPlayer) {
-				if (currentPlayer.hasAllConditions(PassiveCondition.BROKENLEFTARM)) {
-					currentPlayer.removeAllConditions(PassiveCondition.BROKENLEFTARM);
+				if (currentPlayer.hasCondition(PassiveCondition.BROKENLEFTARM)) {
+					currentPlayer.removeCondition(PassiveCondition.BROKENLEFTARM);
 					return("The herbs quickly knits your bones together and fixes your left arm.");
-				} else if (currentPlayer.hasAllConditions(PassiveCondition.BROKENRIGHTARM)) {
-					currentPlayer.removeAllConditions(PassiveCondition.BROKENRIGHTARM);
+				} else if (currentPlayer.hasCondition(PassiveCondition.BROKENRIGHTARM)) {
+					currentPlayer.removeCondition(PassiveCondition.BROKENRIGHTARM);
 					return("The herbs quickly knits your bones together and fixes your right arm.");
 				} else { return failMsg; }
 			}
@@ -58,8 +58,8 @@ public class Plant extends StackableItem {
 		
 		VALERIAN {
 			@Override public String use(Mobile currentPlayer) {
-				if (!(currentPlayer.hasAllConditions(PassiveCondition.SLEEP))) {
-					currentPlayer.addAllConditions(PassiveCondition.SLEEP);
+				if (!(currentPlayer.hasCondition(PassiveCondition.SLEEP))) {
+					currentPlayer.removeCondition(PassiveCondition.SLEEP);
 					return "The root causes a sudden lethargy and you fall asleep.";
 				} else { return failMsg; }
 			}
@@ -82,8 +82,8 @@ public class Plant extends StackableItem {
 		
 		OLEANDER {
 			@Override public String use(Mobile currentPlayer) {
-				if (!(currentPlayer.hasAllConditions(PassiveCondition.DIZZY))) {
-					currentPlayer.addAllConditions(PassiveCondition.DIZZY);
+				if (!(currentPlayer.hasCondition(PassiveCondition.DIZZY))) {
+					currentPlayer.removeCondition(PassiveCondition.DIZZY);
 					return "You feel dizzy.";
 				} else { return failMsg; }
 			}		

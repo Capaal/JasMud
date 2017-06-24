@@ -149,6 +149,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new Unwield(null, null));
 		generalSkills.addSkill(new Diagnose(null, null));
 		generalSkills.addSkill(new Messaging(null, null));
+		generalSkills.addSkill(new Who(null, null));
 		//crafting
 		generalSkills.addSkill(new CraftItem(null, null));
 		generalSkills.addSkill(new Salvage(null, null));
@@ -198,7 +199,9 @@ public class CreateWorld {
 		addBleedPotion();
 		addRegenPotion();
 		addOreRock();	
+		addLog();
 		addTree();
+		makeABow();
 		makeAloeHerb();	
 		makeComfreyHerb();
 		makeOleander();
@@ -213,27 +216,27 @@ public class CreateWorld {
 
 		//first location, north exit to 2
 		LocationBuilder firstLoc = new LocationBuilder();
-		firstLoc.setName("Start.");
+		firstLoc.setName("Start");
 		firstLoc.setDescription("You have to start somewhere.");
 		firstLoc.complete();	
 
 		//2nd location, south exit to 1, north exit to 3
 		LocationBuilder newLoc2 = new LocationBuilder();
-		newLoc2.setName("North of Start.");
+		newLoc2.setName("North of Start");
 		newLoc2.setDescription("Slightly north.");
 		newLoc2.addLocationConnection(Direction.SOUTH, 1, Direction.NORTH, new Door());
 		newLoc2.complete();	
 	
 		//3rd location, south exit to 2
 		LocationBuilder newLoc3 = new LocationBuilder();
-		newLoc3.setName("Road.");
+		newLoc3.setName("Road");
 		newLoc3.setDescription("On the road to nowhere.");
 		newLoc3.addLocationConnection(Direction.SOUTH, 2);
 		newLoc3.complete();	
 		
 		//4th location, south exit to 3
 		LocationBuilder newLoc4 = new LocationBuilder();
-		newLoc4.setName("Along the road.");
+		newLoc4.setName("Along the road");
 		newLoc4.setDescription("A road passing by some farmlands.");		
 		newLoc4.setQuest(new FarmerQuest());
 		newLoc4.addLocationConnection(Direction.SOUTH, 3);
@@ -241,21 +244,21 @@ public class CreateWorld {
 		
 		//5th location, south exit to 4
 		LocationBuilder newLoc5 = new LocationBuilder();
-		newLoc5.setName("On a bridge.");
+		newLoc5.setName("On a bridge");
 		newLoc5.setDescription("A bridge over a dried creek.");
 		newLoc5.addLocationConnection(Direction.SOUTH, 4);
 		newLoc5.complete();	
 		
 		//6th location, west exit to 5
 		LocationBuilder newLoc6 = new LocationBuilder();
-		newLoc6.setName("Forest trail.");
+		newLoc6.setName("Forest trail");
 		newLoc6.setDescription("Off the main path.");
 		newLoc6.addLocationConnection(Direction.WEST, 5);
 		newLoc6.complete();	
 		
 		//7th location, west exit to 6
 		LocationBuilder newLoc7 = new LocationBuilder();
-		newLoc7.setName("End of trail.");
+		newLoc7.setName("End of trail");
 		newLoc7.setDescription("Oh no, it's a dead end.");
 		newLoc7.addLocationConnection(Direction.WEST, 6, Direction.EAST, null);
 		newLoc7.addLocationConnection(Direction.IN, 2, Direction.EAST, null);
@@ -263,14 +266,14 @@ public class CreateWorld {
 		
 		//8th location, south exit to 5
 		LocationBuilder newLoc8 = new LocationBuilder();
-		newLoc8.setName("Loop.");
+		newLoc8.setName("Loop");
 		newLoc8.addLocationConnection(Direction.SOUTH, 5, Direction.NORTH, null);
 		newLoc8.addLocationConnection(Direction.NORTH, 5, Direction.NORTH, null);
 		newLoc8.complete();	
 		
 		//9th location, east exit to 1
 		LocationBuilder newLoc9 = new LocationBuilder();
-		newLoc9.setName("Bank.");
+		newLoc9.setName("Bank");
 		newLoc9.setDescription("Not the watery type.");
 		newLoc9.addLocationConnection(Direction.EAST, 1);
 		newLoc9.complete();	
@@ -300,13 +303,13 @@ public class CreateWorld {
 
 	private static void makeLandingPad() {
 		LocationBuilder newLoc10 = new LocationBuilder();
-		newLoc10.setName("Landing entrance.");
+		newLoc10.setName("Landing entrance");
 		newLoc10.setDescription("This is the primary entrance to the floating island. It's an open platform jutting out into the air. A dock is visible to the north.");
 		newLoc10.addLocationConnection(Direction.SOUTH, 7);
 		newLoc10.complete();
 
 		LocationBuilder newLoc11 = new LocationBuilder();
-		newLoc11.setName("Dock.");
+		newLoc11.setName("Dock");
 		newLoc11.setDescription("A large dock with multiple receiving points. A few small airships hover nearby, next to two portal terminals. The wind occasionally brings misty water onto the east side of the dock, carried from the waterfall not far off. The westside of the dock offers a view of the busy merchant district, while northwards there is a sprawling, peaceful garden, and in the distance, the inner city dome is visible.");
 		newLoc11.addLocationConnection(Direction.SOUTH, 10);
 		newLoc11.complete();
@@ -614,6 +617,18 @@ public class CreateWorld {
 		newItem.setBalanceMult(1.5);
 		newItem.setSalvageable(true);
 		itemTemplates.put("shield", newItem);
+	}
+	
+	public static void makeABow() {
+		WeaponItemBuilder newItem = new WeaponItemBuilder();
+		newItem.setName("bow");
+		newItem.setDescription("It's a bow!");
+		newItem.setComponents(Arrays.asList(itemTemplates.get("log").getNonexistentFinishedItem()));
+		newItem.setDamageMult(1);
+		newItem.setWeight(2);
+		newItem.setBalanceMult(1.5);
+		newItem.setSalvageable(true);
+		itemTemplates.put("bow", newItem);
 	}
 	
 	public static void addIronPotion() {

@@ -2,7 +2,6 @@ package skills;
 
 import interfaces.Mobile;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -87,7 +86,7 @@ public class Move extends Skills {
 	}
 	
 	protected boolean legsOk() {
-		if(currentPlayer.hasAllConditions(PassiveCondition.BROKENLEGS)) {
+		if(currentPlayer.hasCondition(PassiveCondition.BROKENLEGS)) {
 			messageSelf("Oh no your legs are broken.");
 			return false;
 		}
@@ -95,7 +94,7 @@ public class Move extends Skills {
 	}
 	
 	protected void ifDizzy() {
-		if (currentPlayer.hasAllConditions(PassiveCondition.DIZZY)) {
+		if (currentPlayer.hasCondition(PassiveCondition.DIZZY)) {
 			String[] d = {"n", "s", "e", "w", "nw", "se", "ne", "sw", "in", "out", "up", "down"};
 			Random r = new Random();
 			dir = d[r.nextInt(d.length)];		
@@ -104,7 +103,7 @@ public class Move extends Skills {
 	}
 	
 	protected boolean isRooted() {
-		if (currentPlayer.hasAllConditions(PassiveCondition.ROOT)) {
+		if (currentPlayer.hasCondition(PassiveCondition.ROOT)) {
 			messageSelf("You are rooted and cannot move.");
 			return true;
 		}

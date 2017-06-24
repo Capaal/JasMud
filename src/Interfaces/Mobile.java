@@ -2,6 +2,7 @@ package interfaces;
 
 import items.StdItem;
 
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -72,11 +73,8 @@ public interface Mobile extends Container {
 	public Map<SkillBook, Integer> viewSkillBooks();
 	public void spawnDeathLoot();
 	public Equipment getEquipment();
-	public void addAllConditions(PassiveCondition conditions);
+//	public void addAllConditions(PassiveCondition conditions); //should use effectmanager
 	public void createNewEffectManager();
-	public void removeAllConditions(PassiveCondition conditions);
-	public Set<PassiveCondition> getAllConditions();
-	public boolean hasAllConditions(PassiveCondition conditions);
 	public void moveHoldable(Location finalLocation);
 	public void setContainer(Location container);
 	public int compareTo(Mobile arg0);
@@ -90,4 +88,5 @@ public interface Mobile extends Container {
 	public void setFollowing(Mobile finalTarget);
 	public void addFollower(Mobile currentPlayer);
 	public void removeFollower(Mobile follower);
+	EnumSet<PassiveCondition> getAllPassiveEffects();
 }

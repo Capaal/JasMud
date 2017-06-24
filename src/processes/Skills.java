@@ -41,7 +41,7 @@ public abstract class Skills implements Runnable {
 			return false;
 		}
 		if (!fullCommand.equals("wake")) { //this is ugly TODO
-			if (currentPlayer.hasAllConditions(PassiveCondition.SLEEP)) {
+			if (currentPlayer.hasCondition(PassiveCondition.SLEEP)) {
 				messageSelf("You are asleep and can't do anything.");
 				return false;
 			}
@@ -71,7 +71,7 @@ public abstract class Skills implements Runnable {
 		return false;
 	}
 	
-	public Boolean hasBalance() {
+	public boolean hasBalance() {
 		if (currentPlayer.hasBalance()) {
 			return true;
 		}

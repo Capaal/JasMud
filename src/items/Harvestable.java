@@ -78,7 +78,7 @@ public class Harvestable extends StationaryItem {
 	
 	private void schedule() {
 		SkillWrapper wrapper = new SkillWrapper();
-//		effectExecutor.schedule(wrapper, timeToReset, TimeUnit.SECONDS); //20s for test
+		WorldServer.gameState.effectExecutor.schedule(wrapper, timeToReset, TimeUnit.SECONDS); //20s for test
 	}
 	//end timer stuff
 	

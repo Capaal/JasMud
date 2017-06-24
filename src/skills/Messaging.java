@@ -64,7 +64,8 @@ public class Messaging extends Skills {
 			case "send":
 				Mobile tg = allPlayers.get(target);
 				if (tg != null) {
-					((StdMob)tg).addMessage(msg);
+					((StdMob)tg).addMessage(currentPlayer.getName() + ":" + msg);
+					messageSelf("Message sent.");
 				} else {
 					messageSelf("That player doesn't exist.");
 				}
@@ -73,6 +74,7 @@ public class Messaging extends Skills {
 				if (UsefulCommands.isInteger(target)) {
 					if (allMsgs.size() >= Integer.parseInt(target)) {
 						allMsgs.remove(Integer.parseInt(target)-1);
+						messageSelf("Message deleted.");
 					} else {
 						messageSelf("You don't have that many messages.");
 					}

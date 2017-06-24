@@ -30,7 +30,7 @@ public class Struggle extends InductionSkill {
 		public void performSkill() {
 			int n = r.nextInt(5);
 			if (n > 2) {  //20% change success
-				currentPlayer.removeAllConditions(PassiveCondition.ROOT);
+				currentPlayer.removeCondition(PassiveCondition.ROOT);
 			//	messageSelf("You are free to move about again."); // this is in passivecondition doOnDestruction instead
 				messageOthers(currentPlayer.getName() + " is no longer bound.", Arrays.asList(currentPlayer));
 				endSuccessfully();
@@ -47,7 +47,7 @@ public class Struggle extends InductionSkill {
 
 	@Override
 	protected void performSkill() {		
-		if (currentPlayer.hasAllConditions(PassiveCondition.ROOT)) {
+		if (currentPlayer.hasCondition(PassiveCondition.ROOT)) {
 			messageSelf("You being struggling against the bonds holding you.");
 			scheduleInduction(50, 2500);
 			currentPlayer.setInduction(this);

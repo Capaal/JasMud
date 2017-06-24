@@ -28,7 +28,7 @@ public class Wake extends InductionSkill {
 		public void performSkill() {
 			int n = r.nextInt(5);
 			if (n > 2) {  //20% change success
-				currentPlayer.removeAllConditions(PassiveCondition.SLEEP);
+				currentPlayer.removeCondition(PassiveCondition.SLEEP);
 				messageSelf("You wake up.");
 				messageOthers(currentPlayer.getName() + " wakes up.", Arrays.asList(currentPlayer));
 				endSuccessfully();
@@ -52,7 +52,7 @@ public class Wake extends InductionSkill {
 	protected void performSkill() {
 		String target = Syntax.TARGET.getStringInfo(fullCommand, this);
 		if (target.equals("")) {
-			if (currentPlayer.hasAllConditions(PassiveCondition.SLEEP)) {
+			if (currentPlayer.hasCondition(PassiveCondition.SLEEP)) {
 				messageSelf("You start trying to wake yourself up.");
 				scheduleInduction(50, 2500);
 				currentPlayer.setInduction(this);
@@ -66,8 +66,8 @@ public class Wake extends InductionSkill {
 				return;
 			} 
 			//test if rooted, paralyzed?
-			if (mob.hasAllConditions(PassiveCondition.SLEEP)) {
-				mob.removeAllConditions(PassiveCondition.SLEEP);
+			if (mob.hasCondition(PassiveCondition.SLEEP)) {
+				mob.removeCondition(PassiveCondition.SLEEP);
 				messageSelf("You shake " + mob.getName() + " awake.");
 				messageTarget(currentPlayer.getName() + " wakes you up.", Arrays.asList(mob));
 				messageOthers(currentPlayer.getName() + " shakes " + mob.getName() + " awake.", Arrays.asList(currentPlayer, mob));

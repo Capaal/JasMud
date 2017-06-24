@@ -6,6 +6,8 @@ import java.util.Set;
 
 import effects.PassiveCondition;
 import interfaces.Mobile;
+import items.StdItem;
+import processes.Equipment;
 import processes.Location;
 import processes.Location.Direction;
 import processes.Skills;
@@ -17,6 +19,7 @@ public class Shoot extends Skills {
 	private Set<Location> allLocations;
 	private String possibleTarg;
 	private Mobile finalTarget;
+	private StdItem possBow;
 	
 	public Shoot(Mobile currentPlayer, String fullCommand) {
 		super("shoot", "A Quick shot or throw.", currentPlayer, fullCommand);
@@ -41,7 +44,7 @@ public class Shoot extends Skills {
 	}		
 		
 	private int calculateDamage() {
-		return intensity;
+		return (int) (possBow.getDamageMult() * intensity);
 	}
 	
 	private void findAllLocations() {
@@ -95,6 +98,7 @@ public class Shoot extends Skills {
 		if (!hasBalance()) {
 			return false;
 		}	
+		if(!checkWeapon()) {return false;}
 		findAllLocations();				
 		finalTarget = getTarget();
 		if (finalTarget == null) {
@@ -106,6 +110,19 @@ public class Shoot extends Skills {
 		}
 		return true;
 	}	
+	
+	private boolean checkWeapon() {
+        //righthand primary for now
+    	possBow = (StdItem) currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND);
+		if (possBow == null || (!possBow.getName().equals("bow"))) {
+			possBow = (StdItem) currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND);
+			if (possBow == null || (!possBow.getName().equals("bow"))) {
+				messageSelf("You are not wielding a bow.");
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	@Override
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {

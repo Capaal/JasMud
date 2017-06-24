@@ -64,14 +64,12 @@ public class Headshot extends InductionSkill {
 	@Override
 	protected void performSkill() {
 		allLocations = new HashSet<Location>();
-		if (!hasBalance()) {return;}
-		if (!weaponWielded()) {return;}
-		if (!findAllLocations()) {return;}		
-		if (!findTarget()) {return;}	
-		scheduleInduction(1, 2000); // Triggers this skill's "run()" in 2 seconds. Interruptible.
-		currentPlayer.setInduction(this);
-		messageSelf("You begin aiming at " + finalTarget.getName() + ".");
-		messageTarget(currentPlayer.getName() + " begins aiming at your head.", Arrays.asList(finalTarget));
+		if (preSkillChecks()) {
+			scheduleInduction(1, 2000); // Triggers this skill's "run()" in 2 seconds. Interruptible.
+			currentPlayer.setInduction(this);
+			messageSelf("You begin aiming at " + finalTarget.getName() + ".");
+			messageTarget(currentPlayer.getName() + " begins aiming at your head.", Arrays.asList(finalTarget));
+		}
 	}		
 		
 	private int calculateDamage() {
@@ -167,7 +165,10 @@ public class Headshot extends InductionSkill {
 
 	@Override
 	protected boolean preSkillChecks() {
-		// TODO Auto-generated method stub
+		if (!hasBalance()) {return false;}
+		if (!weaponWielded()) {return false;}
+		if (!findAllLocations()) {return false;}		
+		if (!findTarget()) {return false;}	
 		return true;
 	}
 	

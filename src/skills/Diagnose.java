@@ -16,7 +16,7 @@ public class Diagnose extends Skills {
 
 	@Override
 	protected void performSkill() {
-		Set<PassiveCondition> passiveC = currentPlayer.getAllConditions();
+		Set<PassiveCondition> passiveC = currentPlayer.getAllPassiveEffects();
 		for (PassiveCondition p : passiveC) {
 			messageSelf(p.name().toLowerCase());
 		}

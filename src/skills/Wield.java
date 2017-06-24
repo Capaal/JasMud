@@ -61,12 +61,12 @@ public class Wield extends Skills {
 		}
 		//is bodypart broken/wieldable
 		if (wantSlot.equals("righthand")) {
-			if (currentPlayer.hasAllConditions(PassiveCondition.BROKENRIGHTARM)) {
+			if (currentPlayer.hasCondition(PassiveCondition.BROKENRIGHTARM)) {
 				messageSelf("Your arm is broken, you can't wield right now.");
 				return false;
 			}
 		} else if (wantSlot.equals("lefthand")) {
-			if (currentPlayer.hasAllConditions(PassiveCondition.BROKENLEFTARM)) {
+			if (currentPlayer.hasCondition(PassiveCondition.BROKENLEFTARM)) {
 				messageSelf("Your arm is broken, you can't wield right now.");
 				return false;
 			}

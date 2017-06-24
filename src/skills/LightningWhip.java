@@ -86,7 +86,7 @@ public class LightningWhip extends InductionSkill {
 
 	@Override
 	public void inductionKilled() {
-		messageSelf("You stop whipping " + possibleTarg);
+		messageSelf("You stop whipping " + possibleTarg + ".");
 		inductionEnded();
 	}	
 	

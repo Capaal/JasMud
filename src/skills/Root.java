@@ -19,7 +19,7 @@ public class Root extends Skills{
 	@Override
 	protected void performSkill() {
 		if(preSkillChecks()) {
-			finalTarget.addAllConditions(PassiveCondition.ROOT);
+			finalTarget.hasCondition(PassiveCondition.ROOT);
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 2000);
 			messageSelf("Strong, ropey vines curl out of your hands towards " + finalTarget.getName() + " and wrap themselves tightly around " + "their feet."); //finalTarget.getGenderHimHer()
 			messageTarget("Vines suddenly encircle your feet and root you to the spot.", Arrays.asList(finalTarget));
@@ -51,7 +51,7 @@ public class Root extends Skills{
 	}
 	
 	private boolean hasCondition() {
-		if (finalTarget.hasAllConditions(PassiveCondition.ROOT)) {
+		if (finalTarget.hasCondition(PassiveCondition.ROOT)) {
 			messageSelf("There are already roots surrounding " + finalTarget.getName() + ".");
 			return true;
 		}

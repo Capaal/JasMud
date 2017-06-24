@@ -54,7 +54,7 @@ public class Give extends Skills {
 	}
 	
 	private boolean brokenArms() {
-		if (currentPlayer.hasAllConditions(PassiveCondition.BROKENLEFTARM) && currentPlayer.hasAllConditions(PassiveCondition.BROKENRIGHTARM)) {
+		if (currentPlayer.hasCondition(PassiveCondition.BROKENLEFTARM) && currentPlayer.hasCondition(PassiveCondition.BROKENRIGHTARM)) {
 			messageSelf("Your arms are broken!");
 			return true;
 		} 

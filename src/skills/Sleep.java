@@ -17,10 +17,10 @@ public class Sleep extends Skills {
 
 	@Override
 	protected void performSkill() {
-		if (currentPlayer.hasAllConditions(PassiveCondition.SLEEP)) {
+		if (currentPlayer.hasCondition(PassiveCondition.SLEEP)) {
 			messageSelf("You are already asleep.");
 		} else {
-			currentPlayer.addAllConditions(PassiveCondition.SLEEP);
+			currentPlayer.addPassiveCondition((PassiveCondition.SLEEP),-1);
 			messageSelf("You fall asleep.");
 		}
 		

@@ -1,6 +1,7 @@
 package processes;
 
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Set;
@@ -313,26 +314,6 @@ public enum DecoratorType {
 	}
 
 	@Override
-	public void addAllConditions(PassiveCondition conditions) {
-		decoratedMobile.addAllConditions(conditions);
-	}
-
-	@Override
-	public void removeAllConditions(PassiveCondition conditions) {
-		decoratedMobile.removeAllConditions(conditions);
-	}
-
-	@Override
-	public Set<PassiveCondition> getAllConditions() {
-		return decoratedMobile.getAllConditions();
-	}
-
-	@Override
-	public boolean hasAllConditions(PassiveCondition conditions) {
-		return decoratedMobile.hasAllConditions(conditions);
-	}
-
-	@Override
 	public boolean isBlocking() {
 		return decoratedMobile.isBlocking();
 	}
@@ -391,6 +372,12 @@ public enum DecoratorType {
 	@Override
 	public void removeFollower(Mobile follower) {
 		decoratedMobile.removeFollower(follower);
+	}
+
+	@Override
+	public EnumSet<PassiveCondition> getAllPassiveEffects() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

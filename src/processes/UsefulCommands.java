@@ -256,6 +256,28 @@ public class UsefulCommands {
 		return true;
 	}
 	
+	//duplicate of messageOthers in Skills
+	public static void messageOthers(Mobile currentPlayer, String msg, List<Mobile> toIgnore) {
+		for (Mobile h : currentPlayer.getContainer().getMobiles().values()) {
+			if (h.isControlled()) {
+				Boolean shouldTell = true;
+				if (h.equals(currentPlayer)) {
+					shouldTell = false;
+				} else {
+					for (Mobile m : toIgnore) {
+						if (h.equals(m)) {
+							shouldTell = false;
+						}
+					}
+				}
+				if (shouldTell) {
+					h.tell(msg);
+					h.displayPrompt();
+				}
+			}			
+		}
+	}
+	
 	/* Obsolete
 	public static void displayToAllLocation(Location location, String message) {
 		Iterator iter = WorldServer.activeClients.iterator();

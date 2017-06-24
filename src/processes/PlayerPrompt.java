@@ -196,7 +196,7 @@ public class PlayerPrompt implements Runnable {
 	}	
 	
 	//duplicate of messageOthers in Skills
-	private void messageOthers(String msg, List<Mobile> toIgnore) {
+	public void messageOthers(String msg, List<Mobile> toIgnore) {
 		for (Mobile h : currentPlayer.getContainer().getMobiles().values()) {
 			if (h.isControlled()) {
 				Boolean shouldTell = true;
@@ -217,7 +217,9 @@ public class PlayerPrompt implements Runnable {
 		}
 	}
 	
-	
+	public Mobile getPlayer() {
+		return this.currentPlayer;
+	}
 	
 }
 
