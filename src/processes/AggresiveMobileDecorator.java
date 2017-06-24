@@ -1,6 +1,8 @@
 package processes;
 
 import java.util.concurrent.TimeUnit;
+
+import skills.Punch;
 import interfaces.Mobile;
 
 public class AggresiveMobileDecorator extends MobileDecorator {
@@ -35,11 +37,11 @@ public class AggresiveMobileDecorator extends MobileDecorator {
 			return;
 		}
 		if (lastAggressor != null && lastAggressor.getContainer().equals(decoratedMobile.getContainer() ) && !lastAggressor.isDead()) {
-			Skills basicSkill = getCommand("punch");
 			StringBuilder sb = new StringBuilder();
 			sb.append("punch ");
 			sb.append(lastAggressor.getName());
-			basicSkill.perform(sb.toString().trim().toLowerCase(), this);
+			Skills basicSkill = new Punch(this, sb.toString());			
+			WorldServer.gameState.addToQueue(basicSkill);
 			executor.schedule(new AITask(this), 900, TimeUnit.MILLISECONDS);
 		} else {
 			hasTask = false;

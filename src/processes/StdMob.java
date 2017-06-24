@@ -222,7 +222,7 @@ public class StdMob implements Mobile, Container{
 		if (currentHp <= 0 && !isDead) {
 			tell("You collapse to the ground, unable to fight on.");
 			isDead = true;
-			for (Holdable m : getContainer().getInventory().values()) {
+			for (Mobile m : getContainer().getMobiles().values()) {
 				if (m instanceof Mobile && ((Mobile)m).isControlled() && !m.equals(this)) {
 					((Mobile)m).tell(getName() + " drops to the floor, dead.");
 				}

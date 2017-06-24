@@ -364,8 +364,33 @@ public enum DecoratorType {
 
 	@Override
 	public Set<TickingEffect> getAllActiveConditions() {
-		// TODO Auto-generated method stub
-		return null;
+		return decoratedMobile.getAllActiveConditions();
+	}
+
+	@Override
+	public void moveFollowers(String fullCommand) {
+		decoratedMobile.moveFollowers(fullCommand);
+	}
+
+	@Override
+	public void stopFollowing() {
+		decoratedMobile.stopFollowing();
+		
+	}
+
+	@Override
+	public void setFollowing(Mobile finalTarget) {
+		decoratedMobile.setFollowing(finalTarget);
+	}
+
+	@Override
+	public void addFollower(Mobile currentPlayer) {
+		decoratedMobile.addFollower(currentPlayer);
+	}
+
+	@Override
+	public void removeFollower(Mobile follower) {
+		decoratedMobile.removeFollower(follower);
 	}
 
 }

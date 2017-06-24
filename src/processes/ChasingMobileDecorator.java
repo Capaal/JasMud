@@ -3,6 +3,7 @@ package processes;
 import java.util.concurrent.TimeUnit;
 
 import processes.Location.Direction;
+import skills.Move;
 import interfaces.Container;
 import interfaces.Mobile;
 
@@ -34,12 +35,13 @@ public class ChasingMobileDecorator extends MobileDecorator {
 			if (!aggressorLocation.equals(decoratedMobile.getContainer())) {
 				Direction toAggressor = ((Location)decoratedMobile.getContainer()).getDirectionToLocation((Location)aggressorLocation);
 				if (toAggressor != null) {
-					Skills move = decoratedMobile.getCommand("move");
 					StringBuilder sb = new StringBuilder();
 					sb.append("move ");
 					sb.append(toAggressor.toString());
-					move.perform(sb.toString(), this);
-		//			executor.schedule(new AITask(this), 900, TimeUnit.MILLISECONDS);					
+					Skills move = new Move(this, sb.toString());	
+					WorldServer.gameState.addToQueue(move);
+			//		move.perform(sb.toString(), this);
+					executor.schedule(new AITask(this), 900, TimeUnit.MILLISECONDS);					
 				} else {
 					hasTask = false;
 				}
