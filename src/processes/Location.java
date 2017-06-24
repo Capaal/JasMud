@@ -3,6 +3,8 @@ package processes;
 import java.util.*;
 import java.util.Map.Entry;
 
+import processes.LocationBuilder.LocationConnectionDataBox;
+
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import Quests.Quest;
@@ -38,9 +40,20 @@ public class Location implements Container {
 		if (bondedQuest != null) {
 			bondedQuest.bondLocation(this);
 		}
-		this.locationMap = builder.getlocationMap();
+		
+		// Build all Location Connections
+		locationMap = new HashMap<Direction, LocationConnection>();
+		for (LocationConnectionDataBox db : builder.getLocationBuildingBlocks()) {
+			LocationConnection newLocCon = new LocationConnection(this, db.door, db.other);
+			locationMap.put(db.toOther, newLocCon);
+			db.other.setLocation(db.otherLocationToCurrentDirection, newLocCon);
+		}
+		
+		
+		
+	//	this.locationMap = builder.getlocationMap();
 		WorldServer.gameState.addLocation(this.id, this);		
-		for (Location otherLocation : builder.locationConnections.keySet()){
+	/*	for (Location otherLocation : builder.locationConnections.keySet()){
 			if (otherLocation != null) {
 				Direction directionToHere = builder.locationConnections.get(otherLocation).otherLocationToCurrentDirection;
 				Door connectingDoor = builder.locationConnections.get(otherLocation).door;
@@ -48,13 +61,17 @@ public class Location implements Container {
 			} else {
 				System.out.println("Location: " + otherLocation + " does not exist to connect to." + this);
 			}
-		}
+		}*/
+	}
+	
+	private void setLocation(Direction directionToThere, LocationConnection newLocCon) {
+		this.locationMap.put(directionToThere, newLocCon);
 	}
 	
 	// Called from ANOTHER location when connecting locations.
-	private void setLocation(Location futureLoc, Door door, Direction directionToThere) {
-			this.locationMap.put(directionToThere, new LocationConnection(door, futureLoc));
-	}	
+//	private void setLocation(Location futureLoc, Door door, Direction directionToThere) {
+//		this.locationMap.put(directionToThere, new LocationConnection(door, futureLoc));
+//	}	
 	
 	public Map<Direction, LocationConnection> getLocationMap() {
 		return new HashMap<Direction, LocationConnection>(locationMap);
@@ -87,7 +104,7 @@ public class Location implements Container {
 	
 	public Location getLocation(Direction dir) {	
 		if (locationMap.get(dir) != null) {
-			return locationMap.get(dir).getLocation();
+			return locationMap.get(dir).getNotOneself(this);
 		}
 		return null;
 	}
@@ -182,7 +199,7 @@ public class Location implements Container {
 	
 	public Direction getDirectionToLocation(Location askingLocation) {
 		for (Entry<Direction, LocationConnection> entry : locationMap.entrySet()) {
-			if (entry.getValue().getLocation() == askingLocation) {
+			if (entry.getValue().getOldLocation() == askingLocation) {
 				return entry.getKey();
 			}
 		}

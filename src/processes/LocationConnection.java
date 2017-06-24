@@ -4,27 +4,33 @@ import items.Door;
 
 public class LocationConnection {
 	
+	private final Location newLocation;
+	private final Door doorSlot;
+	private final Location oldLocation;
+//	private ArrayList<Blocking> blockingList;
 	
-	// Direction to Location then door then Direction back to old location
-	
-	private Location otherLocation;
-	private Door doorSlot;
-	
-	public LocationConnection(Door door, Location loc) {
+	public LocationConnection(Location currentLoc, Door door, Location otherLoc) {
 		this.doorSlot = door;
-		this.otherLocation = loc;
+		this.oldLocation = otherLoc;
+		this.newLocation = currentLoc;
 	}
 	
-	public Location getLocation() {
-		return otherLocation;
+	public Location getOldLocation() {
+		return oldLocation;
+	}
+	
+	public Location getNewLocation() {
+		return newLocation;
+	}
+	
+	public Location getNotOneself(Location oneSelf) {
+		if (newLocation == oneSelf) {
+			return oldLocation;
+		}
+		return newLocation;
 	}
 	
 	public Door getDoor() {
 		return doorSlot;
-	}
-	
-	public void setDoor(Door newDoor) {
-		this.doorSlot = newDoor;
-	}
-	
+	}	
 }

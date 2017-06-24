@@ -53,7 +53,7 @@ public class SkillBook {
 		return id;
 	}
 	
-	public Map<String, Skills> viewSkills() {
+	public NavigableMap<String, Skills> viewSkills() {
 		return new TreeMap<String, Skills>(skillList);
 	}
 	

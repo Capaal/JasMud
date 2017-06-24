@@ -14,6 +14,9 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import effects.*;
 import processes.Equipment.EquipmentEnum;
 import processes.MobileDecorator.DecoratorType;
+import skills.Follow;
+import skills.Move;
+import skills.MoveFollow;
 
 /**
  * A basic implentable of the interface Mobile, StdMob contains the basic methods for anything that can move around on it's own, whether
@@ -60,7 +63,8 @@ public class StdMob implements Mobile, Container{
 	protected ArrayList<String> messages;
 	protected Set<PassiveCondition> allConditions;
 	protected double currentWeight;
-	protected Lock lock = new ReentrantLock();
+	protected ArrayList<Mobile> followers = new ArrayList<Mobile>();
+	protected Mobile following;
 	
 	public StdMob(MobileBuilder build) {
 		Mobile decoratedMob = decorate(build, this);
@@ -157,39 +161,29 @@ public class StdMob implements Mobile, Container{
 	}
 	
 	@Override
-	public ContainerErrors acceptItem(Holdable item) {
-		lock.lock();
-		try {
-			if ((getCurrentWeight() + item.getWeight()) > getMaxWeight()) {
-				return ContainerErrors.QTYFULL;
-			}
-			inventory.put(item.getName().toLowerCase() + item.getId(), item);
-			changeCurrentWeight(item.getWeight());
-			return null;
-		} finally {
-			lock.unlock();
+	public synchronized ContainerErrors acceptItem(Holdable item) {
+		if ((getCurrentWeight() + item.getWeight()) > getMaxWeight()) {
+			return ContainerErrors.QTYFULL;
 		}
+		inventory.put(item.getName().toLowerCase() + item.getId(), item);
+		changeCurrentWeight(item.getWeight());
+		return null;
 	}
 	
 	// Put in Container AND remove from Container is complicated, but should be GUARANTEED in ONE LINE TODO
 		@Override
-		public void removeItemFromLocation(Holdable oldItem) {
-			lock.lock();
-			try {
-				if (inventory.containsValue(oldItem)) {
-					String key = oldItem.getName() + oldItem.getId();
-					inventory.remove(key);
-					changeCurrentWeight(-oldItem.getWeight());
-				} else if (equipment.hasItem(oldItem)){
-					equipment.remove(oldItem);
-					removeItemFromLocation(oldItem);
-					changeCurrentWeight(-oldItem.getWeight());
-				} else {
-					//TODO make this bug comment better
-					System.out.println("StdMob removeItemFromLocation: An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
-				}
-			} finally {
-				lock.unlock();
+		public synchronized void removeItemFromLocation(Holdable oldItem) {
+			if (inventory.containsValue(oldItem)) {
+				String key = oldItem.getName() + oldItem.getId();
+				inventory.remove(key);
+				changeCurrentWeight(-oldItem.getWeight());
+			} else if (equipment.hasItem(oldItem)){
+				equipment.remove(oldItem);
+				removeItemFromLocation(oldItem);
+				changeCurrentWeight(-oldItem.getWeight());
+			} else {
+				//TODO make this bug comment better
+				System.out.println("StdMob removeItemFromLocation: An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
 			}
 		}
 	
@@ -661,6 +655,40 @@ public class StdMob implements Mobile, Container{
 		this.currentWeight += change;
 	}
 
+	@Override
+	public void moveFollowers(String fullCommand) {
+		for (Mobile m : followers) {
+			WorldServer.gameState.addToQueue(new MoveFollow(m, fullCommand));
+		}
+	}
+
+	@Override
+	public void stopFollowing() {
+		if (following != null) {
+			following.removeFollower(this);
+			following = null;
+		}
+	}
+
+//	@Override
+//	public void followingMove(String fullCommand, Move moveType) {
+//		WorldServer.gameState.addToQueue(moveType.getNewInstance(this, fullCommand));
+//	}
+
+	@Override
+	public void setFollowing(Mobile finalTarget) {
+		following = finalTarget;
+	}
+
+	@Override
+	public void addFollower(Mobile newFollower) {
+		followers.add(newFollower);		
+	}
+	
+	@Override
+	public void removeFollower(Mobile follower) {
+		followers.remove(follower);
+	}
 
 
 }

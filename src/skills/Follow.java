@@ -9,6 +9,8 @@ import processes.WorldServer;
 public class Follow extends Skills {
 	
 	Mobile finalTarget;
+	Move following;
+	MoveFollow fm;
 	
 	public Follow(Mobile currentPlayer, String fullCommand) {
 		super("follow", "Following others around.", currentPlayer, fullCommand);
@@ -26,19 +28,22 @@ public class Follow extends Skills {
 	}
 	
 	private void startFollowing() {
-		finalTarget.addFollower(this);
+		currentPlayer.setFollowing(finalTarget);
+		finalTarget.addFollower(currentPlayer);
+	//	following = ((Move)finalTarget.getCommand("move"));
+	//	following.addFollower(this);
 	}
 	
-	public void move(String fullCommand) {
-		WorldServer.gameState.addToQueue(new MoveFollow(currentPlayer, fullCommand));
-	}
+//	public void move(String fullCommand) {
+//		WorldServer.gameState.addToQueue(new MoveFollow(currentPlayer, fullCommand));
+//	}
 	
-	public void stopFollowing() {
-		if (following != null) {
-			following.removeFollower(this);
-			following = null;
-		}
-	}
+//	public void stopFollowing() {
+//		if (following != null) {
+//			following.removeFollower(this);
+//			following = null;
+//		}
+//	}
 	
 	protected boolean preSkillChecks() {
 		String possibleTarg = Syntax.TARGET.getStringInfo(fullCommand, this);

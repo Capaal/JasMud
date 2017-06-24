@@ -3,6 +3,8 @@ package skills;
 import interfaces.Mobile;
 import processes.Skills;
 
+
+// TODO stop following on fail follow (bad timing on doors closed etc.)
 public class MoveFollow extends Move {
 	
 	public MoveFollow(Mobile currentPlayer, String fullCommand) {

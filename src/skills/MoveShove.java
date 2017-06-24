@@ -10,7 +10,6 @@ public class MoveShove extends Move {
 	public MoveShove(Mobile currentPlayer, String fullCommand) {
 		super(currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.TARGET);
-		followers = null;
 	}
 	
 	//shove ignores these conditions
@@ -35,16 +34,11 @@ public class MoveShove extends Move {
 	}
 	
 	@Override protected void displayEnterMsg() {
-		if (followers == null) {
-			followers = ((Move)currentPlayer.getCommand("move")).followers;
-		}
 		messageOthersAway(currentPlayer.getName() + "is suddenly shoved into this location.", Arrays.asList(currentPlayer), endContainer);
 	}
 	
 	@Override protected void moveFollowers() {
-		for (Follow f : followers) {
-			f.move("move " + dir);
-		}
+		currentPlayer.moveFollowers("move " + dir);
 	}
 	
 	@Override

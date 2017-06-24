@@ -15,6 +15,7 @@ import processes.SendMessage;
 import processes.Skills;
 import processes.SkillBook;
 import processes.Type;
+import skills.Move;
 
 public interface Mobile extends Container {
 	
@@ -83,5 +84,10 @@ public interface Mobile extends Container {
 //	public String getGenderHimHer();
 //	public String getGenderHeShe();
 	public Set<TickingEffect> getAllActiveConditions();
-	
+	public void moveFollowers(String fullCommand);
+	public void stopFollowing();
+//	public void followingMove(String fullCommand, Move moveType);
+	public void setFollowing(Mobile finalTarget);
+	public void addFollower(Mobile currentPlayer);
+	public void removeFollower(Mobile follower);
 }

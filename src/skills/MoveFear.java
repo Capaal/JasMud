@@ -15,13 +15,9 @@ public class MoveFear extends Move {
 	
 	public MoveFear(Mobile currentPlayer, String fullCommand) {
 		super(currentPlayer, fullCommand);
-		followers = null;
 	}
 	
 	@Override protected boolean findDirection() {
-		if (followers == null) {
-			followers = ((Move)currentPlayer.getCommand("move")).followers;
-		}
 		startContainer = currentPlayer.getContainer();
 		endContainer = null;
 		Map<Direction, LocationConnection> availDir = currentPlayer.getContainer().getLocationMap();
@@ -30,7 +26,7 @@ public class MoveFear extends Move {
 		Random r = new Random();
 		LocationConnection randomDir = locList.get(r.nextInt(locList.size()));		
 		if (randomDir != null) {
-			endContainer = randomDir.getLocation();		
+			endContainer = randomDir.getOldLocation();		
 		}
 		if (endContainer == null) {
 			currentPlayer.tell("You run around in circles, panicking but unable to find an exit.");
@@ -59,9 +55,7 @@ public class MoveFear extends Move {
 	}
 	
 	@Override protected void moveFollowers() {
-		for (Follow f : followers) {
-			f.move("move " + dir);
-		}
+		currentPlayer.moveFollowers("move " + dir);
 	}
 	@Override
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {

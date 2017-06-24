@@ -19,7 +19,7 @@ public class SkillList extends Skills {
 		messageSelf("Skills: ");
 		Map<SkillBook, Integer> books = currentPlayer.viewSkillBooks();
 		for (SkillBook b : books.keySet()) {
-			for (Skills s : b.viewSkills()) {
+			for (Skills s : b.viewSkills().values()) {
 				if (s.getName() != "skills") {
 					messageSelf(s.getName());
 				}

@@ -23,14 +23,10 @@ public class Move extends Skills {
 	protected Direction directionEnum;
 	protected Location startContainer;
 	protected Location endContainer;
-	protected ArrayList<Follow> followers = new ArrayList<Follow>();
-	protected Follow follow = null;
+	
 	
 	@Override
 	protected void performSkill() {
-		if (follow == null) {
-			follow = (Follow) currentPlayer.getCommand("follow");
-		}
 		if (preSkillChecks()) {
 
 			ifDizzy(); //if dizzy, sets a new random direction, ok to run into walls
@@ -47,9 +43,18 @@ public class Move extends Skills {
 			
 			Look look = new Look(currentPlayer, "");
 			look.run();
-	//		moveFollowers();
-	//		stopFollowing();
+			moveFollowers();
+			stopFollowing();
+			
 		}
+	}
+	
+	protected void moveFollowers() {
+		currentPlayer.moveFollowers(fullCommand);
+	}
+	
+	protected void stopFollowing() {
+		currentPlayer.stopFollowing();
 	}
 	
 	protected boolean findDirection() {
@@ -104,29 +109,6 @@ public class Move extends Skills {
 			return true;
 		}
 		return false;
-	}
-	
-	protected void moveFollowers() {
-		for (Follow f : followers) {
-			f.move(fullCommand);
-		}
-	}
-	
-	protected void stopFollowing() {
-		follow.stopFollowing();
-	}
-	
-	protected void loseFollowers() {
-		followers.clear();
-	}
-	
-	protected void addFollower(Follow follow) {
-		followers.add(follow);
-	}
-	
-	//A follows B, A stops following B, B removes A here - wtf?
-	public void removeFollower(Follow follow) {
-		followers.remove(follow);
 	}
 
 	@Override

@@ -1,8 +1,11 @@
 package processes;
 
 import items.Door;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import Quests.Quest;
 import processes.Location.Direction;
 
@@ -31,6 +34,7 @@ public class LocationBuilder {
 	private boolean buildComplete = false;
 	private Quest bondedQuest = null;
 	private static int maxId = 0;
+	private ArrayList<LocationConnectionDataBox> locationBuildingBlocks;
 	
 	public LocationBuilder() {
 		id = 0;
@@ -38,6 +42,7 @@ public class LocationBuilder {
 		this.description = "default description.";
 		this.locationMap = new HashMap<Direction, LocationConnection>();
 		locationConnections = new HashMap<Location, LocationConnectionDataBox>();
+		locationBuildingBlocks = new ArrayList<LocationConnectionDataBox>();
 	}
 	
 	// Declares the Location Builder done building. Generates a new Location and finds a valid ID to assign.
@@ -72,16 +77,21 @@ public class LocationBuilder {
 	public String getDescription() {return description;}
 	public void setDescription(String description) {this.description = description;}	
 
-	public void addLocationConnection(Direction directionToOtherLocation, int otherLocationId, Direction otherLocationToHereDirection, Door door) {		
-		if (WorldServer.gameState.checkForLocation(otherLocationId)) { // If otherLocation already exists, continue.
-			Location otherLocation = WorldServer.gameState.viewLocations().get(otherLocationId);	
-			if (directionToOtherLocation != null) { // if two-ways					
+	public void addLocationConnection(Direction directionToOtherLocation, int otherLocationId, Direction otherLocationToHereDirection, Door door) {			
+		if (WorldServer.gameState.checkForLocation(otherLocationId)) { // If otherLocation already exists, continue.	
+			Location otherLocation = WorldServer.gameState.viewLocations().get(otherLocationId);
+		
+			locationBuildingBlocks.add(new LocationConnectionDataBox(directionToOtherLocation, otherLocation, otherLocationToHereDirection, door));
+	}
+			// Need to know: Direction to other, other, other direction to here, door.
+			
+			/*if (directionToOtherLocation != null) { // if two-ways					
 				locationConnections.put(otherLocation, new LocationConnectionDataBox(door,otherLocationToHereDirection)); // Set up for the Other existing location to connect here.
 			}
 			locationMap.put(directionToOtherLocation, new LocationConnection(door, otherLocation));	// Set-up for this location to connect to other location.
 		} else {
 			throw new IllegalStateException("Other Location does not exist.");
-		}
+		}*/
 	}
 	
 	//overload of above method
@@ -91,12 +101,16 @@ public class LocationBuilder {
 	
 	public class LocationConnectionDataBox {
 		
+		final Location other;
+		final Direction toOther;
 		final Door door;
 		final Direction otherLocationToCurrentDirection;
 		
-		public LocationConnectionDataBox(Door door, Direction dir) {
+		public LocationConnectionDataBox(Direction toOther, Location other, Direction otherToHere, Door door) {
 			this.door = door;
-			this.otherLocationToCurrentDirection = dir;
+			this.otherLocationToCurrentDirection = otherToHere;
+			this.other = other;
+			this.toOther = toOther;
 		}
 	}	
 	
@@ -110,4 +124,8 @@ public class LocationBuilder {
 	public Map<Direction, LocationConnection> getlocationMap() {
 		return new HashMap<Direction, LocationConnection>(locationMap);
 	}	
+	
+	public ArrayList<LocationConnectionDataBox> getLocationBuildingBlocks() {
+		return new ArrayList<LocationConnectionDataBox>(locationBuildingBlocks);
+	}
 }
