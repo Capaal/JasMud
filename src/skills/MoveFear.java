@@ -26,7 +26,7 @@ public class MoveFear extends Move {
 		Random r = new Random();
 		LocationConnection randomDir = locList.get(r.nextInt(locList.size()));		
 		if (randomDir != null) {
-			endContainer = randomDir.getOldLocation();		
+			endContainer = randomDir.getNotOneself(startContainer);		
 		}
 		if (endContainer == null) {
 			currentPlayer.tell("You run around in circles, panicking but unable to find an exit.");

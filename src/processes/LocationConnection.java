@@ -15,13 +15,13 @@ public class LocationConnection {
 		this.newLocation = currentLoc;
 	}
 	
-	public Location getOldLocation() {
+/*	public Location getOldLocation() {
 		return oldLocation;
 	}
 	
 	public Location getNewLocation() {
 		return newLocation;
-	}
+	}*/
 	
 	public Location getNotOneself(Location oneSelf) {
 		if (newLocation == oneSelf) {

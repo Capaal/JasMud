@@ -188,7 +188,7 @@ public class Location implements Container {
 	
 	public Direction getDirectionToLocation(Location askingLocation) {
 		for (Entry<Direction, LocationConnection> entry : locationMap.entrySet()) {
-			if (entry.getValue().getOldLocation() == askingLocation) {
+			if (entry.getValue().getNotOneself(this) == askingLocation) {
 				return entry.getKey();
 			}
 		}

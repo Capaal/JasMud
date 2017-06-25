@@ -74,7 +74,10 @@ public class GameState {
 		AllSkillBooks = new HashMap<Integer, SkillBook>();
 		effectExecutor  = Executors.newScheduledThreadPool(1);
 		SkillQueue = new ArrayBlockingQueue<Runnable>(1024);
-		return this;
+		for (Mobile m : allPlayersList.values()) {
+			m.getContainer().removeItemFromLocation(m);
+		}
+		return this;		
 	}
 	
 	public ScheduledExecutorService getEffectExecutor() {

@@ -23,4 +23,9 @@ public class MoveFollow extends Move {
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new MoveFollow(currentPlayer, fullCommand);
 	}
+	
+	@Override
+	protected void onFail() {
+		super.stopFollowing();
+	}
 }

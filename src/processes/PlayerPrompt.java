@@ -123,9 +123,13 @@ public class PlayerPrompt implements Runnable {
 			sendBack.printMessage("Your name or password is invalid");
 			LogIn();
 		} else {
-			boolean oldPlayer = lookForExistingPlayer(enteredName, enteredPass);			
-			// Creates a new player with selected Name if load failed.
-			if (oldPlayer == false && !enteredName.equals("")) {
+			Mobile m = WorldServer.getGameState().getPlayer(enteredName);
+			if (m != null && m.getPassword().equals(enteredPass)) {
+				currentPlayer = m;
+				currentPlayer.setSendBack(sendBack);
+				currentPlayer.getContainer().acceptItem(currentPlayer);
+				currentPlayer.controlStatus(true);
+			} else if (m == null) {
 				sendBack.printMessage("Would you like to create a new character? Y/N ");
 				String create = sendBack.getMessage();
 				if (create.equalsIgnoreCase("n") || create.equalsIgnoreCase("no")) {
@@ -133,42 +137,11 @@ public class PlayerPrompt implements Runnable {
 				} else {
 					createNewPlayer(enteredName, enteredPass);
 				}
+			} else {
+				sendBack.printMessage("Username or Password invalid.");
+				LogIn();				
 			}
 		}
-	}
-	
-	//load needs to check gamestate TODO
-	private boolean lookForExistingPlayer(String enteredName, String enteredPass) {
-		Mobile m = WorldServer.getGameState().getPlayer(enteredName);
-		if (m != null && m.getPassword().equals(enteredPass)) {
-			currentPlayer = m;
-			currentPlayer.setSendBack(sendBack);
-			currentPlayer.getContainer().acceptItem(currentPlayer);
-			currentPlayer.controlStatus(true);
-			return true;
-		}
-		return false;
-		
-		
-		/*StdMob person = null;
-		    try{		    	
-		        File xmlFile = new File("./Players/" + enteredName + enteredPass + ".xml");
-		        if (!xmlFile.exists()) {
-		        	return false;
-		        }
-		        person = (StdMob) WorldServer.xstream.fromXML(xmlFile);       
-		    } catch(Exception e){
-		        System.err.println("Error in XML Read: " + e.getMessage());
-		    }
-	    if (person != null) {
-	    	currentPlayer = person;   	
-	    	currentPlayer.setSendBack(sendBack);
-	    	for (Holdable h : currentPlayer.getInventory().values()) {
-	    		h.setContainer(currentPlayer);
-	    	}
-	    	return true;
-	    }
-	    return false;*/
 	}
 	
 	private void createNewPlayer(String enteredName, String enteredPass) {

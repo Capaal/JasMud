@@ -33,9 +33,13 @@ public class Move extends Skills {
 	
 			if (endContainer == null) {
 				messageSelf("You can't go that way!");
+				onFail();
 				return;
 			}
-			if (!checkDoor()) {return;}
+			if (!checkDoor()) {
+				onFail();
+				return;
+			}
 			
 			displayLeaveMsg();
 			currentPlayer.moveHoldable(endContainer);
@@ -46,7 +50,13 @@ public class Move extends Skills {
 			moveFollowers();
 			stopFollowing();
 			
+		} else {
+			onFail();
 		}
+	}
+	
+	protected void onFail() {
+		stopFollowing();
 	}
 	
 	protected void moveFollowers() {
