@@ -1,5 +1,6 @@
 package interfaces;
 
+import items.Plant.PlantType;
 import items.StdItem;
 
 import java.util.EnumSet;
@@ -89,4 +90,7 @@ public interface Mobile extends Container {
 	public void addFollower(Mobile currentPlayer);
 	public void removeFollower(Mobile follower);
 	EnumSet<PassiveCondition> getAllPassiveEffects();
+	void cooldownOn(PlantType p);
+	void cooldownOff(PlantType p);
+	boolean checkCooldown(PlantType p);
 }

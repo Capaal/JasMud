@@ -2,6 +2,7 @@ package processes;
 
 import interfaces.*;
 import items.ItemBuilder;
+import items.Plant.PlantType;
 import items.StdItem;
 
 import java.util.*;
@@ -67,6 +68,7 @@ public class StdMob implements Mobile, Container{
 	protected ArrayList<Mobile> followers = new ArrayList<Mobile>();
 	@XStreamOmitField
 	protected Mobile following;
+	protected Map<PlantType, Boolean> eatPlantCooldowns; // = new EnumMap<PlantType, Boolean>(PlantType.class);
 	
 	public StdMob(MobileBuilder build) {
 		Mobile decoratedMob = decorate(build, this);
@@ -87,6 +89,7 @@ public class StdMob implements Mobile, Container{
 		createNewEffectManager();		
 		this.skillBookList = build.getSkillBookList();		
 		this.equipment = build.getEquipment();
+		this.eatPlantCooldowns = build.getPlantCooldowns();
 		WorldServer.getGameState().addMob(decoratedMob.getName() + decoratedMob.getId(), decoratedMob);
 		WorldServer.getGameState().addNewPlayer(this.name, decoratedMob);
 		decoratedMob.getContainer().acceptItem(decoratedMob);
@@ -188,20 +191,22 @@ public class StdMob implements Mobile, Container{
 	@Override
 	//TODO should be two methods or rename to changeLife
 	public synchronized void takeDamage(Type type, int damage) {
-		if(!(damage < 0)) {  
+		if(!(damage < 0)) {  //adjust dmg for defense
 			damage = damage - defense;
 		}
-		if (currentHp < damage) {
+		if (currentHp < damage) { //adjust dmg so hp won't be neg
 			damage = currentHp;
 		} 
-		if ((currentHp - damage) > maxHp) { //healing ignores defense
+		if (currentHp == maxHp && damage < 0) { //stop displaying prompt when no effect
+			return;
+		}
+		if ((currentHp - damage) > maxHp) { // healed to max life
 			currentHp = maxHp;
 		} else {
-			this.currentHp = currentHp - damage;
+			this.currentHp = currentHp - damage; 
 			System.out.println(this.getName() + " damage: " + damage);
 		}
-		checkHp();
-		//stop displaying prompt if no regen
+		checkHp();	
 		displayPrompt();
 	}	
 
@@ -683,6 +688,21 @@ public class StdMob implements Mobile, Container{
 	@Override
 	public void removeFollower(Mobile follower) {
 		followers.remove(follower);
+	}
+	
+	@Override
+	public void cooldownOn(PlantType p) {
+		eatPlantCooldowns.put(p, true);
+	}
+	
+	@Override
+	public void cooldownOff(PlantType p) {
+		eatPlantCooldowns.put(p, false);
+	}
+	
+	@Override
+	public boolean checkCooldown(PlantType p) {
+		return eatPlantCooldowns.get(p).booleanValue();
 	}
 
 

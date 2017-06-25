@@ -2,16 +2,19 @@ package skills;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 import interfaces.Holdable;
 import interfaces.Mobile;
 import items.Plant;
 import items.Plant.PlantType;
 import items.Pouch;
+import processes.InductionSkill;
 import processes.Skills;
+import processes.WorldServer;
 
 //currently only for herbs
-public class Eat extends Skills{
+public class Eat extends Skills {
 	
 	private String itemName;
 	private Collection<Holdable> containerList;
@@ -25,8 +28,14 @@ public class Eat extends Skills{
 
 	@Override
 	protected void performSkill() {
-		if(preSkillChecks()) {		
-			messageSelf(finalHerb.use(currentPlayer));
+		if(preSkillChecks()) {	
+			PlantType pt = finalHerb.getPlantType();
+			if (!currentPlayer.checkCooldown(pt)) {
+				messageSelf(finalHerb.use(currentPlayer));
+				triggerCooldown(finalHerb.getPlantType(), finalHerb.getPlantType().COOLDOWN);
+			} else {
+				messageSelf("That herb won't have any effect so soon.");
+			}
 			messageOthers(currentPlayer.getName() + " eats a " + finalHerb.getName() + ".", Arrays.asList(currentPlayer));
 			finalHerb.removeFromStack(1); 	
 		}
@@ -82,4 +91,38 @@ public class Eat extends Skills{
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new Eat(currentPlayer, fullCommand);
 	}
+
+	// Called to start cooldown period.
+		protected  void triggerCooldown(PlantType p, int length) {
+			currentPlayer.cooldownOn(p);
+			offCooldownIn(p,length);
+		}
+		
+		// Called when cooldown period ends. Override to add messages. But call super.setOffCooldown()
+		protected  void setOffCooldown(PlantType p) {
+			currentPlayer.cooldownOff(p);
+			messageSelf("You can eat a " + p.toString().toLowerCase() + " again.");
+		}
+
+		private void offCooldownIn(PlantType p, int duration) {
+			if (duration <= 0) {
+				throw new IllegalArgumentException("Invalid duration " + duration);
+			}
+			CooldownWrapper wrapper = new CooldownWrapper(this, p);
+			WorldServer.getGameState().getEffectExecutor().schedule(wrapper, duration, TimeUnit.MILLISECONDS);				
+		}
+		
+			protected class CooldownWrapper implements Runnable {		
+				Eat wrappedSkill;		
+				PlantType p;
+				public CooldownWrapper(Eat s, PlantType p) {
+					this.p = p;
+					wrappedSkill = s;
+				}			
+				public void run() {
+					wrappedSkill.setOffCooldown(p);			
+				}
+			}			
+	
+	
 }

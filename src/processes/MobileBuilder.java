@@ -3,9 +3,12 @@ package processes;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import items.ItemBuilder;
+import items.Plant;
+import items.Plant.PlantType;
 import items.StdItem;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +85,8 @@ public class MobileBuilder {
 	public void setEquipment(EquipmentEnum slot, StdItem item) {
 		equipment.forceEquip(slot, item);
 	}
+	
+	
 	
 	public int getDefense() {
 		return defense;
@@ -348,6 +353,14 @@ public class MobileBuilder {
 
 	public void setFinishedMob(Mobile decoratedMob) {
 		finishedMob = decoratedMob;
+	}
+
+	public Map<PlantType, Boolean> getPlantCooldowns() {
+		Map<PlantType, Boolean> plantCooldowns = new EnumMap<PlantType, Boolean>(PlantType.class);
+		for (PlantType p : Plant.PlantType.values()) {
+			plantCooldowns.put(p, false);
+		}
+		return plantCooldowns;
 	}
 
 //	public Set<PassiveCondition> getAllConditions() {

@@ -14,6 +14,7 @@ import processes.Equipment.EquipmentEnum;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import interfaces.TickingEffect;
+import items.Plant.PlantType;
 import items.StdItem;
 
 public class MobileDecorator implements Mobile {
@@ -378,6 +379,24 @@ public enum DecoratorType {
 	public EnumSet<PassiveCondition> getAllPassiveEffects() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void cooldownOn(PlantType p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void cooldownOff(PlantType p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean checkCooldown(PlantType p) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
