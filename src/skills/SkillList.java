@@ -6,6 +6,7 @@ import java.util.Map;
 
 import processes.SkillBook;
 import processes.Skills;
+import processes.UsefulCommands;
 
 public class SkillList extends Skills {
 
@@ -16,9 +17,10 @@ public class SkillList extends Skills {
 	
 	@Override
 	protected void performSkill() {
-		messageSelf("Skills: ");
+		messageSelf(UsefulCommands.ANSI.MAGENTA + "Skills: " + UsefulCommands.ANSI.SANE);
 		Map<SkillBook, Integer> books = currentPlayer.viewSkillBooks();
 		for (SkillBook b : books.keySet()) {
+			messageSelf(b.getName() + ": ");
 			for (Skills s : b.viewSkills().values()) {
 				if (s.getName() != "skills") {
 					messageSelf(s.getName());

@@ -21,9 +21,9 @@ public class Root extends Skills{
 		if(preSkillChecks()) {
 			finalTarget.addPassiveCondition(PassiveCondition.ROOT, -1);
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 2000);
-			messageSelf("Strong, ropey vines curl out of your hands towards " + finalTarget.getName() + " and wrap themselves tightly around " + "their feet."); //finalTarget.getGenderHimHer()
+			messageSelf("Strong, ropey vines curl out of your hands towards " + finalTarget.getNameColored() + " and wrap themselves tightly around " + "their feet."); //finalTarget.getGenderHimHer()
 			messageTarget("Vines suddenly encircle your feet and root you to the spot.", Arrays.asList(finalTarget));
-			messageOthers("Living vines fly out from " + currentPlayer.getName() + "'s hands and firmly binds " + finalTarget.getName() + " to the ground.", Arrays.asList(currentPlayer, finalTarget)); 
+			messageOthers("Living vines fly out from " + currentPlayer.getNameColored() + "'s hands and firmly binds " + finalTarget.getNameColored() + " to the ground.", Arrays.asList(currentPlayer, finalTarget)); 
 		}
 	}
 	

@@ -30,8 +30,8 @@ public class Punch extends Skills {
 			finalTarget.takeDamage(Type.BLUNT, calculateDamage());
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
 			messageSelf("You punch " + finalTarget.getName());
-			messageTarget(currentPlayer.getName() + " punches you.", Arrays.asList(finalTarget));
-			messageOthers(currentPlayer.getName() + " punches " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));
+			messageTarget(currentPlayer.getNameColored() + " punches you.", Arrays.asList(finalTarget));
+			messageOthers(currentPlayer.getNameColored() + " punches " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget));
 		}
 	}
 

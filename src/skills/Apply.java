@@ -37,7 +37,7 @@ public class Apply extends Skills {
 		((Weapon)target).getAppliedList().add((Plant)itemToApply);
 		currentPlayer.removeItemFromLocation(itemToApply);
 		messageSelf("You carefully apply the " + itemToApply.getName() + " to your " + target.getName() + ".");
-		messageOthers(currentPlayer.getName() + " applies a " + itemToApply.getName() + " to a " + target.getName() + ".", Arrays.asList(currentPlayer));
+		messageOthers(currentPlayer.getNameColored() + " applies a " + itemToApply.getName() + " to a " + target.getName() + ".", Arrays.asList(currentPlayer));
 		
 	}
 	

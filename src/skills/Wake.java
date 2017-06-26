@@ -30,7 +30,7 @@ public class Wake extends InductionSkill {
 			if (n > 2) {  //20% change success
 				currentPlayer.removeCondition(PassiveCondition.SLEEP);
 				messageSelf("You wake up.");
-				messageOthers(currentPlayer.getName() + " wakes up.", Arrays.asList(currentPlayer));
+			//	messageOthers(currentPlayer.getName() + " wakes up.", Arrays.asList(currentPlayer));
 				endSuccessfully();
 			} else {
 				messageSelf("You continue trying to wake up.");

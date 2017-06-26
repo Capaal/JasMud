@@ -1,9 +1,9 @@
 package skills;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import effects.PassiveCondition;
-import interfaces.Container;
 import interfaces.Mobile;
 import items.StdItem;
 import processes.Equipment;
@@ -31,6 +31,8 @@ public class Wield extends Skills {
 				if (wantSlot.equalsIgnoreCase(s.toString())) {
 					currentPlayer.equip(s, itemToWield);
 					messageSelf("You are now wielding the " + itemToWield.getName() + " in your " + s.toString().toLowerCase() + ".");
+					messageOthers(currentPlayer.getNameColored() + " is now wielding a " + itemToWield.getName() + 
+							" in their " + wantSlot.toString() + ".", Arrays.asList(currentPlayer));
 					return;
 				}
 			}

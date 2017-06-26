@@ -45,10 +45,10 @@ public class Headshot extends InductionSkill {
 			}		
 			finalTarget.takeDamage(Type.SHARP, calculateDamage());
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
-			messageSelf("You headshot " + finalTarget.getName() + ".");
-			messageTarget(currentPlayer.getName() + " headshots you.", Arrays.asList(finalTarget));
-			messageOthers(currentPlayer.getName() + " headshots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));	
-			messageOthersAway(currentPlayer.getName() + " headshots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget), finalTarget.getContainer());	
+			messageSelf("You headshot " + finalTarget.getNameColored() + ".");
+			messageTarget(currentPlayer.getNameColored() + " headshots you.", Arrays.asList(finalTarget));
+			messageOthers(currentPlayer.getNameColored() + " headshots " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget));	
+			messageOthersAway(currentPlayer.getNameColored() + " headshots " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget), finalTarget.getContainer());	
 		}
 
 		@Override

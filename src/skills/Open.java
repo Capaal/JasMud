@@ -26,7 +26,7 @@ public class Open extends Skills {
 		if (preSkillChecks()) {
 			door.alterDoor(true);
 			messageSelf("You open the door to your " + dir.toString().toLowerCase() + ".");
-			messageOthers(currentPlayer.getName() + " opens the door to the " + dir.toString().toLowerCase() + ".", Arrays.asList(currentPlayer));
+			messageOthers(currentPlayer.getNameColored() + " opens the door to the " + dir.toString().toLowerCase() + ".", Arrays.asList(currentPlayer));
 		}
 	}
 

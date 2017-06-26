@@ -31,13 +31,13 @@ public class MoveShove extends Move {
 	@Override protected void displayLeaveMsg() {
 		shover = Syntax.TARGET.getStringInfo(fullCommand, this);
 		dir = Location.Direction.getDirectionName(dir).toString().toLowerCase();
-		messageTarget("You shove " + currentPlayer.getName() + " to the " + dir + ".", Arrays.asList(shoverP));
-		messageSelf(shoverP.getName() + " shoves you away.");
-		messageOthers(shover + " shoves " + currentPlayer.getName() + " to the " + dir + ".", Arrays.asList(currentPlayer, shoverP));
+		messageTarget("You shove " + currentPlayer.getNameColored() + " to the " + dir + ".", Arrays.asList(shoverP));
+		messageSelf(shoverP.getNameColored() + " shoves you away.");
+		messageOthers(shover + " shoves " + currentPlayer.getNameColored() + " to the " + dir + ".", Arrays.asList(currentPlayer, shoverP));
 	}
 	
 	@Override protected void displayEnterMsg() {
-		messageOthersAway(currentPlayer.getName() + "is suddenly shoved into this location.", Arrays.asList(currentPlayer), endContainer);
+		messageOthersAway(currentPlayer.getNameColored() + "is suddenly shoved into this location.", Arrays.asList(currentPlayer), endContainer);
 	}
 	
 	@Override protected void moveFollowers() {

@@ -27,7 +27,7 @@ public class Float extends Skills {
 			currentPlayer.addActiveCondition(new Levitate(currentPlayer), 4);
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
 		//	messageSelf("You float up a foot above the ground."); //done in levitate effect
-			messageOthers(currentPlayer.getName() + "floats into the air.", Arrays.asList(currentPlayer));
+			messageOthers(currentPlayer.getNameColored() + "floats into the air.", Arrays.asList(currentPlayer));
 		}
 	}
 

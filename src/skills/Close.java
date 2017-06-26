@@ -38,7 +38,7 @@ public class Close extends Skills {
 		}
 		door.alterDoor(false);
 		messageSelf("You close the door to your " + dir.toString().toLowerCase() + ".");
-		messageOthers(currentPlayer.getName() + " closes the door to the " + dir.toString().toLowerCase() + ".", Arrays.asList(currentPlayer));
+		messageOthers(currentPlayer.getNameColored() + " closes the door to the " + dir.toString().toLowerCase() + ".", Arrays.asList(currentPlayer));
 		// TODO, get location on the other side of door and display message?
 	}
 

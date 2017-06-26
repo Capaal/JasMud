@@ -31,9 +31,9 @@ public class SpinKick extends Skills {
 			finalTarget.informLastAggressor(currentPlayer);
 			finalTarget.takeDamage(Type.BLUNT, calculateDamage());
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
-			messageSelf("You spin around really fast and kick " + finalTarget.getName() + ".");
-			messageTarget(currentPlayer.getName() + " makes you stumble with a dizzying kick.", Arrays.asList(finalTarget));
-			messageOthers(currentPlayer.getName() + " spins and kicks " + finalTarget.getName() + ".", Arrays.asList(currentPlayer, finalTarget));
+			messageSelf("You spin around really fast and kick " + finalTarget.getNameColored() + ".");
+			messageTarget(currentPlayer.getNameColored() + " makes you stumble with a dizzying kick.", Arrays.asList(finalTarget));
+			messageOthers(currentPlayer.getNameColored() + " spins and kicks " + finalTarget.getNameColored() + ".", Arrays.asList(currentPlayer, finalTarget));
 		}
 	}
 	

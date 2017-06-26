@@ -26,7 +26,7 @@ public class Intimidate extends Skills {
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 2000);
 			messageSelf("You fear someone.");
 			messageTarget("Someone fears you.", Arrays.asList(mobileToFear));
-			messageOthers(mobileToFear.getName() + " suddenly looks around with a panicked expression.", Arrays.asList(mobileToFear,currentPlayer));
+			messageOthers(mobileToFear.getNameColored() + " suddenly looks around with a panicked expression.", Arrays.asList(mobileToFear,currentPlayer));
 		}
 	}
 

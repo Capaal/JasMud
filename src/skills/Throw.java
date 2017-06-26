@@ -35,10 +35,10 @@ public class Throw extends Skills {
 		finalTarget.takeDamage(Type.SHARP, calculateDamage());
 		itemToThrow.moveHoldable(finalLoc);
 		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
-		messageSelf("You throw " + itemToThrow.getName() + " at " + finalTarget.getName() + ".");
-		messageTarget(currentPlayer.getName() + " throws " + itemToThrow.getName() + " at you.", Arrays.asList(finalTarget));
-		messageOthers(currentPlayer.getName() + " throws " + itemToThrow.getName() + " at " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));
-		messageOthersAway(finalTarget.getName() + "is hit with a thrown " +  itemToThrow.getName() + ".", Arrays.asList(finalTarget), finalLoc);
+		messageSelf("You throw " + itemToThrow.getName() + " at " + finalTarget.getNameColored() + ".");
+		messageTarget(currentPlayer.getNameColored() + " throws " + itemToThrow.getName() + " at you.", Arrays.asList(finalTarget));
+		messageOthers(currentPlayer.getNameColored() + " throws " + itemToThrow.getName() + " at " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget));
+		messageOthersAway(finalTarget.getNameColored() + "is hit with a thrown " +  itemToThrow.getName() + ".", Arrays.asList(finalTarget), finalLoc);
 	}	
 	
 	@Override

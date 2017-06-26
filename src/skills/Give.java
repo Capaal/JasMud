@@ -40,14 +40,14 @@ public class Give extends Skills {
 			}
 			if (qty == -1) { // defaults to full stack
 				itemToMove.moveHoldable((Mobile)mobileToGive);
-				messageSelf("You give " + itemToMove.getName() + " to " + mobileToGive.getName() + ".");
-				messageTarget(currentPlayer.getName() + " gives you " + itemToMove + ".", Arrays.asList((Mobile)mobileToGive));
-				messageOthers(currentPlayer.getName() + " gives " + itemToMove.getName() + " to " + (Mobile)mobileToGive + ".", Arrays.asList(currentPlayer));
+				messageSelf("You give " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".");
+				messageTarget(currentPlayer.getNameColored() + " gives you " + itemToMove + ".", Arrays.asList(mobileToGive));
+				messageOthers(currentPlayer.getNameColored() + " gives " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".", Arrays.asList(currentPlayer));
 			} else {
 				itemToMove.moveHoldable((Mobile)mobileToGive, qty);
-				messageSelf("You give " + qty + " " + itemToMove.getName() + " to " + mobileToGive.getName() + ".");
-				messageTarget(currentPlayer.getName() + " gives you " + qty + " " + itemToMove + ".", Arrays.asList((Mobile)mobileToGive));
-				messageOthers(currentPlayer.getName() + " gives " + itemToMove.getName() + " to " + (Mobile)mobileToGive + ".", Arrays.asList(currentPlayer));
+				messageSelf("You give " + qty + " " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".");
+				messageTarget(currentPlayer.getNameColored() + " gives you " + qty + " " + itemToMove + ".", Arrays.asList(mobileToGive));
+				messageOthers(currentPlayer.getNameColored() + " gives " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".", Arrays.asList(currentPlayer));
 			}		
 			questCares(itemToMove, (Mobile)mobileToGive);		
 		}

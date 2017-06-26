@@ -93,4 +93,5 @@ public interface Mobile extends Container {
 	void cooldownOn(PlantType p);
 	void cooldownOff(PlantType p);
 	boolean checkCooldown(PlantType p);
+	String getNameColored();
 }

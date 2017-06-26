@@ -399,4 +399,10 @@ public enum DecoratorType {
 		return false;
 	}
 
+	@Override
+	public String getNameColored() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

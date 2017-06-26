@@ -32,8 +32,8 @@ public class Heal extends Skills {
 				messageOthers(currentPlayer.getName() + " heals a bit.", Arrays.asList(currentPlayer, finalTarget));
 			} else {
 				messageSelf("You heal " + finalTarget.getName());
-				messageTarget(currentPlayer.getName() + " heals you.", Arrays.asList(finalTarget));
-				messageOthers(currentPlayer.getName() + " heals " + finalTarget.getName() + ".", Arrays.asList(currentPlayer, finalTarget));
+				messageTarget(currentPlayer.getNameColored() + " heals you.", Arrays.asList(finalTarget));
+				messageOthers(currentPlayer.getNameColored() + " heals " + finalTarget.getNameColored() + ".", Arrays.asList(currentPlayer, finalTarget));
 			}
 		}
 	}

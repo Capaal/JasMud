@@ -86,6 +86,8 @@ public class CreateWorld {
 		generalSkills.addSkill(new Diagnose(null, null));
 		generalSkills.addSkill(new Messaging(null, null));
 		generalSkills.addSkill(new Who(null, null));
+		generalSkills.addSkill(new CharacterSheet(null, null));
+		generalSkills.addSkill(new GoTo(null, null));
 		//crafting
 		generalSkills.addSkill(new CraftItem(null, null));
 		generalSkills.addSkill(new Salvage(null, null));

@@ -36,7 +36,7 @@ public class Eat extends Skills {
 			} else {
 				messageSelf("That herb won't have any effect so soon.");
 			}
-			messageOthers(currentPlayer.getName() + " eats a " + finalHerb.getName() + ".", Arrays.asList(currentPlayer));
+			messageOthers(currentPlayer.getNameColored() + " eats a " + finalHerb.getName() + ".", Arrays.asList(currentPlayer));
 			finalHerb.removeFromStack(1); 	
 		}
 	}

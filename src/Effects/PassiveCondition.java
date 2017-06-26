@@ -30,6 +30,7 @@ public enum PassiveCondition {
 		ROOT() {
 			@Override public void doOnDestruction(Mobile currentPlayer) {
 				currentPlayer.tell("You are no longer rooted.");
+				UsefulCommands.messageOthers(currentPlayer, currentPlayer.getNameColored() + " is no longer rooted.", Arrays.asList(currentPlayer));
 			}
 		},
 		

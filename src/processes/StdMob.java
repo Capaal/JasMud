@@ -112,6 +112,7 @@ public class StdMob implements Mobile, Container{
 	}
 	
 	@Override public String getName() {return name;}	
+	@Override public String getNameColored() {return UsefulCommands.ANSI.GREEN + name + UsefulCommands.ANSI.SANE;}	
 	@Override public boolean isDead() {return isDead;}	
 	
 	@Override public boolean hasBalance() {

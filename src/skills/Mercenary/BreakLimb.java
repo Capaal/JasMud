@@ -41,9 +41,9 @@ public class BreakLimb extends Skills {
 			finalTarget.informLastAggressor(currentPlayer);
 			finalTarget.takeDamage(Type.BLUNT, calculateDamage());
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
-			messageSelf("You target a specific limb and hit " + finalTarget.getName() + " really hard.");
+			messageSelf("You target a specific limb and hit " + finalTarget.getNameColored() + " really hard.");
 		//	messageTarget(currentPlayer.getName() + " hits you with a targetted punch.", Arrays.asList(finalTarget));
-			messageOthers(currentPlayer.getName() + " punches " + finalTarget.getName() + " harder than usual.", Arrays.asList(currentPlayer, finalTarget));
+			messageOthers(currentPlayer.getNameColored() + " punches " + finalTarget.getNameColored() + " harder than usual.", Arrays.asList(currentPlayer, finalTarget));
 		}
 	}
 	

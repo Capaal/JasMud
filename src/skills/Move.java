@@ -88,11 +88,11 @@ public class Move extends Skills {
 	}
 	
 	protected void displayLeaveMsg() {
-		messageOthers(currentPlayer.getName() + " leaves to the " + dir.toLowerCase() + ".", Arrays.asList(currentPlayer));
+		messageOthers(currentPlayer.getNameColored() + " leaves to the " + dir.toLowerCase() + ".", Arrays.asList(currentPlayer));
 	}
 	
 	protected void displayEnterMsg() {
-		messageOthers(currentPlayer.getName() + " arrives from the " + Location.Direction.getDirectionName(dir).getOpp().toLowerCase() + ".", Arrays.asList(currentPlayer));
+		messageOthers(currentPlayer.getNameColored() + " arrives from the " + Location.Direction.getDirectionName(dir).getOpp().toLowerCase() + ".", Arrays.asList(currentPlayer));
 		//this opposite direction is not always correct?
 	}
 	

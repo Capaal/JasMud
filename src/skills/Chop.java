@@ -52,7 +52,7 @@ public class Chop extends InductionSkill {
 			scheduleInduction(1, 5000); // Triggers this skill's "run()" in 5 seconds. Interruptible.
 			currentPlayer.setInduction(this);
 			messageSelf("You begin chopping.");
-			messageOthers(currentPlayer.getName() + " begins chopping.", Arrays.asList(currentPlayer));
+			messageOthers(currentPlayer.getNameColored() + " begins chopping.", Arrays.asList(currentPlayer));
 		}
 	}
 	

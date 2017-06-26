@@ -35,8 +35,8 @@ public class Shoot extends Skills {
 	protected void performSkill() {
 		if (preSkillChecks()) {
 			messageSelf("You shoot " + finalTarget.getName() + ".");
-			messageTarget(currentPlayer.getName() + " shoots you.", Arrays.asList(finalTarget));
-			messageOthers(currentPlayer.getName() + " shoots " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));
+			messageTarget(currentPlayer.getNameColored() + " shoots you.", Arrays.asList(finalTarget));
+			messageOthers(currentPlayer.getNameColored() + " shoots " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget));
 			finalTarget.informLastAggressor(currentPlayer);
 			finalTarget.takeDamage(Type.SHARP, calculateDamage());
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);

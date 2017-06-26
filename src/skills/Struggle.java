@@ -32,7 +32,7 @@ public class Struggle extends InductionSkill {
 			if (n > 2) {  //20% change success
 				currentPlayer.removeCondition(PassiveCondition.ROOT);
 			//	messageSelf("You are free to move about again."); // this is in passivecondition doOnDestruction instead
-				messageOthers(currentPlayer.getName() + " is no longer bound.", Arrays.asList(currentPlayer));
+			//	messageOthers(currentPlayer.getNameColored() + " is no longer bound.", Arrays.asList(currentPlayer));
 				endSuccessfully();
 			} else {
 				messageSelf("You continue to writhe against the bonds holding you.");

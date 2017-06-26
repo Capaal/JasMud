@@ -24,9 +24,9 @@ public class Greet extends Skills {
 		target = setTarget();
 		if (preSkillChecks()) {
 			if (canTalk()) {
-				messageSelf("You greet " + target.getName() + " in a friendly manner.");
-				messageOthers(currentPlayer.getName() + " greets " + target.getName() + " in a friendly manner.", Arrays.asList(currentPlayer, target));
-				messageTarget(currentPlayer.getName() + " greets you in a friendly manner.", Arrays.asList(target));
+				messageSelf("You greet " + target.getNameColored() + " in a friendly manner.");
+				messageOthers(currentPlayer.getNameColored() + " greets " + target.getNameColored() + " in a friendly manner.", Arrays.asList(currentPlayer, target));
+				messageTarget(currentPlayer.getNameColored() + " greets you in a friendly manner.", Arrays.asList(target));
 				((Location)currentPlayer.getContainer()).notifyQuest(Quest.Trigger.GREETS);
 			} else {
 				messageSelf("You can't talk.");

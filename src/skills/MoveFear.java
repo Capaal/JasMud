@@ -37,11 +37,11 @@ public class MoveFear extends Move {
 	
 	@Override protected void displayLeaveMsg() {
 		messageSelf("You flee away to the " + dir + ".");
-		messageOthers(currentPlayer.getName() + " flees away to the " + dir + ".", Arrays.asList(currentPlayer)); //TODO need to specify direction
+		messageOthers(currentPlayer.getNameColored() + " flees away to the " + dir + ".", Arrays.asList(currentPlayer)); //TODO need to specify direction
 	}
 	
 	@Override protected void displayEnterMsg() {
-		messageOthers(currentPlayer.getName() + " flees in from a random direction.", Arrays.asList(currentPlayer));
+		messageOthers(currentPlayer.getNameColored() + " flees in from a random direction.", Arrays.asList(currentPlayer));
 	}
 	
 	@Override protected boolean checkDoor() {

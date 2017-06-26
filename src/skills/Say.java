@@ -21,7 +21,7 @@ public class Say extends Skills {
 		words = Syntax.LIST.getStringInfo(fullCommand, this);
 		if (preSkillChecks()) {
 			messageSelf("You say: \"" + words + "\".");
-			messageOthers(currentPlayer.getName() + " says, \"" + Syntax.LIST.getStringInfo(fullCommand, this) + "\".", Arrays.asList(currentPlayer));
+			messageOthers(currentPlayer.getNameColored() + " says, \"" + Syntax.LIST.getStringInfo(fullCommand, this) + "\".", Arrays.asList(currentPlayer));
 		}
 	}
 	

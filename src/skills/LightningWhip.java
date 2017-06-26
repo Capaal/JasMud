@@ -39,9 +39,9 @@ public class LightningWhip extends InductionSkill {
 				return;
 			}		
 			finalTarget.takeDamage(Type.COLD, calculateDamage());
-			messageSelf("Your lightning whip hits " + finalTarget.getName() + ".");
-			messageTarget(currentPlayer.getName() + " lightning lashes you.", Arrays.asList(finalTarget));
-			messageOthers(currentPlayer.getName() + " whips " + finalTarget.getName(), Arrays.asList(currentPlayer, finalTarget));	
+			messageSelf("Your lightning whip hits " + finalTarget.getNameColored() + ".");
+			messageTarget(currentPlayer.getNameColored() + " lightning lashes you.", Arrays.asList(finalTarget));
+			messageOthers(currentPlayer.getNameColored() + " whips " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget));	
 		}
 
 		@Override

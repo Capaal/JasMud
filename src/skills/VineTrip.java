@@ -26,7 +26,7 @@ public class VineTrip extends Skills{
 			finalTarget.killInduction();
 			messageSelf("You encourage a vine to get in the way.");
 			messageTarget("A vine shoots out by your feet and trips you.", Arrays.asList(finalTarget));
-			messageOthers("A vine trips " + finalTarget + ".", Arrays.asList(currentPlayer, finalTarget));
+			messageOthers("A vine trips " + finalTarget.getNameColored() + ".", Arrays.asList(currentPlayer, finalTarget));
 		}
 	}
 	
