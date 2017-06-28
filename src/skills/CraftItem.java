@@ -34,7 +34,7 @@ public class CraftItem extends Skills {
 		itemToMake = Syntax.ITEM.getStringInfo(fullCommand, this);		
 		if (!preSkillChecks()) {return;}		
 		List<StdItem> componentsNeeded = copyThis.getComponents();
-		TreeMap<String, Holdable> copyPlayerInv = currentPlayer.getInventory();
+		TreeMap<String, Holdable> copyPlayerInv = currentPlayer.viewInventory();
 		while (quantity > 0) {			
 			Iterator<StdItem> it = componentsNeeded.iterator();
 				if (!checkRemoveCreate(it, copyPlayerInv)) {

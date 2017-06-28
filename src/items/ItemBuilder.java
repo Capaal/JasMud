@@ -4,13 +4,11 @@ import interfaces.Container;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
+import processes.Equipment.EquipmentSlot;
 import processes.WorldServer;
-import processes.Equipment.EquipmentEnum;
 
 public class ItemBuilder {
 	
@@ -23,7 +21,7 @@ public class ItemBuilder {
 	protected int maxDurability = 1;
 	protected int currentDurability = 1;
 	protected Container itemContainer;		
-	protected EnumSet<EquipmentEnum> allowedSlots = EnumSet.of(EquipmentEnum.RIGHTHAND, EquipmentEnum.LEFTHAND);// EnumSet.noneOf(EquipmentEnum.class);
+	protected EnumSet<EquipmentSlot> allowedSlots = EnumSet.of(EquipmentSlot.RIGHTHAND, EquipmentSlot.LEFTHAND);// EnumSet.noneOf(EquipmentEnum.class);
 	protected List<StdItem> components = new ArrayList<StdItem>();
 	protected boolean salvageable = false;
 	
@@ -110,14 +108,14 @@ public class ItemBuilder {
 		return itemContainer;
 	}
 	
-	public void setAllowedSlots(EnumSet<EquipmentEnum> allowedSlots) {
+	public void setAllowedSlots(EnumSet<EquipmentSlot> allowedSlots) {
 		this.allowedSlots = allowedSlots;
 	}
-	public void setAllowedSlots(EquipmentEnum allowedSlots) {
+	public void setAllowedSlots(EquipmentSlot allowedSlots) {
 		this.allowedSlots.add(allowedSlots);
 	}	
 	
-	public Set<EquipmentEnum> getAllowedSlots() {
+	public Set<EquipmentSlot> getAllowedSlots() {
 		return EnumSet.copyOf(allowedSlots);
 	}
 	

@@ -9,8 +9,8 @@ import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import processes.Equipment.EquipmentSlot;
 import effects.PassiveCondition;
-import processes.Equipment.EquipmentEnum;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import interfaces.TickingEffect;
@@ -27,8 +27,8 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public TreeMap<String, Holdable> getInventory() {
-		return decoratedMobile.getInventory();
+	public TreeMap<String, Holdable> viewInventory() {
+		return decoratedMobile.viewInventory();
 	}
 
 	@Override
@@ -173,7 +173,7 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public void equip(EquipmentEnum slot, StdItem item) {
+	public void equip(EquipmentSlot slot, StdItem item) {
 		decoratedMobile.equip(slot, item);
 	}
 
@@ -183,17 +183,13 @@ public class MobileDecorator implements Mobile {
 	}
 	
 	@Override
-	public void unEquip(EquipmentEnum slot) {
+	public void unEquip(EquipmentSlot slot) {
 		decoratedMobile.unEquip(slot);
 	}
 
-	@Override
-	public EquipmentEnum findEquipment(String itemName) {
-		return decoratedMobile.findEquipment(itemName);
-	}
 
 	@Override
-	public Holdable getEquipmentInSlot(EquipmentEnum slot) {
+	public Holdable getEquipmentInSlot(EquipmentSlot slot) {
 		return decoratedMobile.getEquipmentInSlot(slot);
 	}
 
@@ -293,11 +289,6 @@ public enum DecoratorType {
 	}
 
 	@Override
-	public Equipment getEquipment() {
-		return decoratedMobile.getEquipment();
-	}
-
-	@Override
 	public void setContainer(Location container) {
 		decoratedMobile.setContainer(container);
 		
@@ -377,32 +368,32 @@ public enum DecoratorType {
 
 	@Override
 	public EnumSet<PassiveCondition> getAllPassiveEffects() {
-		// TODO Auto-generated method stub
-		return null;
+		return decoratedMobile.getAllPassiveEffects();
 	}
 
 	@Override
 	public void cooldownOn(PlantType p) {
-		// TODO Auto-generated method stub
-		
+		decoratedMobile.cooldownOn(p);
 	}
 
 	@Override
 	public void cooldownOff(PlantType p) {
-		// TODO Auto-generated method stub
-		
+		decoratedMobile.cooldownOff(p);
 	}
 
 	@Override
 	public boolean checkCooldown(PlantType p) {
-		// TODO Auto-generated method stub
-		return false;
+		return decoratedMobile.checkCooldown(p);
 	}
 
 	@Override
 	public String getNameColored() {
-		// TODO Auto-generated method stub
-		return null;
+		return decoratedMobile.getNameColored();
+	}
+
+	@Override
+	public TreeMap<String, Holdable> viewInventoryWithoutEquipment() {
+		return decoratedMobile.viewInventoryWithoutEquipment();
 	}
 
 }

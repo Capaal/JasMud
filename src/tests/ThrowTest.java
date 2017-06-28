@@ -17,9 +17,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+
+
 //import effects.Balance;
 import processes.GameState;
 import processes.Location;
+import processes.Location.Direction;
 import processes.LocationBuilder;
 import processes.MobileBuilder;
 import processes.Skills;
@@ -27,6 +30,7 @@ import processes.StdMob;
 import processes.Type;
 import processes.WorldServer;
 import skills.Shoot;
+import skills.Throw;
 
 public class ThrowTest {
 	
@@ -39,8 +43,8 @@ public class ThrowTest {
 
 	@Test
 	public void testCannotThrowTwiceInstantly() {
-		testSkill.perform("throw dagger target", currentPlayer);
-		testSkill.perform("throw dagger target", currentPlayer);
+		new Throw(currentPlayer, "throw dagger target");
+		new Throw(currentPlayer, "throw dagger target");
 		verify(target, Mockito.times(1)).takeDamage(Type.SHARP,  expectedDamage);
 	}	
 	
@@ -66,13 +70,13 @@ public class ThrowTest {
 	@Test
 	public void testCannotThrowDeadMobiles() {
 		when(target.isDead()).thenReturn(true);
-		testSkill.perform("throw dagger target", currentPlayer);
+		new Throw(currentPlayer, "throw dagger target");
 		verify(target, Mockito.times(0)).takeDamage(Type.SHARP,  expectedDamage);		
 	}
 	
 	@Test
 	public void testCannotThrowSelf() {
-		testSkill.perform("throw dagger currentplayer", currentPlayer);
+		new Throw(currentPlayer, "throw dagger currentPlayer");
 		assertTrue("CurrentPlayer's hp should be at Max HP but is: " + currentPlayer.getCurrentHp(), currentPlayer.getCurrentHp() == currentPlayer.getMaxHp());
 	}
 	
@@ -85,13 +89,13 @@ public class ThrowTest {
 		newLocation.acceptItem(target);
 		location.removeItemFromLocation(target);
 		when(target.getContainer()).thenReturn(newLocation);
-		testSkill.perform("throw dagger target", currentPlayer);
+		new Throw(currentPlayer, "throw dagger target");
 		verify(target, Mockito.times(0)).takeDamage(Type.SHARP,  expectedDamage);		
 	}
 	
 	@Test
 	public void testEnemyPresent() {
-		testSkill.perform("throw dagger target", currentPlayer);
+		new Throw(currentPlayer, "throw dagger target");
 		verify(target).takeDamage(Type.SHARP,  expectedDamage);
 	}
 	
@@ -99,13 +103,14 @@ public class ThrowTest {
 	public void testThrowOneAway() {
 		LocationBuilder lb = new LocationBuilder();
 	//	lb.setId(2);
-		lb.south(1, "north");
+		lb.addLocationConnection(Direction.SOUTH,  1, Direction.NORTH, null);
+	//	lb.south(1, "north");
 		lb.complete();
 		Location newLocation = lb.getFinishedLocation();
 		newLocation.acceptItem(target);
 		location.removeItemFromLocation(target);
 		when(target.getContainer()).thenReturn(newLocation);
-		testSkill.perform("throw dagger target north", currentPlayer);
+		new Throw(currentPlayer, "throw dagger target north");
 		verify(target).takeDamage(Type.SHARP, expectedDamage);
 	}
 	
@@ -113,10 +118,10 @@ public class ThrowTest {
 	public void testThrowTargetIsHereButIncludeNorth() {
 		LocationBuilder lb = new LocationBuilder();
 //		lb.setId(2);
-		lb.south(1, "north");
+		lb.addLocationConnection(Direction.SOUTH,  1, Direction.NORTH, null);
 		lb.complete();
 		Location newLocation = lb.getFinishedLocation();
-		testSkill.perform("throw dagger target north", currentPlayer);
+		new Throw(currentPlayer, "throw dagger target north");
 		verify(target, Mockito.times(0)).takeDamage(Type.SHARP,  expectedDamage);	
 	}
 	
@@ -131,9 +136,8 @@ public class ThrowTest {
 	@Before
 	public void setUp() throws Exception {
 		WorldServer.setGameState(new GameState());
-		testSkill = new Shoot();
 		LocationBuilder lb = new LocationBuilder();
-	//	lb.setId(1);
+//		lb.setId(1);
 		lb.complete();
 		location = lb.getFinishedLocation();
 		MobileBuilder mb = new MobileBuilder();
@@ -150,8 +154,9 @@ public class ThrowTest {
 		target = mock(StdMob.class);
 		location.acceptItem(target);
 		when(target.getName()).thenReturn("target");
+		when(target.getId()).thenReturn(1);
+
 		when(target.getContainer()).thenReturn(location);
-		testSkill = new Shoot();
 	}
 
 	@After

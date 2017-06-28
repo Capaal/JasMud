@@ -20,13 +20,13 @@ public class Info extends Skills {
 		toInfo = Syntax.ITEM.getStringInfo(fullCommand, this);
 		if (preSkillChecks()) {
 			if (toInfo.equals("here")) {
-				if (currentPlayer.getContainer().getInventory().keySet().isEmpty()) {
+				if (currentPlayer.getContainer().viewInventory().keySet().isEmpty()) {
 					messageSelf("There is nothing on the ground.");
 				} else {
 					listAllInfo(currentPlayer.getContainer());
 				}
 			} else if (toInfo.equals("inventory")) {
-				if (currentPlayer.getInventory().keySet().isEmpty()) {
+				if (currentPlayer.viewInventory().keySet().isEmpty()) {
 					messageSelf("You are holding nothing.");
 				} else {
 					listAllInfo(currentPlayer);
@@ -42,7 +42,7 @@ public class Info extends Skills {
 	}
 
 	private void listAllInfo (Container where) {
-		for (String i : where.getInventory().keySet()) {
+		for (String i : where.viewInventory().keySet()) {
 			messageSelf(i);
 		}
 	}

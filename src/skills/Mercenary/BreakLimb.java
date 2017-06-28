@@ -4,15 +4,15 @@ import java.util.Arrays;
 
 import effects.PassiveCondition;
 import interfaces.Mobile;
+import processes.Equipment.EquipmentSlot;
 import processes.Skills;
 import processes.Type;
-import processes.Equipment.EquipmentEnum;
 import skills.Sleep;
 
 public class BreakLimb extends Skills {
 
 	private Mobile finalTarget;
-	private EquipmentEnum slot;
+	private EquipmentSlot slot;
 	private final int intensity = 8;
 	private String targetName;
 	
@@ -29,13 +29,13 @@ public class BreakLimb extends Skills {
 		if (preSkillChecks()) {
 			//checks if slot specified is a hand, then checks if hand is already broken
 			//sets limb to broken, unwield if hand
-			if (slot.equals(EquipmentEnum.LEFTHAND)) {
+			if (slot.equals(EquipmentSlot.LEFTHAND)) {
 				breakarm(PassiveCondition.BROKENLEFTARM);
-			} else if (slot.equals(EquipmentEnum.RIGHTHAND)) {
+			} else if (slot.equals(EquipmentSlot.RIGHTHAND)) {
 				breakarm(PassiveCondition.BROKENRIGHTARM);
-			} else if (slot.equals(EquipmentEnum.LEGS)) {
+	//		} else if (slot.equals(EquipmentSlot.LEGS)) {
 			//	messageTarget("Your legs are broken.", Arrays.asList(finalTarget));
-				finalTarget.addPassiveCondition((PassiveCondition.BROKENLEGS),-1);
+//				finalTarget.addPassiveCondition((PassiveCondition.BROKENLEGS),-1);
 			}
 			//the regular stuff a damaging atk does
 			finalTarget.informLastAggressor(currentPlayer);
@@ -53,11 +53,11 @@ public class BreakLimb extends Skills {
 	
 	private boolean findSlotAndWeapon() {
 		String toBreak = Syntax.SLOT.getStringInfo(fullCommand, this);
-		slot = EquipmentEnum.fromString(toBreak);
+		slot = EquipmentSlot.fromString(toBreak);
 		if (slot == null) {
 			return false;
 		}
-		if (!slot.equals(EquipmentEnum.LEFTHAND) && !slot.equals(EquipmentEnum.RIGHTHAND) && !slot.equals(EquipmentEnum.LEGS)) {
+		if (!slot.equals(EquipmentSlot.LEFTHAND) && !slot.equals(EquipmentSlot.RIGHTHAND) /*&& !slot.equals(EquipmentSlot.LEGS)*/) {
 			return false;
 		}				
 		return true;

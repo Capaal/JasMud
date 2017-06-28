@@ -6,17 +6,13 @@ import items.Plant.PlantType;
 import items.StdItem;
 
 import java.util.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 import effects.*;
-import processes.Equipment.EquipmentEnum;
+import processes.Equipment.EquipmentSlot;
 import processes.MobileDecorator.DecoratorType;
-import skills.Follow;
-import skills.Move;
 import skills.MoveFollow;
 
 /**
@@ -52,7 +48,7 @@ public class StdMob implements Mobile, Container{
 	protected SendMessage sendBack;
 	protected boolean isControlled = false;
 //	protected boolean loadOnStartUp = false;
-	protected TreeMap<String, Holdable> inventory = new TreeMap<String, Holdable>();
+	protected TreeMap<String, Holdable> inventory;
 	@XStreamOmitField
 	protected InductionSkill inductionSkill = null;
 //	@XStreamOmitField
@@ -82,8 +78,10 @@ public class StdMob implements Mobile, Container{
 		this.mobLocation = build.getLocation();
 		this.isDead = build.isDead();
 		this.description = build.getDescription();
-		this.shortDescription = build.getShortDescription();	
+		this.shortDescription = build.getShortDescription();
+		this.inventory = new TreeMap<String, Holdable>();
 		this.inventory.putAll(build.getInventory())	;
+	
 		this.dropsOnDeath = build.getDropsOnDeath();
 		this.experience = build.getExperience();
 		createNewEffectManager();		
@@ -94,6 +92,7 @@ public class StdMob implements Mobile, Container{
 		WorldServer.getGameState().addNewPlayer(this.name, decoratedMob);
 		decoratedMob.getContainer().acceptItem(decoratedMob);
 		this.messages = new ArrayList<String>();
+		
 	}
 	
 	private Mobile decorate(MobileBuilder build, Mobile m) {
@@ -168,9 +167,8 @@ public class StdMob implements Mobile, Container{
 				inventory.remove(key);
 				changeCurrentWeight(-oldItem.getWeight());
 			} else if (equipment.hasItem(oldItem)){
-				equipment.remove(oldItem);
+				equipment.unwield(oldItem);
 				removeItemFromLocation(oldItem);
-				changeCurrentWeight(-oldItem.getWeight());
 			} else {
 				//TODO make this bug comment better
 				System.out.println("StdMob removeItemFromLocation: An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
@@ -266,29 +264,37 @@ public class StdMob implements Mobile, Container{
 
 	// Returns view of Inventory, allows editing of objects within (which should be limited) but not to the inventory list.
 	@Override
-	public TreeMap<String, Holdable> getInventory() {
+	public TreeMap<String, Holdable> viewInventory() {
+		TreeMap<String, Holdable> inventoryView = new TreeMap<String, Holdable>(this.inventory);
+		inventoryView.putAll(equipment.viewEquipment());
+		return inventoryView;
+	}
+	
+	@Override
+	public TreeMap<String, Holdable> viewInventoryWithoutEquipment() {
 		return new TreeMap<String, Holdable>(this.inventory);
 	}
 	
 	// TODO SHOULD REWRITE AS: Try ceiling, then try range? Or ceiling, then floor, then range. ceiling is USUALLY correct
 	@Override
 	public Holdable getHoldableFromString(String holdableString) {
-		holdableString = holdableString.toLowerCase();
-		String ceiling = inventory.ceilingKey(holdableString);
-		String floor = inventory.floorKey(holdableString);			
+		TreeMap<String, Holdable> inventoryView = viewInventory();
+		holdableString = holdableString.toLowerCase();		
+		String ceiling = inventoryView.ceilingKey(holdableString);
+		String floor = inventoryView.floorKey(holdableString);			
 		String hasNum = UsefulCommands.getOnlyNumerics(holdableString);
 		if (ceiling != null) {
 			if (!hasNum.equals("") && ceiling.equalsIgnoreCase(holdableString)) {
-				return inventory.get(ceiling);				
+				return inventoryView.get(ceiling);				
 			} else if (ceiling.toLowerCase().startsWith(holdableString)) {
-				return inventory.get(ceiling);				
+				return inventoryView.get(ceiling);				
 			}
 		}
 		if (floor != null) {
 			if (!hasNum.equals("") && floor.equalsIgnoreCase(holdableString)) {
-				return inventory.get(floor);				
+				return inventoryView.get(floor);				
 			} else if (floor.toLowerCase().startsWith(holdableString)) {
-				return inventory.get(floor);				
+				return inventoryView.get(floor);				
 			}
 		}
 		return null;	
@@ -328,8 +334,9 @@ public class StdMob implements Mobile, Container{
 	
 	@Override
 	public Collection<Holdable> getListMatchingString(String holdableString) {
+		TreeMap<String, Holdable> inventoryView = viewInventory();
 		holdableString = holdableString.toLowerCase();		
-		SortedMap<String, Holdable> subMap = inventory.subMap(holdableString, true, holdableString + Character.MAX_VALUE, true);		
+		SortedMap<String, Holdable> subMap = inventoryView.subMap(holdableString, true, holdableString + Character.MAX_VALUE, true);		
 		Collection<Holdable> set = new TreeSet<Holdable>(subMap.values());
 		System.out.println("StdMob getListMatchingString: " + set.toString());		
 		if (set.isEmpty() || set == null) {
@@ -388,34 +395,37 @@ public class StdMob implements Mobile, Container{
 	}
 	
 	@Override 
-	public void equip(EquipmentEnum slot, StdItem item) {		
-		item.equip(this);
-		equipment.equip(slot, item);
+	public void equip(EquipmentSlot slot, StdItem item) {	
+		String key = item.getName() + item.getId();
+		if (inventory.remove(key) != null) {
+			changeCurrentWeight(-item.getWeight());
+			equipment.wield(item, slot);
+		}
 	}
 	
-	@Override
-	public Equipment getEquipment() {
-		return equipment;
-	}
+//	@Override
+//	public Equipment getEquipment() {
+//		return equipment;
+//	}
 	
 	@Override
 	public void unEquip(Holdable item) {
-		equipment.unEquip(item);
+		equipment.unwield(item);
 	}
 	
 	@Override
-	public void unEquip(EquipmentEnum slot) {
-		equipment.unEquip(slot);
+	public void unEquip(EquipmentSlot slot) {
+		equipment.unwield(slot);
 	}
 	
 	@Override
-	public Holdable getEquipmentInSlot(EquipmentEnum slot) {
-		return equipment.getValue(slot);
+	public Holdable getEquipmentInSlot(EquipmentSlot slot) {
+		return equipment.getEquipmentInSlot(slot);
 	}
 	
 	//TODO
-	@Override
-	public EquipmentEnum findEquipment(String itemName) {
+/*	@Override
+	public EquipmentSlot findEquipment(String itemName) {
 		Collection<Holdable> items =  equipment.values();
 		for (Holdable item : items) {
 			if (item != null) {
@@ -426,7 +436,7 @@ public class StdMob implements Mobile, Container{
 			}
 		}
 		return null;
-	}
+	}*/
 	
 	@Override
 	public void addBook(SkillBook skillBook, int progress) {
@@ -624,11 +634,6 @@ public class StdMob implements Mobile, Container{
     	controlStatus(true);
 		for (Holdable h: inventory.values()) {
 			h.setContainer(this);
-		}
-		for (Holdable h : equipment.values()) {
-			if (h != null) {
-				h.setContainer(this);
-			}
 		}
 		return this;
 	}

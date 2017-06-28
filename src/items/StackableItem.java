@@ -52,7 +52,7 @@ public class StackableItem extends StdItem {
 		} else {
 			return ContainerErrors.QTYFULL; // If the bag can accept none of the stackable, return full error.
 		}
-		TreeMap<String, Holdable> inventoryView = finalLocation.getInventory();
+		TreeMap<String, Holdable> inventoryView = finalLocation.viewInventory();
 		Map.Entry<String,Holdable> possibleStackEntry = inventoryView.ceilingEntry(this.name);
 		Holdable possibleStack = null;
 		if (possibleStackEntry != null) {

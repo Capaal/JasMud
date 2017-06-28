@@ -6,11 +6,12 @@ import items.StdItem;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import effects.PassiveCondition;
 import processes.ContainerErrors;
 import processes.Equipment;
-import processes.Equipment.EquipmentEnum;
+import processes.Equipment.EquipmentSlot;
 import processes.InductionSkill;
 import processes.Location;
 import processes.SendMessage;
@@ -55,11 +56,11 @@ public interface Mobile extends Container {
 	public void controlStatus(boolean statusChange);
 	public void save();
 //	public void setStartup(boolean b);
-	public void equip(EquipmentEnum slot, StdItem item);
-	public void unEquip(EquipmentEnum slot);
+	public void equip(EquipmentSlot slot, StdItem item);
+	public void unEquip(EquipmentSlot slot);
 	public void unEquip(Holdable item);
-	public EquipmentEnum findEquipment(String itemName);
-	public Holdable getEquipmentInSlot(EquipmentEnum slot);
+//	public EquipmentSlot findEquipment(String itemName);
+	public Holdable getEquipmentInSlot(EquipmentSlot slot);
 	public void removeFromWorld();
 	public void displayPrompt();
 	public void setSendBack(SendMessage sendBack);
@@ -73,7 +74,7 @@ public interface Mobile extends Container {
 	public void setInduction(InductionSkill skill);
 	public Map<SkillBook, Integer> viewSkillBooks();
 	public void spawnDeathLoot();
-	public Equipment getEquipment();
+//	public Equipment getEquipment();
 //	public void addAllConditions(PassiveCondition conditions); //should use effectmanager
 	public void createNewEffectManager();
 	public void moveHoldable(Location finalLocation);
@@ -94,4 +95,5 @@ public interface Mobile extends Container {
 	void cooldownOff(PlantType p);
 	boolean checkCooldown(PlantType p);
 	String getNameColored();
+	public TreeMap<String, Holdable> viewInventoryWithoutEquipment();
 }

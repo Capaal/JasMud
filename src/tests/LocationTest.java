@@ -54,7 +54,8 @@ public class LocationTest {
 		Location south = new Location(buildSouth);
 		LocationBuilder buildNorth = new LocationBuilder();
 //		buildNorth.setId(2);
-		buildNorth.south(1, "north");		
+		buildNorth.addLocationConnection(Direction.SOUTH,  1, Direction.NORTH, null);
+	//	buildNorth.south(1, "north");		
 		buildNorth.complete();
 		Location north = new Location(buildNorth);
 		assertTrue("South location's north should point at location north" , south.getLocation(Direction.NORTH) == north);
@@ -71,7 +72,9 @@ public class LocationTest {
 		Location south = new Location(buildSouth);
 		LocationBuilder buildNorth = new LocationBuilder();
 //		buildNorth.setId(2);
-		buildNorth.south(1, "northwest");
+		buildNorth.addLocationConnection(Direction.SOUTH,  1, Direction.NORTHWEST, null);
+
+//		buildNorth.south(1, "northwest");
 		buildNorth.complete();
 		Location north = new Location(buildNorth);
 		assertTrue("South location's northwest should point at location north" , south.getLocation(Direction.NORTHWEST) == north);
@@ -88,7 +91,9 @@ public class LocationTest {
 		Location south = new Location(buildSouth);
 		LocationBuilder buildNorth = new LocationBuilder();
 //		buildNorth.setId(2);
-		buildNorth.south(1, null);
+		buildNorth.addLocationConnection(Direction.SOUTH,  1, null, null);
+
+	//	buildNorth.south(1, null);
 		buildNorth.complete();
 		Location north = new Location(buildNorth);
 		assertFalse("South should not have any location pointing at north" , south.getLocation(Direction.NORTH) == north);

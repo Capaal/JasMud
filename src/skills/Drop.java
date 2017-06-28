@@ -5,7 +5,6 @@ import java.util.Arrays;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.ContainerErrors;
-import processes.Equipment.EquipmentEnum;
 import processes.Skills;
 
 public class Drop extends Skills {
@@ -24,26 +23,12 @@ public class Drop extends Skills {
 	// Requires balance, syntax = "drop dagger" or "drop sword1532"
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			EquipmentEnum slot = null;
-			itemToMove = currentPlayer.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
-			if (itemToMove == null) {
-				itemToMove = currentPlayer.getEquipmentInSlot(EquipmentEnum.RIGHTHAND);
-				slot = EquipmentEnum.RIGHTHAND;
-				if (itemToMove == null) {
-					itemToMove = currentPlayer.getEquipmentInSlot(EquipmentEnum.LEFTHAND);
-					slot = EquipmentEnum.LEFTHAND;
-					if (itemToMove == null) {
-						messageSelf("You can't find that item.");
-						return;	
-					}
-				}
-			}	
-			dropItem(itemToMove, slot);
+		if (preSkillChecks()) {			
+			dropItem(itemToMove);
 		}
 	}	
 	
-	private void dropItem(Holdable itemToDrop, EquipmentEnum slot) {
+	private void dropItem(Holdable itemToDrop) {
 		String quantityToMove = Syntax.QUANTITY.getStringInfo(fullCommand, this);
 		quantity = 1;
 		if (!quantityToMove.isEmpty()) {
@@ -52,17 +37,12 @@ public class Drop extends Skills {
 				quantity = itemToDrop.getQuantity();
 			}
 		}
-		if (slot == null) {
-			ContainerErrors err = itemToDrop.moveHoldable(currentPlayer.getContainer(), quantity);
-			if (err == null) {
-				displayMessages();	
-			} else {
-				System.out.println(currentPlayer.getName() + " is holding an item that can't be dropped: " + itemToDrop.getName());
-				messageSelf(err.display(itemToDrop.getName()));
-			}
+		ContainerErrors err = itemToDrop.moveHoldable(currentPlayer.getContainer(), quantity);
+		if (err == null) {
+			displayMessages();	
 		} else {
-			currentPlayer.getEquipment().unEquip(slot);
-			displayMessages();
+			System.out.println(currentPlayer.getName() + " is holding an item that can't be dropped: " + itemToDrop.getName());
+			messageSelf(err.display(itemToDrop.getName()));
 		}
 	}
 	
@@ -108,6 +88,8 @@ public class Drop extends Skills {
 	@Override
 	protected boolean preSkillChecks() {
 		if (!hasBalance()) {return false;}
+		itemToMove = currentPlayer.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
+		if (itemToMove == null) { return false;}
 		return true;
 	}
 	@Override

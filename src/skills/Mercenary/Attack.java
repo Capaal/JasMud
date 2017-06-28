@@ -7,6 +7,7 @@ import interfaces.Holdable;
 import interfaces.Mobile;
 import items.StdItem;
 import items.Weapon;
+import processes.Equipment.EquipmentSlot;
 import processes.Location;
 import processes.Equipment;
 import processes.Skills;
@@ -127,9 +128,9 @@ public class Attack extends Skills {
 
     private boolean weaponWielded() { 
         //righthand primary for now
-    	possWeapon = (StdItem) currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND);
+    	possWeapon = (StdItem) currentPlayer.getEquipmentInSlot(EquipmentSlot.RIGHTHAND);
     	if (possWeapon == null) {
-    		possWeapon = (StdItem) currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.LEFTHAND);
+    		possWeapon = (StdItem) currentPlayer.getEquipmentInSlot(EquipmentSlot.LEFTHAND);
     	}
     	
     	if (possWeapon == null) {

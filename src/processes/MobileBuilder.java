@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.TreeMap;
 
-import processes.Equipment.EquipmentEnum;
+import processes.Equipment.EquipmentSlot;
 import processes.MobileDecorator.DecoratorType;
 
 public class MobileBuilder {	
@@ -47,18 +47,6 @@ public class MobileBuilder {
 	private static Map<String, Integer> idMap = new HashMap<String, Integer>();
 	
 	public MobileBuilder() {
-		// might change based on implementation.
-		setEquipment(EquipmentEnum.HEAD,  null);
-		setEquipment(EquipmentEnum.NECK,  null);
-		setEquipment(EquipmentEnum.LEFTEAR,  null);
-		setEquipment(EquipmentEnum.RIGHTEAR,  null);
-		setEquipment(EquipmentEnum.LEFTHAND,  null);
-		setEquipment(EquipmentEnum.RIGHTHAND,  null);
-		setEquipment(EquipmentEnum.CHEST,  null);
-		setEquipment(EquipmentEnum.LEGS,  null);
-		setEquipment(EquipmentEnum.FEET,  null);
-		setEquipment(EquipmentEnum.LEFTFINGER,  null);
-		setEquipment(EquipmentEnum.RIGHTFINGER,  null);
 	}	
 	
 	public boolean buildCompleted() {
@@ -82,8 +70,8 @@ public class MobileBuilder {
 		return new Equipment(equipment, finishedMob);
 	}
 	
-	public void setEquipment(EquipmentEnum slot, StdItem item) {
-		equipment.forceEquip(slot, item);
+	public void setEquipment(EquipmentSlot slot, StdItem item) {
+		equipment.wield(item, slot);
 	}
 	
 	

@@ -2,16 +2,30 @@ package tests;
 
 import static org.junit.Assert.*;
 import interfaces.Mobile;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import processes.GameState;
+import processes.Location;
+import processes.LocationBuilder;
 import processes.MobileBuilder;
+import processes.WorldServer;
 
 public class StdMobBuilderTest {
 	
 	MobileBuilder mob;
+	Location LocationOne;
 	
 	@Before
 	public void initialize() {
+		WorldServer.setGameState(new GameState());
+		
+		LocationBuilder firstLoc = new LocationBuilder();
+		firstLoc.setName("Start.");
+		firstLoc.setDescription("You have to start somewhere");
+		firstLoc.complete();
+		LocationOne = firstLoc.getFinishedLocation();
 		mob = new MobileBuilder();
 	//	mob.setId(1);
 	}

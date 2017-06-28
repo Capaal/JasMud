@@ -27,7 +27,7 @@ public class Bag extends StdItem implements Container { //wearable
 	}
 
 	@Override
-	public TreeMap<String, Holdable> getInventory() {
+	public TreeMap<String, Holdable> viewInventory() {
 		return new TreeMap<String, Holdable>(this.inventory);
 	}
 	

@@ -5,9 +5,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import effects.PassiveCondition;
+import interfaces.Holdable;
 import interfaces.Mobile;
 import items.StdItem;
 import processes.Equipment;
+import processes.Equipment.EquipmentSlot;
 import processes.Location;
 import processes.Location.Direction;
 import processes.Skills;
@@ -113,15 +115,22 @@ public class Shoot extends Skills {
 	
 	private boolean checkWeapon() {
         //righthand primary for now
-    	possBow = (StdItem) currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND);
-		if (possBow == null || (!possBow.getName().equals("bow"))) {
-			possBow = (StdItem) currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND);
+    	Holdable possBowLeft = currentPlayer.getEquipmentInSlot(EquipmentSlot.LEFTHAND);
+    	Holdable possBowRight = currentPlayer.getEquipmentInSlot(EquipmentSlot.RIGHTHAND);
+    	if ((possBowLeft != null && possBowLeft.getName().equals("bow")) || (possBowRight != null && possBowRight.getName().equals("bow"))) {
+    		return true;
+    	}
+    	return false;
+    	
+    	
+	/*	if ((possBowLeft == null || (!possBow.getName().equals("bow")))) {
+			possBow = (StdItem) currentPlayer.getEquipmentInSlot(EquipmentSlot.RIGHTHAND);
 			if (possBow == null || (!possBow.getName().equals("bow"))) {
 				messageSelf("You are not wielding a bow.");
 				return false;
 			}
 		}
-		return true;
+		return true;*/
 	}
 	
 	@Override

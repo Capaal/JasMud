@@ -106,12 +106,12 @@ public class DualAttack extends Skills {
     }
     //preskill check
     private boolean weaponWielded() {
-        if (currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.LEFTHAND) == null || currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND) == null) {
+        if (currentPlayer.getEquipmentInSlot(Equipment.EquipmentSlot.LEFTHAND) == null || currentPlayer.getEquipmentInSlot(Equipment.EquipmentSlot.RIGHTHAND) == null) {
             messageSelf("You need a weapon in both hands for this skill.");
             return false;
         }
-        rightWeapon = currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND);
-        leftWeapon = currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.LEFTHAND);
+        rightWeapon = currentPlayer.getEquipmentInSlot(Equipment.EquipmentSlot.RIGHTHAND);
+        leftWeapon = currentPlayer.getEquipmentInSlot(Equipment.EquipmentSlot.LEFTHAND);
         if (!(rightWeapon instanceof StdItem) || !(leftWeapon instanceof StdItem)) {
         	messageSelf("One of those items isn't a weapon.");
         	return false;

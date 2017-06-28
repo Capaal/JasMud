@@ -1,12 +1,15 @@
 package skills;
 
+import interfaces.Holdable;
 import interfaces.Mobile;
+import processes.Equipment.EquipmentSlot;
+import processes.Skills.Syntax;
 import processes.Skills;
-import processes.Equipment.EquipmentEnum;
 
 public class Unwield extends Skills {
 
-	private String wantSlot;
+	private EquipmentSlot wantSlot;
+	private Holdable itemToUnwield;
 	
 	public Unwield (Mobile currentPlayer, String fullCommand) {
 		super("unwield", "Unwielding items in your hands.", currentPlayer, fullCommand);
@@ -18,48 +21,20 @@ public class Unwield extends Skills {
 	@Override
 	protected void performSkill() {
 		if(!preSkillChecks()) {return;}
-		
-		//this doesn't work right now, just deletes the equipped thing
-		if (wantSlot.equals("")) { 
-			wantSlot = "righthand"; 
-			if (currentPlayer.getEquipment().getValue(EquipmentEnum.RIGHTHAND) == null) {
-				tryLeft();
-			} else {
-				tryRight();
-			}
-		} else if (wantSlot.equals("righthand")) {
-			if (currentPlayer.getEquipment().getValue(EquipmentEnum.RIGHTHAND) != null) {
-				tryRight();
-			} else {
-				messageSelf("You are not wielding anything in your right hand.");
-				return;
-			}
-		} else if (wantSlot.equals("lefthand")) {
-			if (currentPlayer.getEquipment().getValue(EquipmentEnum.LEFTHAND) != null) {
-				tryLeft();
-			} else {
-				messageSelf("You are not wielding anything in your left hand.");
-				return;
-			}
-		}
-	
-	}
-	
-	private void tryRight() {
-		messageSelf("You unwield a " + currentPlayer.getEquipment().getValue(EquipmentEnum.RIGHTHAND).getName() + ".");
-		currentPlayer.unEquip(EquipmentEnum.RIGHTHAND);
-	}
-	
-	private void tryLeft() {
-		messageSelf("You unwield a " + currentPlayer.getEquipment().getValue(EquipmentEnum.LEFTHAND).getName() + ".");
-		currentPlayer.unEquip(EquipmentEnum.LEFTHAND);
+		currentPlayer.unEquip(wantSlot);
+		messageSelf("You unwield a " + itemToUnwield + " from your " + wantSlot + ".");	
 	}
 	
 	@Override
 	protected boolean preSkillChecks() {
-		wantSlot = Syntax.SLOT.getStringInfo(fullCommand, this);
+		String item = Syntax.ITEM.getStringInfo(fullCommand, this);
+		wantSlot = EquipmentSlot.fromString((Syntax.SLOT.getStringInfo(fullCommand, this)));
+		if (wantSlot == null) {
+			wantSlot = EquipmentSlot.RIGHTHAND;
+		}
+		itemToUnwield = currentPlayer.getEquipmentInSlot(wantSlot);
 		//if (!hasBalance()) {return;} - don't need balance to unwield, shrug
-		if (currentPlayer.getEquipment().getValue(EquipmentEnum.RIGHTHAND) == null && currentPlayer.getEquipment().getValue(EquipmentEnum.LEFTHAND) == null) {
+		if (itemToUnwield == null || !itemToUnwield.getName().startsWith(item.toLowerCase())) {
 			messageSelf("You're not wielding anything.");
 			return false;
 		}

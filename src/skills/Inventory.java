@@ -6,7 +6,7 @@ import java.util.Iterator;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Equipment;
-import processes.Equipment.EquipmentEnum;
+import processes.Equipment.EquipmentSlot;
 import processes.Skills;
 
 public class Inventory extends Skills {
@@ -21,19 +21,19 @@ public class Inventory extends Skills {
 		//wielded
 		StringBuilder inventoryMsg = new StringBuilder();
 		inventoryMsg.append("You are wielding: ");
-		inventoryMsg.append("\n");
-		Holdable weapon = currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.LEFTHAND);
+		inventoryMsg.append(System.lineSeparator());
+		Holdable weapon = currentPlayer.getEquipmentInSlot(EquipmentSlot.LEFTHAND);
 		if (weapon != null) {
 			inventoryMsg.append("Lefthand: " + weapon.getName());
 		} else { inventoryMsg.append("Lefthand: empty. "); }
-		weapon = currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND);
+		weapon = currentPlayer.getEquipmentInSlot(EquipmentSlot.RIGHTHAND);
 		if (weapon != null) {
 			inventoryMsg.append("Righthand: " + weapon.getName());
 		} else {  inventoryMsg.append("Righthand: empty. "); }
 		inventoryMsg.append("\n");
 		//inventory
 		inventoryMsg.append("You are holding: ");
-		Collection<Holdable> inv = currentPlayer.getInventory().values();
+		Collection<Holdable> inv = currentPlayer.viewInventoryWithoutEquipment().values();
 		Iterator<Holdable> i = inv.iterator();
 		if (!i.hasNext()) {
 			inventoryMsg.append("nothing!");

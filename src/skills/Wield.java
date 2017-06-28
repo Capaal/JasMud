@@ -4,17 +4,19 @@ import java.util.Arrays;
 import java.util.Set;
 
 import effects.PassiveCondition;
+import interfaces.Holdable;
 import interfaces.Mobile;
 import items.StdItem;
 import processes.Equipment;
 import processes.Skills;
+import processes.Equipment.EquipmentSlot;
+import processes.Skills.Syntax;
 
 
 public class Wield extends Skills {
 
-	private String wantSlot;
+	private EquipmentSlot wantSlot;
 	private StdItem itemToWield;
-	private Set<Equipment.EquipmentEnum> equippableSlots;
 	
 	public Wield(Mobile currentPlayer, String fullCommand) {
 		super("wield", "Wielding items.", currentPlayer, fullCommand);
@@ -25,26 +27,22 @@ public class Wield extends Skills {
 	
 	@Override
 	protected void performSkill() {
-		wantSlot = Syntax.SLOT.getStringInfo(fullCommand, this);
 		if (preSkillChecks()) {		
-			for (Equipment.EquipmentEnum s : equippableSlots) {
-				if (wantSlot.equalsIgnoreCase(s.toString())) {
-					currentPlayer.equip(s, itemToWield);
-					messageSelf("You are now wielding the " + itemToWield.getName() + " in your " + s.toString().toLowerCase() + ".");
-					messageOthers(currentPlayer.getNameColored() + " is now wielding a " + itemToWield.getName() + 
-							" in their " + wantSlot.toString() + ".", Arrays.asList(currentPlayer));
-					return;
-				}
-			}
-			messageSelf("You can't wield that item there.");
+			currentPlayer.equip(wantSlot, itemToWield);
+			messageSelf("You are now wielding the " + itemToWield.getName() + " in your " + wantSlot.toString().toLowerCase() + ".");
+			messageOthers(currentPlayer.getNameColored() + " is now wielding a " + itemToWield.getName() + 
+					" in their " + wantSlot.toString() + ".", Arrays.asList(currentPlayer));
+			return;	
 		}
-	//	Equipment.valueof(Syntax.SLOT.getStringInfo(fullCommand, this));
 	}
 
 	@Override
 	protected boolean preSkillChecks() {
 		if (!hasBalance()) {return false;}
-		if(wantSlot.equals("")) {wantSlot = "righthand";} //defaulting righthand
+		wantSlot = EquipmentSlot.fromString((Syntax.SLOT.getStringInfo(fullCommand, this)));
+		if (wantSlot == null) {
+			wantSlot = EquipmentSlot.RIGHTHAND;
+		}
 		//find if item exists in inv
 		itemToWield = (StdItem)currentPlayer.getHoldableFromString(Syntax.ITEM.getStringInfo(fullCommand, this));
 		if (itemToWield == null) {
@@ -56,18 +54,17 @@ public class Wield extends Skills {
 			return false;
 		}
 		//find if item can be wielded in slot specified
-		equippableSlots = itemToWield.getAllowedEquipSlots();
-		if (equippableSlots == null) {
-			messageSelf("You can't wield that. Not equippable.");
+		if (!itemToWield.getAllowedEquipSlots().contains(wantSlot)) {
+			messageSelf("You can't wield that there.");
 			return false;
 		}
 		//is bodypart broken/wieldable
-		if (wantSlot.equals("righthand")) {
+		if (wantSlot.equals(EquipmentSlot.RIGHTHAND)) {
 			if (currentPlayer.hasCondition(PassiveCondition.BROKENRIGHTARM)) {
 				messageSelf("Your arm is broken, you can't wield right now.");
 				return false;
 			}
-		} else if (wantSlot.equals("lefthand")) {
+		} else if (wantSlot.equals(EquipmentSlot.LEFTHAND)) {
 			if (currentPlayer.hasCondition(PassiveCondition.BROKENLEFTARM)) {
 				messageSelf("Your arm is broken, you can't wield right now.");
 				return false;

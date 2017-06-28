@@ -72,7 +72,7 @@ public class Pouch extends Bag {
 	}
 
 	@Override
-	public TreeMap<String, Holdable> getInventory() {
+	public TreeMap<String, Holdable> viewInventory() {
 		TreeMap<String, Holdable> newLook = new TreeMap<String,Holdable>();
 		if (inventory != null) {
 			newLook.put(inventory.getName() + inventory.getId(), inventory);

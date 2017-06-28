@@ -113,7 +113,7 @@ public abstract class Skills implements Runnable {
 	}
 	
 	public void messageOthersAway(String msg, List<Mobile> toIgnore, Location otherLoc) {
-		for (Holdable h : otherLoc.getInventory().values()) {
+		for (Holdable h : otherLoc.viewInventory().values()) {
 			if (h instanceof Mobile && ((Mobile) h).isControlled()) {
 				Boolean shouldTell = true;
 				if (h.equals(currentPlayer)) {

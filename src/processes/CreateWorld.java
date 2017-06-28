@@ -14,7 +14,6 @@ import items.StdItem;
 import items.Weapon.MercEffect;
 import items.Harvestable.HarvestType;
 import items.Weapon.WeaponItemBuilder;
-import processes.Equipment.EquipmentEnum;
 import processes.Location.Direction;
 
 import java.util.Arrays;
@@ -491,8 +490,6 @@ public class CreateWorld {
 		newItem.setComponents(Arrays.asList(WorldServer.getGameState().itemTemplates.get("ingot").getNonexistentFinishedItem()));
 		newItem.setSalvageable(true);
 		newItem.setWeight(1.5);
-		newItem.setAllowedSlots(EquipmentEnum.LEFTHAND);
-		newItem.setAllowedSlots(EquipmentEnum.RIGHTHAND);
 		newItem.setMercEffect(MercEffect.BLEED);
 		newItem.complete();
 		WorldServer.getGameState().itemTemplates.put("dagger", newItem);

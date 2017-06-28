@@ -7,6 +7,7 @@ import java.util.Set;
 import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Equipment;
+import processes.Equipment.EquipmentSlot;
 import processes.InductionSkill;
 import processes.Location;
 import processes.Skills;
@@ -77,7 +78,7 @@ public class Headshot extends InductionSkill {
 	}
 	
 	private boolean weaponWielded() {
-		if (currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.LEFTHAND) == null && currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND) == null) {
+		if (currentPlayer.getEquipmentInSlot(EquipmentSlot.LEFTHAND) == null && currentPlayer.getEquipmentInSlot(EquipmentSlot.RIGHTHAND) == null) {
 			messageSelf("You are not wielding a weapon.");
 			return false;
 		}

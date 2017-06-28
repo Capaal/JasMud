@@ -7,7 +7,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import interfaces.*;
 import processes.*;
-import processes.Equipment.EquipmentEnum;
+import processes.Equipment.EquipmentSlot;
 
 @XStreamAlias("StdItem")
 public class StdItem implements Holdable{
@@ -20,7 +20,7 @@ public class StdItem implements Holdable{
 	protected final List<StdItem> components; // Add to weapon interface? Make a craftable interface?
 	protected final boolean salvageable;
 	protected final double weight;	
-	protected final Set<EquipmentEnum> allowedEquipSlots;
+	protected final Set<EquipmentSlot> allowedEquipSlots;
 //	protected final int maxDurability;
 	
 //  protected int currentDurability;
@@ -64,7 +64,7 @@ public class StdItem implements Holdable{
 //		this.currentDurability = newDurability;
 //	}
 	
-	public Set<EquipmentEnum> getAllowedEquipSlots() {return allowedEquipSlots;}
+	public Set<EquipmentSlot> getAllowedEquipSlots() {return allowedEquipSlots;}
 	public List<StdItem> getComponents() {return components;}
 	
 	public double getDamageMult() {
@@ -81,32 +81,14 @@ public class StdItem implements Holdable{
 		}
 		getContainer().removeItemFromLocation(this);		
 		this.itemLocation = finalLocation;
-		
-				// TESTS: Problem with gamestate not updating locations.
-				System.out.println("TI: " + getContainer().getId());
-	/*			Set<StdItem> items = WorldServer.gameState.viewAllItems();
-				System.out.println(items);
-				boolean found = false;
-				for (StdItem i : items) {
-					if (i == this) {				
-						System.out.println("AI: " + i.getContainer().getId());
-						found = true;
-						break;
-					}
-				}
-				if (!found) {
-					System.out.println("Did not find item: " + getName());
-				}*/
-		
-		
 		return error;
 	}
 	
 	// Most of equiping is handled by StdMob
-	public void equip(Mobile player) {
-		getContainer().removeItemFromLocation(this);
-		this.itemLocation = player;
-	}
+//	public void equip(Mobile player) {
+//		getContainer().removeItemFromLocation(this);
+//		this.itemLocation = player;
+//	}
 	
 	
 	@Override

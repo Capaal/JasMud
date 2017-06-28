@@ -6,6 +6,7 @@ import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Equipment;
+import processes.Equipment.EquipmentSlot;
 import processes.InductionSkill;
 import processes.Skills;
 import skills.Sleep;
@@ -55,9 +56,9 @@ public class Shieldblock extends InductionSkill {
 	
 	private boolean weaponWielded() {
 		//tests left hand first
-		Holdable possShield = currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.LEFTHAND);
+		Holdable possShield = currentPlayer.getEquipmentInSlot(EquipmentSlot.LEFTHAND);
 		if (possShield == null || (!possShield.getName().equals("shield"))) {
-			possShield = currentPlayer.getEquipmentInSlot(Equipment.EquipmentEnum.RIGHTHAND);
+			possShield = currentPlayer.getEquipmentInSlot(EquipmentSlot.RIGHTHAND);
 			if (possShield == null || (!possShield.getName().equals("shield"))) {
 				messageSelf("You are not wielding a shield.");
 				return false;

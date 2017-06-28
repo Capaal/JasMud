@@ -8,7 +8,7 @@ public interface Container {
 	
 //	public Set<Holdable> inventory = Collections.synchronizedSortedSet(new TreeSet<Holdable>());
 
-	public TreeMap<String, Holdable> getInventory();
+	public TreeMap<String, Holdable> viewInventory();
 	public String getName();
 	public int getId();
 	public double getMaxWeight();

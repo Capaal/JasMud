@@ -181,7 +181,7 @@ public class GameState {
 		FileOutputStream fos = null;
 		try {		
 			WorldServer.xstream.toXML(player, new FileWriter(new File("./Players/" + player.getName() + player.getPassword() + ".xml")));
-			for (Holdable s : player.getInventory().values()) {
+			for (Holdable s : player.viewInventory().values()) {
 				s.delete();
 			}
 		} catch(Exception e) {
