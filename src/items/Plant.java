@@ -4,10 +4,11 @@ import effects.Belladonna;
 import effects.PassiveCondition;
 import effects.Regen;
 import interfaces.Container;
+import interfaces.Cooldown;
 import interfaces.Mobile;
 import processes.Type;
 
-public class Plant extends StackableItem {
+public class Plant extends StackableItem{
 
 	private PlantType type;
 	
@@ -33,7 +34,7 @@ public class Plant extends StackableItem {
 	}
 	
 	
-	public enum PlantType {
+	public enum PlantType implements Cooldown {
 		ALOE(3000) {
 			@Override public String use(Mobile currentPlayer) {
 				if (currentPlayer.getCurrentHp() >= currentPlayer.getMaxHp()) {
@@ -93,6 +94,21 @@ public class Plant extends StackableItem {
 		
 		PlantType(int cooldown) { this.COOLDOWN = cooldown;}
 		
+		@Override
+		public boolean isOnCooldown(Mobile currentPlayer) {
+			return currentPlayer.isOnCooldown(this);
+		}
+
+		@Override
+		public void addCooldown(Mobile currentPlayer) {
+			currentPlayer.addCooldown(this);
+		}
+		
+		@Override
+		public void removeCooldown(Mobile currentPlayer) {
+			currentPlayer.removeCooldown(this);
+		}
+		
 		public String failMsg = "The plant doesn't seem to have an effect.";
 		public final int COOLDOWN;
 		
@@ -116,6 +132,8 @@ public class Plant extends StackableItem {
 	@Override public ItemBuilder newBuilder() {
 		return newBuilder(new PlantItemBuilder());
 	}
+
+
 	
 	
 	

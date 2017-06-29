@@ -36,7 +36,7 @@ public class Move extends Skills {
 				onFail();
 				return;
 			}
-			if (!checkDoor()) {
+			if (isDirectionBlocked(startContainer, directionEnum)) {
 				onFail();
 				return;
 			}
@@ -70,7 +70,7 @@ public class Move extends Skills {
 	protected boolean findDirection() {
 		dir = Syntax.DIRECTION.getStringInfo(fullCommand, this); // Why not convert to enum?
 		if (!dir.equals("")) {
-			endContainer = startContainer.getContainer(dir);
+			endContainer = startContainer.getLocation(dir);
 			directionEnum = Direction.getDirectionName(dir);
 			return true;
 		} else {
@@ -79,13 +79,13 @@ public class Move extends Skills {
 		}
 	}
 	
-	protected boolean checkDoor() { //might crash if directionEnum is null TODO
+/*	protected boolean checkDoor() { //might crash if directionEnum is null TODO
 		if (isDoorBlocking(startContainer, directionEnum)) {
 			messageSelf("The door is closed before you.");
 			return false;
 		}
 		return true;
-	}
+	}*/
 	
 	protected void displayLeaveMsg() {
 		messageOthers(currentPlayer.getNameColored() + " leaves to the " + dir.toLowerCase() + ".", Arrays.asList(currentPlayer));

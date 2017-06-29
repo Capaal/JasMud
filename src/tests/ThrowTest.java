@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import interfaces.Container;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import items.ItemBuilder;
@@ -29,7 +28,6 @@ import processes.Skills;
 import processes.StdMob;
 import processes.Type;
 import processes.WorldServer;
-import skills.Shoot;
 import skills.Throw;
 
 public class ThrowTest {
@@ -43,8 +41,14 @@ public class ThrowTest {
 
 	@Test
 	public void testCannotThrowTwiceInstantly() {
-		new Throw(currentPlayer, "throw dagger target");
-		new Throw(currentPlayer, "throw dagger target");
+		new Throw(currentPlayer, "throw dagger target").run();
+		new Throw(currentPlayer, "throw dagger target").run();
+		verify(target, Mockito.times(1)).takeDamage(Type.SHARP,  expectedDamage);
+	}	
+	
+	@Test
+	public void testBasic() {
+		new Throw(currentPlayer, "throw dagger target").run();
 		verify(target, Mockito.times(1)).takeDamage(Type.SHARP,  expectedDamage);
 	}	
 	
@@ -70,13 +74,13 @@ public class ThrowTest {
 	@Test
 	public void testCannotThrowDeadMobiles() {
 		when(target.isDead()).thenReturn(true);
-		new Throw(currentPlayer, "throw dagger target");
+		new Throw(currentPlayer, "throw dagger target").run();
 		verify(target, Mockito.times(0)).takeDamage(Type.SHARP,  expectedDamage);		
 	}
 	
 	@Test
 	public void testCannotThrowSelf() {
-		new Throw(currentPlayer, "throw dagger currentPlayer");
+		new Throw(currentPlayer, "throw dagger currentPlayer").run();
 		assertTrue("CurrentPlayer's hp should be at Max HP but is: " + currentPlayer.getCurrentHp(), currentPlayer.getCurrentHp() == currentPlayer.getMaxHp());
 	}
 	
@@ -89,13 +93,13 @@ public class ThrowTest {
 		newLocation.acceptItem(target);
 		location.removeItemFromLocation(target);
 		when(target.getContainer()).thenReturn(newLocation);
-		new Throw(currentPlayer, "throw dagger target");
+		new Throw(currentPlayer, "throw dagger target").run();
 		verify(target, Mockito.times(0)).takeDamage(Type.SHARP,  expectedDamage);		
 	}
 	
 	@Test
 	public void testEnemyPresent() {
-		new Throw(currentPlayer, "throw dagger target");
+		new Throw(currentPlayer, "throw dagger target").run();
 		verify(target).takeDamage(Type.SHARP,  expectedDamage);
 	}
 	
@@ -110,7 +114,7 @@ public class ThrowTest {
 		newLocation.acceptItem(target);
 		location.removeItemFromLocation(target);
 		when(target.getContainer()).thenReturn(newLocation);
-		new Throw(currentPlayer, "throw dagger target north");
+		new Throw(currentPlayer, "throw dagger target north").run();
 		verify(target).takeDamage(Type.SHARP, expectedDamage);
 	}
 	
@@ -121,7 +125,7 @@ public class ThrowTest {
 		lb.addLocationConnection(Direction.SOUTH,  1, Direction.NORTH, null);
 		lb.complete();
 		Location newLocation = lb.getFinishedLocation();
-		new Throw(currentPlayer, "throw dagger target north");
+		new Throw(currentPlayer, "throw dagger target north").run();
 		verify(target, Mockito.times(0)).takeDamage(Type.SHARP,  expectedDamage);	
 	}
 	
@@ -152,11 +156,12 @@ public class ThrowTest {
 		ib.complete();
 		item = ib.getFinishedItem();
 		target = mock(StdMob.class);
-		location.acceptItem(target);
 		when(target.getName()).thenReturn("target");
 		when(target.getId()).thenReturn(1);
 
 		when(target.getContainer()).thenReturn(location);
+		location.acceptItem(target);
+		
 	}
 
 	@After

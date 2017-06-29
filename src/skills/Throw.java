@@ -79,7 +79,7 @@ public class Throw extends Skills {
 				messageSelf("There isn't a location that way.");
 				return false;
 			}
-			if (isDoorBlocking(finalLoc, Direction.getDirectionName(dir))) {
+			if (isDirectionBlocked(finalLoc, Direction.getDirectionName(dir))) {
 				messageSelf("There is a door blocking your way.");
 				return false;
 			}
@@ -125,7 +125,7 @@ public class Throw extends Skills {
 	
 	private Location getLoc(String dir) {
 		Location mobLocation = currentPlayer.getContainer();
-		return mobLocation.getContainer(dir);
+		return mobLocation.getLocation(dir);
 	}
 	
 	@Override

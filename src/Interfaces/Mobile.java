@@ -10,7 +10,6 @@ import java.util.TreeMap;
 
 import effects.PassiveCondition;
 import processes.ContainerErrors;
-import processes.Equipment;
 import processes.Equipment.EquipmentSlot;
 import processes.InductionSkill;
 import processes.Location;
@@ -18,7 +17,6 @@ import processes.SendMessage;
 import processes.Skills;
 import processes.SkillBook;
 import processes.Type;
-import skills.Move;
 
 public interface Mobile extends Container {
 	
@@ -40,7 +38,6 @@ public interface Mobile extends Container {
 	public void takeDamage(Type types, int d);
 	public void tell(String msg);
 	public void tellLine(String msg);
-//	public void setContainer(Container newLoc);  SHOULD be handled by moveHoldable(finalLocation);
 	public Skills getCommand(String command);
 	public ContainerErrors acceptItem(Holdable item);
 	public boolean addPassiveCondition(PassiveCondition newEffect, int duration);
@@ -50,50 +47,36 @@ public interface Mobile extends Container {
 	public boolean hasCondition(PassiveCondition effect);
 	public void removeCondition(TickingEffect effect);
 	public void removeCondition(PassiveCondition effect);
-//	public void removeItem(Holdable item); Handled by Container
 	public void addBook(SkillBook skillBook, int progress);
 	public boolean isControlled();
 	public void controlStatus(boolean statusChange);
 	public void save();
-//	public void setStartup(boolean b);
 	public void equip(EquipmentSlot slot, StdItem item);
 	public void unEquip(EquipmentSlot slot);
 	public void unEquip(Holdable item);
-//	public EquipmentSlot findEquipment(String itemName);
 	public Holdable getEquipmentInSlot(EquipmentSlot slot);
 	public void removeFromWorld();
 	public void displayPrompt();
 	public void setSendBack(SendMessage sendBack);
-//	public SendMessage getSendBack(); probably should not be freely available
 	public void informLastAggressor(Mobile currentPlayer);
-//	public boolean isCreating(); All creating stuff is probably being scrapped
-//	public void startCreating();
-//	public void stopCreating();
 	public boolean isInducting();
 	public void killInduction();
 	public void setInduction(InductionSkill skill);
 	public Map<SkillBook, Integer> viewSkillBooks();
 	public void spawnDeathLoot();
-//	public Equipment getEquipment();
-//	public void addAllConditions(PassiveCondition conditions); //should use effectmanager
-	public void createNewEffectManager();
 	public void moveHoldable(Location finalLocation);
 	public void setContainer(Location container);
 	public int compareTo(Mobile arg0);
-//	public void setGender();
-//	public String getGenderHimHer();
-//	public String getGenderHeShe();
 	public Set<TickingEffect> getAllActiveConditions();
 	public void moveFollowers(String fullCommand);
 	public void stopFollowing();
-//	public void followingMove(String fullCommand, Move moveType);
 	public void setFollowing(Mobile finalTarget);
 	public void addFollower(Mobile currentPlayer);
 	public void removeFollower(Mobile follower);
 	EnumSet<PassiveCondition> getAllPassiveEffects();
-	void cooldownOn(PlantType p);
-	void cooldownOff(PlantType p);
-	boolean checkCooldown(PlantType p);
+	public void addCooldown(Cooldown c);
+	public void removeCooldown(Cooldown c);
 	String getNameColored();
 	public TreeMap<String, Holdable> viewInventoryWithoutEquipment();
+	public boolean isOnCooldown(Cooldown c);
 }

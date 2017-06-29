@@ -90,12 +90,11 @@ public class Headshot extends InductionSkill {
 		allLocations.add(currentPlayerLocation);		
 		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
 		if (!dir.equals("")) {
-			Location nextLocation = currentPlayerLocation.getContainer(dir);
+			Location nextLocation = currentPlayerLocation.getLocation(dir);
 			if (nextLocation == null) {
 				messageSelf("There isn't a location that way.");
 				return false;
-			} else if (isDoorBlocking(currentPlayerLocation, Direction.getDirectionName(dir))) {
-				messageSelf("A door is blocking your way.");
+			} else if (isDirectionBlocked(currentPlayerLocation, Direction.getDirectionName(dir))) {
 				return false;
 			} else {
 				allLocations.add(nextLocation);
@@ -106,8 +105,8 @@ public class Headshot extends InductionSkill {
 	}
 	
 	private void getNextLocation(String dir, Location currentLocation) {
-		Location anotherLocation = currentLocation.getContainer(dir);
-		if (!isDoorBlocking(currentLocation, Direction.getDirectionName(dir))) {		
+		Location anotherLocation = currentLocation.getLocation(dir);
+		if (!isDirectionBlocked(currentLocation, Direction.getDirectionName(dir))) {		
 			if (anotherLocation != null && !allLocations.contains(anotherLocation)) {
 				allLocations.add(anotherLocation);
 				getNextLocation(dir, anotherLocation);

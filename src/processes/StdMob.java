@@ -64,7 +64,7 @@ public class StdMob implements Mobile, Container{
 	protected ArrayList<Mobile> followers = new ArrayList<Mobile>();
 	@XStreamOmitField
 	protected Mobile following;
-	protected Map<PlantType, Boolean> eatPlantCooldowns; // = new EnumMap<PlantType, Boolean>(PlantType.class);
+	protected Set<Cooldown> cooldowns; 
 	
 	public StdMob(MobileBuilder build) {
 		Mobile decoratedMob = decorate(build, this);
@@ -84,15 +84,14 @@ public class StdMob implements Mobile, Container{
 	
 		this.dropsOnDeath = build.getDropsOnDeath();
 		this.experience = build.getExperience();
-		createNewEffectManager();		
+		effectManager = new EffectManager(this);		
 		this.skillBookList = build.getSkillBookList();		
 		this.equipment = build.getEquipment();
-		this.eatPlantCooldowns = build.getPlantCooldowns();
+		this.cooldowns = build.getCooldowns();
 		WorldServer.getGameState().addMob(decoratedMob.getName() + decoratedMob.getId(), decoratedMob);
 		WorldServer.getGameState().addNewPlayer(this.name, decoratedMob);
 		decoratedMob.getContainer().acceptItem(decoratedMob);
-		this.messages = new ArrayList<String>();
-		
+		this.messages = new ArrayList<String>();		
 	}
 	
 	private Mobile decorate(MobileBuilder build, Mobile m) {
@@ -102,12 +101,6 @@ public class StdMob implements Mobile, Container{
 			return decorate(build, m);
 		}
 		return m;
-	}
-	
-	
-	// SHOULD MOVE TO a readResolve for XStream
-	@Override public void createNewEffectManager() {
-		effectManager = new EffectManager(this);
 	}
 	
 	@Override public String getName() {return name;}	
@@ -584,7 +577,7 @@ public class StdMob implements Mobile, Container{
 	private Object readResolve() {
 		followers = new ArrayList<Mobile>();
     	getContainer().acceptItem(this);
-    	createNewEffectManager();	 
+    	effectManager = new EffectManager(this); 
     	controlStatus(true);
 		for (Holdable h: inventory.values()) {
 			h.setContainer(this);
@@ -643,6 +636,16 @@ public class StdMob implements Mobile, Container{
 	}
 	
 	@Override
+	public void addCooldown(Cooldown c) {
+		cooldowns.add(c);
+	}
+	
+	@Override
+	public void removeCooldown(Cooldown c) {
+		cooldowns.remove(c);
+	}
+	
+/*	@Override
 	public void cooldownOn(PlantType p) {
 		eatPlantCooldowns.put(p, true);
 	}
@@ -650,11 +653,18 @@ public class StdMob implements Mobile, Container{
 	@Override
 	public void cooldownOff(PlantType p) {
 		eatPlantCooldowns.put(p, false);
-	}
+	}*/
 	
 	@Override
-	public boolean checkCooldown(PlantType p) {
-		return eatPlantCooldowns.get(p).booleanValue();
+	public boolean isOnCooldown(Cooldown c) {
+		for (Cooldown cd : cooldowns) {
+			System.out.println(cd.equals(c));
+			System.out.println(c.equals(cd));
+		}
+		System.out.println("Check " +cooldowns);
+		System.out.println(cooldowns.contains(c));
+		return cooldowns.contains(c);
+
 	}
 
 

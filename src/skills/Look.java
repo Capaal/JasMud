@@ -26,12 +26,12 @@ public class Look extends Skills {
 			doLook(mobLocation);
 			return;
 		}
-		Location futureLocation = mobLocation.getContainer(dir);
+		Location futureLocation = mobLocation.getLocation(dir);
 		if (futureLocation == null) {
 			messageSelf("There is no location that way.");
 			return;
 		}
-		if (isDoorBlocking(mobLocation, trueDir)) {
+		if (isDirectionBlocked(mobLocation, trueDir)) {
 			messageSelf("A door is closed and blocking your view.");
 			return;
 		}

@@ -54,8 +54,8 @@ public class Shoot extends Skills {
 		allLocations.add(currentPlayerLocation);		
 		String dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
 		if (!dir.equals("")) {
-			Location nextLocation = currentPlayerLocation.getContainer(dir);
-			if (isDoorBlocking(currentPlayerLocation, Direction.getDirectionName(dir))) {
+			Location nextLocation = currentPlayerLocation.getLocation(dir);
+			if (isDirectionBlocked(currentPlayerLocation, Direction.getDirectionName(dir))) {
 				messageSelf("There is a door blocking your way.");
 				return;
 			}
@@ -70,8 +70,8 @@ public class Shoot extends Skills {
 	}
 	
 	private void getNextLocation(String dir, Location currentLocation) {
-		Location anotherLocation = currentLocation.getContainer(dir);
-		if (!isDoorBlocking(currentLocation, Direction.getDirectionName(dir))) {
+		Location anotherLocation = currentLocation.getLocation(dir);
+		if (!isDirectionBlocked(currentLocation, Direction.getDirectionName(dir))) {
 			if (anotherLocation != null && !allLocations.contains(anotherLocation)) {
 				allLocations.add(anotherLocation);
 				getNextLocation(dir, anotherLocation);
@@ -106,7 +106,7 @@ public class Shoot extends Skills {
 		if (finalTarget == null) {
 			messageSelf("There is no \"" + possibleTarg + "\" for you to attack.");
 			return false;
-		}	
+		}
 		if (isBlocking(finalTarget)) {  // Probably not complete still
 			return false;
 		}

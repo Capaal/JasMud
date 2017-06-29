@@ -17,7 +17,7 @@ public abstract class InductionSkill extends Skills {
 	protected static ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(1);
 	protected InductionWrapper wrapper;
 	
-	protected boolean offCooldown = true;
+//	protected boolean offCooldown = true;
 	
 	public void shutDown() {
 		WorldServer.shutdownAndAwaitTermination(effectExecutor);
@@ -104,7 +104,7 @@ public abstract class InductionSkill extends Skills {
 		}
 	}
 	
-	// Called to start cooldown period.
+/*	// Called to start cooldown period.
 	protected  void triggerCooldown(int length) {
 		offCooldown = false;
 		offCooldownIn(length);
@@ -131,5 +131,5 @@ public abstract class InductionSkill extends Skills {
 			public void run() {
 				wrappedSkill.setOffCooldown();			
 			}
-		}			
+		}	*/		
 }

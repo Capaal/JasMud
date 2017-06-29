@@ -3,10 +3,12 @@ package processes;
 import java.util.*;
 import java.util.Map.Entry;
 
+import processes.Location.Direction;
 import processes.LocationBuilder.LocationConnectionDataBox;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
+import effects.Blocking;
 import Quests.Quest;
 import Quests.Quest.Trigger;
 import interfaces.*;
@@ -184,7 +186,6 @@ public class Location implements Container {
 	}
 
 	@Override public String getName() {return name;}
-	public Location getContainer(String dir) {return getLocation(dir);}	
 	
 	public Direction getDirectionToLocation(Location askingLocation) {
 		for (Entry<Direction, LocationConnection> entry : locationMap.entrySet()) {
@@ -420,5 +421,29 @@ public class Location implements Container {
 		
 	}
 
+	public void addBlocking(Direction direction, Blocking blocking) {
+		LocationConnection locDir = locationMap.get(direction);
+		locDir.addBlocking(blocking);		
+	}
+	public void removeBlocking(Direction direction, Blocking blocking) {
+		LocationConnection locDir = locationMap.get(direction);
+		locDir.removeBlocking(blocking);		
+	}
 
+	public boolean isDirectionBlocked(Direction interestedDir) {
+		LocationConnection locDir = locationMap.get(interestedDir);
+		if (locDir != null) {
+			return locDir.isBlocked();	
+		}
+		return false;
+	}
+
+//	public LocationConnection getLocationConnection(Direction direction) {
+//		return locationMap.get(direction);
+//	}
+
+	public ArrayList<Blocking> getBlocking(Direction interestedDir) {
+		LocationConnection locDir = locationMap.get(interestedDir);
+		return locDir.getBlocking();	
+	}
 }

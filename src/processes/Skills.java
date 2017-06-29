@@ -5,6 +5,7 @@ import items.Door;
 
 import java.util.*;
 
+import effects.Blocking;
 import effects.PassiveCondition;
 import processes.Location.Direction;
 
@@ -60,12 +61,19 @@ public abstract class Skills implements Runnable {
 		}
 	}
 	
-	protected boolean isDoorBlocking(Location currentLocation, Direction interestedDir) {
+	protected boolean isDirectionBlocked(Location currentLocation, Direction interestedDir) {
 		if (currentLocation == null) {
 			throw new IllegalArgumentException("Supplied location may not be null.");
 		}
 		Door d = currentLocation.getDoor(interestedDir);
 		if (d != null && !d.isOpen()) {
+			messageSelf("A door is blocking the way.");
+			return true;
+		}
+		if (currentLocation.isDirectionBlocked(interestedDir)) {
+			for (Blocking b : currentLocation.getBlocking(interestedDir)) {
+				messageSelf("A " + b.getDescription() + " is blocking the way.");
+			}
 			return true;
 		}
 		return false;
@@ -113,20 +121,10 @@ public abstract class Skills implements Runnable {
 	}
 	
 	public void messageOthersAway(String msg, List<Mobile> toIgnore, Location otherLoc) {
-		for (Holdable h : otherLoc.viewInventory().values()) {
-			if (h instanceof Mobile && ((Mobile) h).isControlled()) {
-				Boolean shouldTell = true;
-				if (h.equals(currentPlayer)) {
-					shouldTell = false;
-				} else {
-					for (Mobile m : toIgnore) {
-						if (h.equals(m)) {
-							shouldTell = false;
-						}
-					}
-				}
-				if (shouldTell) {
-					((Mobile)h).tell(msg);
+		for (Mobile h : otherLoc.getMobiles().values()) {
+			if (h.isControlled()) {
+				if (!toIgnore.contains(h)) {
+					h.tell(msg);
 				}
 			}			
 		}
@@ -231,4 +229,15 @@ public abstract class Skills implements Runnable {
 	public String getName() {
 		return name;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		return o.getClass().equals(this.getClass());	
+	}
+	
+	@Override
+	public int hashCode() {
+        return name.hashCode();
+    }
+ 
 }

@@ -295,12 +295,7 @@ public enum DecoratorType {
 		}
 	public int getDefense() {
 		return decoratedMobile.getDefense();
-	}
-
-	@Override
-	public void createNewEffectManager() {
-		decoratedMobile.createNewEffectManager();
-		}		
+	}		
 	public void addDefense(int i) {
 		decoratedMobile.addDefense(i);
 	}

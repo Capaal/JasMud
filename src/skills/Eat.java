@@ -30,7 +30,7 @@ public class Eat extends Skills {
 	protected void performSkill() {
 		if(preSkillChecks()) {	
 			PlantType pt = finalHerb.getPlantType();
-			if (!currentPlayer.checkCooldown(pt)) {
+			if (!currentPlayer.isOnCooldown(pt)) {
 				messageSelf(finalHerb.use(currentPlayer));
 				triggerCooldown(finalHerb.getPlantType(), finalHerb.getPlantType().COOLDOWN);
 			} else {
@@ -73,7 +73,6 @@ public class Eat extends Skills {
 				Plant herb = (Plant) pouch.getHoldableFromString(itemName);
 				if (herb != null) {
 					finalHerb = herb;
-					return true;
 				}
 			}	
 			messageSelf("You have no " + itemName + ".");
@@ -94,13 +93,13 @@ public class Eat extends Skills {
 
 	// Called to start cooldown period.
 		protected  void triggerCooldown(PlantType p, int length) {
-			currentPlayer.cooldownOn(p);
+			currentPlayer.addCooldown(p);
 			offCooldownIn(p,length);
 		}
 		
 		// Called when cooldown period ends. Override to add messages. But call super.setOffCooldown()
 		protected  void setOffCooldown(PlantType p) {
-			currentPlayer.cooldownOff(p);
+			currentPlayer.removeCooldown(p);
 			messageSelf("You can eat a " + p.toString().toLowerCase() + " again.");
 		}
 
@@ -108,11 +107,13 @@ public class Eat extends Skills {
 			if (duration <= 0) {
 				throw new IllegalArgumentException("Invalid duration " + duration);
 			}
-			CooldownWrapper wrapper = new CooldownWrapper(this, p);
-			WorldServer.getGameState().getEffectExecutor().schedule(wrapper, duration, TimeUnit.MILLISECONDS);				
+			WorldServer.getGameState().getEffectExecutor().schedule(() -> setOffCooldown(p), duration, TimeUnit.MILLISECONDS);
+			
+//			CooldownWrapper wrapper = new CooldownWrapper(this, p);
+//			WorldServer.getGameState().getEffectExecutor().schedule(wrapper, duration, TimeUnit.MILLISECONDS);				
 		}
 		
-			protected class CooldownWrapper implements Runnable {		
+	/*		protected class CooldownWrapper implements Runnable {		
 				Eat wrappedSkill;		
 				PlantType p;
 				public CooldownWrapper(Eat s, PlantType p) {
@@ -122,7 +123,7 @@ public class Eat extends Skills {
 				public void run() {
 					wrappedSkill.setOffCooldown(p);			
 				}
-			}			
+			}*/			
 	
 	
 }

@@ -98,6 +98,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new Root(null, null));
 		generalSkills.addSkill(new VineTrip(null, null));
 		generalSkills.addSkill(new LightningWhip(null, null));
+		generalSkills.addSkill(new Icewall(null, null));
 		
 		SkillBook mercSkills = new SkillBook("mercskills", 3);
 		WorldServer.getGameState().addBook(3, mercSkills);

@@ -44,16 +44,6 @@ public class MoveFear extends Move {
 		messageOthers(currentPlayer.getNameColored() + " flees in from a random direction.", Arrays.asList(currentPlayer));
 	}
 	
-	@Override protected boolean checkDoor() {
-		directionEnum = startContainer.getDirectionToLocation(endContainer);
-		dir = directionEnum.toString().toLowerCase();
-		if (isDoorBlocking(startContainer, directionEnum)) {
-			messageSelf("The door is closed before you.");
-			return false;
-		}
-		return true;
-	}
-	
 	@Override protected void moveFollowers() {
 		currentPlayer.moveFollowers("move " + dir);
 	}

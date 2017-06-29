@@ -1,13 +1,20 @@
 package skills.Mercenary;
 
+import interfaces.Cooldown;
 import interfaces.Mobile;
 import effects.PassiveCondition;
+
+import java.util.concurrent.TimeUnit;
+
 import effects.Fear;
 import processes.InductionSkill;
 import processes.Skills;
+import processes.WorldServer;
 import skills.Sleep;
 
-public class Clearmind extends InductionSkill {
+public class Clearmind extends Skills implements Cooldown {
+	
+	private final int COOLDOWNLENGTH = 10000;
 	
 	public Clearmind(Mobile currentPlayer, String fullCommand) {
 		super("clearmind", "Cures mental afflictions", currentPlayer, fullCommand);
@@ -22,45 +29,34 @@ public class Clearmind extends InductionSkill {
 				currentPlayer.removeCondition(PassiveCondition.DIZZY);
 				messageSelf("Dizzy cured.");
 				currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 1000);
-				triggerCooldown(5000);
+				addCooldown(currentPlayer);
+				WorldServer.getGameState().getEffectExecutor().schedule(() -> setOffCooldown(), COOLDOWNLENGTH, TimeUnit.MILLISECONDS);	
+		//		offCooldownIn(length);
+		//		triggerCooldown(5000);
 			} else if (currentPlayer.hasCondition(new Fear(currentPlayer))) {
 				currentPlayer.removeCondition(new Fear(currentPlayer));
 				messageSelf("Fear cured.");
 				currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 1000);
-				triggerCooldown(5000);
+				addCooldown(currentPlayer);
+				WorldServer.getGameState().getEffectExecutor().schedule(() -> setOffCooldown(), COOLDOWNLENGTH, TimeUnit.MILLISECONDS);		
+		//		offCooldownIn(length);
+		//		triggerCooldown(5000);
 			} else {
 				messageSelf("Your mind is already clear.");
 			}
 		}
 	}
 	
-	@Override protected void setOffCooldown() { 
-		super.setOffCooldown();
+	
+	private void setOffCooldown() { 
+	//	super.setOffCooldown();
+		removeCooldown(currentPlayer);
 		messageSelf("You are again able to clear your mind.");
-	}
+	}	
 	
 	@Override
-	public void inductionKilled() {
-		throw new IllegalStateException("Cooldown skills should not have induction called.");		
-	}
-
-	@Override
-	protected void inductionEnded() {
-		throw new IllegalStateException("Cooldown skills should not have induction called.");	
-	}
-
-
-
-	@Override
-	public InnerSkill getInnerSkill(Mobile currentPlayer, String fullCommand) {
-		return null;
-	}
-
-
-
-	@Override
 	protected boolean preSkillChecks() {
-		if (!offCooldown) {
+		if (isOnCooldown(currentPlayer)) {
 			messageSelf("You must wait a moment to clear your mind again.");
 			return false;
 		}
@@ -71,5 +67,23 @@ public class Clearmind extends InductionSkill {
 	@Override
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new Clearmind(currentPlayer, fullCommand);
+	}
+
+
+	@Override
+	public boolean isOnCooldown(Mobile currentPlayer) {
+		return currentPlayer.isOnCooldown(this);
+	}
+
+
+	@Override
+	public void addCooldown(Mobile currentPlayer) {
+		currentPlayer.addCooldown(this);
+	}
+
+
+	@Override
+	public void removeCooldown(Mobile currentPlayer) {
+		currentPlayer.removeCooldown(this);
 	}
 }

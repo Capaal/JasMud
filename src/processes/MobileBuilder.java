@@ -1,5 +1,6 @@
 package processes;
 
+import interfaces.Cooldown;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import items.ItemBuilder;
@@ -10,8 +11,10 @@ import items.StdItem;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
 
@@ -44,7 +47,7 @@ public class MobileBuilder {
 	private boolean buildComplete = false;
 	private Mobile finishedMob;
 //	public Set<PassiveCondition> allConditions = EnumSet.noneOf(PassiveCondition.class);
-	private static Map<String, Integer> idMap = new HashMap<String, Integer>();
+	private Set<Cooldown> cooldowns = new HashSet<Cooldown>();
 	
 	public MobileBuilder() {
 	}	
@@ -194,12 +197,13 @@ public class MobileBuilder {
 	public Mobile getFinishedMob() {return finishedMob;}
 	
 	private synchronized void handleId() {
-		if (idMap.containsKey(this.name)) {
-			this.id = idMap.get(this.name) + 1;
-			idMap.put(this.name, this.id);			
+		Map<String, Integer> idMap = WorldServer.getGameState().idMap;
+		if (idMap.containsKey("mobile")) {
+			this.id = idMap.get("mobile") + 1;
+			idMap.put("mobile", this.id);			
 		} else {
 			this.id = 1;
-			idMap.put(this.name,  this.id);
+			idMap.put("mobile",  this.id);
 		}
 	}
 	
@@ -343,12 +347,8 @@ public class MobileBuilder {
 		finishedMob = decoratedMob;
 	}
 
-	public Map<PlantType, Boolean> getPlantCooldowns() {
-		Map<PlantType, Boolean> plantCooldowns = new EnumMap<PlantType, Boolean>(PlantType.class);
-		for (PlantType p : Plant.PlantType.values()) {
-			plantCooldowns.put(p, false);
-		}
-		return plantCooldowns;
+	public Set<Cooldown> getCooldowns() {
+		return cooldowns;
 	}
 
 //	public Set<PassiveCondition> getAllConditions() {

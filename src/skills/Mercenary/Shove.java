@@ -62,7 +62,7 @@ public class Shove extends Skills {
 	private boolean setDirection() {
 		dir = Syntax.DIRECTION.getStringInfo(fullCommand, this);
 		if (!dir.equals("")) {
-			endContainer = startContainer.getContainer(dir);
+			endContainer = startContainer.getLocation(dir);
 		} else {
 			messageSelf("Specify direction to shove.");
 			return false;
@@ -71,8 +71,7 @@ public class Shove extends Skills {
 			messageSelf("There is no location in that direction.");
 			return false;
 		}
-		if (isDoorBlocking(startContainer, Direction.getDirectionName(dir))) {
-			messageSelf("You can't shove through closed doors.");
+		if (isDirectionBlocked(startContainer, Direction.getDirectionName(dir))) {
 			return false;
 		}
 		return true;
