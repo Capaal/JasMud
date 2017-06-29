@@ -36,10 +36,7 @@ public class ItemBuilder {
 		if (quantity != this.quantity) {
 			throw new IllegalArgumentException("Cannot set quantity on StdItem.");
 		}
-	}
-	
-	
-	
+	}	
 	
 	public void setDamageMult(double physicalMult) {
 		this.damageMult = physicalMult;
@@ -168,7 +165,5 @@ public class ItemBuilder {
 		handleId();
 		StdItem notFinishedItem = produceType();
 		return notFinishedItem;
-	}
-
-	
+	}	
 }

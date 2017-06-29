@@ -5,8 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-//@SuiteClasses({ EffectManagerTest.class, LocationTest.class, DamageTest.class, DamageTest.class, ChargeTest.class,
-//		SQLInterfaceTest.class, StdMobBuilderTest.class })
+@SuiteClasses({ GetHoldableFromStringTest.class, LocationTest.class, StdMobBuilderTest.class, ThrowTest.class, UnwieldTest.class, WieldTest.class })
 public class AllTests {
 
 }

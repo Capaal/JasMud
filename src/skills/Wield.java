@@ -1,17 +1,12 @@
 package skills;
 
 import java.util.Arrays;
-import java.util.Set;
 
 import effects.PassiveCondition;
-import interfaces.Holdable;
 import interfaces.Mobile;
 import items.StdItem;
-import processes.Equipment;
 import processes.Skills;
 import processes.Equipment.EquipmentSlot;
-import processes.Skills.Syntax;
-
 
 public class Wield extends Skills {
 

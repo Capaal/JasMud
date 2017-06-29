@@ -7,8 +7,8 @@ import interfaces.Mobile;
 import processes.Equipment.EquipmentSlot;
 import processes.Skills;
 import processes.Type;
-import skills.Sleep;
 
+//TODO only breaks arms, legs disabled.
 public class BreakLimb extends Skills {
 
 	private Mobile finalTarget;

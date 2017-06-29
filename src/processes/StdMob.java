@@ -159,22 +159,21 @@ public class StdMob implements Mobile, Container{
 		return null;
 	}
 	
-	// Put in Container AND remove from Container is complicated, but should be GUARANTEED in ONE LINE TODO
-		@Override
-		public synchronized void removeItemFromLocation(Holdable oldItem) {
-			if (inventory.containsValue(oldItem)) {
-				String key = oldItem.getName() + oldItem.getId();
-				inventory.remove(key);
-				changeCurrentWeight(-oldItem.getWeight());
-			} else if (equipment.hasItem(oldItem)){
-				equipment.unwield(oldItem);
-				removeItemFromLocation(oldItem);
-			} else {
-				//TODO make this bug comment better
-				System.out.println("StdMob removeItemFromLocation: An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
-			}
+	@Override
+	public synchronized void removeItemFromLocation(Holdable oldItem) {
+		if (inventory.containsValue(oldItem)) {
+			String key = oldItem.getName() + oldItem.getId();
+			inventory.remove(key);
+			changeCurrentWeight(-oldItem.getWeight());
+		} else if (equipment.hasItem(oldItem)){
+			equipment.unwield(oldItem);
+			removeItemFromLocation(oldItem);
+		} else {
+			//TODO make this bug comment better
+			System.out.println("StdMob removeItemFromLocation: An item was just attempted to be moved from an inventory that probably shouldn't have gotten this far.");
 		}
-	
+	}
+
 	@Override
 	public synchronized void moveHoldable(Location finalLocation) {
 			getContainer().removeItemFromLocation(this);
@@ -400,6 +399,9 @@ public class StdMob implements Mobile, Container{
 		if (inventory.remove(key) != null) {
 			changeCurrentWeight(-item.getWeight());
 			equipment.wield(item, slot);
+		} else if (equipment.hasItem(item)) {
+			equipment.unwield(item);
+			equip(slot, item);
 		}
 	}
 	
@@ -485,24 +487,8 @@ public class StdMob implements Mobile, Container{
 	
 	@Override
 	public void setSendBack(SendMessage sendBack) {
-		this.sendBack = sendBack;
-		
+		this.sendBack = sendBack;		
 	}
-	
-	public static void insertNewBlankMob(String newName, String newPassword) throws IllegalStateException {
-		int newId = findNewId(newName);
-		String sql = "insert into mobstats (MOBID, MOBNAME, MOBPASS) values (" + newId + ", '" + newName + "', '" + newPassword + "');";
-	//	WorldServer.databaseInterface.saveAction(sql);
-		String insertBook = "insert into SKILLBOOKTABLE (MOBID, SKILLBOOKID, MOBPROGRESS) values((SELECT MOBID FROM MOBSTATS"
-				+ " WHERE MOBNAME='" + newName + "'), 1, 1) ON DUPLICATE KEY UPDATE MOBPROGRESS=1;";
-//		WorldServer.databaseInterface.saveAction(insertBook);
-	}
-
-/*	@Override
-	public GroundType getGroundType() {
-		// TODO Auto-generated method stub
-		return GroundType.GROUND;
-	}*/
 
 	@Override
 	public int getId() {
@@ -540,36 +526,9 @@ public class StdMob implements Mobile, Container{
 		messages.remove(i);
 	}
 
-	// TODO Should we even allow this?
-//	@Override
-//	public SendMessage getSendBack() {
-//		return sendBack;
-//	}
-
 	@Override
 	public void informLastAggressor(Mobile aggressor) {
-		this.lastAggressor = aggressor;
-		
-	}
-	
-	// TODO
-	private static int findNewId(String name) {
-/*		String sqlQuery = "SELECT sequencetable.sequenceid FROM sequencetable"
-				+ " LEFT JOIN MOBSTATS ON sequencetable.sequenceid = mobstats.mobid"
-				+ " WHERE mobstats.mobid IS NULL";		
-		Object availableId = 1;
-	//	Object availableId = (int) WorldServer.databaseInterface.viewData(sqlQuery, "sequenceid");
-		if (availableId == null || !(availableId instanceof Integer)) {
-			WorldServer.databaseInterface.increaseSequencer();
-			findNewId(name);
-		} else {
-			if (WorldServer.gameState.checkForMob(name + availableId)) {
-				throw new IllegalStateException("A mob of the id already exists.");
-			}
-			return (int)availableId;
-		}
-		return 0;*/
-		return 1;
+		this.lastAggressor = aggressor;		
 	}
 	
 	@Override
@@ -597,8 +556,7 @@ public class StdMob implements Mobile, Container{
 	public Map<SkillBook, Integer> viewSkillBooks() {
 		return new HashMap<SkillBook, Integer>(skillBookList);
 	}
-
-	// TODO
+	
 	public int compareTo(Mobile other) {
 		String thisItem = this.getName()+this.getId();
 		String otherItem = other.getName()+other.getId();
@@ -625,10 +583,6 @@ public class StdMob implements Mobile, Container{
 	
 	private Object readResolve() {
 		followers = new ArrayList<Mobile>();
- //   	addBook(WorldServer.getGameState().getBook(1), 100);
-  //  	addBook(WorldServer.getGameState().getBook(2), 100);
-   // 	addBook(WorldServer.getGameState().getBook(3), 100);
-   // 	WorldServer.getGameState().addMob(name + id, this);
     	getContainer().acceptItem(this);
     	createNewEffectManager();	 
     	controlStatus(true);
@@ -642,9 +596,6 @@ public class StdMob implements Mobile, Container{
 	@Override
 	public void setContainer(Location container) {
 		this.mobLocation = (Location) container;
-	
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -675,11 +626,6 @@ public class StdMob implements Mobile, Container{
 			following = null;
 		}
 	}
-
-//	@Override
-//	public void followingMove(String fullCommand, Move moveType) {
-//		WorldServer.gameState.addToQueue(moveType.getNewInstance(this, fullCommand));
-//	}
 
 	@Override
 	public void setFollowing(Mobile finalTarget) {

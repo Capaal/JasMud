@@ -80,6 +80,17 @@ public class UnwieldTest {
 	
 	}
 	
+
+	
+	@Test
+	public void testSwapRightToLeft() {
+		assertTrue("Player starts with stick in righthand.", player.getEquipmentInSlot(EquipmentSlot.RIGHTHAND) == StickOne);
+		new Wield(player, "wield stick left").run();
+		assertTrue("Player should unWield stick from righthand.", player.getEquipmentInSlot(EquipmentSlot.RIGHTHAND) == null);
+		assertTrue("Player should wield stick into left.", player.getEquipmentInSlot(EquipmentSlot.LEFTHAND) == StickOne);
+	
+	}
+	
 	@Test
 	public void testRightHandUnWieldLowercase() {
 		new Unwield(player, "UnWield stick righthand").run();

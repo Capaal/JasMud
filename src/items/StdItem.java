@@ -21,9 +21,6 @@ public class StdItem implements Holdable{
 	protected final boolean salvageable;
 	protected final double weight;	
 	protected final Set<EquipmentSlot> allowedEquipSlots;
-//	protected final int maxDurability;
-	
-//  protected int currentDurability;
 	protected int quantity = 1;
 	protected Container itemLocation;
 
@@ -39,8 +36,7 @@ public class StdItem implements Holdable{
 		this.allowedEquipSlots = build.getAllowedSlots();
 		this.components = build.getComponents();
 		this.salvageable = build.getSalvageable();
-		this.weight = build.getWeight();
-		
+		this.weight = build.getWeight();		
 	}
 	
 	@Override public String getName() {return name;}
@@ -50,27 +46,15 @@ public class StdItem implements Holdable{
 	public double getBalanceMult() {return balanceMult;}
 	public double getWeight() {return weight;}
 	@Override public Container getContainer() {return itemLocation;}	
-	public void doOnAttack() {}; //for my mercenary attack skill
 	
 	public int getQuantity() {return quantity;}
-	
-//	public int getMaxDurability() {return maxDurability;}
-	
-//	public synchronized int getCurrentDurability() {return currentDurability;}
-//	public synchronized void setDurability(int newDurability) {
-//		if (newDurability > maxDurability) {
-//			newDurability = maxDurability;
-//		}
-//		this.currentDurability = newDurability;
-//	}
 	
 	public Set<EquipmentSlot> getAllowedEquipSlots() {return allowedEquipSlots;}
 	public List<StdItem> getComponents() {return components;}
 	
 	public double getDamageMult() {
 		return physicalMult;
-	}
-	
+	}	
 	
 	// TODO NEEDS to watch for a FALSE return from ACCEPTITEM, then handle the failed insertion.
 	@Override
@@ -82,14 +66,7 @@ public class StdItem implements Holdable{
 		getContainer().removeItemFromLocation(this);		
 		this.itemLocation = finalLocation;
 		return error;
-	}
-	
-	// Most of equiping is handled by StdMob
-//	public void equip(Mobile player) {
-//		getContainer().removeItemFromLocation(this);
-//		this.itemLocation = player;
-//	}
-	
+	}	
 	
 	@Override
 	public void removeFromWorld() {
