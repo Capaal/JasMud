@@ -17,8 +17,6 @@ public abstract class InductionSkill extends Skills {
 	protected static ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(1);
 	protected InductionWrapper wrapper;
 	
-//	protected boolean offCooldown = true;
-	
 	public void shutDown() {
 		WorldServer.shutdownAndAwaitTermination(effectExecutor);
 	}
@@ -82,8 +80,6 @@ public abstract class InductionSkill extends Skills {
 		public void run() {
 			if (totalTimesRan < timesToRun) {
 				WorldServer.getGameState().addToQueue(wrappedInnerSkill.getNewInstance(currentPlayer, "")); 
-		//		wrapperExecutor.execute(wrappedSkill);
-		//		wrappedSkill.secondaryRun();
 				totalTimesRan ++;
 				if (totalTimesRan == timesToRun) {
 					future.cancel(true);
@@ -102,34 +98,5 @@ public abstract class InductionSkill extends Skills {
 			future.cancel(true);
 			totalTimesRan = timesToRun;			
 		}
-	}
-	
-/*	// Called to start cooldown period.
-	protected  void triggerCooldown(int length) {
-		offCooldown = false;
-		offCooldownIn(length);
-	}
-	
-	// Called when cooldown period ends. Override to add messages. But call super.setOffCooldown()
-	protected  void setOffCooldown() {
-		offCooldown = true;
-	}
-
-	private void offCooldownIn(int duration) {
-		if (duration <= 0) {
-			throw new IllegalArgumentException("Invalid duration " + duration);
-		}
-		CooldownWrapper wrapper = new CooldownWrapper(this);
-		effectExecutor.schedule(wrapper, duration, TimeUnit.MILLISECONDS);				
-	}
-	
-		protected class CooldownWrapper implements Runnable {		
-			InductionSkill wrappedSkill;		
-			public CooldownWrapper(InductionSkill s) {
-				wrappedSkill = s;
-			}			
-			public void run() {
-				wrappedSkill.setOffCooldown();			
-			}
-		}	*/		
+	}	
 }

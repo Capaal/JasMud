@@ -237,7 +237,7 @@ public abstract class Skills implements Runnable {
 	
 	@Override
 	public int hashCode() {
-        return name.hashCode();
+        return this.getClass().getName().hashCode();
     }
  
 }

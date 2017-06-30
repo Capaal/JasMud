@@ -9,7 +9,6 @@ import interfaces.Mobile;
 import items.Plant;
 import items.Plant.PlantType;
 import items.Pouch;
-import processes.InductionSkill;
 import processes.Skills;
 import processes.WorldServer;
 

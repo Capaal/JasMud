@@ -7,14 +7,12 @@ import effects.PassiveCondition;
 import java.util.concurrent.TimeUnit;
 
 import effects.Fear;
-import processes.InductionSkill;
 import processes.Skills;
 import processes.WorldServer;
-import skills.Sleep;
 
 public class Clearmind extends Skills implements Cooldown {
 	
-	private final int COOLDOWNLENGTH = 10000;
+	private final int COOLDOWNLENGTH = 5000;
 	
 	public Clearmind(Mobile currentPlayer, String fullCommand) {
 		super("clearmind", "Cures mental afflictions", currentPlayer, fullCommand);
@@ -31,16 +29,12 @@ public class Clearmind extends Skills implements Cooldown {
 				currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 1000);
 				addCooldown(currentPlayer);
 				WorldServer.getGameState().getEffectExecutor().schedule(() -> setOffCooldown(), COOLDOWNLENGTH, TimeUnit.MILLISECONDS);	
-		//		offCooldownIn(length);
-		//		triggerCooldown(5000);
 			} else if (currentPlayer.hasCondition(new Fear(currentPlayer))) {
 				currentPlayer.removeCondition(new Fear(currentPlayer));
 				messageSelf("Fear cured.");
 				currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 1000);
 				addCooldown(currentPlayer);
-				WorldServer.getGameState().getEffectExecutor().schedule(() -> setOffCooldown(), COOLDOWNLENGTH, TimeUnit.MILLISECONDS);		
-		//		offCooldownIn(length);
-		//		triggerCooldown(5000);
+				WorldServer.getGameState().getEffectExecutor().schedule(() -> setOffCooldown(), COOLDOWNLENGTH, TimeUnit.MILLISECONDS);	
 			} else {
 				messageSelf("Your mind is already clear.");
 			}
@@ -49,7 +43,6 @@ public class Clearmind extends Skills implements Cooldown {
 	
 	
 	private void setOffCooldown() { 
-	//	super.setOffCooldown();
 		removeCooldown(currentPlayer);
 		messageSelf("You are again able to clear your mind.");
 	}	

@@ -636,12 +636,12 @@ public class StdMob implements Mobile, Container{
 	}
 	
 	@Override
-	public void addCooldown(Cooldown c) {
+	public synchronized void addCooldown(Cooldown c) {
 		cooldowns.add(c);
 	}
 	
 	@Override
-	public void removeCooldown(Cooldown c) {
+	public synchronized void removeCooldown(Cooldown c) {
 		cooldowns.remove(c);
 	}
 	
@@ -656,18 +656,9 @@ public class StdMob implements Mobile, Container{
 	}*/
 	
 	@Override
-	public boolean isOnCooldown(Cooldown c) {
-		for (Cooldown cd : cooldowns) {
-			System.out.println(cd.equals(c));
-			System.out.println(c.equals(cd));
-		}
-		System.out.println("Check " +cooldowns);
-		System.out.println(cooldowns.contains(c));
+	public synchronized boolean isOnCooldown(Cooldown c) {
 		return cooldowns.contains(c);
-
 	}
-
-
 }
 
 	
