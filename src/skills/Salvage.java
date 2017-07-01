@@ -35,12 +35,12 @@ public class Salvage extends Skills {
 				Random chance = new Random();
 				int p = chance.nextInt(100);
 				if (p>50) {
-					ItemBuilder toCopy = allItemTemplates.get(i); // Are all components actually stored in this list?
+					ItemBuilder toCopy = allItemTemplates.get(i.getName()); // Are all components actually stored in this list?
 					toCopy.setItemContainer(currentPlayer);
 					toCopy.complete();
 					messageSelf(toCopy.getName() + " salvaged.");
 				} else {
-					messageSelf("You weren't able to salvage the " + i + " this time.");
+					messageSelf("You weren't able to salvage the " + i.getName() + " this time.");
 				}
 			}	
 		}

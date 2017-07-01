@@ -24,9 +24,9 @@ public class Wield extends Skills {
 	protected void performSkill() {
 		if (preSkillChecks()) {		
 			currentPlayer.equip(wantSlot, itemToWield);
-			messageSelf("You are now wielding the " + itemToWield.getName() + " in your " + wantSlot.toString().toLowerCase() + ".");
+			messageSelf("You are now wielding the " + itemToWield.getName().toString() + " in your " + wantSlot.toString().toLowerCase() + ".");
 			messageOthers(currentPlayer.getNameColored() + " is now wielding a " + itemToWield.getName() + 
-					" in their " + wantSlot.toString() + ".", Arrays.asList(currentPlayer));
+					" in their " + wantSlot.toString().toLowerCase() + ".", Arrays.asList(currentPlayer));
 			return;	
 		}
 	}

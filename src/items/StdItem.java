@@ -145,17 +145,17 @@ public class StdItem implements Holdable{
 	}
 	
 	public  void addToStack(int quantity) {
-		throw new IllegalStateException("StdItems cannot add to quantity.");
+		throw new IllegalStateException("StdItem addToStack: StdItems cannot add to quantity.");
 	}
 	
 	public void removeFromStack(int qty) {
-		throw new IllegalStateException("StdItems cannot remove from quantity.");
+		throw new IllegalStateException("StdItem removeFromStack: StdItems cannot remove from quantity.");
 	}
 
 	@Override
 	public ContainerErrors moveHoldable(Container container, int quantity) {
 		if (quantity != 1) {
-			throw new IllegalArgumentException("StdItems cannot be anything but quantity 1.");
+			throw new IllegalArgumentException("StdItem moveHoldable: StdItems cannot be anything but quantity 1.");
 		}
 		return moveHoldable(container);		
 	}
@@ -166,7 +166,7 @@ public class StdItem implements Holdable{
 		if (file.exists()) {
 			file.delete();	
 		} else {
-			System.out.println("error deleteing item " + this.getName() + this.getId());
+			System.out.println("StdItem delete(): error deleteing item " + this.getName() + this.getId());
 		}
 	}
 

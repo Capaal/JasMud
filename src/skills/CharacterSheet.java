@@ -22,10 +22,12 @@ public class CharacterSheet extends Skills {
 		sb.append("/");
 		sb.append(currentPlayer.getMaxHp());
 		sb.append("\n");
-		sb.append("Class: (N/A)"); //need to add
+		sb.append("Class: ");
+		sb.append(currentPlayer.getClassName());
 		sb.append("\n");
 		sb.append("Description: ");
 		sb.append(currentPlayer.getDescription());
+		sb.append("\n");
 		sb.append("More info: [SKILLS] [INVENTORY]");
 		messageSelf(sb.toString());
 	}

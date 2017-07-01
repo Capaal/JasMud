@@ -47,6 +47,7 @@ public class MobileBuilder {
 	private List<ItemBuilder> dropsOnDeath = new ArrayList<ItemBuilder>();
 	private boolean buildComplete = false;
 	private Mobile finishedMob;
+	private String className;
 //	public Set<PassiveCondition> allConditions = EnumSet.noneOf(PassiveCondition.class);
 	private Set<Cooldown> cooldowns = new HashSet<Cooldown>();
 	
@@ -336,8 +337,8 @@ public class MobileBuilder {
 		return skillBookList;
 	}
 
-	public void addSkillBook(SkillBook book) {
-		skillBookList.put(book, 100);		
+	public void addSkillBook(SkillBook book, int level) {
+		skillBookList.put(book, level);		
 	}
 
 	public void dropOnDeath(ItemBuilder skeletonBody) {
@@ -354,6 +355,14 @@ public class MobileBuilder {
 
 	public Set<Cooldown> getCooldowns() {
 		return cooldowns;
+	}
+
+	public String getClassName() {
+		return className;
+	}
+	
+	public void setClassName(String classN) {
+		this.className = classN;
 	}
 
 //	public Set<PassiveCondition> getAllConditions() {

@@ -37,6 +37,14 @@ public class GameState {
 	
 	public int maxLocationId;
 	
+	private Map<String, ArrayList<SkillBook>> classToBooks = new TreeMap<String, ArrayList<SkillBook>>();
+	public void addClass(String className, ArrayList<SkillBook> books) {
+		classToBooks.put(className, books);
+	}
+	public ArrayList<SkillBook> getBooksFromClass(String className) {
+		return classToBooks.get(className);
+	}
+	
 	// Contains transient sockets of each connected Player.
 	@XStreamOmitField
 	private Set<PlayerPrompt> activeClients = new HashSet<PlayerPrompt>();

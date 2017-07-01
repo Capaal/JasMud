@@ -115,16 +115,20 @@ public class Pouch extends Bag {
 	public String getExamine() {
 		StringBuilder s = new StringBuilder();
 		if (this.inventory != null) {
+			s.append(this.getDescription());
+			s.append(" ");
 			s.append("This pouch contains: ");
 			s.append(inventory.getQuantity());
 			s.append(" ");
 			s.append(inventory.getName());
 			s.append(".");
 			return s.toString();
-		} else
+		} else {
 			s.append(this.getDescription());
+			s.append(" ");
 			s.append("There is nothing in the pouch.");
 			return s.toString();
+		}
 	}
 	
 	@Override public ItemBuilder newBuilder() {		

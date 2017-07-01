@@ -7,6 +7,7 @@ import interfaces.Mobile;
 import items.Plant;
 import items.Weapon;
 import processes.Skills;
+import processes.Skills.Syntax;
 
 public class Apply extends Skills {
 	
@@ -20,6 +21,7 @@ public class Apply extends Skills {
 		super.syntaxList.add(Syntax.ITEM);
 		super.syntaxList.add(Syntax.FILLER);
 		super.syntaxList.add(Syntax.TARGET);
+		super.syntaxList.add(Syntax.QUANTITY);
 	}
 
 	@Override
@@ -34,8 +36,20 @@ public class Apply extends Skills {
 			return;
 		}
 		
-		((Weapon)target).getAppliedList().add((Plant)itemToApply);
-		currentPlayer.removeItemFromLocation(itemToApply);
+		String quantityToApply = Syntax.QUANTITY.getStringInfo(fullCommand, this);
+		int quantity = 1;
+		if (!quantityToApply.isEmpty()) {
+			quantity = Integer.parseInt(quantityToApply);
+			if (quantity > itemToApply.getQuantity()) {
+				quantity = itemToApply.getQuantity();
+			}
+		}
+		
+		Plant plant = (Plant) itemToApply;
+		for (int i=0; i<=quantity; i++) {
+			((Weapon)target).getAppliedList().add(plant);
+		}
+		plant.removeFromStack(quantity);
 		messageSelf("You carefully apply the " + itemToApply.getName() + " to your " + target.getName() + ".");
 		messageOthers(currentPlayer.getNameColored() + " applies a " + itemToApply.getName() + " to a " + target.getName() + ".", Arrays.asList(currentPlayer));
 		
@@ -51,7 +65,7 @@ public class Apply extends Skills {
 		//find the item
 		if (!checkItem()) {
 			messageSelf("You do not have a \"" + itemToApplyName + "\".");
-			System.out.println("Put precheck: item not in inv.");
+			System.out.println("Apply precheck: item not in inv.");
 			return false;
 		} 
 		//check filler word

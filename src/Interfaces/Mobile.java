@@ -77,6 +77,7 @@ public interface Mobile extends Container {
 	public void addCooldown(Cooldown c);
 	public void removeCooldown(Cooldown c);
 	String getNameColored();
+	String getClassName();
 	public TreeMap<String, Holdable> viewInventoryWithoutEquipment();
 	public boolean isOnCooldown(Cooldown c);
 	public void changeBalanceMult(double change);

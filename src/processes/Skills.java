@@ -234,6 +234,24 @@ public abstract class Skills implements Runnable {
 		return name;
 	}
 	
+	public String getDescription() {
+		return description;
+	}
+	
+	public String displaySyntax() {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < syntaxList.size(); i++) {
+			if (i == 0) {
+				sb.append(this.getName().toUpperCase());
+				sb.append(" ");
+			} else {
+				sb.append(syntaxList.get(i).toString());
+				sb.append(" ");
+			}
+		}
+		return sb.toString();
+	}
+				
 	@Override
 	public boolean equals(Object o) {
 		return o.getClass().equals(this.getClass());	
@@ -244,4 +262,5 @@ public abstract class Skills implements Runnable {
         return this.getClass().getName().hashCode();
     }
  
+
 }

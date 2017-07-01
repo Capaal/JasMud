@@ -17,9 +17,12 @@ import items.Harvestable.HarvestType;
 import items.Weapon.WeaponItemBuilder;
 import processes.Location.Direction;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import Quests.FarmerQuest;
 import skills.*;
@@ -37,21 +40,23 @@ public class CreateWorld {
 		makeSkills();
 		makeItems();
 		spawnMobs();
+		makeClasses();
 	}
 	
 	public static void createWorld() {
 	//	makeWorldFromNowhere();
 		makeSkills();
 		spawnMobs();
+		makeClasses();
 	}
 	
 	//Hardcoded skill list
 	public static void makeSkills() {
-		SkillBook moveSkills = new SkillBook("moveSkills", 1);
+		SkillBook moveSkills = new SkillBook("movement", 1);
 		WorldServer.getGameState().addBook(1, moveSkills);
 		moveSkills.addSkill(new Move(null, null));		
 		
-		SkillBook generalSkills = new SkillBook("generalSkills", 2);
+		SkillBook generalSkills = new SkillBook("generals", 2);
 		WorldServer.getGameState().addBook(2, generalSkills);	
 		
 		generalSkills.addSkill(new SkillList(null, null));
@@ -87,7 +92,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new Messaging(null, null));
 		generalSkills.addSkill(new Who(null, null));
 		generalSkills.addSkill(new CharacterSheet(null, null));
-		generalSkills.addSkill(new GoTo(null, null));
+		generalSkills.addSkill(new RollDice(null, null));
 		//crafting
 		generalSkills.addSkill(new CraftItem(null, null));
 		generalSkills.addSkill(new Salvage(null, null));
@@ -101,7 +106,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new LightningWhip(null, null));
 		generalSkills.addSkill(new Icewall(null, null));
 		
-		SkillBook mercSkills = new SkillBook("mercskills", 3);
+		SkillBook mercSkills = new SkillBook("mercenary", 3);
 		WorldServer.getGameState().addBook(3, mercSkills);
 		//mercenary only
 		mercSkills.addSkill(new Headshot(null, null));
@@ -117,7 +122,33 @@ public class CreateWorld {
 		mercSkills.addSkill(new MercRegenSkill(null, null));
 		mercSkills.addSkill(new Shieldblock(null, null));
 
+		SkillBook adminSkills = new SkillBook("admin", 4);
+		adminSkills.addSkill(new GoTo(null, null));
+		WorldServer.getGameState().addBook(4, adminSkills);
 	}
+	
+	//Classes!
+	public static void makeClasses() {
+		//merc class
+		String className = "mercenary";
+		ArrayList<SkillBook> books = new ArrayList<SkillBook>();
+		books = addMercBooks(books);
+		WorldServer.getGameState().addClass(className, books);
+		//admin ...class...
+		className = "admin";
+		ArrayList<SkillBook> booksAdmin = new ArrayList<SkillBook>();
+		booksAdmin = addMercBooks(booksAdmin);
+		booksAdmin.add(WorldServer.getGameState().getBook(4));
+		WorldServer.getGameState().addClass(className, booksAdmin);
+	}
+	
+	private static ArrayList<SkillBook> addMercBooks(ArrayList<SkillBook> books) {
+		books.add(WorldServer.getGameState().getBook(1));
+		books.add(WorldServer.getGameState().getBook(2));
+		books.add(WorldServer.getGameState().getBook(3));
+		return books;
+	}
+	
 	
 	public static void spawnMobs() {
 		makeGoblin();
@@ -672,6 +703,7 @@ public class CreateWorld {
 	public static void addPouch() {
 		PouchItemBuilder newItem = new PouchItemBuilder();
 		newItem.setName("pouch");
+		newItem.setDescription("It's a pouch. Pouches hold one stackable item only.");
 		newItem.setWeight(.5);
 	//	newItem.complete();
 		WorldServer.getGameState().itemTemplates.put("pouch", newItem);

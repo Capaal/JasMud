@@ -145,19 +145,47 @@ public class PlayerPrompt implements Runnable {
 	}
 	
 	private void createNewPlayer(String enteredName, String enteredPass) {
-		MobileBuilder newPlayer = new MobileBuilder();		
+		MobileBuilder newPlayer = new MobileBuilder();	
+		sendBack.printMessage("Select a class: Mercenary, Admin"); //this is really ugly TODO
+		String enteredClass = sendBack.getMessage();
+		ArrayList<SkillBook> bookList;
+		if (enteredClass.equalsIgnoreCase("mercenary")) { //this is really ugly TODO
+			newPlayer.setClassName("mercenary");
+			bookList = WorldServer.getGameState().getBooksFromClass("mercenary");
+			for (SkillBook s : bookList) {
+				newPlayer.addSkillBook(s, 100);
+			}
+		} else if (enteredClass.equalsIgnoreCase("admin")) { //this is really ugly TODO
+			newPlayer.setClassName("admin");
+			bookList = WorldServer.getGameState().getBooksFromClass("admin");
+			for (SkillBook s : bookList) {
+				newPlayer.addSkillBook(s, 100);
+			}
+		} else {
+			sendBack.printMessage("That's not a valid class. Defaulting to Mercenary..."); //temporary ugly default for testings
+			bookList = WorldServer.getGameState().getBooksFromClass("mercenary");
+			newPlayer.setClassName("mercenary");
+			System.out.println(bookList);
+			for (SkillBook s : bookList) {
+				newPlayer.addSkillBook(s, 100);
+			}
+		}
+		
 		newPlayer.setName(enteredName);					
 		newPlayer.setPassword(enteredPass);		
-		newPlayer.setLocation(WorldServer.getGameState().viewLocations().get(1));  // Default starting location.	
+		newPlayer.setLocation(WorldServer.getGameState().viewLocations().get(1));  // Default starting location.
 		newPlayer.complete();
-		this.currentPlayer = newPlayer.getFinishedMob();						
+		this.currentPlayer = newPlayer.getFinishedMob();		
+		
+		
+		
 	//	WorldServer.gameState.addMob(currentPlayer.getName() + currentPlayer.getId(), currentPlayer); This should be happening on mob creation.
 		
 		//adding hardcoded skillbook TEMP
 	//	currentPlayer.addBook(CreateWorld.generalSkills.duplicate(),100);	
-		currentPlayer.addBook(WorldServer.getGameState().getBook(1), 100);	
-		currentPlayer.addBook(WorldServer.getGameState().getBook(2), 100);
-		currentPlayer.addBook(WorldServer.getGameState().getBook(3), 100);
+		//currentPlayer.addBook(WorldServer.getGameState().getBook(1), 100);	
+		//currentPlayer.addBook(WorldServer.getGameState().getBook(2), 100);
+		//currentPlayer.addBook(WorldServer.getGameState().getBook(3), 100);
 		currentPlayer.setSendBack(sendBack);
 		currentPlayer.controlStatus(true);
 	//	currentPlayer.save(); 

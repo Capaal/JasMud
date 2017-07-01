@@ -377,19 +377,40 @@ public enum DecoratorType {
 		return decoratedMobile.viewInventoryWithoutEquipment();
 	}
 
-	@Override
-	public void addCooldown(Cooldown c) {
-		decoratedMobile.addCooldown(c);
+@Override
+	public String getClassName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	@Override
-	public void removeCooldown(Cooldown c) {
-		decoratedMobile.removeCooldown(c);
-	}
+@Override
+public void addCooldown(Cooldown c) {
+	// TODO Auto-generated method stub
+	
+}
 
-	@Override
-	public boolean isOnCooldown(Cooldown c) {
-		return decoratedMobile.isOnCooldown(c);
-	}
+@Override
+public void removeCooldown(Cooldown c) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public boolean isOnCooldown(Cooldown c) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public void changeBalanceMult(double change) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public double getBalanceMult() {
+	// TODO Auto-generated method stub
+	return 0;
+}
 
 }

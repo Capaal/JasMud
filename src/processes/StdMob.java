@@ -53,7 +53,7 @@ public class StdMob implements Mobile, Container{
 	@XStreamOmitField
 	protected InductionSkill inductionSkill = null;
 //	@XStreamOmitField
-	protected Map<SkillBook, Integer> skillBookList = new HashMap<SkillBook, Integer>();
+	protected Map<SkillBook, Integer> skillBookList; //skillbook : player's level
 	protected List<ItemBuilder> dropsOnDeath;
 	@XStreamOmitField
 	protected EffectManager effectManager;
@@ -66,6 +66,7 @@ public class StdMob implements Mobile, Container{
 	@XStreamOmitField
 	protected Mobile following;
 	protected Set<Cooldown> cooldowns; 
+	protected String className;
 	
 	public StdMob(MobileBuilder build) {
 		Mobile decoratedMob = decorate(build, this);
@@ -93,6 +94,7 @@ public class StdMob implements Mobile, Container{
 		WorldServer.getGameState().addNewPlayer(this.name, decoratedMob);
 		decoratedMob.getContainer().acceptItem(decoratedMob);
 		this.messages = new ArrayList<String>();		
+		this.className = build.getClassName();
 	}
 	
 	private Mobile decorate(MobileBuilder build, Mobile m) {
@@ -104,6 +106,7 @@ public class StdMob implements Mobile, Container{
 		return m;
 	}
 	
+	@Override public String getClassName() {return className;}
 	@Override public String getName() {return name;}	
 	@Override public String getNameColored() {return UsefulCommands.ANSI.GREEN + name + UsefulCommands.ANSI.SANE;}	
 	@Override public boolean isDead() {return isDead;}	
