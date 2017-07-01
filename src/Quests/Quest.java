@@ -5,6 +5,7 @@ import interfaces.Mobile;
 import java.util.HashMap;
 import java.util.Map;
 
+import Quests.Quest.State;
 import processes.Location;
 
 public abstract class Quest {
@@ -57,21 +58,7 @@ public abstract class Quest {
 		}
 		
 		public void triggered(Trigger triggerType) {
-			switch(triggerType) {
-			case GREETS:
-				runGreets();
-				break;
-			case NODS:
-				runNods();
-				break;
-			case NEWSTATE:
-				runNewState();
-				break;
-			case GIVES:
-				runGives();
-				break;
-			default:
-			}
+			triggerType.runType(this);
 		}
 		
 		protected abstract void runGreets();
@@ -87,18 +74,27 @@ public abstract class Quest {
 	public enum Trigger {
 		
 		GREETS() {
-			
+			@Override public void runType(State state) {
+				state.runGreets();
+			}
 		},
 		NODS() {
+			@Override public void runType(State state) {
+				state.runNods();
+			}
 			
 		},
 		NEWSTATE() {
-			
+			@Override public void runType(State state) {
+				state.runNewState();
+			}
 		},
 		GIVES() {
-			
+			@Override public void runType(State state) {
+				state.runGives();
+			}
 		};
-	}
-
-	
+		
+		public void runType(State state) {}
+	}	
 }

@@ -16,6 +16,7 @@ public class Inventory extends Skills {
 		super.syntaxList.add(Syntax.SKILL);
 	}
 	
+	//TODO armor
 	@Override
 	protected void performSkill() {
 		//wielded

@@ -38,6 +38,7 @@ public class StdMob implements Mobile, Container{
 	protected boolean isBlocking = false;
 	protected final Equipment equipment;	
 	protected int defense;
+	protected double balanceMult;
 	protected String description; //displays on examine
 	protected int xpWorth;
 	protected String shortDescription; //displays on look as (name + shortDesc)
@@ -81,7 +82,7 @@ public class StdMob implements Mobile, Container{
 		this.shortDescription = build.getShortDescription();
 		this.inventory = new TreeMap<String, Holdable>();
 		this.inventory.putAll(build.getInventory())	;
-	
+		this.balanceMult = build.getBalanceMult();
 		this.dropsOnDeath = build.getDropsOnDeath();
 		this.experience = build.getExperience();
 		effectManager = new EffectManager(this);		
@@ -389,7 +390,7 @@ public class StdMob implements Mobile, Container{
 	@Override 
 	public void equip(EquipmentSlot slot, StdItem item) {	
 		String key = item.getName() + item.getId();
-		if (inventory.remove(key) != null) {
+		if (inventory.remove(key.toLowerCase()) != null) {
 			changeCurrentWeight(-item.getWeight());
 			equipment.wield(item, slot);
 		} else if (equipment.hasItem(item)) {
@@ -658,6 +659,16 @@ public class StdMob implements Mobile, Container{
 	@Override
 	public synchronized boolean isOnCooldown(Cooldown c) {
 		return cooldowns.contains(c);
+	}
+	
+	@Override
+	public void changeBalanceMult(double change) {
+		this.balanceMult += change;
+	}
+	
+	@Override
+	public double getBalanceMult() {
+		return balanceMult;
 	}
 }
 

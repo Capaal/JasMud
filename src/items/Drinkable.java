@@ -131,11 +131,6 @@ public class Drinkable extends StdItem {
 		
 		@Override public StdItem produceType() {
 			return new Drinkable(this);
-		} 
-		
-		
-	}
-	
-	
-	
+		} 		
+	}	
 }

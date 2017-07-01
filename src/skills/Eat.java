@@ -72,6 +72,7 @@ public class Eat extends Skills {
 				Plant herb = (Plant) pouch.getHoldableFromString(itemName);
 				if (herb != null) {
 					finalHerb = herb;
+					return true;
 				}
 			}	
 			messageSelf("You have no " + itemName + ".");

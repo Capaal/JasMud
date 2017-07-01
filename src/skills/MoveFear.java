@@ -32,6 +32,7 @@ public class MoveFear extends Move {
 			currentPlayer.tell("You run around in circles, panicking but unable to find an exit.");
 			return false;
 		}
+		dir = startContainer.getDirectionToLocation(endContainer).toString().toLowerCase();
 		return true;
 	}
 	

@@ -99,6 +99,10 @@ public abstract class Skills implements Runnable {
 		currentPlayer.tell(msg);
 	}
 	
+	protected double getPlayerBalanceMult() {
+		return currentPlayer.getBalanceMult();
+	}
+	
 	public void messageOthers(String msg, List<Mobile> toIgnore) {
 		for (Mobile h : currentPlayer.getContainer().getMobiles().values()) {
 			if (h.isControlled()) {

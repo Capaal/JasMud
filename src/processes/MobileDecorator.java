@@ -11,6 +11,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import processes.Equipment.EquipmentSlot;
 import effects.PassiveCondition;
+import interfaces.Cooldown;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import interfaces.TickingEffect;
@@ -367,21 +368,6 @@ public enum DecoratorType {
 	}
 
 	@Override
-	public void cooldownOn(PlantType p) {
-		decoratedMobile.cooldownOn(p);
-	}
-
-	@Override
-	public void cooldownOff(PlantType p) {
-		decoratedMobile.cooldownOff(p);
-	}
-
-	@Override
-	public boolean checkCooldown(PlantType p) {
-		return decoratedMobile.checkCooldown(p);
-	}
-
-	@Override
 	public String getNameColored() {
 		return decoratedMobile.getNameColored();
 	}
@@ -389,6 +375,21 @@ public enum DecoratorType {
 	@Override
 	public TreeMap<String, Holdable> viewInventoryWithoutEquipment() {
 		return decoratedMobile.viewInventoryWithoutEquipment();
+	}
+
+	@Override
+	public void addCooldown(Cooldown c) {
+		decoratedMobile.addCooldown(c);
+	}
+
+	@Override
+	public void removeCooldown(Cooldown c) {
+		decoratedMobile.removeCooldown(c);
+	}
+
+	@Override
+	public boolean isOnCooldown(Cooldown c) {
+		return decoratedMobile.isOnCooldown(c);
 	}
 
 }

@@ -31,6 +31,7 @@ public class MobileBuilder {
 	private int maxHp = 100;
 	private int currentHp = 100; //probably don't need this
 	private int defense = 0;
+	private double balanceMult = 1;
 	private Location location = WorldServer.getGameState().viewLocations().get(1);
 	private boolean isDead = false;
 	private int xpWorth = 1;
@@ -109,6 +110,10 @@ public class MobileBuilder {
 
 	public int getMaxHp() {
 		return maxHp;
+	}
+	
+	public double getBalanceMult() {
+		return balanceMult;
 	}
 
 	public void setMaxHp(int maxHp) {

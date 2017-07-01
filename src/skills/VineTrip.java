@@ -11,6 +11,7 @@ import processes.Skills.Syntax;
 public class VineTrip extends Skills{
 	
 	private Mobile finalTarget;
+	private final int BASEBALANCE = 2000;
 	
 	public VineTrip(Mobile currentPlayer, String fullCommand) {
 		super("vinetrip", "Unbalance your target briefly.", currentPlayer, fullCommand);
@@ -21,7 +22,7 @@ public class VineTrip extends Skills{
 	@Override
 	protected void performSkill() {
 		if (preSkillChecks()) {
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 2000);
+			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
 			finalTarget.addPassiveCondition(PassiveCondition.BALANCE, 1700);
 			finalTarget.killInduction();
 			messageSelf("You encourage a vine to get in the way.");
@@ -43,6 +44,10 @@ public class VineTrip extends Skills{
 			messageSelf("There is no " + targetName + " here.");
 			return false;
 		}
+	}
+	
+	private int calculateBalance() {
+		return (int) (BASEBALANCE * getPlayerBalanceMult());
 	}
 
 	@Override

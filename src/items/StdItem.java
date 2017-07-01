@@ -56,7 +56,6 @@ public class StdItem implements Holdable{
 		return physicalMult;
 	}	
 	
-	// TODO NEEDS to watch for a FALSE return from ACCEPTITEM, then handle the failed insertion.
 	@Override
 	public ContainerErrors moveHoldable(Container finalLocation) {
 		ContainerErrors error = finalLocation.acceptItem(this);		

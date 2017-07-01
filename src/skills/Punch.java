@@ -13,6 +13,7 @@ public class Punch extends Skills {
 	private final int intensity = 10;
 	private String targetName;
 	private Mobile finalTarget;
+	private final int BASEBALANCE = 3000;
 	
 	public Punch(Mobile currentPlayer, String fullCommand) {
 		super("punch", "Throwing a quick punch.", currentPlayer, fullCommand);
@@ -28,7 +29,8 @@ public class Punch extends Skills {
 		if (preSkillChecks()) {
 			finalTarget.informLastAggressor(currentPlayer);
 			finalTarget.takeDamage(Type.BLUNT, calculateDamage());
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+			System.out.println(calculateBalance());
+			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
 			messageSelf("You punch " + finalTarget.getName());
 			messageTarget(currentPlayer.getNameColored() + " punches you.", Arrays.asList(finalTarget));
 			messageOthers(currentPlayer.getNameColored() + " punches " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget));
@@ -45,6 +47,10 @@ public class Punch extends Skills {
 			return true;
 		} 
 		return false;
+	}
+	
+	private int calculateBalance() {
+		return (int) (BASEBALANCE * getPlayerBalanceMult());
 	}
 	
 	private Mobile setTarget() {

@@ -5,12 +5,13 @@ import java.util.Map;
 
 import interfaces.Holdable;
 import interfaces.Mobile;
+import items.Armor;
 
 public class Equipment {
 	
 	private Holdable rightHand;
 	private Holdable leftHand;
-//	private Armor armor;
+	private Armor armor;
 	private Mobile bondedMobile;
 	
 	public Equipment(Mobile mobile) {
@@ -36,7 +37,13 @@ public class Equipment {
 			break;
 			
 			case ARMOR:
-				
+				if (!(toWield instanceof Armor)) {
+					throw new IllegalArgumentException();
+				}
+				unwield(slot);
+				armor = (Armor)toWield;
+				bondedMobile.addDefense(((Armor)toWield).getDefenceMod());
+				bondedMobile.changeBalanceMult(((Armor)toWield).getDamageMult());
 			break;
 			
 			default:
@@ -60,6 +67,9 @@ public class Equipment {
 		if (leftHand != null && leftHand.equals(item)) {
 			unwield(EquipmentSlot.LEFTHAND);
 		}
+		if (armor != null && armor.equals(item)) {
+			unwield(EquipmentSlot.ARMOR);
+		}
 	}
 	
 	@Override
@@ -79,11 +89,11 @@ public class Equipment {
 		}
 		sb.append(System.lineSeparator());
 		sb.append("Armor: ");
-	//	if (armor != null) {
-	//		sb.append(armor);
-	//	} else {
-	//		sb.append("none");
-	//	}
+		if (armor != null) {
+			sb.append(armor);
+		} else {
+			sb.append("none");
+		}
 		return sb.toString();
 			
 	}
@@ -109,7 +119,12 @@ public class Equipment {
 		},
 		ARMOR(){
 			public Holdable getItem(Equipment equipment) {
-				return equipment.rightHand;		// TODO	
+				return equipment.armor;		// TODO	
+			}
+			public void unwield(Equipment equipment) {
+				equipment.bondedMobile.addDefense(-equipment.armor.getDefenceMod());
+				equipment.bondedMobile.changeBalanceMult(-equipment.armor.getDamageMult());
+				equipment.armor = null;
 			}
 		};
 		
@@ -161,8 +176,8 @@ public class Equipment {
 	}
 	
 	private Object readResolve() {
-		rightHand.setContainer(bondedMobile);
-		leftHand.setContainer(bondedMobile);
+		if (rightHand != null) rightHand.setContainer(bondedMobile);
+		if (leftHand != null) leftHand.setContainer(bondedMobile);
 		return this;
 	}	
 }	

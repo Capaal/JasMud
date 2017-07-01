@@ -1,5 +1,6 @@
 package processes;
 
+import items.Armor.ArmorItemBuilder;
 import items.Bag.BagItemBuilder;
 import items.Door;
 import items.Drinkable.DrinkType;
@@ -148,6 +149,7 @@ public class CreateWorld {
 		addPouch();
 		makeGinsengHerb();
 		makeBag();
+		makeArmor();
 	}
 	
 	public static void makeWorldFromNowhere() {
@@ -681,6 +683,14 @@ public class CreateWorld {
 		newItem.setWeight(2);
 	//	newItem.complete();
 		WorldServer.getGameState().itemTemplates.put("bag", newItem);
+	}
+	
+	public static void makeArmor() {
+		ArmorItemBuilder newItem = new ArmorItemBuilder();
+		newItem.setName("Chainmail");
+		newItem.setWeight(35);
+	//	newItem.complete();
+		WorldServer.getGameState().itemTemplates.put("chainmail", newItem);
 	}
 
 	public static void addOreRock() {
