@@ -31,8 +31,12 @@ public abstract class Skills implements Runnable {
 		if (preAllSkills()) {
 		//	currentPlayer.tell("\n");
 			performSkill();
-			currentPlayer.displayPrompt();
+			displayPrompt();
 		}
+	}
+	
+	protected void displayPrompt() {
+		currentPlayer.displayPrompt();
 	}
 	
 	//method for checking conditions that prevent any skills

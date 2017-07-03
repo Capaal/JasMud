@@ -34,7 +34,7 @@ public class GoTo extends Skills {
 
 	@Override
 	protected boolean preSkillChecks() {
-		posstarget = Syntax.TARGET.getStringInfo(fullCommand, this);
+		posstarget = Syntax.TARGET.getStringInfo(fullCommand, this).toLowerCase();
 		if (posstarget.equals("")) {
 			messageSelf("Need a target to go-to.");
 			return false;
@@ -46,7 +46,7 @@ public class GoTo extends Skills {
 			target = i.next().getPlayer();
 			if (target.getName().equals(posstarget)) {
 				return true;
-			} else if (target.getName().startsWith(posstarget)) {
+			} else if (target.getName().toLowerCase().startsWith(posstarget)) {
 				return true;
 			}
 		}

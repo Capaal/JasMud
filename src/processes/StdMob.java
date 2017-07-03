@@ -244,11 +244,12 @@ public class StdMob implements Mobile, Container{
 			sendBack.printMessage(msg);
 		} 
 	}
+	
 	@Override
 	public void tellLine(String msg) {
 		// NPCs will not have a sendback object.
 		if (this.sendBack != null) {
-			sendBack.printMessageLine(msg); // Prints msg on SAME line, does not create newLine.
+			sendBack.printMessage(msg); // Prints msg on SAME line, does not create newLine.
 		}	
 	}
 	
@@ -647,17 +648,8 @@ public class StdMob implements Mobile, Container{
 	@Override
 	public synchronized void removeCooldown(Cooldown c) {
 		cooldowns.remove(c);
+		this.displayPrompt();
 	}
-	
-/*	@Override
-	public void cooldownOn(PlantType p) {
-		eatPlantCooldowns.put(p, true);
-	}
-	
-	@Override
-	public void cooldownOff(PlantType p) {
-		eatPlantCooldowns.put(p, false);
-	}*/
 	
 	@Override
 	public synchronized boolean isOnCooldown(Cooldown c) {

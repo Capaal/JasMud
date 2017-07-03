@@ -55,6 +55,10 @@ public class Move extends Skills {
 		}
 	}
 	
+	@Override
+	protected void displayPrompt() {
+	}
+	
 	protected void onFail() {
 		stopFollowing();
 	}

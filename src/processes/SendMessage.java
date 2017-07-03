@@ -18,10 +18,10 @@ public class SendMessage {
 		this.out = new PrintWriter(new OutputStreamWriter(incoming.getOutputStream()), true);	
 	}
 	// Prints message to user, does not "return" to next line.
-	public void printMessageLine(String msg) {
-		out.print(msg);
-		out.flush();
-	}
+//	public void printMessageLine(String msg) {
+//		out.print(msg);
+//		out.flush();
+//	}
 	
 	// Prints any message sent to it.
 	public void printMessage(String msg) {

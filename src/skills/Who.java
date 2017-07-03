@@ -17,8 +17,8 @@ public class Who extends Skills {
 		StringBuilder sb = new StringBuilder();
 		sb.append("All players online: \n");
 		for (PlayerPrompt m : WorldServer.getGameState().viewActiveClients()) {
-			sb.append(m.getPlayer().getName());
-			sb.append(UsefulCommands.ANSI.MAGENTA + " at: ");
+			sb.append(m.getPlayer().getNameColored());
+			sb.append(UsefulCommands.ANSI.RED + " at: ");
 			sb.append(m.getPlayer().getContainer().getName() + UsefulCommands.ANSI.SANE);
 			sb.append("\n");
 		}
