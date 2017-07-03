@@ -106,4 +106,9 @@ public class Apply extends Skills {
 		return new Apply(currentPlayer, fullCommand);
 	}
 
+	@Override
+	public String displaySyntax() {
+		return "APPLY [POISON] ON [WEAPON]";
+	}
+	
 }

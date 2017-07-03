@@ -100,5 +100,10 @@ public class Chop extends InductionSkill {
 	public InnerSkill getInnerSkill(Mobile currentPlayer, String fullCommand) {
 		return new InnerChop(currentPlayer, fullCommand);
 	}
+	
+	@Override
+	public String displaySyntax() {
+		return "CHOP [TREE]";
+	}
 
 }
