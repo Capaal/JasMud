@@ -8,32 +8,33 @@ public class Armor extends StdItem {
 
 	// Durability?
 	private final int defenceMod;
-	private final double balanceMult;
+//	private final double balanceMult;
 	
 	public Armor(ArmorItemBuilder build) {
 		super(build);
 		this.defenceMod = build.getDefenceMod();
-		this.balanceMult = build.getBalanceMult();
+//		this.balanceMult = build.getBalanceMult();
 	}
 	
 	public int getDefenceMod() {
 		return defenceMod;
 	}
 	
-	public double getBalanceMult() {
-		return balanceMult;
-	}
+//	public double getBalanceMult() {
+//		return balanceMult;
+//	}
 	
 	
 	public static class ArmorItemBuilder extends ItemBuilder {
 		
 	// Durability?
 		private int defenceMod = 5;
-		private double balanceMult = .2;
+//		private double balanceMult = .1;
 		
 		public ArmorItemBuilder() {
 			super();
 			allowedSlots = EnumSet.of(EquipmentSlot.ARMOR);
+			balanceMult = .1;
 		}		
 		
 		public int getDefenceMod() {
@@ -44,13 +45,13 @@ public class Armor extends StdItem {
 			this.defenceMod = newMod;
 		}
 		
-		public double getBalanceMult() {
-			return balanceMult;
-		}
+	//	public double getBalanceMult() {
+	//		return balanceMult;
+	//	}
 		
-		public void setBalanceMult(double newMult) {
-			this.balanceMult = newMult;
-		}
+//		public void setBalanceMult(double newMult) {
+//			this.balanceMult = newMult;
+//		}
 		
 		@Override public StdItem produceType() {
 			return new Armor(this);

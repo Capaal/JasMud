@@ -43,7 +43,7 @@ public class Equipment {
 				unwield(slot);
 				armor = (Armor)toWield;
 				bondedMobile.addDefense(((Armor)toWield).getDefenceMod());
-				bondedMobile.changeBalanceMult(((Armor)toWield).getDamageMult());
+				bondedMobile.changeBalanceMult(((Armor)toWield).getBalanceMult());
 			break;
 			
 			default:
@@ -123,7 +123,7 @@ public class Equipment {
 			}
 			public void unwield(Equipment equipment) {
 				equipment.bondedMobile.addDefense(-equipment.armor.getDefenceMod());
-				equipment.bondedMobile.changeBalanceMult(-equipment.armor.getDamageMult());
+				equipment.bondedMobile.changeBalanceMult(-equipment.armor.getBalanceMult());
 				equipment.armor = null;
 			}
 		};

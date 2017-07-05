@@ -37,7 +37,7 @@ public interface Mobile extends Container {
 	public int getXpWorth();
 	public void takeDamage(Type types, int d);
 	public void tell(String msg);
-	public void tellLine(String msg);
+//	public void tellLine(String msg);
 	public Skills getCommand(String command);
 	public ContainerErrors acceptItem(Holdable item);
 	public boolean addPassiveCondition(PassiveCondition newEffect, int duration);

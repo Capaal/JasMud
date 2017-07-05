@@ -109,11 +109,6 @@ public class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public void tellLine(String msg) {
-		decoratedMobile.tellLine(msg);
-	}
-
-	@Override
 	public Skills getCommand(String command) {
 		return decoratedMobile.getCommand(command);
 	}

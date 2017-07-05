@@ -244,14 +244,14 @@ public class StdMob implements Mobile, Container{
 			sendBack.printMessage(msg);
 		} 
 	}
-	
-	@Override
-	public void tellLine(String msg) {
-		// NPCs will not have a sendback object.
-		if (this.sendBack != null) {
-			sendBack.printMessage(msg); // Prints msg on SAME line, does not create newLine.
-		}	
-	}
+//	@Override
+//	public void tellLine(String msg) {
+//		// NPCs will not have a sendback object.
+//		if (this.sendBack != null) {
+////			sendBack.printMessageLine(msg); // Prints msg on SAME line, does not create newLine.
+//			sendBack.printMessage(msg);
+//		}	
+//	}
 	
 	
 	
@@ -480,7 +480,7 @@ public class StdMob implements Mobile, Container{
 		if (!hasBalance()) {
 			balance = "-";
 		}
-		tellLine(getCurrentHp() + "/" + getMaxHp() + " " + balance + ": ");
+		tell(getCurrentHp() + "/" + getMaxHp() + " " + balance + ": ");
 	}
 	
 	@Override

@@ -32,7 +32,7 @@ public class Unwield extends Skills {
 			wantSlot = EquipmentSlot.RIGHTHAND;
 		}
 		itemToUnwield = currentPlayer.getEquipmentInSlot(wantSlot);
-		if (itemToUnwield == null || !itemToUnwield.getName().startsWith(item.toLowerCase())) {
+		if (itemToUnwield == null || !itemToUnwield.getName().toLowerCase().startsWith(item.toLowerCase())) {
 			messageSelf("You're not wielding anything.");
 			return false;
 		}

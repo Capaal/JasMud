@@ -17,6 +17,8 @@ public class SendMessage {
 		this.in = new BufferedReader(new InputStreamReader(incoming.getInputStream()));
 		this.out = new PrintWriter(new OutputStreamWriter(incoming.getOutputStream()), true);	
 	}
+	
+	// ERROR: Causing delays in display the line.
 	// Prints message to user, does not "return" to next line.
 //	public void printMessageLine(String msg) {
 //		out.print(msg);
