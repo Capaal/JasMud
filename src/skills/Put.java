@@ -154,4 +154,9 @@ public class Put extends Skills {
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new Put(currentPlayer, fullCommand);
 	}
+	
+	@Override
+	public String displaySyntax() {
+		return "PUT [ITEM] IN [CONTAINER] (QTY)";
+	}
 }

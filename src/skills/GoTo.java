@@ -58,5 +58,10 @@ public class GoTo extends Skills {
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new GoTo(currentPlayer, fullCommand);
 	}
+	
+	@Override
+	public String displaySyntax() {
+		return "GOTO [TARGET]";
+	}
 
 }

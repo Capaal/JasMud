@@ -23,28 +23,36 @@ public class Clearmind extends Skills implements Cooldown {
 	@Override
 	protected void performSkill() {
 		if (preSkillChecks()) {
+			//can do switch/case here? TODO
 			if (currentPlayer.hasCondition(PassiveCondition.DIZZY)) {
 				currentPlayer.removeCondition(PassiveCondition.DIZZY);
 				messageSelf("Dizzy cured.");
-				currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 1000);
-				addCooldown(currentPlayer);
-				WorldServer.getGameState().getEffectExecutor().schedule(() -> setOffCooldown(), COOLDOWNLENGTH, TimeUnit.MILLISECONDS);	
+				cureCooldown();
 			} else if (currentPlayer.hasCondition(new Fear(currentPlayer))) {
 				currentPlayer.removeCondition(new Fear(currentPlayer));
 				messageSelf("Fear cured.");
-				currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 1000);
-				addCooldown(currentPlayer);
-				WorldServer.getGameState().getEffectExecutor().schedule(() -> setOffCooldown(), COOLDOWNLENGTH, TimeUnit.MILLISECONDS);	
+				cureCooldown();
+			} else if (currentPlayer.hasCondition(PassiveCondition.CONFUSED)) {
+				currentPlayer.removeCondition(PassiveCondition.CONFUSED);
+				messageSelf("Confusion cured.");
+				cureCooldown();
 			} else {
 				messageSelf("Your mind is already clear.");
 			}
 		}
 	}
 	
+	//can do this like Straighten instead? TODO
+	private void cureCooldown() {
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 1000);
+		addCooldown(currentPlayer);
+		WorldServer.getGameState().getEffectExecutor().schedule(() -> setOffCooldown(), COOLDOWNLENGTH, TimeUnit.MILLISECONDS);	
+	}
+	
 	
 	private void setOffCooldown() { 
-		removeCooldown(currentPlayer);
 		messageSelf("You are again able to clear your mind.");
+		removeCooldown(currentPlayer);
 	}	
 	
 	@Override

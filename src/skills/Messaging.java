@@ -120,4 +120,9 @@ public class Messaging extends Skills {
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new Messaging(currentPlayer, fullCommand);
 	}
+	
+	@Override
+	public String displaySyntax() {
+		return "MESSAGE [SHOWALL/READ #/SEND TARGET/DELETE #/DELETEALL]";
+	}
 }

@@ -100,5 +100,10 @@ public class Mine extends InductionSkill {
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new Mine(currentPlayer, fullCommand);
 	}
+	
+	@Override
+	public String displaySyntax() {
+		return "MINE IRONROCK";
+	}
 
 }

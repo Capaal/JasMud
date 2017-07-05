@@ -176,4 +176,9 @@ public class Headshot extends InductionSkill {
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new Headshot(currentPlayer, fullCommand);
 	}
+	
+	@Override
+	public String displaySyntax() {
+		return "HEADSHOT [TARGET] (DIR)";
+	}
 }

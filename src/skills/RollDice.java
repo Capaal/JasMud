@@ -25,8 +25,8 @@ public class RollDice extends Skills {
 		if (preSkillChecks()) {
 			for (int i=1;i<=numOfDice;i++) {
 				int roll = (int) (Math.random() * sidesOfDice) + 1;
-				messageSelf("You roll a " + diceWanted.toUpperCase() +  " dice and it comes to: " +  roll);
-				messageOthers(currentPlayer.getName() + "rolls and " + diceWanted.toUpperCase() + " dice and it comes to: " +  roll, Arrays.asList(currentPlayer));
+				messageSelf("You roll a " + diceWanted.toUpperCase() +  " and it comes to: " +  roll);
+				messageOthers(currentPlayer.getName() + "rolls and " + diceWanted.toUpperCase() + " and it comes to: " +  roll, Arrays.asList(currentPlayer));
 			}
 		}
 	}

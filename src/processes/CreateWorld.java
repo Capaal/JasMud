@@ -680,6 +680,16 @@ public class CreateWorld {
 		WorldServer.getGameState().itemTemplates.put("ginseng", newItem);
 	}
 	
+	public static void makeFoxgloveHerb() {
+		PlantItemBuilder newItem = new PlantItemBuilder();
+		newItem.setName("foxglove");
+		newItem.setDamageMult(0.1);
+		newItem.setWeight(.1);
+		newItem.setPlantType(PlantType.FOXGLOVE);
+	//	newItem.complete();
+		WorldServer.getGameState().itemTemplates.put("foxglove", newItem);
+	}
+	
 	public static void makeValerianPoison() {
 		PlantItemBuilder newItem = new PlantItemBuilder();
 		newItem.setName("valerian");

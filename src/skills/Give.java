@@ -94,4 +94,9 @@ public class Give extends Skills {
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new Give(currentPlayer, fullCommand);
 	}
+	
+	@Override
+	public String displaySyntax() {
+		return "GIVE [ITEM] [TARGET] (QTY)";
+	}
 }

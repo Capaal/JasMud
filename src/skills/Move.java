@@ -28,8 +28,6 @@ public class Move extends Skills {
 	protected void performSkill() {
 		stopFollowing();
 		if (preSkillChecks()) {
-
-			ifDizzy(); //if dizzy, sets a new random direction, ok to run into walls
 	
 			if (endContainer == null) {
 				messageSelf("You can't go that way!");
@@ -37,6 +35,7 @@ public class Move extends Skills {
 				return;
 			}
 			if (isDirectionBlocked(startContainer, directionEnum)) {
+				//no messageSelf? TODO
 				onFail();
 				return;
 			}
@@ -73,6 +72,8 @@ public class Move extends Skills {
 	
 	protected boolean findDirection() {
 		dir = Syntax.DIRECTION.getStringInfo(fullCommand, this); // Why not convert to enum?
+		ifConfused(); //if confused, sets the opposite direction, ok to run into walls
+		ifDizzy(); //if dizzy, sets a new random direction, ok to run into walls
 		if (!dir.equals("")) {
 			endContainer = startContainer.getLocation(dir);
 			directionEnum = Direction.getDirectionName(dir);
@@ -108,6 +109,13 @@ public class Move extends Skills {
 		return true;
 	}
 	
+	protected void ifConfused() {
+		if (currentPlayer.hasCondition(PassiveCondition.CONFUSED)) {
+			dir = Direction.getDirectionName(dir).getOpp();
+			messageSelf("In your confused state, you try to go the other way.");
+		}
+	}
+	
 	protected void ifDizzy() {
 		if (currentPlayer.hasCondition(PassiveCondition.DIZZY)) {
 			String[] d = {"n", "s", "e", "w", "nw", "se", "ne", "sw", "in", "out", "up", "down"};
@@ -133,12 +141,16 @@ public class Move extends Skills {
 		startContainer = currentPlayer.getContainer();
 		endContainer = null;
 		if (!findDirection()) {return false;}
-		
 		return true;
 	}
 	
 	@Override
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new Move(currentPlayer, fullCommand);
+	}
+	
+	@Override
+	public String displaySyntax() {
+		return "MOVE [DIR] or just [DIR]";
 	}
 }

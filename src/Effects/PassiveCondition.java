@@ -24,6 +24,7 @@ public enum PassiveCondition {
 		BALANCE() {
 			@Override public void doOnDestruction(Mobile currentPlayer) {
 				currentPlayer.tell("You regain balance.");
+				currentPlayer.displayPrompt();
 			}
 		},
 		
@@ -59,7 +60,7 @@ public enum PassiveCondition {
 		
 		DIZZY() {
 			
-		};	
+		}, CONFUSED;	
 		
 		private PassiveCondition() {}
 		

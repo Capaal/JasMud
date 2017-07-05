@@ -62,8 +62,14 @@ public class Heal extends Skills {
 		}		
 		return true;
 	}
+	
 	@Override
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new Heal(currentPlayer, fullCommand);
+	}
+	
+	@Override
+	public String displaySyntax() {
+		return "HEAL or HEAL [TARGET]";
 	}
 }

@@ -137,4 +137,9 @@ public class Shoot extends Skills {
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new Shoot(currentPlayer, fullCommand);
 	}
+	
+	@Override
+	public String displaySyntax() {
+		return "SHOOT [TARGET] (DIR)";
+	}
 }

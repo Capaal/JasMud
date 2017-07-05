@@ -60,7 +60,7 @@ public class Plant extends StackableItem{
 		VALERIAN(0) {
 			@Override public String use(Mobile currentPlayer) {
 				if (!(currentPlayer.hasCondition(PassiveCondition.SLEEP))) {
-					currentPlayer.removeCondition(PassiveCondition.SLEEP);
+					currentPlayer.addPassiveCondition(PassiveCondition.SLEEP,-1);
 					return "The root causes a sudden lethargy and you fall asleep.";
 				} else { return failMsg; }
 			}
@@ -75,10 +75,18 @@ public class Plant extends StackableItem{
 		},
 			
 		GINSENG(3000) {
-			
 			@Override public String use(Mobile currentPlayer) {
 				currentPlayer.addActiveCondition(new Regen(currentPlayer, -5), 4);
 				return "The root revitalizes and energizes you.";
+			}
+		},
+		
+		FOXGLOVE(0) {
+			@Override public String use(Mobile currentPlayer) {
+				if (!(currentPlayer.hasCondition(PassiveCondition.CONFUSED))) {
+					currentPlayer.addPassiveCondition(PassiveCondition.CONFUSED,-1);
+					return "The flower makes you confused.";
+				} else { return failMsg; }
 			}
 		},
 		

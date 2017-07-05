@@ -31,7 +31,9 @@ public class Eat extends Skills {
 			PlantType pt = finalHerb.getPlantType();
 			if (!currentPlayer.isOnCooldown(pt)) {
 				messageSelf(finalHerb.use(currentPlayer));
-				triggerCooldown(finalHerb.getPlantType(), finalHerb.getPlantType().COOLDOWN);
+				if (finalHerb.getPlantType().COOLDOWN > 0) {
+					triggerCooldown(finalHerb.getPlantType(), finalHerb.getPlantType().COOLDOWN);
+				}
 			} else {
 				messageSelf("That herb won't have any effect so soon.");
 			}

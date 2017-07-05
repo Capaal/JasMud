@@ -73,5 +73,10 @@ public class Icewall extends Skills {
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new Icewall(currentPlayer, fullCommand);
 	}
+	
+	@Override
+	public String displaySyntax() {
+		return "ICEWALL [DIRECTION]";
+	}
 
 }
