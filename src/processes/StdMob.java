@@ -443,7 +443,7 @@ public class StdMob implements Mobile, Container{
 		if (skillBookList == null) {
 			skillBookList = new HashMap<SkillBook, Integer>();
 		}
-		skillBookList.put(skillBook, progress);
+		skillBookList.put(skillBook.duplicate(), progress);
 		
 	}
 	@Override

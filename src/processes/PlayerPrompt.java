@@ -146,7 +146,7 @@ public class PlayerPrompt implements Runnable {
 	
 	private void createNewPlayer(String enteredName, String enteredPass) {
 		MobileBuilder newPlayer = new MobileBuilder();	
-		sendBack.printMessage("Select a class: Mercenary, Admin"); //this is really ugly TODO
+		sendBack.printMessage("Select a class: Mercenary, Arcanist, Admin"); //this is really ugly TODO
 		String enteredClass = sendBack.getMessage();
 		ArrayList<SkillBook> bookList;
 		if (enteredClass.equalsIgnoreCase("mercenary")) { //this is really ugly TODO
@@ -158,6 +158,12 @@ public class PlayerPrompt implements Runnable {
 		} else if (enteredClass.equalsIgnoreCase("admin")) { //this is really ugly TODO
 			newPlayer.setClassName("admin");
 			bookList = WorldServer.getGameState().getBooksFromClass("admin");
+			for (SkillBook s : bookList) {
+				newPlayer.addSkillBook(s, 100);
+			}
+		} else if (enteredClass.equalsIgnoreCase("arcanist")) { //this is really ugly TODO
+			newPlayer.setClassName("arcanist");
+			bookList = WorldServer.getGameState().getBooksFromClass("arcanist");
 			for (SkillBook s : bookList) {
 				newPlayer.addSkillBook(s, 100);
 			}

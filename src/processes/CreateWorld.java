@@ -19,13 +19,11 @@ import processes.Location.Direction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import Quests.FarmerQuest;
 import skills.*;
+import skills.Arcanist.ArcanistSkillbook;
+import skills.Arcanist.Commands.*;
 import skills.Mercenary.*;
 
 public class CreateWorld {
@@ -93,6 +91,8 @@ public class CreateWorld {
 		generalSkills.addSkill(new Who(null, null));
 		generalSkills.addSkill(new CharacterSheet(null, null));
 		generalSkills.addSkill(new RollDice(null, null));
+		
+		
 		//crafting
 		generalSkills.addSkill(new CraftItem(null, null));
 		generalSkills.addSkill(new Salvage(null, null));
@@ -121,7 +121,16 @@ public class CreateWorld {
 		mercSkills.addSkill(new Staunch(null, null));
 		mercSkills.addSkill(new MercRegenSkill(null, null));
 		mercSkills.addSkill(new Shieldblock(null, null));
-
+		
+		// ARCANIST SKILLS
+		SkillBook arcanistSkills = new ArcanistSkillbook("arcanist", 5);
+		WorldServer.getGameState().addBook(5, arcanistSkills);
+		arcanistSkills.addSkill(new ArcanistAlter(null, null));
+		arcanistSkills.addSkill(new ArcanistCreate(null, null));
+		arcanistSkills.addSkill(new ArcanistComplete(null, null));
+		arcanistSkills.addSkill(new ArcanistAnalyze(null, null));
+		
+		// ADMIN SKILLS
 		SkillBook adminSkills = new SkillBook("admin", 4);
 		adminSkills.addSkill(new GoTo(null, null));
 		WorldServer.getGameState().addBook(4, adminSkills);
@@ -134,11 +143,21 @@ public class CreateWorld {
 		ArrayList<SkillBook> books = new ArrayList<SkillBook>();
 		books = addMercBooks(books);
 		WorldServer.getGameState().addClass(className, books);
+		
+		//arcanist class
+		className = "arcanist";
+		ArrayList<SkillBook> booksArcanist = new ArrayList<SkillBook>();
+		booksArcanist.add(WorldServer.getGameState().getBook(1));
+		booksArcanist.add(WorldServer.getGameState().getBook(2));
+		booksArcanist.add(WorldServer.getGameState().getBook(5));
+		WorldServer.getGameState().addClass(className, booksArcanist);
+		
 		//admin ...class...
 		className = "admin";
 		ArrayList<SkillBook> booksAdmin = new ArrayList<SkillBook>();
 		booksAdmin = addMercBooks(booksAdmin);
-		booksAdmin.add(WorldServer.getGameState().getBook(4));
+		booksAdmin.add(WorldServer.getGameState().getBook(4)); // ADMIN
+		booksArcanist.add(WorldServer.getGameState().getBook(5)); // ARCANIST
 		WorldServer.getGameState().addClass(className, booksAdmin);
 	}
 	
