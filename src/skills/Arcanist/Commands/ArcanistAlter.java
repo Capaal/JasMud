@@ -1,12 +1,18 @@
 package skills.Arcanist.Commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import interfaces.Mobile;
 import processes.SkillBook;
 import processes.Skills;
 import processes.UsefulCommands;
 import skills.Arcanist.*;
-import skills.Arcanist.WhereTargettingBlock.WhereTargettingFactory;
-import skills.Arcanist.WhoTargettingBlock.WhoTargettingFactory;
+import skills.Arcanist.Targetting.TargettingBlock;
+import skills.Arcanist.Targetting.WhereTargettingBlock;
+import skills.Arcanist.Targetting.WhoTargettingBlock;
+import skills.Arcanist.Targetting.WhereTargettingBlock.WhereTargettingFactory;
+import skills.Arcanist.Targetting.WhoTargettingBlock.WhoTargettingFactory;
 
 public class ArcanistAlter extends Skills {
 	
@@ -80,7 +86,7 @@ public class ArcanistAlter extends Skills {
 		return null;
 	}
 	
-	private enum ArcanistComponentsFactory {
+	public enum ArcanistComponentsFactory {
 		
 		DAMAGE() {
 			@Override
@@ -94,7 +100,47 @@ public class ArcanistAlter extends Skills {
 				}
 				return null;
 			}
+			@Override
+			public String describeYourself() {
+				return "Alter Damage [Intensity]: Percent damage dealt. Cost: 2 x intensity";
+			}
 			
+		},
+		
+		HEAL() {
+			@Override
+			public  ArcanistBuilder getBlock(ArcanistBuilder build, String details) {
+				if (UsefulCommands.isInteger(details)) {				
+					int desiredHealing = Integer.parseInt(details);
+					if (desiredHealing >= 0 && desiredHealing <= 100) { // May not be negative nor more than 100% hitpoints.
+						build.setDamage(new DamageBlockHeal(desiredHealing, build.getDamageBlock().getAddedEffects()));
+						return build;
+					}
+				}
+				return null;
+			}
+			@Override
+			public String describeYourself() {
+				return "Alter Heal [intensity]: Heals equal to intensity. Cost: 1.5 x Intensity.";
+			}
+		},
+		
+		MANA() {
+			@Override
+			public  ArcanistBuilder getBlock(ArcanistBuilder build, String details) {
+				if (UsefulCommands.isInteger(details)) {				
+					int manaCost = Integer.parseInt(details);
+					if (manaCost >= 0 && manaCost <= 100) { // May not be negative nor more than 100 mana.
+						build.setMana(manaCost);
+						return build;
+					}
+				}
+				return null;
+			}
+			@Override
+			public String describeYourself() {
+				return "Alter Mana [Required Mana]: Sets the amount of mana to cast this spell. Cost: mana.";
+			}
 		},
 		
 		SPEED() {
@@ -111,7 +157,10 @@ public class ArcanistAlter extends Skills {
 				}
 				return null;
 			}
-			
+			@Override
+			public String describeYourself() {
+				return "Alter Speed [Time in Seconds]: Sets resulting balance duration in seconds. Cost: +/- 20/second.";
+			}
 		},
 		
 		WHO() {
@@ -120,10 +169,20 @@ public class ArcanistAlter extends Skills {
 				WhoTargettingBlock whoBlock = WhoTargettingFactory.getWho(details);
 				if (whoBlock != null) {
 					build.setTargettingBlock(new TargettingBlock(whoBlock, build.getTargettingBlock().getWhere()));
+					build.setSyntax(build.getTargettingBlock().getSyntax());
 					return build;
 				}
 				return null;
-			}			
+			}	
+			@Override
+			public String describeYourself() {
+				StringBuilder sb = new StringBuilder();
+				for (WhoTargettingFactory b : WhoTargettingFactory.values()) {
+					b.describeOneself(sb);
+					sb.append(System.lineSeparator());
+				}
+				return sb.toString();
+			}
 		},
 		
 		WHERE() {
@@ -132,19 +191,50 @@ public class ArcanistAlter extends Skills {
 				WhereTargettingBlock whereBlock = WhereTargettingFactory.getWhere(details);
 				if (whereBlock != null) {
 					build.setTargettingBlock(new TargettingBlock(build.getTargettingBlock().getWho(), whereBlock));
+					build.setSyntax(build.getTargettingBlock().getSyntax());
 					return build;
 				}
 				return null;
-			}			
+			}	
+			
+			@Override
+			public String describeYourself() {
+				StringBuilder sb = new StringBuilder();
+				for (WhereTargettingFactory b : WhereTargettingFactory.values()) {
+					b.describeOneself(sb);
+					sb.append(System.lineSeparator());
+				}
+				return sb.toString();
+			}
 		},
 		
-		EFFECT() {
+		BLEED() {
 			@Override
 			public  ArcanistBuilder getBlock(ArcanistBuilder build, String details) {
-				return null; // Will attempt to process ANOTHER enum factory containing list of possible added effects.
-				// Or maybe this shouldn't be called effect, but BLLEd and POISON and HEAL and WHATEVER.
-				
-				// Where does COOLDOWN go? SPEED?
+				if (UsefulCommands.isInteger(details)) {				
+					int intensity = Integer.parseInt(details);
+					DamageBlock currentDamageBlock = build.getDamageBlock();
+					List<ArcanistBlock> effects = currentDamageBlock.getAddedEffects();
+					if (effects == null) {
+						effects = new ArrayList<ArcanistBlock>();
+					}
+					for (ArcanistBlock b : effects) {
+						if (b instanceof BleedBlock) {
+							effects.remove(b);
+						}
+					}
+					effects.add(new BleedBlock(intensity));
+					build.setDamage(currentDamageBlock.getNewInstance(currentDamageBlock.getDamage(), effects));
+					// The Below assumes DamageBlock, what about Heal?
+				//	build.setDamage(new DamageBlock(build.getDamageBlock().getDamage(), effects, build.getDamageBlock().getHeal()));
+					return build;
+				}				
+				return null;
+			}
+			
+			public String describeYourself() {
+				return "Bleed [Starting Intensity]: Intensity decays every tick. Cost: 4 x intensity";
+			//	return BleedBlock.describeYoursedl(); //?? I dunno, maybe this is smart? Or just do it here? it would be static
 			}
 			
 		}; //TODO NAME, DESCRPTION, LOTS OF EFFECTS, INDUCTION, COOLDOWN BLAH BLAH
@@ -152,6 +242,7 @@ public class ArcanistAlter extends Skills {
 		private ArcanistComponentsFactory() {}	
 		
 		public abstract ArcanistBuilder getBlock(ArcanistBuilder build, String details);
+		public abstract String describeYourself();
 		
 		public static ArcanistComponentsFactory getComponent(String componentName) {
 			for (ArcanistComponentsFactory e : ArcanistComponentsFactory.values()) {

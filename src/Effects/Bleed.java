@@ -25,6 +25,11 @@ public class Bleed extends TickingEffect {
 	public void run() {
 		currentPlayer.takeDamage(Type.BLEED, intensity);	
 		changeIntensity(-5);
+		if (intensity <=0) {
+			kill();
+		} else {
+			wrapper.modifyTimesRan(0); // Too much of a hack to ensure continuous running until it runes down to 0 intensity?
+		}
 	}
 	
 	@Override

@@ -3,6 +3,7 @@ package skills.Arcanist;
 import java.util.List;
 
 import processes.Skills.Syntax;
+import skills.Arcanist.Targetting.TargettingBlock;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,10 +13,10 @@ public class ArcanistBuilder {
 	private String name;
 	private String description;
 	
-	private  DamageBlock damageBlock;
-	private  SpeedBlock speedBlock;
-	private  TargettingBlock targettingBlock;
-	private  int mana;
+	private DamageBlock damageBlock;
+	private SpeedBlock speedBlock;
+	private TargettingBlock targettingBlock;
+	private int mana;
 	private List<Syntax> syntaxList;
 
 //	private  ArrayList<ArcanistBlock> addedEffects; // Specically effects that do not hit the target. Necessary? targetted effects are in damage.
@@ -33,8 +34,6 @@ public class ArcanistBuilder {
 		description = "Unremarkable";
 		
 		syntaxList = new ArrayList<Syntax>();
-		syntaxList.add(Syntax.SKILL);
-		syntaxList.add(Syntax.TARGET); // TEMP
 		damageBlock = new DamageBlock(-1, null);
 		speedBlock = new SpeedBlock(-1);
 		targettingBlock = new TargettingBlock(null, null);
@@ -47,10 +46,6 @@ public class ArcanistBuilder {
 	
 	public String getDescrption() {
 		return description;
-	}
-
-	public int getManaCost() {
-		return mana;
 	}
 
 	public TargettingBlock getTargettingBlock() {
@@ -133,5 +128,13 @@ public class ArcanistBuilder {
 
 	public int getMana() {
 		return mana;
+	}
+
+	public void setSyntax(List<Syntax> syntax) {
+		syntaxList = syntax;
+	}
+
+	public void setMana(int manaCost) {
+		mana = manaCost;
 	}
 }

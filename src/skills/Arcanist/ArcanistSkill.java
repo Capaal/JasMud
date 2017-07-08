@@ -5,6 +5,7 @@ import java.util.List;
 
 import interfaces.Mobile;
 import processes.Skills;
+import skills.Arcanist.Targetting.TargettingBlock;
 
 public class ArcanistSkill extends Skills {
 	
@@ -23,7 +24,7 @@ public class ArcanistSkill extends Skills {
 		damageBlock = build.getDamageBlock();
 		speedBlock = build.getSpeedBlock();
 		targettingBlock = build.getTargettingBlock();
-		manaCost = build.getManaCost();
+		manaCost = build.getMana();
 	}
 	// Syntax?
 	public ArcanistSkill(ArcanistSkill self, Mobile currentPlayer, String fullCommand) {
@@ -64,18 +65,23 @@ public class ArcanistSkill extends Skills {
 	@Override
 	protected void performSkill() {
 		if (preSkillChecks()) {
+			messages(); // Still messages people who block.
 			damageBlock.perform(this);
-			messages();
 			speedBlock.perform(this);
+			// TODO subtract from MANA
 		}
 	}
 	
 	private void messages() {
-		// SUPER TEMP
+		// SUPER TEMP TODO 
+		// Handle in targetting? damage? just a super generic that tells everyone who is hit that they got hit?
+		// I LIKE THE LAST CHOICE. Simple and easy, just say they got hit by something, and effects will add extras
+		// Maybe some choices later of different pre-made messages. and then we start selling messages....
+		// What about targets that block the attack? So many things AOE complicate...
 		for (Mobile t : currentData.targets) {
-			messageTarget(currentPlayer.getNameColored() + " punches you.", Arrays.asList(t));
-			messageSelf("You punch " + t.getName());
-			messageOthers(currentPlayer.getNameColored() + " punches " + t.getNameColored(), Arrays.asList(currentPlayer, t));
+			messageTarget(currentPlayer.getNameColored() + " casts a spell on you.", Arrays.asList(t));
+			messageSelf("You cast a spell at " + t.getName());
+			messageOthers(currentPlayer.getNameColored() + " casts a spell on " + t.getNameColored(), Arrays.asList(currentPlayer, t));
 		}
 	}
 
@@ -84,7 +90,7 @@ public class ArcanistSkill extends Skills {
 		if (!hasBalance()) {
 			return false;
 		}	
-//		if (isBlocking(finalTarget)) {  // Actually true? an effect to get extra points? oh geeze. Also, AOE doesn't care here?
+//		if (isBlocking(finalTarget)) {  // Actually true? an effect to get extra points? oh geeze. Also, AOE doesn't care here? // Cost to make unblockable?
 //			return false;
 //		}
 		targettingBlock.perform(this);

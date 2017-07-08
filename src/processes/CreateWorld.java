@@ -129,6 +129,9 @@ public class CreateWorld {
 		arcanistSkills.addSkill(new ArcanistCreate(null, null));
 		arcanistSkills.addSkill(new ArcanistComplete(null, null));
 		arcanistSkills.addSkill(new ArcanistAnalyze(null, null));
+		arcanistSkills.addSkill(new ArcanistComponents(null, null));
+
+		
 		
 		// ADMIN SKILLS
 		SkillBook adminSkills = new SkillBook("admin", 4);

@@ -7,8 +7,8 @@ import processes.Type;
 
 public class DamageBlock implements ArcanistBlock {
 	
-	private final int damage;
-	private final List<ArcanistBlock> addedEffects;
+	protected final int damage;
+	protected final List<ArcanistBlock> addedEffects;
 	
 	public DamageBlock(int damage, List<ArcanistBlock> newEffects) {
 		this.damage = damage;
@@ -18,15 +18,24 @@ public class DamageBlock implements ArcanistBlock {
 	@Override
 	public void perform(ArcanistSkill skill) {
 		for (Mobile t : skill.getCurrentData().targets) {
-			t.takeDamage(Type.BLUNT, damage);
-			if (addedEffects != null) { // UGLY, probably better solution, but by implementation empty is allowed but currently null is allowed.
-				for (ArcanistBlock e : addedEffects) {
-					e.perform(skill);
-				}
-		
+			if (!isBlocking(t)) { 
+				t.takeDamage(Type.BLUNT, damage);							
 			}
 		}
-		
+		if (addedEffects != null) { // UGLY, probably better solution, but by implementation empty is allowed but currently null is allowed.
+			for (ArcanistBlock e : addedEffects) {
+				e.perform(skill);
+			}
+	
+		}		
+	}
+	
+	protected boolean isBlocking(Mobile target) {
+//		if (target.isBlocking()) {
+//			messageSelf(target.getName() + " deftly blocks your attack.");
+//			messageTarget("Your careful defence blocks an attack from " + currentPlayer.getName(), Arrays.asList(target));
+//		}		
+		return target.isBlocking();
 	}
 	
 	public int determineCost() {
@@ -73,5 +82,17 @@ public class DamageBlock implements ArcanistBlock {
 			}
 		}
 		return true;
+	}
+
+	public void addEffect(ArcanistBlock newBlock) {
+		addedEffects.add(newBlock);
+	}
+
+	public int getDamage() {
+		return damage;
+	}
+
+	public DamageBlock getNewInstance(int damage2, List<ArcanistBlock> effects) {
+		return new DamageBlock(damage2, effects);
 	}
 }

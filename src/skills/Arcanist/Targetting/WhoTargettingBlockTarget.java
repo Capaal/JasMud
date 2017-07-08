@@ -1,4 +1,4 @@
-package skills.Arcanist;
+package skills.Arcanist.Targetting;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,6 +7,7 @@ import java.util.List;
 import interfaces.Mobile;
 import processes.Location;
 import processes.Skills.Syntax;
+import skills.Arcanist.ArcanistSkill;
 
 // Target is defined by syntax as a particular word entered by the user.
 public class WhoTargettingBlockTarget implements WhoTargettingBlock {
@@ -45,6 +46,11 @@ public class WhoTargettingBlockTarget implements WhoTargettingBlock {
 		sb.append(" Cost: ");
 		sb.append(determineCost());
 		return sb;
+	}
+
+	@Override
+	public Syntax requestSyntax() {
+		return Syntax.TARGET;
 	}
 
 }

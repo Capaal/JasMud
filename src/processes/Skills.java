@@ -65,7 +65,7 @@ public abstract class Skills implements Runnable {
 		}
 	}
 	
-	protected boolean isDirectionBlocked(Location currentLocation, Direction interestedDir) {
+	public boolean isDirectionBlocked(Location currentLocation, Direction interestedDir) {
 		if (currentLocation == null) {
 			throw new IllegalArgumentException("Supplied location may not be null.");
 		}
@@ -91,7 +91,7 @@ public abstract class Skills implements Runnable {
 		return false;
 	}
 	
-	public Boolean isBlocking(Mobile target) {
+	public boolean isBlocking(Mobile target) {
 		if (target.isBlocking()) {
 			messageSelf(target.getName() + " deftly blocks your attack.");
 			messageTarget("Your careful defence blocks an attack from " + currentPlayer.getName(), Arrays.asList(target));

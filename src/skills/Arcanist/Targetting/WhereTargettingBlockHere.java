@@ -1,10 +1,11 @@
-package skills.Arcanist;
+package skills.Arcanist.Targetting;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import processes.Location;
+import processes.Skills.Syntax;
+import skills.Arcanist.ArcanistSkill;
 
 public class WhereTargettingBlockHere implements WhereTargettingBlock {
 
@@ -27,4 +28,8 @@ public class WhereTargettingBlockHere implements WhereTargettingBlock {
 		return sb;
 	}
 
+	@Override
+	public Syntax requestSyntax() {
+		return null;
+	}
 }
