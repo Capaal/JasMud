@@ -29,7 +29,7 @@ public class SpeedBlock implements ArcanistBlock {
 	public StringBuilder describeOneself(StringBuilder sb) {
 		sb.append(System.lineSeparator());
 		sb.append("Balance time: ");
-		sb.append(duration/1000);
+		sb.append((double)duration/1000);
 		sb.append(" seconds.");
 		sb.append(" Cost: ");
 		sb.append(determineCost());
@@ -38,7 +38,7 @@ public class SpeedBlock implements ArcanistBlock {
 
 	@Override
 	public boolean isValid() {
-		if (duration >= 0) {
+		if (duration > 0) {
 			return true;
 		}
 		return false;

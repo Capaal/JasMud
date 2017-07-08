@@ -3,6 +3,7 @@ package skills.Arcanist.Commands;
 import interfaces.Mobile;
 import processes.SkillBook;
 import processes.Skills;
+import processes.UsefulCommands;
 import skills.Arcanist.ArcanistBuilder;
 import skills.Arcanist.ArcanistSkillbook;
 
@@ -29,11 +30,21 @@ public class ArcanistAnalyze extends Skills {
 			sb.append(". Costing: ");
 			sb.append(currentSkill.calculateManaCost());
 			sb.append(System.lineSeparator() + "Syntax: " + currentSkill.getSyntax());
-			sb.append(System.lineSeparator() + "Build status: " + currentSkill.getCost());
-			if (currentSkill.isValid()) {
-				sb.append(System.lineSeparator() + "is valid for completion.");
+			if (currentSkill.getCost() > 0) {
+				sb.append(UsefulCommands.ANSI.GREEN);
 			} else {
+				sb.append(UsefulCommands.ANSI.RED);
+			}
+			sb.append(System.lineSeparator() + "Build status: " + currentSkill.getCost());
+			sb.append(UsefulCommands.ANSI.SANE);
+			if (currentSkill.isValid()) {
+				sb.append(UsefulCommands.ANSI.GREEN);
+				sb.append(System.lineSeparator() + "is valid for completion.");
+				sb.append(UsefulCommands.ANSI.SANE);
+			} else {
+				sb.append(UsefulCommands.ANSI.RED);
 				sb.append(System.lineSeparator() + "is NOT valid for completion.");
+				sb.append(UsefulCommands.ANSI.SANE);
 			}
 			messageSelf(sb.toString());
 		}

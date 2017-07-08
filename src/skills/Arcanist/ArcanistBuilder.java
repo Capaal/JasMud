@@ -4,6 +4,8 @@ import java.util.List;
 
 import processes.Skills.Syntax;
 import skills.Arcanist.Targetting.TargettingBlock;
+import skills.Arcanist.Targetting.WhereTargettingBlockHere;
+import skills.Arcanist.Targetting.WhoTargettingBlockTarget;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,9 +36,10 @@ public class ArcanistBuilder {
 		description = "Unremarkable";
 		
 		syntaxList = new ArrayList<Syntax>();
-		damageBlock = new DamageBlock(-1, null);
-		speedBlock = new SpeedBlock(-1);
-		targettingBlock = new TargettingBlock(null, null);
+		damageBlock = new DamageBlock(0, null);
+		speedBlock = new SpeedBlock(3);
+		targettingBlock = new TargettingBlock(new WhoTargettingBlockTarget(), new WhereTargettingBlockHere());
+		setSyntax(getTargettingBlock().getSyntax());
 		mana = 0;
 	}
 	

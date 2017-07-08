@@ -6,6 +6,7 @@ import java.util.List;
 import interfaces.Mobile;
 import processes.Location;
 import processes.Skills.Syntax;
+import processes.UsefulCommands;
 import skills.Arcanist.ArcanistBlock;
 import skills.Arcanist.ArcanistSkill;
 
@@ -68,9 +69,13 @@ public class TargettingBlock implements ArcanistBlock {
 	public StringBuilder describeOneself(StringBuilder sb) {
 		if (who != null) {
 			sb = who.describeOneself(sb);
+		} else {
+			sb.append("Who: No one!");
 		}
 		if (where != null) {
 			sb = where.describeOneself(sb);
+		} else {
+			sb.append("Where: Nowhere!");
 		}
 		return sb;
 	}
