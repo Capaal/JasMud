@@ -22,7 +22,7 @@ public class SpeedBlock implements ArcanistBlock {
 
 	@Override
 	public int determineCost() {
-		return (duration - 3000) / 1000 * 20;		
+		return (duration - 3000) * 20 / 1000;		
 	}
 
 	@Override

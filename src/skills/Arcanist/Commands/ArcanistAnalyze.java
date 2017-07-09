@@ -30,7 +30,7 @@ public class ArcanistAnalyze extends Skills {
 			sb.append(". Costing: ");
 			sb.append(currentSkill.calculateManaCost());
 			sb.append(System.lineSeparator() + "Syntax: " + currentSkill.getSyntax());
-			if (currentSkill.getCost() > 0) {
+			if (currentSkill.getCost() >= 0) {
 				sb.append(UsefulCommands.ANSI.GREEN);
 			} else {
 				sb.append(UsefulCommands.ANSI.RED);

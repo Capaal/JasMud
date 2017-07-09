@@ -158,6 +158,10 @@ public abstract class Skills implements Runnable {
 			
 		},
 		
+		COMPONENT() {
+			
+		},
+		
 		LIST() {
 			@Override
 			public String getStringInfo(String fullCommand, Skills s) {

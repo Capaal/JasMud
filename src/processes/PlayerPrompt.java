@@ -168,10 +168,9 @@ public class PlayerPrompt implements Runnable {
 				newPlayer.addSkillBook(s, 100);
 			}
 		} else {
-			sendBack.printMessage("That's not a valid class. Defaulting to Mercenary..."); //temporary ugly default for testings
-			bookList = WorldServer.getGameState().getBooksFromClass("mercenary");
-			newPlayer.setClassName("mercenary");
-			System.out.println(bookList);
+			sendBack.printMessage("That's not a valid class. Defaulting to ADMIN..."); //temporary ugly default for testings
+			bookList = WorldServer.getGameState().getBooksFromClass("admin");
+			newPlayer.setClassName("admin");
 			for (SkillBook s : bookList) {
 				newPlayer.addSkillBook(s, 100);
 			}

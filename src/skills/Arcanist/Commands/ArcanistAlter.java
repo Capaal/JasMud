@@ -86,6 +86,9 @@ public class ArcanistAlter extends Skills {
 		return null;
 	}
 	
+	// Notes about adding new block:
+	// Components skills: Add to a type so it displays.
+	//
 	public enum ArcanistComponentsFactory {
 		
 		DAMAGE() {
@@ -159,7 +162,7 @@ public class ArcanistAlter extends Skills {
 			}
 			@Override
 			public String describeYourself() {
-				return "Alter Speed [Time in Seconds]: Sets resulting balance duration in seconds. Cost: +/- 20/second.";
+				return "Alter Speed [Time in Seconds]: Sets resulting balance duration in seconds. Cost: High";
 			}
 		},
 		
@@ -233,7 +236,7 @@ public class ArcanistAlter extends Skills {
 			}
 			
 			public String describeYourself() {
-				return "Bleed [Starting Intensity]: Intensity decays every tick. Cost: 4 x intensity";
+				return " Alter Bleed [Starting Intensity]: Intensity decays every tick. Cost: High, scales with intensity.";
 			//	return BleedBlock.describeYoursedl(); //?? I dunno, maybe this is smart? Or just do it here? it would be static
 			}
 			

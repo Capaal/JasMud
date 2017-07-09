@@ -33,8 +33,7 @@ public class ArcanistBuilder {
 	// New skill getting started.
 	public ArcanistBuilder(String incomingName) {	
 		this.name = incomingName;
-		description = "Unremarkable";
-		
+		description = "Unremarkable";		
 		syntaxList = new ArrayList<Syntax>();
 		damageBlock = new DamageBlock(0, null);
 		speedBlock = new SpeedBlock(3);

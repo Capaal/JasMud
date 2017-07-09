@@ -123,13 +123,16 @@ public class CreateWorld {
 		mercSkills.addSkill(new Shieldblock(null, null));
 		
 		// ARCANIST SKILLS
-		SkillBook arcanistSkills = new ArcanistSkillbook("arcanist", 5);
+		SkillBook arcanistSkills = new SkillBook("arcanist", 5);
 		WorldServer.getGameState().addBook(5, arcanistSkills);
 		arcanistSkills.addSkill(new ArcanistAlter(null, null));
 		arcanistSkills.addSkill(new ArcanistCreate(null, null));
 		arcanistSkills.addSkill(new ArcanistComplete(null, null));
 		arcanistSkills.addSkill(new ArcanistAnalyze(null, null));
 		arcanistSkills.addSkill(new ArcanistComponents(null, null));
+		
+		SkillBook arcanistSpells = new ArcanistSkillbook("spells", 6);
+		WorldServer.getGameState().addBook(6, arcanistSpells);
 
 		
 		
@@ -153,6 +156,7 @@ public class CreateWorld {
 		booksArcanist.add(WorldServer.getGameState().getBook(1));
 		booksArcanist.add(WorldServer.getGameState().getBook(2));
 		booksArcanist.add(WorldServer.getGameState().getBook(5));
+		booksArcanist.add(WorldServer.getGameState().getBook(6));
 		WorldServer.getGameState().addClass(className, booksArcanist);
 		
 		//admin ...class...
@@ -160,7 +164,8 @@ public class CreateWorld {
 		ArrayList<SkillBook> booksAdmin = new ArrayList<SkillBook>();
 		booksAdmin = addMercBooks(booksAdmin);
 		booksAdmin.add(WorldServer.getGameState().getBook(4)); // ADMIN
-		booksArcanist.add(WorldServer.getGameState().getBook(5)); // ARCANIST
+		booksAdmin.add(WorldServer.getGameState().getBook(5)); // ARCANIST
+		booksAdmin.add(WorldServer.getGameState().getBook(6)); // Arcanist spellbook
 		WorldServer.getGameState().addClass(className, booksAdmin);
 	}
 	
