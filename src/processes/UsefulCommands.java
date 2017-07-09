@@ -105,7 +105,7 @@ public class UsefulCommands {
 	}
 	
 	public static boolean checkIfValidCharacters(String testString) {
-		Pattern pattern = Pattern.compile("[;'~#@*+%{}<>\\[\\]|\"\\_^]");
+		Pattern pattern = Pattern.compile("[;'~#@*+%{}<>\\[\\]|\"\\_^!=]");
 		Matcher matcher = pattern.matcher(testString);
 		if (testString.matches(".*\\d.*") || matcher.find() || testString.equals("")) {
 			return false;

@@ -40,7 +40,7 @@ public class SkillList extends Skills {
 	}
 		
 	private void displayBooks(Map<SkillBook, Integer> books) {
-		messageSelf(UsefulCommands.ANSI.BLUE + "Your skillbooks: " + UsefulCommands.ANSI.SANE);
+		messageSelf(UsefulCommands.ANSI.CYAN + "Your skillbooks: " + UsefulCommands.ANSI.SANE);
 		for (SkillBook b : books.keySet()) {
 			messageSelf(b.getName());
 		}
@@ -48,7 +48,7 @@ public class SkillList extends Skills {
 	}
 	
 	private void displaySkillsInBook(SkillBook sb) {
-		messageSelf(UsefulCommands.ANSI.BLUE + sb.getName() + " skills :" + UsefulCommands.ANSI.SANE);
+		messageSelf(UsefulCommands.ANSI.CYAN + sb.getName() + " skills :" + UsefulCommands.ANSI.SANE);
 		for (Skills sk : sb.viewSkills().values()) {
 			if (sk.getName() != "skills") {
 				messageSelf(sk.getName());

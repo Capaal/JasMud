@@ -55,7 +55,7 @@ public class ArcanistAlter extends Skills {
 		}
 		currentSkill = currentBook.getCurrentSkillBuilder();
 		if (currentSkill == null) {
-			messageSelf("You have not yet began to CREATE a new spell.");
+			messageSelf("You have not yet begun to CREATE a new spell.");
 			return false;
 		}
 		String componentName = Syntax.TARGET.getStringInfo(fullCommand, this);

@@ -25,14 +25,14 @@ public class Messaging extends Skills {
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.SLOT);
 		super.syntaxList.add(Syntax.TARGET);
-		super.syntaxList.add(Syntax.LIST);
+		super.syntaxList.add(Syntax.SAY);
 	}
 
 	//player needs to see that they have messages when logging in
 	@Override
 	protected void performSkill() {
 		keyword = Syntax.SLOT.getStringInfo(fullCommand, this);
-		msg = Syntax.LIST.getStringInfo(fullCommand, this);
+		msg = Syntax.SAY.getStringInfo(fullCommand, this);
 		if (preSkillChecks()) {
 			target = Syntax.TARGET.getStringInfo(fullCommand, this);
 			allPlayers = WorldServer.getGameState().viewAllPlayers();

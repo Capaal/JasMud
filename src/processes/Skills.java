@@ -161,8 +161,8 @@ public abstract class Skills implements Runnable {
 		COMPONENT() {
 			
 		},
-		
-		LIST() {
+		/*
+		 * LIST() {
 			@Override
 			public String getStringInfo(String fullCommand, Skills s) {
 				ArrayList<String> fullCommandArray = new ArrayList<String>(); // To becomes list of each word from fullCommand
@@ -180,6 +180,18 @@ public abstract class Skills implements Runnable {
 				}
 				return "";
 			}			
+		}, */
+		
+		SAY() {
+			@Override
+			public String getStringInfo(String fullCommand, Skills s) {
+				int syntaxPos = s.syntaxList.indexOf(this); 
+				String[] split = fullCommand.split(" ", 2);
+				if (split.length > 1) {
+					return split[syntaxPos];
+				}
+				return "";
+			}		
 		},
 		
 		DIRECTION() {
@@ -194,24 +206,14 @@ public abstract class Skills implements Runnable {
 		},
 		
 		QUANTITY() {		
+
 			@Override
 			public String getStringInfo(String fullCommand, Skills s) {
-				ArrayList<String> fullCommandArray = new ArrayList<String>(); // To becomes list of each word from fullCommand
-				StringTokenizer st = new StringTokenizer(fullCommand);  // Breaks fullCommand into individual words.
-				while (st.hasMoreTokens()) {
-					fullCommandArray.add(st.nextToken()); // adds individual words to fullCommandArray
+				String numerics = super.getStringInfo(fullCommand, s);	
+				if (numerics.matches("[0-9]+")) {
+					return numerics;
 				}
-				int syntaxPos = s.syntaxList.indexOf(this); // Queries THIS skill for the given Syntax (neededInfo) for which position that word should be.
-				if (syntaxPos != -1) { // Would be -1 IF the neededInfo Syntax was NOT defined by this Skill.				
-					if (fullCommandArray.size() > syntaxPos) { // If fullCommand has enough words.
-						String numerics = fullCommandArray.get(syntaxPos);					
-						if (numerics.matches("[0-9]+")) {
-							return fullCommandArray.get(syntaxPos);
-						}
-						return "";
-					}
-				}
-				return "";		
+				return "";
 			}
 		},
 		
@@ -223,15 +225,11 @@ public abstract class Skills implements Runnable {
 		private Syntax() {}
 		
 		public String getStringInfo(String fullCommand, Skills s) {
-			ArrayList<String> fullCommandArray = new ArrayList<String>(); // To becomes list of each word from fullCommand
-			StringTokenizer st = new StringTokenizer(fullCommand);  // Breaks fullCommand into individual words.
-			while (st.hasMoreTokens()) {
-				fullCommandArray.add(st.nextToken()); // adds individual words to fullCommandArray
-			}
+			String[] splitFullCommand = fullCommand.split(" ");
 			int syntaxPos = s.syntaxList.indexOf(this); // Queries THIS skill for the given Syntax (neededInfo) for which position that word should be.
 			if (syntaxPos != -1) { // Would be -1 IF the neededInfo Syntax was NOT defined by this Skill.				
-				if (fullCommandArray.size() > syntaxPos) { // If fullCommand has enough words.
-					return fullCommandArray.get(syntaxPos); // Return the word at the given position.
+				if (splitFullCommand.length > syntaxPos) { // If fullCommand has enough words.
+					return splitFullCommand[syntaxPos]; // Return the word at the given position.
 				}
 			}
 			return "";

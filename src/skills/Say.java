@@ -13,15 +13,15 @@ public class Say extends Skills {
 	public Say(Mobile currentPlayer, String fullCommand) {
 		super("say", "Talking to others nearby.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
-		super.syntaxList.add(Syntax.LIST);
+		super.syntaxList.add(Syntax.SAY);
 	}
 
 	@Override
 	protected void performSkill() {
-		words = Syntax.LIST.getStringInfo(fullCommand, this);
+		words = Syntax.SAY.getStringInfo(fullCommand, this);
 		if (preSkillChecks()) {
 			messageSelf("You say: \"" + words + "\".");
-			messageOthers(currentPlayer.getNameColored() + " says, \"" + Syntax.LIST.getStringInfo(fullCommand, this) + "\".", Arrays.asList(currentPlayer));
+			messageOthers(currentPlayer.getNameColored() + " says, \"" + words + "\".", Arrays.asList(currentPlayer));
 		}
 	}
 	
@@ -36,7 +36,7 @@ public class Say extends Skills {
 			messageSelf("You can't talk.");
 			return false;
 		}
-		words = Syntax.LIST.getStringInfo(fullCommand, this);
+		words = Syntax.SAY.getStringInfo(fullCommand, this);
 		if (words.equals("")) {
 			messageSelf("You utter nothing.");
 			return false;

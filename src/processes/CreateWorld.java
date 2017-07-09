@@ -91,7 +91,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new Who(null, null));
 		generalSkills.addSkill(new CharacterSheet(null, null));
 		generalSkills.addSkill(new RollDice(null, null));
-		
+		generalSkills.addSkill(new ListAll(null, null));
 		
 		//crafting
 		generalSkills.addSkill(new CraftItem(null, null));
@@ -142,7 +142,7 @@ public class CreateWorld {
 		WorldServer.getGameState().addBook(4, adminSkills);
 	}
 	
-	//Classes!
+	//Classes! (1) movement, (2) generals, (3) mercenary, (4) admin, (5) arcanist
 	public static void makeClasses() {
 		//merc class
 		String className = "mercenary";
@@ -162,9 +162,9 @@ public class CreateWorld {
 		//admin ...class...
 		className = "admin";
 		ArrayList<SkillBook> booksAdmin = new ArrayList<SkillBook>();
-		booksAdmin = addMercBooks(booksAdmin);
-		booksAdmin.add(WorldServer.getGameState().getBook(4)); // ADMIN
-		booksAdmin.add(WorldServer.getGameState().getBook(5)); // ARCANIST
+		for (SkillBook b : WorldServer.getGameState().viewAllBooks()) {
+			booksAdmin.add(b);
+		}
 		booksAdmin.add(WorldServer.getGameState().getBook(6)); // Arcanist spellbook
 		WorldServer.getGameState().addClass(className, booksAdmin);
 	}
@@ -756,7 +756,7 @@ public class CreateWorld {
 	
 	public static void makeArmor() {
 		ArmorItemBuilder newItem = new ArmorItemBuilder();
-		newItem.setName("Chainmail");
+		newItem.setName("chainmail");
 		newItem.setWeight(35);
 	//	newItem.complete();
 		WorldServer.getGameState().itemTemplates.put("chainmail", newItem);

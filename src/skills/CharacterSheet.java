@@ -14,8 +14,12 @@ public class CharacterSheet extends Skills {
 	@Override
 	protected void performSkill() {
 		StringBuilder sb = new StringBuilder();
+		sb.append("***********************************");
+		sb.append("\n");
+		sb.append("Character Info");
+		sb.append("\n");
 		sb.append("Name: ");
-		sb.append(currentPlayer.getName());
+		sb.append(currentPlayer.getNameColored());
 		sb.append("\n");
 		sb.append("Health: ");
 		sb.append(currentPlayer.getCurrentHp());
@@ -28,8 +32,11 @@ public class CharacterSheet extends Skills {
 		sb.append("Description: ");
 		sb.append(currentPlayer.getDescription());
 		sb.append("\n");
+		sb.append("***********************************");
+		sb.append("\n");
 		sb.append("More info: [SKILLS] [INVENTORY]");
 		messageSelf(sb.toString());
+		//add age, city?, race?
 	}
 
 	@Override
