@@ -31,15 +31,27 @@ public class ArcanistAlter extends Skills {
 	@Override
 	protected void performSkill() {
 		if (preSkillChecks()) {
-			currentSkill = factory.getBlock(currentSkill, Syntax.ITEM.getStringInfo(fullCommand, this));
-			if (currentSkill == null) {
-				messageSelf("Alteration unsuccessful, the component details were invalid.");				
-			} else {
-				messageSelf("Alteration successful.");
-				if (currentSkill.isValid()) {
-					messageSelf("COMPLETE to finalize this spell.");
+			// Case of DESCRIPTION
+			if (factory.equals(ArcanistComponentsFactory.DESCRIPTION)) {
+				String[] split = fullCommand.split(" ", 3);
+				if (split.length > 2) {
+					currentSkill = factory.getBlock(currentSkill, split[2]);
+					messageSelf("Alteration successful.");
 				} else {
-					messageSelf("Further alteration necessary before spell completion.");
+					messageSelf("Alteration unsuccessful, the component details were invalid.");
+				}
+				// All other cases.
+			} else {
+				currentSkill = factory.getBlock(currentSkill, Syntax.ITEM.getStringInfo(fullCommand, this));
+				if (currentSkill == null) {
+					messageSelf("Alteration unsuccessful, the component details were invalid.");				
+				} else {
+					messageSelf("Alteration successful.");
+					if (currentSkill.isValid()) {
+						messageSelf("COMPLETE to finalize this spell.");
+					} else {
+						messageSelf("Further alteration necessary before spell completion.");
+					}
 				}
 			}
 		}
@@ -47,7 +59,7 @@ public class ArcanistAlter extends Skills {
 
 	@Override
 	protected boolean preSkillChecks() {
-		currentBook = getCurrentBook();
+		currentBook = ArcanistSkillbook.getCurrentBook(currentPlayer);
 		if (currentBook == null) {
 			messageSelf("But you have no book for which to scribe!");
 			System.out.println("Serious bug, player missing ArcanistSkillbook but used ALTER.");
@@ -75,15 +87,6 @@ public class ArcanistAlter extends Skills {
 	@Override
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new ArcanistAlter(currentPlayer, fullCommand);
-	}
-	
-	private ArcanistSkillbook getCurrentBook() {
-		for (SkillBook s : currentPlayer.viewSkillBooks().keySet()) {
-			if (s instanceof ArcanistSkillbook) {
-				return (ArcanistSkillbook)s;
-			}
-		}
-		return null;
 	}
 	
 	// Notes about adding new block:
@@ -209,6 +212,22 @@ public class ArcanistAlter extends Skills {
 				}
 				return sb.toString();
 			}
+		},
+		
+		DESCRIPTION() {
+			@Override
+			public  ArcanistBuilder getBlock(ArcanistBuilder build, String details) {
+				if (!details.equals("")) {
+					build.setDescription(details);
+					return build;
+				}
+				return null;
+			}
+			
+			public String describeYourself() {
+				return " Alter Description [description]: Alters your personal description. Cost: Free!.";
+			}
+			
 		},
 		
 		BLEED() {

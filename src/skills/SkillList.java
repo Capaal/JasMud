@@ -63,7 +63,7 @@ public class SkillList extends Skills {
 			messageSelf("That's not a valid " + sb.getName() + " skill.");
 		} else {
 			messageSelf(toInfo.getDescription());
-			messageSelf("Syntax: " + toInfo.displaySyntax());
+	//		messageSelf("Syntax: " + toInfo.displaySyntax());
 		}
 	}
 	

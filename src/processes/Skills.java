@@ -91,6 +91,8 @@ public abstract class Skills implements Runnable {
 		return false;
 	}
 	
+	
+	
 	public boolean isBlocking(Mobile target) {
 		if (target.isBlocking()) {
 			messageSelf(target.getName() + " deftly blocks your attack.");

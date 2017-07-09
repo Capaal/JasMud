@@ -5,7 +5,6 @@ import java.util.List;
 
 import interfaces.Mobile;
 import processes.Skills;
-import processes.Skills.Syntax;
 import skills.Arcanist.Commands.ArcanistAlter.ArcanistComponentsFactory;
 
 public class ArcanistComponents extends Skills {
@@ -58,7 +57,8 @@ public class ArcanistComponents extends Skills {
 	}
 	
 	private enum ComponentGroups {
-		BASICS(Arrays.asList(ArcanistComponentsFactory.DAMAGE, ArcanistComponentsFactory.MANA, ArcanistComponentsFactory.SPEED)) {
+		BASICS(Arrays.asList(ArcanistComponentsFactory.DAMAGE, ArcanistComponentsFactory.MANA,
+				ArcanistComponentsFactory.SPEED, ArcanistComponentsFactory.DESCRIPTION)) {
 			
 			
 		},

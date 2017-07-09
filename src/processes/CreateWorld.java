@@ -130,6 +130,9 @@ public class CreateWorld {
 		arcanistSkills.addSkill(new ArcanistComplete(null, null));
 		arcanistSkills.addSkill(new ArcanistAnalyze(null, null));
 		arcanistSkills.addSkill(new ArcanistComponents(null, null));
+		arcanistSkills.addSkill(new ArcanistModify(null, null));
+		arcanistSkills.addSkill(new ArcanistDelete(null, null));
+
 		
 		SkillBook arcanistSpells = new ArcanistSkillbook("spells", 6);
 		WorldServer.getGameState().addBook(6, arcanistSpells);

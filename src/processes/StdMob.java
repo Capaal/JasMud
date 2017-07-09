@@ -32,6 +32,8 @@ public class StdMob implements Mobile, Container{
 	protected final int id;
 	protected int maxHp;
 	protected int currentHp; 
+	protected int currentMana;
+	protected int maxMana;
 //	@XStreamOmitField
 	protected Location mobLocation;
 	protected boolean isDead;
@@ -76,6 +78,8 @@ public class StdMob implements Mobile, Container{
 		this.password = build.getPassword();
 		this.maxHp = build.getMaxHp();
 		this.currentHp = getMaxHp();
+		this.maxMana = build.getMaxHp();
+		this.currentMana = maxMana;
 		this.defense = build.getDefense();
 		this.mobLocation = build.getLocation();
 		this.isDead = build.isDead();
@@ -121,6 +125,25 @@ public class StdMob implements Mobile, Container{
 	
 	@Override public String getShortDescription() {
 		return name + shortDescription;
+	}
+	
+	@Override public int getCurrentMana() {
+		return currentMana;
+	}
+	
+	@Override public void changeMana(int change) {
+		if (change < 0) {
+			int allowedMaxChange = currentMana;
+			if (-change > currentMana) {
+				change = -currentMana;
+			}
+		} else {
+			int allowedMaxChange = maxMana - currentMana;
+			if (change > allowedMaxChange) {
+				change = allowedMaxChange;	
+			}
+		}
+		currentMana += change;		
 	}
 	
 	public void addDefense(int i) {
@@ -476,11 +499,22 @@ public class StdMob implements Mobile, Container{
 	
 	@Override
 	public void displayPrompt() {
+		StringBuilder sb = new StringBuilder();
 		String balance = "b";
 		if (!hasBalance()) {
 			balance = "-";
 		}
-		tell(getCurrentHp() + "/" + getMaxHp() + " " + balance + ": ");
+		sb.append(getCurrentHp());
+		sb.append("/");
+		sb.append(getMaxHp());
+		sb.append(" ");
+		sb.append(balance);
+		sb.append(" Mana: ");
+		sb.append(getCurrentMana());
+		sb.append("/");
+		sb.append(maxMana);
+		tell(sb.toString());
+	//	tell(getCurrentHp() + "/" + getMaxHp() + " " + balance + ": ");
 	}
 	
 	@Override

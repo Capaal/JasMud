@@ -20,12 +20,6 @@ public class ArcanistBuilder {
 	private TargettingBlock targettingBlock;
 	private int mana;
 	private List<Syntax> syntaxList;
-
-//	private  ArrayList<ArcanistBlock> addedEffects; // Specically effects that do not hit the target. Necessary? targetted effects are in damage.
-	
-	public ArcanistBuilder(ArcanistSkill skill) {
-		// Create from existing skill. TODO
-	}
 	
 	@SuppressWarnings("unused")
 	private ArcanistBuilder() {} // Not allowed.
@@ -138,5 +132,9 @@ public class ArcanistBuilder {
 
 	public void setMana(int manaCost) {
 		mana = manaCost;
+	}
+
+	public void setDescription(String description2) {
+		description = description2;
 	}
 }

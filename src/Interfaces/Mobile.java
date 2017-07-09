@@ -25,6 +25,8 @@ public interface Mobile extends Container {
 	public String getPassword();
 	public int getMaxHp();
 	public int getCurrentHp();
+	public int getCurrentMana();
+	public void changeMana(int change);	
 	public int getDefense();
 	public void addDefense(int i);
 	public Location getContainer();

@@ -408,4 +408,16 @@ public double getBalanceMult() {
 	return 0;
 }
 
+@Override
+public int getCurrentMana() {
+	// TODO Auto-generated method stub
+	return 0;
+}
+
+@Override
+public void changeMana(int change) {
+	// TODO Auto-generated method stub
+	
+}
+
 }

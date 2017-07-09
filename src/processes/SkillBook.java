@@ -1,13 +1,12 @@
 package processes;
 
-import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
 public class SkillBook {
 
-	private NavigableMap<String, Skills> skillList;
-	private final String name;
+	protected NavigableMap<String, Skills> skillList;
+	protected final String name;
 	private final int id;
 	
 	public SkillBook(String name, int id) {
@@ -18,7 +17,7 @@ public class SkillBook {
 	
 	public void addSkill(Skills newSkill) {
 		synchronized (skillList) {
-			skillList.put(newSkill.name, newSkill);
+			skillList.put(newSkill.name.toLowerCase(), newSkill);
 		}
 	}	
 	
@@ -26,7 +25,7 @@ public class SkillBook {
 		if (skill == null || skill.equals("")) {
 			return null;
 		}
-		return findSkill(skill);
+		return findSkill(skill.toLowerCase());
 	}
 	
 	// TODO change to find via name via how moveHoldable works.
@@ -36,11 +35,6 @@ public class SkillBook {
 			if (s != null && s.startsWith(skill)) {
 				return skillList.get(s);
 			}
-	//		for (Skills s : skillList) {
-	//			if (s.getName().toLowerCase().startsWith(skill.toLowerCase())) {			
-	//				return s;
-	//			}
-	//		}
 		}
 		return null;
 	}

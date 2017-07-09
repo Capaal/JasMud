@@ -52,7 +52,7 @@ public class ArcanistAnalyze extends Skills {
 
 	@Override
 	protected boolean preSkillChecks() {
-		ArcanistSkillbook currentBook = getCurrentBook();
+		ArcanistSkillbook currentBook = ArcanistSkillbook.getCurrentBook(currentPlayer);
 		if (currentBook == null) {
 			messageSelf("But you have no book for which to scribe!");
 			System.out.println("Serious bug, player missing ArcanistSkillbook but used ALTER.");
@@ -64,15 +64,6 @@ public class ArcanistAnalyze extends Skills {
 			return false;
 		}
 		return true;
-	}
-	
-	private ArcanistSkillbook getCurrentBook() {
-		for (SkillBook s : currentPlayer.viewSkillBooks().keySet()) {
-			if (s instanceof ArcanistSkillbook) {
-				return (ArcanistSkillbook)s;
-			}
-		}
-		return null;
 	}
 
 	@Override

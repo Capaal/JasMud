@@ -21,7 +21,7 @@ public class ArcanistCreate extends Skills {
 	@Override
 	protected void performSkill() {
 		spellName = Syntax.TARGET.getStringInfo(fullCommand, this);
-		currentBook = getCurrentBook();
+		currentBook = ArcanistSkillbook.getCurrentBook(currentPlayer);
 		if (preSkillChecks()) {
 			if (currentBook.getCurrentSkillBuilder() != null) {
 				messageSelf("Previous scriblings have been forgotten.");
@@ -65,15 +65,6 @@ public class ArcanistCreate extends Skills {
 			}
 		}
 		return false; 
-	}
-	
-	private ArcanistSkillbook getCurrentBook() {
-		for (SkillBook s : currentPlayer.viewSkillBooks().keySet()) {
-			if (s instanceof ArcanistSkillbook) {
-				return (ArcanistSkillbook)s;
-			}
-		}
-		return null;
 	}
 	
 	private boolean improperName() {

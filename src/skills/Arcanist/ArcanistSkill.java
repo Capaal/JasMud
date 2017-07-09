@@ -6,6 +6,8 @@ import java.util.List;
 import interfaces.Mobile;
 import processes.Skills;
 import skills.Arcanist.Targetting.TargettingBlock;
+import skills.Arcanist.Targetting.WhereTargettingBlockHere;
+import skills.Arcanist.Targetting.WhoTargettingBlockTarget;
 
 public class ArcanistSkill extends Skills {
 	
@@ -26,7 +28,7 @@ public class ArcanistSkill extends Skills {
 		targettingBlock = build.getTargettingBlock();
 		manaCost = build.getMana();
 	}
-	// Syntax?
+	
 	public ArcanistSkill(ArcanistSkill self, Mobile currentPlayer, String fullCommand) {
 		super(self.getName(), self.getDescription(), currentPlayer, fullCommand);
 		super.syntaxList.addAll(self.syntaxList);
@@ -68,7 +70,7 @@ public class ArcanistSkill extends Skills {
 			messages(); // Still messages people who block.
 			damageBlock.perform(this);
 			speedBlock.perform(this);
-			// TODO subtract from MANA
+			currentPlayer.changeMana(-manaCost);
 		}
 	}
 	
@@ -90,6 +92,9 @@ public class ArcanistSkill extends Skills {
 		if (!hasBalance()) {
 			return false;
 		}	
+		if (!hasMana()) {
+			return false;
+		}
 //		if (isBlocking(finalTarget)) {  // Actually true? an effect to get extra points? oh geeze. Also, AOE doesn't care here? // Cost to make unblockable?
 //			return false;
 //		}
@@ -99,9 +104,28 @@ public class ArcanistSkill extends Skills {
 		}
 		return true;
 	}
+	
+	public boolean hasMana() {
+		if (currentPlayer.getCurrentMana() < manaCost) {
+			messageSelf("You're too mentally drained to cast.");
+			return false;
+		}
+		return true;
+	}
 
 	@Override
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new ArcanistSkill(this, currentPlayer, fullCommand);
+	}
+	
+	public ArcanistBuilder getNewBuilder() {
+		ArcanistBuilder build = new ArcanistBuilder(getName());
+		build.setDescription(getDescription());
+		build.setDamage(damageBlock);
+		build.setSpeed(speedBlock);
+		build.setTargettingBlock(targettingBlock);
+		build.setSyntax(targettingBlock.getSyntax());
+		build.setMana(manaCost);
+		return build;
 	}
 }
