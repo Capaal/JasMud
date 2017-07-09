@@ -7,18 +7,6 @@ import java.util.regex.Pattern;
 
 
 public class UsefulCommands {
-	// Converts a single incoming word so that first letter is capitalized.
-	public static String firstToCap(String str) {
-		StringBuffer sb2 = new StringBuffer();
-		int i;
-		char firstch = str.charAt(0);
-		sb2.append(Character.toUpperCase(firstch));
-		for (i = 1;  i < str.length();  i++) {
-	     	char ch = str.charAt(i);
-			sb2.append(ch);
-		}
-		return sb2.toString();
-	}
 	// Converts incoming word so that only numbers are returned.
 	public static String getOnlyNumerics(String str) {
 	   	if (str == null) {
@@ -59,26 +47,6 @@ public class UsefulCommands {
 	    return true;
 	}
 	
-	public static String getFirstWord(String fullCommand) {
-		StringTokenizer st = new StringTokenizer(fullCommand);
-		if (st.hasMoreTokens()) {
-			return st.nextToken();
-		}
-		return null;
-	}
-	
-	public static String getSecondWord(String fullCommand) {
-		return getFirstWord(returnTarget(fullCommand));
-	}
-	
-	public static String getThirdWord(String fullCommand) {
-		return getFirstWord(returnTarget(returnTarget(fullCommand)));
-	}
-	
-//	public static String getForthWord(String fullCommand) {
-//		return getFirstWord(returnTarget(returnTarget(returnTarget(fullCommand))));
-//	}
-	
 	// Converts incoming word so that numbers are stripped out and only letters are returned.
 	public static String getOnlyStrings(String str) {
 		if (str == null) {
@@ -94,72 +62,13 @@ public class UsefulCommands {
 		}
 		return strBuff.toString();
 	}
+	
 	// Returns a set stringTokenizer.
 	public static StringTokenizer getST(String fullCommand) {
 		StringTokenizer st = new StringTokenizer(fullCommand);
 		st.nextToken();
 		return st;
 	}
-	
-	// Removes first word of command, returns rest of command.
-	public static String returnTarget(String fullCommand) {
-		StringBuffer sb = new StringBuffer();
-		StringTokenizer st = new StringTokenizer(fullCommand);
-		st.nextToken();
-		if (st.hasMoreTokens()) {
-			sb.append(st.nextToken());
-		} else {
-			return "";
-		}
-		while (st.hasMoreTokens()) {
-			sb.append(" " + st.nextToken());
-		} 
-		return sb.toString();
-	}
-	
-	/*public static TreeMap<String, String> fullDir;
-	
-	public static String getDirName(String dir) {		
-		if (fullDir == null) {
-			fullDir = new TreeMap<String, String>();
-			fullDir.put("n", "north");
-			fullDir.put("ne", "northeast");
-			fullDir.put("e","east");
-			fullDir.put("s", "south");
-			fullDir.put("se", "southeast");			
-			fullDir.put("sw", "southwest");
-			fullDir.put("w", "west");
-			fullDir.put("nw", "northwest");
-			fullDir.put("in", "in");
-			fullDir.put("o", "out");
-			fullDir.put("u", "up");
-			fullDir.put("d", "down");
-		}
-		if (fullDir.containsValue(dir)) {
-			return dir;
-		} else if (fullDir.containsKey(dir)) {
-			return fullDir.get(dir);
-		} else {
-			for (String s : fullDir.values()) {
-				if (s.startsWith(dir)) {
-					return s;
-				}
-			}
-		}
-		return null;
-	}*/
-	
-	// Gets player prompt (Give all player prompts an ID that represents that connection?)
-	/*public static PlayerPrompt getPlayerPromptFromPlayer(Mobile currentPlayer) {
-		Iterator iter = WorldServer.activeClients.iterator();
-		while (iter.hasNext()) {
-			PlayerPrompt t = (PlayerPrompt) iter.next();
-			if (t.getCurrentPlayer().getName().equals(currentPlayer.getName())) {
-				return t;
-			}
-		}	
-		return null;
-	}*/
 	
 	public final class ANSI {
 
@@ -195,58 +104,6 @@ public class UsefulCommands {
 		private ANSI() {} // disable automatic constructor
 	}
 	
-	
-	
-	//Obsolete?
-/*	public static int getPosID(int i) {
-		boolean fail = false;
-		int posID = (i);
-		for (int j = 0; j < WorldServer.gameState.allItems.size(); j++) {
-			if (WorldServer.gameState.allItems.get(j).getId() == posID) {
-				posID = getPosID(posID+1);
-				fail = true;
-				break;
-			}
-		}
-		if (fail == false) {
-			return posID;
-		}
-	return posID;
-	}*/
-	
-	// string, container to holdable
-/*	public static Holdable stringToHoldable(String item, Collection<Holdable> place) {
-		for (Holdable h : place) {
-			String tempItemName = h.getName().toLowerCase();
-			if (tempItemName.equals(item) || (tempItemName + h.getId()).equals(item)) {
-				return h;
-			}
-		}
-		return null;
-			
-	}*/
-	
-	private static ArrayList<String> effectList;
-	public static boolean isValidEffect(String effect) {
-		if (effectList == null) {
-			effectList = new ArrayList<String>();
-			effectList.add("bleed");
-		}
-		if (effectList.contains(effect)) {
-			return true;
-		}
-		return false;
-	}
-	/*
-	public static void tellAllInRoom(String canSeeDesc, Container loc) {
-		for (Holdable i : loc.getInventory()) {
-			if (i instanceof Mobile) {
-				((Mobile) i).tell(canSeeDesc);
-			}
-		}
-		
-	}*/
-	
 	public static boolean checkIfValidCharacters(String testString) {
 		Pattern pattern = Pattern.compile("[;'~#@*+%{}<>\\[\\]|\"\\_^]");
 		Matcher matcher = pattern.matcher(testString);
@@ -277,23 +134,4 @@ public class UsefulCommands {
 			}			
 		}
 	}
-	
-	/* Obsolete
-	public static void displayToAllLocation(Location location, String message) {
-		Iterator iter = WorldServer.activeClients.iterator();
-		while (iter.hasNext()) {
-			PlayerPrompt t = (PlayerPrompt) iter.next();
-			if (t.currentPlayer.getMobLocation() == location) {
-				t.sendBack.printSpace();
-				t.sendBack.printMessage(message);
-				displayPrompt(t.currentPlayer);
-	//			String balance = "b";
-	//			if (t.currentPlayer.balance == false) {
-	//				balance = "-";
-	//			}
-	//			t.sendBack.printMessageLine(t.currentPlayer.currentHp + "/" + t.currentPlayer.maxHp + 
-	//					" " + balance + ": ");
-			}				
-		}
-	}	*/
 }
