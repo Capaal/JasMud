@@ -7,6 +7,7 @@ import java.util.List;
 
 import effects.PassiveCondition;
 import interfaces.Holdable;
+import interfaces.InformsAggro;
 import interfaces.Mobile;
 import items.StdItem;
 import items.Weapon;
@@ -14,9 +15,8 @@ import processes.Location;
 import processes.Equipment;
 import processes.Skills;
 import processes.Type;
-import skills.Sleep;
 
-public class DualAttack extends Skills {
+public class DualAttack extends Skills implements InformsAggro {
 
     private int intensity = 8;
 //    private Mobile finalTarget; //replaced with targets list
@@ -45,6 +45,7 @@ public class DualAttack extends Skills {
         checkMercWeapons();
         regularRun();
     	currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance()); 
+    	informLastAggressor();
     }
 
     @Override
@@ -150,6 +151,15 @@ public class DualAttack extends Skills {
     @Override
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new DualAttack(currentPlayer, fullCommand);
+	}
+    
+    @Override
+	public void informLastAggressor() {
+    	if (targets != null) {
+    		for (Mobile m : targets) {
+    			m.informLastAggressor(currentPlayer);
+    		}
+    	}
 	}
 }
 

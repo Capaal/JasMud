@@ -6,10 +6,8 @@ import java.util.List;
 import interfaces.Mobile;
 import processes.Skills;
 import skills.Arcanist.Targetting.TargettingBlock;
-import skills.Arcanist.Targetting.WhereTargettingBlockHere;
-import skills.Arcanist.Targetting.WhoTargettingBlockTarget;
 
-public class ArcanistSkill extends Skills {
+public class ArcanistSkill extends Skills implements interfaces.InformsAggro {
 	
 	private final DamageBlock damageBlock;
 	private final SpeedBlock speedBlock;
@@ -71,6 +69,7 @@ public class ArcanistSkill extends Skills {
 			damageBlock.perform(this);
 			speedBlock.perform(this);
 			currentPlayer.changeMana(-manaCost);
+			informLastAggressor();
 		}
 	}
 	
@@ -127,5 +126,15 @@ public class ArcanistSkill extends Skills {
 		build.setSyntax(targettingBlock.getSyntax());
 		build.setMana(manaCost);
 		return build;
+	}
+
+	// Assumes all arcanist spells will cause aggro EXCEPT for heals. // TODO bit hacky, what about slight heal + paralyze?
+	@Override
+	public void informLastAggressor() {
+		if (currentData != null && !(damageBlock instanceof DamageBlockHeal)) {
+			for (Mobile m : currentData.targets) {
+				m.informLastAggressor(getCurrentPlayer());
+			}			
+		}		
 	}
 }

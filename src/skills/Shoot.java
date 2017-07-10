@@ -6,16 +6,16 @@ import java.util.Set;
 
 import effects.PassiveCondition;
 import interfaces.Holdable;
+import interfaces.InformsAggro;
 import interfaces.Mobile;
 import items.StdItem;
-import processes.Equipment;
 import processes.Equipment.EquipmentSlot;
 import processes.Location;
 import processes.Location.Direction;
 import processes.Skills;
 import processes.Type;
 
-public class Shoot extends Skills {
+public class Shoot extends Skills implements InformsAggro {
 	
 	private int intensity = 20;
 	private Set<Location> allLocations;
@@ -42,6 +42,7 @@ public class Shoot extends Skills {
 			finalTarget.informLastAggressor(currentPlayer);
 			finalTarget.takeDamage(Type.SHARP, calculateDamage());
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+			informLastAggressor();
 		}
 	}		
 		
@@ -141,5 +142,10 @@ public class Shoot extends Skills {
 	@Override
 	public String displaySyntax() {
 		return "SHOOT [TARGET] (DIR)";
+	}
+	
+	@Override
+	public void informLastAggressor() {
+		finalTarget.informLastAggressor(currentPlayer);
 	}
 }

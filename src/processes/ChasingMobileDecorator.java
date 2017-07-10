@@ -1,63 +1,53 @@
 package processes;
 
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import processes.Location.Direction;
 import skills.Move;
-import interfaces.Container;
 import interfaces.Mobile;
 
 public class ChasingMobileDecorator extends MobileDecorator {
 
+	private final Skills appointedSkill =  new Move(null, null);
+	
 	private Mobile lastAggressor;
-	private Boolean hasTask = false;
+	private int noTargetTimer = 0;	
+	private ScheduledFuture<?> future;
+	
 	
 	public ChasingMobileDecorator(Mobile decoratedMobile) {
 		super(decoratedMobile);
 	}
 	
-	@Override
-	public void takeDamage(Type types, int d) {
-		decoratedMobile.takeDamage(types, d);
-		if (!hasTask) {
-			executor.schedule(new AITask(this), 100, TimeUnit.MILLISECONDS);
-			hasTask = true;		
-		}		
-	}
-	
 	public void makeDecision() {
-		if (decoratedMobile.isDead()) {
-			hasTask = false;
+		if (decoratedMobile.isDead() || lastAggressor == null) {
+			future.cancel(false);
+			noTargetTimer = 0;
 			return;
 		}
-		if (lastAggressor != null && decoratedMobile.getContainer() instanceof Location && lastAggressor.getContainer() instanceof Location) {
-			Container aggressorLocation = lastAggressor.getContainer();
-			if (!aggressorLocation.equals(decoratedMobile.getContainer())) {
-				Direction toAggressor = ((Location)decoratedMobile.getContainer()).getDirectionToLocation((Location)aggressorLocation);
-				if (toAggressor != null) {
-					StringBuilder sb = new StringBuilder();
-					sb.append("move ");
-					sb.append(toAggressor.toString());
-					Skills move = new Move(this, sb.toString());	
-					WorldServer.getGameState().addToQueue(move);
-			//		move.perform(sb.toString(), this);
-					executor.schedule(new AITask(this), 900, TimeUnit.MILLISECONDS);					
-				} else {
-					hasTask = false;
-				}
-			}			
+		Direction toAggressor = decoratedMobile.getContainer().getDirectionToLocation(lastAggressor.getContainer());
+		if (toAggressor != null) {
+			WorldServer.getGameState().addToQueue(appointedSkill.getNewInstance(decoratedMobile, "chasing " + toAggressor));
+							
 		} else {
-			hasTask = false;
-		}
-		if (hasTask) {
-			executor.schedule(new AITask(this), 900, TimeUnit.MILLISECONDS);
-		}
+			if (decoratedMobile.getContainer() != lastAggressor.getContainer()) {
+				noTargetTimer ++;
+			}
+			if (noTargetTimer == 10) {
+				future.cancel(false);
+				noTargetTimer = 0;
+			}
+		}			
 	}
 	
 	@Override
 	public void informLastAggressor(Mobile mob) {
 		decoratedMobile.informLastAggressor(mob);
 		this.lastAggressor = mob;
+		if (future == null || future.isDone()) {
+			future = WorldServer.getGameState().getEffectExecutor().scheduleWithFixedDelay(() -> makeDecision(), 800, 800, TimeUnit.MILLISECONDS);	
+			noTargetTimer = 0;	
+		}
 	}
-
 }

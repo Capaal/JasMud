@@ -3,13 +3,14 @@ package skills.Mercenary;
 import java.util.Arrays;
 
 import effects.PassiveCondition;
+import interfaces.InformsAggro;
 import interfaces.Mobile;
 import processes.Equipment.EquipmentSlot;
 import processes.Skills;
 import processes.Type;
 
 //TODO only breaks arms, legs disabled.
-public class BreakLimb extends Skills {
+public class BreakLimb extends Skills implements InformsAggro {
 
 	private Mobile finalTarget;
 	private EquipmentSlot slot;
@@ -44,6 +45,7 @@ public class BreakLimb extends Skills {
 			messageSelf("You target a specific limb and hit " + finalTarget.getNameColored() + " really hard.");
 		//	messageTarget(currentPlayer.getName() + " hits you with a targetted punch.", Arrays.asList(finalTarget));
 			messageOthers(currentPlayer.getNameColored() + " punches " + finalTarget.getNameColored() + " harder than usual.", Arrays.asList(currentPlayer, finalTarget));
+			informLastAggressor();
 		}
 	}
 	
@@ -105,4 +107,8 @@ public class BreakLimb extends Skills {
 		return new BreakLimb(currentPlayer, fullCommand);
 	}
 
+	@Override
+	public void informLastAggressor() {
+		finalTarget.informLastAggressor(currentPlayer);
+	}
 }

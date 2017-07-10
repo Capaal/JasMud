@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import effects.PassiveCondition;
 import interfaces.Holdable;
+import interfaces.InformsAggro;
 import interfaces.Mobile;
 import items.StdItem;
 import items.Weapon;
@@ -14,7 +15,7 @@ import processes.Skills;
 import processes.Type;
 import skills.Sleep;
 
-public class Attack extends Skills {
+public class Attack extends Skills implements InformsAggro {
 
     private final int intensity = 8;
     private final double balAdjust = 1; 
@@ -38,6 +39,7 @@ public class Attack extends Skills {
         if (preSkillChecks()) {	
 			messageSelf("You attack " + target.getName() + " with your " + possWeapon.getName() + ".");
 			messageTarget(currentPlayer.getName() + " attacks you with a " + possWeapon.getName() + ".", Arrays.asList(target));
+			informLastAggressor();
 			//applies effect and poison
 			//TODO message others
 			if (possWeapon instanceof Weapon) {
@@ -153,6 +155,11 @@ public class Attack extends Skills {
     @Override
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new Attack(currentPlayer, fullCommand);
+	}
+    
+    @Override
+	public void informLastAggressor() {
+    	target.informLastAggressor(currentPlayer);
 	}
 }
 

@@ -1,50 +1,37 @@
 package processes;
 
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import skills.Punch;
 import interfaces.Mobile;
 
 public class AggresiveMobileDecorator extends MobileDecorator {
-
 	
-	private Mobile lastAggressor;
-	private Boolean hasTask = false;
+	private final Skills appointedSkill = new Punch(null, null);
+	
+	private Mobile lastAggressor;		
+	private int noTargetTimer = 0;	
+	private ScheduledFuture<?> future;
 	
 	public AggresiveMobileDecorator(Mobile decoratedMobile) {
 		super(decoratedMobile);
 	}
 	
-	// Real problem of many attacks is here. Should NOT schedule a new AITask always. maybe clear last task, (but then hitting resets)
-	// So, AI just starts attacking, and it's "lastAggressor" might change, but otherwise it's timer to attack keeps running.
-	// Until last aggressor = null or it tries to punch and find's it's aggressor is gone.
-	// In which case, the currently stored AITASK should go to null.
-	@Override
-	public void takeDamage(Type types, int d) {
-		decoratedMobile.takeDamage(types, d);
-		if (!hasTask) {
-			executor.schedule(new AITask(this), 400, TimeUnit.MILLISECONDS);
-			hasTask = true;		
-		}		
-	}
-	
-	// Will create another scheduler of attacks every time attacked, BAD
-	// If player QUITS, will still keep trying to punch (but block returns false).
-	// Should hold onto AITask, to consider clearing it?
 	public void makeDecision() {
-		if (decoratedMobile.isDead()) {
-			hasTask = false;
-			return;
+		if (decoratedMobile.isDead() || lastAggressor == null) {
+			future.cancel(false);
+			noTargetTimer = 0;
+			return;			
 		}
-		if (lastAggressor != null && lastAggressor.getContainer().equals(decoratedMobile.getContainer() ) && !lastAggressor.isDead()) {
-			StringBuilder sb = new StringBuilder();
-			sb.append("punch ");
-			sb.append(lastAggressor.getName());
-			Skills basicSkill = new Punch(this, sb.toString());			
-			WorldServer.getGameState().addToQueue(basicSkill);
-			executor.schedule(new AITask(this), 900, TimeUnit.MILLISECONDS);
+		if (lastAggressor.getContainer().equals(decoratedMobile.getContainer() )) {
+			WorldServer.getGameState().addToQueue(appointedSkill.getNewInstance(decoratedMobile, "attacking " + lastAggressor.getName()));
 		} else {
-			hasTask = false;
+			noTargetTimer ++;
+			if (noTargetTimer == 10) {
+				future.cancel(false);
+				noTargetTimer = 0;
+			}
 		}
 	}
 	
@@ -52,6 +39,10 @@ public class AggresiveMobileDecorator extends MobileDecorator {
 	public void informLastAggressor(Mobile mob) {
 		decoratedMobile.informLastAggressor(mob);
 		this.lastAggressor = mob;
+		if (future == null || future.isDone()) {
+			future = WorldServer.getGameState().getEffectExecutor().scheduleWithFixedDelay(() -> makeDecision(), 800, 800, TimeUnit.MILLISECONDS);
+			noTargetTimer = 0;
+		}
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import effects.PassiveCondition;
 import interfaces.Holdable;
+import interfaces.InformsAggro;
 import interfaces.Mobile;
 import items.StdItem;
 import processes.Location;
@@ -11,7 +12,7 @@ import processes.Skills;
 import processes.Type;
 import processes.Location.Direction;
 
-public class Throw extends Skills {
+public class Throw extends Skills implements InformsAggro {
 	
 	private final int BASEDAMAGE = 8;
 	private final int BASEBALANCE = 3000;
@@ -39,6 +40,7 @@ public class Throw extends Skills {
 		messageTarget(currentPlayer.getNameColored() + " throws " + itemToThrow.getName() + " at you.", Arrays.asList(finalTarget));
 		messageOthers(currentPlayer.getNameColored() + " throws " + itemToThrow.getName() + " at " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget));
 		messageOthersAway(finalTarget.getNameColored() + "is hit with a thrown " +  itemToThrow.getName() + ".", Arrays.asList(finalTarget), finalLoc);
+		informLastAggressor();
 	}	
 	
 	@Override
@@ -131,5 +133,10 @@ public class Throw extends Skills {
 	@Override
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new Throw(currentPlayer, fullCommand);
+	}
+	
+	@Override
+	public void informLastAggressor() {
+		finalTarget.informLastAggressor(currentPlayer);
 	}
 }

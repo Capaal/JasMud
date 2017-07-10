@@ -4,11 +4,12 @@ import java.util.Arrays;
 
 import effects.PassiveCondition;
 import interfaces.Holdable;
+import interfaces.InformsAggro;
 import interfaces.Mobile;
 import processes.Skills;
 import processes.Type;
 
-public class Punch extends Skills {
+public class Punch extends Skills implements InformsAggro{
 	
 	private final int intensity = 10;
 	private String targetName;
@@ -17,8 +18,8 @@ public class Punch extends Skills {
 	
 	public Punch(Mobile currentPlayer, String fullCommand) {
 		super("punch", "Throwing a quick punch.", currentPlayer, fullCommand);
-		super.syntaxList.add(Syntax.SKILL);
-		super.syntaxList.add(Syntax.TARGET);
+		syntaxList.add(Syntax.SKILL);
+		syntaxList.add(Syntax.TARGET);
 	}	
 	
 	// Deals damage to a single target in currentPlayer's location
@@ -27,9 +28,8 @@ public class Punch extends Skills {
 	protected void performSkill() {
 		targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
 		if (preSkillChecks()) {
-			finalTarget.informLastAggressor(currentPlayer);
+			informLastAggressor();
 			finalTarget.takeDamage(Type.BLUNT, calculateDamage());
-			System.out.println(calculateBalance());
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
 			messageSelf("You punch " + finalTarget.getName());
 			messageTarget(currentPlayer.getNameColored() + " punches you.", Arrays.asList(finalTarget));
@@ -83,5 +83,10 @@ public class Punch extends Skills {
 	@Override
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new Punch(currentPlayer, fullCommand);
+	}
+
+	@Override
+	public void informLastAggressor() {
+		finalTarget.informLastAggressor(currentPlayer);
 	}
 }

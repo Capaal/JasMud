@@ -6,7 +6,7 @@ import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Skills;
 
-public class Root extends Skills{
+public class Root extends Skills implements interfaces.InformsAggro {
 
 	private Mobile finalTarget;
 	
@@ -24,6 +24,7 @@ public class Root extends Skills{
 			messageSelf("Strong, ropey vines curl out of your hands towards " + finalTarget.getNameColored() + " and wrap themselves tightly around " + "their feet."); //finalTarget.getGenderHimHer()
 			messageTarget("Vines suddenly encircle your feet and root you to the spot.", Arrays.asList(finalTarget));
 			messageOthers("Living vines fly out from " + currentPlayer.getNameColored() + "'s hands and firmly binds " + finalTarget.getNameColored() + " to the ground.", Arrays.asList(currentPlayer, finalTarget)); 
+			informLastAggressor();
 		}
 	}
 	
@@ -62,5 +63,9 @@ public class Root extends Skills{
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new Root(currentPlayer, fullCommand);
 	}
-
+	
+	@Override
+	public void informLastAggressor() {
+		finalTarget.informLastAggressor(currentPlayer);
+	}
 }

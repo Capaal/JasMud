@@ -3,12 +3,13 @@ package skills.Mercenary;
 import java.util.Arrays;
 
 import effects.PassiveCondition;
+import interfaces.InformsAggro;
 import interfaces.Mobile;
 import processes.Skills;
 import processes.Type;
 import skills.Sleep;
 
-public class SpinKick extends Skills {
+public class SpinKick extends Skills implements InformsAggro {
 
 	private Mobile finalTarget;
 	private final int intensity = 8;
@@ -34,6 +35,7 @@ public class SpinKick extends Skills {
 			messageSelf("You spin around really fast and kick " + finalTarget.getNameColored() + ".");
 			messageTarget(currentPlayer.getNameColored() + " makes you stumble with a dizzying kick.", Arrays.asList(finalTarget));
 			messageOthers(currentPlayer.getNameColored() + " spins and kicks " + finalTarget.getNameColored() + ".", Arrays.asList(currentPlayer, finalTarget));
+			informLastAggressor();
 		}
 	}
 	
@@ -68,4 +70,9 @@ public class SpinKick extends Skills {
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new SpinKick(currentPlayer, fullCommand);
 	}
+	
+	 @Override
+		public void informLastAggressor() {
+			finalTarget.informLastAggressor(currentPlayer);
+		}
 }

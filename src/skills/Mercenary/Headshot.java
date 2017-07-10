@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import effects.PassiveCondition;
+import interfaces.InformsAggro;
 import interfaces.Mobile;
 import processes.Equipment;
 import processes.Equipment.EquipmentSlot;
@@ -15,7 +16,7 @@ import processes.Type;
 import processes.Location.Direction;
 import skills.Sleep;
 
-public class Headshot extends InductionSkill {
+public class Headshot extends InductionSkill implements InformsAggro {
 	
 	private int intensity = 30;
 	private Set<Location> allLocations;
@@ -50,6 +51,7 @@ public class Headshot extends InductionSkill {
 			messageTarget(currentPlayer.getNameColored() + " headshots you.", Arrays.asList(finalTarget));
 			messageOthers(currentPlayer.getNameColored() + " headshots " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget));	
 			messageOthersAway(currentPlayer.getNameColored() + " headshots " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget), finalTarget.getContainer());	
+			informLastAggressor();
 		}
 
 		@Override
@@ -180,5 +182,10 @@ public class Headshot extends InductionSkill {
 	@Override
 	public String displaySyntax() {
 		return "HEADSHOT [TARGET] (DIR)";
+	}
+	
+	@Override
+	public void informLastAggressor() {
+		finalTarget.informLastAggressor(currentPlayer);
 	}
 }

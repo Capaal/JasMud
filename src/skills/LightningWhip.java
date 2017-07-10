@@ -3,12 +3,13 @@ package skills;
 import java.util.Arrays;
 
 import effects.PassiveCondition;
+import interfaces.InformsAggro;
 import interfaces.Mobile;
 import processes.InductionSkill;
 import processes.Skills;
 import processes.Type;
 
-public class LightningWhip extends InductionSkill {
+public class LightningWhip extends InductionSkill implements InformsAggro {
 	
 	private int intensity = 10;
 	private String possibleTarg;
@@ -41,7 +42,8 @@ public class LightningWhip extends InductionSkill {
 			finalTarget.takeDamage(Type.COLD, calculateDamage());
 			messageSelf("Your lightning whip hits " + finalTarget.getNameColored() + ".");
 			messageTarget(currentPlayer.getNameColored() + " lightning lashes you.", Arrays.asList(finalTarget));
-			messageOthers(currentPlayer.getNameColored() + " whips " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget));	
+			messageOthers(currentPlayer.getNameColored() + " whips " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget));
+			informLastAggressor();
 		}
 
 		@Override
@@ -112,5 +114,10 @@ public class LightningWhip extends InductionSkill {
 	@Override
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new LightningWhip(currentPlayer, fullCommand);
+	}
+	
+	@Override
+	public void informLastAggressor() {
+		finalTarget.informLastAggressor(currentPlayer);
 	}
 }

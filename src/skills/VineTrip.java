@@ -2,13 +2,12 @@ package skills;
 
 import java.util.Arrays;
 
-import effects.Levitate;
 import effects.PassiveCondition;
+import interfaces.InformsAggro;
 import interfaces.Mobile;
 import processes.Skills;
-import processes.Skills.Syntax;
 
-public class VineTrip extends Skills{
+public class VineTrip extends Skills implements InformsAggro {
 	
 	private Mobile finalTarget;
 	private final int BASEBALANCE = 2000;
@@ -28,6 +27,7 @@ public class VineTrip extends Skills{
 			messageSelf("You encourage a vine to get in the way.");
 			messageTarget("A vine shoots out by your feet and trips you.", Arrays.asList(finalTarget));
 			messageOthers("A vine trips " + finalTarget.getNameColored() + ".", Arrays.asList(currentPlayer, finalTarget));
+			informLastAggressor();
 		}
 	}
 	
@@ -59,5 +59,10 @@ public class VineTrip extends Skills{
 	@Override
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new VineTrip(currentPlayer, fullCommand);
+	}
+	
+	@Override
+	public void informLastAggressor() {
+		finalTarget.informLastAggressor(currentPlayer);
 	}
 }

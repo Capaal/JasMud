@@ -3,11 +3,8 @@ package processes;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Map;
-import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 import processes.Equipment.EquipmentSlot;
 import effects.PassiveCondition;
@@ -15,16 +12,36 @@ import interfaces.Cooldown;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import interfaces.TickingEffect;
-import items.Plant.PlantType;
 import items.StdItem;
 
 public class MobileDecorator implements Mobile {
 
 	protected final Mobile decoratedMobile;
-	protected static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 	
 	public MobileDecorator(Mobile decoratedMobile) {
 		this.decoratedMobile = decoratedMobile;
+	}
+	
+	public void makeDecision() {}
+	
+	public enum DecoratorType {
+			
+		AGGRESSIVE() {
+			@Override
+			public Mobile getDecorator(Mobile m) {
+				return new AggresiveMobileDecorator(m);
+			}
+		},
+		CHASING() {
+			@Override
+			public Mobile getDecorator(Mobile m) {
+				return new ChasingMobileDecorator(m);
+			}
+		};	
+		
+		private DecoratorType() {}
+		
+		public abstract Mobile getDecorator(Mobile m);
 	}
 
 	@Override
@@ -206,47 +223,8 @@ public class MobileDecorator implements Mobile {
 
 	@Override
 	public void informLastAggressor(Mobile aggressor) {
-		decoratedMobile.informLastAggressor(aggressor);
-		
-	}
-	
-	public void makeDecision() {}
-	
-public enum DecoratorType {
-		
-		AGGRESSIVE() {
-			@Override
-			public Mobile getDecorator(Mobile m) {
-				return new AggresiveMobileDecorator(m);
-			}
-		},
-		CHASING() {
-			@Override
-			public Mobile getDecorator(Mobile m) {
-				return new ChasingMobileDecorator(m);
-			}
-		};	
-		
-		private DecoratorType() {}
-		
-		public Mobile getDecorator(Mobile m) {
-			return m;
-		}
-	}
-
-
-	public class AITask implements Runnable {
-		
-		private MobileDecorator mobAI;
-		
-		public AITask(MobileDecorator decoratedMobile) {
-			this.mobAI = decoratedMobile;
-		}
-		
-		public void run() {
-			mobAI.makeDecision();
-		}
-	}
+		decoratedMobile.informLastAggressor(aggressor);		
+	}	
 
 	@Override
 	public boolean isInducting() {
@@ -372,52 +350,44 @@ public enum DecoratorType {
 		return decoratedMobile.viewInventoryWithoutEquipment();
 	}
 
-@Override
+	@Override
 	public String getClassName() {
-		// TODO Auto-generated method stub
-		return null;
+		return decoratedMobile.getClassName();
 	}
-
-@Override
-public void addCooldown(Cooldown c) {
-	// TODO Auto-generated method stub
 	
-}
-
-@Override
-public void removeCooldown(Cooldown c) {
-	// TODO Auto-generated method stub
+	@Override
+	public void addCooldown(Cooldown c) {
+		decoratedMobile.addCooldown(c);
+	}
 	
-}
-
-@Override
-public boolean isOnCooldown(Cooldown c) {
-	// TODO Auto-generated method stub
-	return false;
-}
-
-@Override
-public void changeBalanceMult(double change) {
-	// TODO Auto-generated method stub
+	@Override
+	public void removeCooldown(Cooldown c) {
+		decoratedMobile.removeCooldown(c);
+	}
 	
-}
-
-@Override
-public double getBalanceMult() {
-	// TODO Auto-generated method stub
-	return 0;
-}
-
-@Override
-public int getCurrentMana() {
-	// TODO Auto-generated method stub
-	return 0;
-}
-
-@Override
-public void changeMana(int change) {
-	// TODO Auto-generated method stub
+	@Override
+	public boolean isOnCooldown(Cooldown c) {
+		return decoratedMobile.isOnCooldown(c);
+	}
 	
-}
+	@Override
+	public void changeBalanceMult(double change) {
+		decoratedMobile.changeBalanceMult(change);
+	}
+	
+	@Override
+	public double getBalanceMult() {
+		return decoratedMobile.getBalanceMult();
+	}
+	
+	@Override
+	public int getCurrentMana() {
+		return decoratedMobile.getCurrentMana();
+	}
+	
+	@Override
+	public void changeMana(int change) {
+		decoratedMobile.changeMana(change);
+	}
 
 }

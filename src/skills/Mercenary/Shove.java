@@ -1,19 +1,15 @@
 package skills.Mercenary;
 
-import java.util.Arrays;
-
 import effects.PassiveCondition;
-import interfaces.Holdable;
+import interfaces.InformsAggro;
 import interfaces.Mobile;
 import processes.Location;
 import processes.Skills;
 import processes.WorldServer;
 import processes.Location.Direction;
-import processes.Skills.Syntax;
 import skills.MoveShove;
-import skills.Sleep;
 
-public class Shove extends Skills {
+public class Shove extends Skills implements InformsAggro {
 	
 	private String dir;
 	private Location startContainer;
@@ -38,8 +34,9 @@ public class Shove extends Skills {
 		//	messageOthers(currentPlayer.getName() + " shoves " + finalTarget.getName() + " away.", Arrays.asList(currentPlayer, finalTarget));
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
 			MoveShove move = new MoveShove(finalTarget, "move " + dir + " " + currentPlayer.getName());
-			move.setShover(currentPlayer);
+			move.setShover(currentPlayer); // TODO use last aggressor?
 			WorldServer.getGameState().addToQueue(move);
+			informLastAggressor();
 		//	messageOthersAway(targetName + "is suddenly shoved into this location.", Arrays.asList(finalTarget), endContainer);
 		}
 		
@@ -90,5 +87,11 @@ public class Shove extends Skills {
 	@Override
 	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
 		return new Shove(currentPlayer, fullCommand);
+	}
+
+
+	@Override
+	public void informLastAggressor() {
+		finalTarget.informLastAggressor(currentPlayer);
 	}
 }

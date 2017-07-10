@@ -499,22 +499,11 @@ public class StdMob implements Mobile, Container{
 	
 	@Override
 	public void displayPrompt() {
-		StringBuilder sb = new StringBuilder();
 		String balance = "b";
 		if (!hasBalance()) {
 			balance = "-";
 		}
-		sb.append(getCurrentHp());
-		sb.append("/");
-		sb.append(getMaxHp());
-		sb.append(" ");
-		sb.append(balance);
-		sb.append(" Mana: ");
-		sb.append(getCurrentMana());
-		sb.append("/");
-		sb.append(maxMana);
-		tell(sb.toString());
-	//	tell(getCurrentHp() + "/" + getMaxHp() + " " + balance + ": ");
+		tell(getCurrentHp() + "/" + getMaxHp() + " " + getCurrentMana() + "/" + maxMana + " " + balance);
 	}
 	
 	@Override
