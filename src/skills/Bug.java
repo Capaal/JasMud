@@ -54,9 +54,9 @@ public class Bug extends Skills {
 			} else {
 				
 				Date date = Calendar.getInstance().getTime();
-				SimpleDateFormat dt = new SimpleDateFormat("yyyyMMdd.hhmmss");
+				SimpleDateFormat dt = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 				
-				String thisBug = dt.format(date) + " " + currentPlayer.getName() + ": " + reportedText;
+				String thisBug = "(Date) " + dt.format(date) + " (Player) " + currentPlayer.getName() + ": " + reportedText;
 				
 				FileWriter fw = null;
 					try {
