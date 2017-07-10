@@ -73,7 +73,6 @@ public class FarmerQuest extends Quest {
 		
 		private void createSkeleton() {
 			questSkelly = new MobileBuilder();
-	//		questSkelly.addSkillBook(WorldServer.getGameState().getBook(1));
 			questSkelly.addDecorator(MobileDecorator.DecoratorType.CHASING);
 			questSkelly.addDecorator(MobileDecorator.DecoratorType.AGGRESSIVE);
 			questSkelly.setLocation(questLocation);
@@ -95,7 +94,6 @@ public class FarmerQuest extends Quest {
 			questSkelly.complete();
 			Mobile finishedSkelly = questSkelly.getFinishedMob();
 			finishedSkelly.informLastAggressor(bondedMobile);
-			finishedSkelly.takeDamage(Type.SHARP, 0); // Required to trigger AGGRESSIVE decorator to start attacking.
 			sayHere("Farmer James says: Ahhhh, help me!");
 		}
 		@Override protected void runGives() {

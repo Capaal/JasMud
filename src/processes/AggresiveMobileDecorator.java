@@ -19,7 +19,7 @@ public class AggresiveMobileDecorator extends MobileDecorator {
 	}
 	
 	public void makeDecision() {
-		if (decoratedMobile.isDead() || lastAggressor == null) {
+		if (decoratedMobile.isDead() || lastAggressor == null || lastAggressor.isDead()) {
 			future.cancel(false);
 			noTargetTimer = 0;
 			return;			

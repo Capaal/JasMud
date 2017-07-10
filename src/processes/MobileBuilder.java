@@ -202,7 +202,7 @@ public class MobileBuilder {
 		setMaxHp();	
 		handleId();
 		buildComplete = true;
-		finishedMob = new StdMob(this);		
+		new StdMob(this);		
 		return true;
 	}
 	

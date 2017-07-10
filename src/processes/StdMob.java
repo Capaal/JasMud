@@ -94,7 +94,7 @@ public class StdMob implements Mobile, Container{
 		this.skillBookList = build.getSkillBookList();		
 		this.equipment = build.getEquipment();
 		this.cooldowns = build.getCooldowns();
-		WorldServer.getGameState().addMob(decoratedMob.getName() + decoratedMob.getId(), decoratedMob);
+		WorldServer.getGameState().addMob(decoratedMob.getName() + decoratedMob.getId(), decoratedMob); // TODO What are these 2 doing?
 		WorldServer.getGameState().addNewPlayer(this.name, decoratedMob);
 		decoratedMob.getContainer().acceptItem(decoratedMob);
 		this.messages = new ArrayList<String>();		
