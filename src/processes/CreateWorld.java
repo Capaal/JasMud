@@ -92,7 +92,7 @@ public class CreateWorld {
 		generalSkills.addSkill(new CharacterSheet(null, null));
 		generalSkills.addSkill(new RollDice(null, null));
 		generalSkills.addSkill(new ListAll(null, null));
-		
+		generalSkills.addSkill(new Bug(null, null));
 		//crafting
 		generalSkills.addSkill(new CraftItem(null, null));
 		generalSkills.addSkill(new Salvage(null, null));

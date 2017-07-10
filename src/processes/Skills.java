@@ -184,7 +184,7 @@ public abstract class Skills implements Runnable {
 			}			
 		}, */
 		
-		SAY() {
+		MESSAGE() {
 			@Override
 			public String getStringInfo(String fullCommand, Skills s) {
 				int syntaxPos = s.syntaxList.indexOf(this); 
