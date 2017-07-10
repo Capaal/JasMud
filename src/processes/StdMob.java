@@ -10,9 +10,9 @@ import java.util.*;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
+import MobileAI.MobileDecorator.DecoratorType;
 import effects.*;
 import processes.Equipment.EquipmentSlot;
-import processes.MobileDecorator.DecoratorType;
 import skills.MoveFollow;
 
 /**
@@ -687,6 +687,11 @@ public class StdMob implements Mobile, Container{
 	@Override
 	public double getBalanceMult() {
 		return balanceMult;
+	}
+
+	@Override
+	public void informEntered(Mobile newMob) {
+		// Currently doesn't do anything. AI do care, however. Might inform a running skill? or triggered skills?
 	}
 }
 

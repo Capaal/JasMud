@@ -1,10 +1,12 @@
-package processes;
+package MobileAI;
 
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import skills.Punch;
 import interfaces.Mobile;
+import processes.Skills;
+import processes.WorldServer;
 
 public class AggresiveMobileDecorator extends MobileDecorator {
 	
@@ -18,7 +20,8 @@ public class AggresiveMobileDecorator extends MobileDecorator {
 		super(decoratedMobile);
 	}
 	
-	public void makeDecision() {
+	@Override
+	protected void makeDecision() {
 		if (decoratedMobile.isDead() || lastAggressor == null || lastAggressor.isDead()) {
 			future.cancel(false);
 			noTargetTimer = 0;

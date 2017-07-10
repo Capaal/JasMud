@@ -20,6 +20,7 @@ import processes.Location.Direction;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import MobileAI.MobileDecorator;
 import Quests.FarmerQuest;
 import skills.*;
 import skills.Arcanist.ArcanistSkillbook;
@@ -804,6 +805,7 @@ public class CreateWorld {
 		MobileBuilder newFarmerJames = new MobileBuilder();
 	//	newFarmerJames.addSkillBook(WorldServer.getGameState().getBook(1));
 		newFarmerJames.addDecorator(MobileDecorator.DecoratorType.AGGRESSIVE);
+		newFarmerJames.addDecorator(MobileDecorator.DecoratorType.GREETSONENTER);
 		newFarmerJames.setLocation(WorldServer.getGameState().viewLocations().get(4));
 		newFarmerJames.setName("FarmerJames");
 		newFarmerJames.setDescription("A farmer who looks down on his luck. (try GREETing him)");

@@ -1,4 +1,4 @@
-package processes;
+package MobileAI;
 
 import java.util.Collection;
 import java.util.EnumSet;
@@ -6,6 +6,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import Quests.Quest;
+import processes.ContainerErrors;
+import processes.InductionSkill;
+import processes.Location;
+import processes.SendMessage;
+import processes.SkillBook;
+import processes.Skills;
+import processes.Type;
+import skills.Greet;
 import processes.Equipment.EquipmentSlot;
 import effects.PassiveCondition;
 import interfaces.Cooldown;
@@ -14,7 +23,7 @@ import interfaces.Mobile;
 import interfaces.TickingEffect;
 import items.StdItem;
 
-public class MobileDecorator implements Mobile {
+public abstract class MobileDecorator implements Mobile {
 
 	protected final Mobile decoratedMobile;
 	
@@ -22,7 +31,7 @@ public class MobileDecorator implements Mobile {
 		this.decoratedMobile = decoratedMobile;
 	}
 	
-	public void makeDecision() {}
+	protected abstract void makeDecision();
 	
 	public enum DecoratorType {
 			
@@ -36,6 +45,13 @@ public class MobileDecorator implements Mobile {
 			@Override
 			public Mobile getDecorator(Mobile m) {
 				return new ChasingMobileDecorator(m);
+			}
+		},
+		GREETSONENTER() {
+			@Override
+			public Mobile getDecorator(Mobile m) {
+		//		((Location)currentPlayer.getContainer()).notifyQuest(Quest.Trigger.GREETS);
+				return new EntersMobileDecorator(m, () -> m.getContainer().notifyQuest(Quest.Trigger.GREETS));
 			}
 		};	
 		
@@ -388,6 +404,11 @@ public class MobileDecorator implements Mobile {
 	@Override
 	public void changeMana(int change) {
 		decoratedMobile.changeMana(change);
+	}
+
+	@Override
+	public void informEntered(Mobile newMob) {
+		decoratedMobile.informEntered(newMob);
 	}
 
 }

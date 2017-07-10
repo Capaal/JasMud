@@ -91,6 +91,11 @@ public class Location implements Container {
 	
 	public void acceptItem(Mobile newMob) {
 		mobiles.put(newMob.getName().toLowerCase() + newMob.getId(), newMob);
+		for (Mobile m : mobiles.values()) {
+			m.informEntered(newMob);
+		}
+		// add an items.informEntered()
+		// Add an effects.informEntered();
 	}
 	
 	//TODO implement a null location object?

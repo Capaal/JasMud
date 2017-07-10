@@ -18,8 +18,8 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
 
+import MobileAI.MobileDecorator.DecoratorType;
 import processes.Equipment.EquipmentSlot;
-import processes.MobileDecorator.DecoratorType;
 
 public class MobileBuilder {	
 

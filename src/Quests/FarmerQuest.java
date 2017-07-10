@@ -1,10 +1,10 @@
 package Quests;
 
+import MobileAI.MobileDecorator;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import items.ItemBuilder;
 import processes.MobileBuilder;
-import processes.MobileDecorator;
 import processes.Type;
 import processes.WorldServer;
 

@@ -84,4 +84,5 @@ public interface Mobile extends Container {
 	public boolean isOnCooldown(Cooldown c);
 	public void changeBalanceMult(double change);
 	public double getBalanceMult();
+	public void informEntered(Mobile newMob);
 }
