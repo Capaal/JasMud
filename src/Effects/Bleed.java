@@ -24,7 +24,7 @@ public class Bleed extends TickingEffect {
 	@Override
 	public void run() {
 		currentPlayer.takeDamage(Type.BLEED, intensity);	
-		changeIntensity(-5);
+		changeIntensity(-1);
 		if (intensity <=0) {
 			kill();
 		} else {

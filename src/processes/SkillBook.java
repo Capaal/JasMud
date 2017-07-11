@@ -7,7 +7,7 @@ public class SkillBook {
 
 	protected NavigableMap<String, Skills> skillList;
 	protected final String name;
-	private final int id;
+	protected final int id;
 	
 	public SkillBook(String name, int id) {
 		skillList = new TreeMap<String, Skills>();
@@ -53,15 +53,19 @@ public class SkillBook {
 	
 	protected SkillBook duplicate() {
 		SkillBook newSkillBook = new SkillBook(name, id);
-		newSkillBook.skillList = copySkillList();
+		newSkillBook.setSkillList(copySkillList());
 		return newSkillBook;
 	}
 
-	private NavigableMap<String, Skills> copySkillList() {
+	protected NavigableMap<String, Skills> copySkillList() {
 		NavigableMap<String, Skills> newList = new TreeMap<String, Skills>();
 		for (Skills s : skillList.values()) {
 			newList.put(s.name, s.getNewInstance(null, null));
 		}
 		return newList;
+	}
+
+	public void setSkillList(NavigableMap<String, Skills> copySkillList) {
+		this.skillList = copySkillList;
 	}
 }

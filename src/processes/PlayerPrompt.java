@@ -153,26 +153,26 @@ public class PlayerPrompt implements Runnable {
 			newPlayer.setClassName("mercenary");
 			bookList = WorldServer.getGameState().getBooksFromClass("mercenary");
 			for (SkillBook s : bookList) {
-				newPlayer.addSkillBook(s, 100);
+				newPlayer.addSkillBook(s.duplicate(), 100);
 			}
 		} else if (enteredClass.equalsIgnoreCase("admin")) { //this is really ugly TODO
 			newPlayer.setClassName("admin");
 			bookList = WorldServer.getGameState().getBooksFromClass("admin");
 			for (SkillBook s : bookList) {
-				newPlayer.addSkillBook(s, 100);
+				newPlayer.addSkillBook(s.duplicate(), 100);
 			}
 		} else if (enteredClass.equalsIgnoreCase("arcanist")) { //this is really ugly TODO
 			newPlayer.setClassName("arcanist");
 			bookList = WorldServer.getGameState().getBooksFromClass("arcanist");
 			for (SkillBook s : bookList) {
-				newPlayer.addSkillBook(s, 100);
+				newPlayer.addSkillBook(s.duplicate(), 100);
 			}
 		} else {
 			sendBack.printMessage("That's not a valid class. Defaulting to Admin..."); //temporary ugly default for testings
 			bookList = WorldServer.getGameState().getBooksFromClass("admin");
 			newPlayer.setClassName("admin");
 			for (SkillBook s : bookList) {
-				newPlayer.addSkillBook(s, 100);
+				newPlayer.addSkillBook(s.duplicate(), 100);
 			}
 		}
 		

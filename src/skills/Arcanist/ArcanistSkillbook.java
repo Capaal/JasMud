@@ -44,4 +44,11 @@ public class ArcanistSkillbook extends SkillBook {
 	public void remove(ArcanistSkill spell) {		
 		skillList.remove(spell.getName().toLowerCase());
 	}
+	
+	@Override
+	protected SkillBook duplicate() {
+		SkillBook newSkillBook = new ArcanistSkillbook(name, id);
+		newSkillBook.setSkillList(copySkillList());
+		return newSkillBook;
+	}
 }
