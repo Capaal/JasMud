@@ -9,6 +9,7 @@ import interfaces.Holdable;
 import interfaces.Mobile;
 import items.ItemBuilder;
 import items.StackableItem;
+import items.StationaryItem;
 import items.StdItem;
 import processes.CreateWorld;
 import processes.GameState;
@@ -87,15 +88,23 @@ public class CraftItem extends Skills {
 	}
 	
 	private void andCreate() {
-		try {
-			copyThis.setQuantity(quantity);
-		} catch (IllegalArgumentException e) {
-			copyThis.setQuantity(1);
+		Holdable inInventory = currentPlayer.getHoldableFromString(copyThis.getName());
+		if (inInventory != null && inInventory instanceof StackableItem) {
+			StackableItem addTo = (StackableItem)inInventory;
+			addTo.addToStack(quantity);
+			messageSelf("You have created: " + copyThis.getQuantity() + " " + copyThis.getName() + ".");
+			quantity = 0;
+		} else {	
+			try {
+				copyThis.setQuantity(quantity);
+			} catch (IllegalArgumentException e) {
+				copyThis.setQuantity(1);
+			}
+			copyThis.setItemContainer(currentPlayer);
+			copyThis.complete();
+			messageSelf("You have created: " + copyThis.getQuantity() + " " + copyThis.getName() + ".");		
+			quantity -= copyThis.getQuantity();
 		}
-		copyThis.setItemContainer(currentPlayer);
-		copyThis.complete();
-		messageSelf("You have created: " + copyThis.getQuantity() + " " + copyThis.getName() + ".");		
-		quantity -= copyThis.getQuantity();
 	}
 	
 	protected boolean preSkillChecks() {

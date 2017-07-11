@@ -108,7 +108,7 @@ public class Harvestable extends StationaryItem {
 		return newBuild;
 	}
 	
-	public static class HarvestableItemBuilder extends ItemBuilder {		
+	public static class HarvestableItemBuilder extends StationaryItemBuilder {		
 		
 		private HarvestType type = HarvestType.IRON;
 		private int maxQuantity = 0;

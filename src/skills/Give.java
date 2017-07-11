@@ -7,6 +7,7 @@ import Quests.Quest.Trigger;
 import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
+import processes.ContainerErrors;
 import processes.Skills;
 
 public class Give extends Skills {
@@ -17,8 +18,9 @@ public class Give extends Skills {
 	public Give(Mobile currentPlayer, String fullCommand) {
 		super("give", "Giving items to others.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
-		super.syntaxList.add(Syntax.TARGET);
 		super.syntaxList.add(Syntax.ITEM);	
+		//add filler "to"? TODO
+		super.syntaxList.add(Syntax.TARGET);
 		super.syntaxList.add(Syntax.QUANTITY);
 	}
 	
@@ -39,15 +41,25 @@ public class Give extends Skills {
 				}
 			}
 			if (qty == -1) { // defaults to full stack
-				itemToMove.moveHoldable((Mobile)mobileToGive);
-				messageSelf("You give " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".");
-				messageTarget(currentPlayer.getNameColored() + " gives you " + itemToMove + ".", Arrays.asList(mobileToGive));
-				messageOthers(currentPlayer.getNameColored() + " gives " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".", Arrays.asList(currentPlayer));
+				ContainerErrors err = itemToMove.moveHoldable((Mobile)mobileToGive);
+				if (err == null) {
+					messageSelf("You give " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".");
+					messageTarget(currentPlayer.getNameColored() + " gives you " + itemToMove + ".", Arrays.asList(mobileToGive));
+					messageOthers(currentPlayer.getNameColored() + " gives " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".", Arrays.asList(currentPlayer));
+				} else {
+					System.out.println(currentPlayer.getName() + " is holding an item that can't be dropped: " + itemToMove.getName());
+					messageSelf(err.display(itemToMove.getName()));
+				}
 			} else {
-				itemToMove.moveHoldable((Mobile)mobileToGive, qty);
-				messageSelf("You give " + qty + " " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".");
-				messageTarget(currentPlayer.getNameColored() + " gives you " + qty + " " + itemToMove + ".", Arrays.asList(mobileToGive));
-				messageOthers(currentPlayer.getNameColored() + " gives " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".", Arrays.asList(currentPlayer));
+				ContainerErrors err = itemToMove.moveHoldable((Mobile)mobileToGive, qty);
+				if (err == null) {
+					messageSelf("You give " + qty + " " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".");
+					messageTarget(currentPlayer.getNameColored() + " gives you " + qty + " " + itemToMove + ".", Arrays.asList(mobileToGive));
+					messageOthers(currentPlayer.getNameColored() + " gives " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".", Arrays.asList(currentPlayer));
+				} else {
+					System.out.println(currentPlayer.getName() + " is holding an item that can't be dropped: " + itemToMove.getName());
+					messageSelf(err.display(itemToMove.getName()));
+				}
 			}		
 			questCares(itemToMove, (Mobile)mobileToGive);		
 		}

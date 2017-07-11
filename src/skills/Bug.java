@@ -56,7 +56,7 @@ public class Bug extends Skills {
 				Date date = Calendar.getInstance().getTime();
 				SimpleDateFormat dt = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 				
-				String thisBug = "(Date) " + dt.format(date) + " (Player) " + currentPlayer.getName() + ": " + reportedText;
+				String thisBug = "(Date) " + dt.format(date) + " (Player) " + currentPlayer.getNameColored() + ": " + reportedText;
 				
 				FileWriter fw = null;
 					try {
@@ -89,7 +89,7 @@ public class Bug extends Skills {
 
 	@Override
 	public String displaySyntax() {
-		return "BUG [comments]";
+		return "BUG [comments] or BUG LIST";
 	}
 	
 }
