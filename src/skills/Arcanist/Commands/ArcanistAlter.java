@@ -1,6 +1,7 @@
 package skills.Arcanist.Commands;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import interfaces.Mobile;
@@ -240,10 +241,11 @@ public class ArcanistAlter extends Skills {
 					if (effects == null) {
 						effects = new ArrayList<ArcanistBlock>();
 					}
-					for (ArcanistBlock b : effects) {
-						if (b instanceof BleedBlock) {
-							effects.remove(b);
-						}
+					Iterator<ArcanistBlock> iter = effects.iterator();
+					while (iter.hasNext()) {
+					    if (iter.next() instanceof BleedBlock) {
+					        iter.remove();
+					    }
 					}
 					effects.add(new BleedBlock(intensity));
 					build.setDamage(currentDamageBlock.getNewInstance(currentDamageBlock.getDamage(), effects));

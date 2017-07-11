@@ -37,7 +37,7 @@ public class FarmerQuest extends Quest {
 		public stateOne(Quest quest) {
 			super(quest);
 		}
-		@Override protected void runGreets() {sayHere("Farmer James say: Hello! Would you be willing to listen to my plight? (NOD to continue)");}
+		@Override protected void runGreets() {sayHere("Farmer James says: Hello! Would you be willing to listen to my plight? (NOD to continue)");}
 		@Override protected void runNods() {bondedQuest.progressQuest(new stateTwo(bondedQuest));}
 		@Override protected void runNewState() {}
 		@Override protected void runGives() {}

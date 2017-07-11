@@ -48,8 +48,7 @@ public class WhereTargettingBlockProjectile implements WhereTargettingBlock {
 
 	@Override
 	public int determineCost() {
-		// Complicated? What if WHO = ALL? then it hits EVERONE in a LINE. That should be more expensive? but maybe WHO's cost compensates?
-		return -15;
+		return -20;
 	}
 
 	@Override

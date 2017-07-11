@@ -74,8 +74,6 @@ public class ArcanistBuilder {
 		if (speedBlock == null || !speedBlock.isValid()) {
 			return false;
 		}
-		
-		// TEEST syntax list somehow?
 		if (syntaxList == null) {
 			return false;
 		}
@@ -83,11 +81,6 @@ public class ArcanistBuilder {
 		if (targettingBlock == null || !targettingBlock.isValid()) {
 			return false;
 		}
-	//	for (ArcanistBlock e : addedEffects) {
-	//		if (!e.isValid()) {
-	//			return false;
-	//		}
-	//	}
 		if (mana < 0 || mana > 250) {
 			return false; // Arbitrary limits? Should this even ever come up?
 		}
@@ -110,7 +103,7 @@ public class ArcanistBuilder {
 	}
 
 	public int getCost() {
-		int cost = 80; // Initial balance number?
+		int cost = 20; // Initial balance number?
 		cost += damageBlock.determineCost();
 		cost += speedBlock.determineCost();
 		cost += targettingBlock.determineCost();

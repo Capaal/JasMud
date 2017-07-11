@@ -39,7 +39,7 @@ public class DamageBlock implements ArcanistBlock {
 	}
 	
 	public int determineCost() {
-		int cost = -damage*2;
+		int cost = -damage;
 		if (addedEffects != null) { // UGLY, probably better solution, but by implementation empty is allowed but currently null is allowed.
 			for (ArcanistBlock e : addedEffects) {
 				cost += e.determineCost();

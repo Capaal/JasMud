@@ -17,7 +17,7 @@ public class DamageBlockHeal extends DamageBlock {
 	
 	@Override
 	public int determineCost() {
-		double cost = damage*1.5;
+		double cost = (damage*.5);
 		if (addedEffects != null) { // UGLY, probably better solution, but by implementation empty is allowed but currently null is allowed.
 			for (ArcanistBlock e : addedEffects) {
 				cost -= e.determineCost();

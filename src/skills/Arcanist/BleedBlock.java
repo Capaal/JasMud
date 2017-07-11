@@ -21,14 +21,18 @@ public class BleedBlock implements ArcanistBlock {
 
 	@Override
 	public int determineCost() {
-		return -intensity * 4;
+        int cost = intensity; // this  will be the result
+        for (int i = intensity - 1; i > 0; i--) {
+        	cost += i;
+        }
+        return -(cost + 10);
 	}
 
 	@Override
 	public StringBuilder describeOneself(StringBuilder sb) {
 		sb.append(System.lineSeparator());
 		sb.append("Bleed effect per tick: " + intensity);
-		sb.append(". Cost: " + determineCost());
+		sb.append(". Cost shown in damage: " + determineCost());
 		return sb;
 	}
 

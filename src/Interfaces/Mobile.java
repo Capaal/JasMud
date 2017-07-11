@@ -52,7 +52,6 @@ public interface Mobile extends Container {
 	public void addBook(SkillBook skillBook, int progress);
 	public boolean isControlled();
 	public void controlStatus(boolean statusChange);
-	public void save();
 	public void equip(EquipmentSlot slot, StdItem item);
 	public void unEquip(EquipmentSlot slot);
 	public void unEquip(Holdable item);

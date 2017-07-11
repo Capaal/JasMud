@@ -17,7 +17,7 @@ public class WhoTargettingBlockSelf implements WhoTargettingBlock {
 
 	@Override
 	public int determineCost() {
-		return 5;
+		return 0;
 	}
 
 	@Override

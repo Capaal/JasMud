@@ -20,28 +20,27 @@ public class Nod extends Skills {
 
 	@Override
 	protected void performSkill() {
-		target = setTarget();
-		if (target == null) {
-			messageSelf("You nod agreeably.");
-			messageOthers(currentPlayer.getName() + " nods in agreement.", Arrays.asList(currentPlayer));
-			return;
+		if (preSkillChecks() ) {
+			if (target == null) {
+				messageSelf("You nod agreeably.");
+				messageOthers(currentPlayer.getName() + " nods in agreement.", Arrays.asList(currentPlayer));
+			} else {
+				messageSelf("You nod to " + target.getNameColored() + " in agreement.");
+				messageOthers(currentPlayer.getNameColored() + " nods to " + target.getNameColored() + ".", Arrays.asList(currentPlayer, target));
+				messageTarget(currentPlayer.getNameColored() + " nods to you in agreement.", Arrays.asList(target));
+			}
 		}
-		messageSelf("You nod to " + target.getNameColored() + " in agreement.");
-		messageOthers(currentPlayer.getNameColored() + " nods to " + target.getNameColored() + ".", Arrays.asList(currentPlayer, target));
-		messageTarget(currentPlayer.getNameColored() + " nods to you in agreement.", Arrays.asList(target));
 		((Location)currentPlayer.getContainer()).notifyQuest(Quest.Trigger.NODS);	
-	}
-	
-	private Mobile setTarget() {
-		Mobile h = currentPlayer.getContainer().getMobileFromString(Syntax.TARGET.getStringInfo(fullCommand, this));
-		if (h != null) {
-			return h;
-		}			
-		return null;
 	}
 
 	@Override
 	protected boolean preSkillChecks() {
+		String targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
+		if (targetName.equals("") || targetName.equals(currentPlayer.getName())) {
+			target = null;
+		} else {
+			target = currentPlayer.getContainer().getMobileFromString(targetName);
+		}		
 		return true;
 	}
 	

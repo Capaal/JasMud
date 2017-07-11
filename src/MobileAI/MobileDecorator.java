@@ -197,11 +197,6 @@ public abstract class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public void save() {
-		decoratedMobile.save();
-	}
-
-	@Override
 	public void equip(EquipmentSlot slot, StdItem item) {
 		decoratedMobile.equip(slot, item);
 	}

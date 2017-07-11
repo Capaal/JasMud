@@ -23,7 +23,7 @@ public class WhoTargettingBlockAll implements WhoTargettingBlock {
 
 	@Override
 	public int determineCost() {
-		return -20;
+		return -40;
 	}
 
 	@Override

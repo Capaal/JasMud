@@ -39,6 +39,9 @@ public class SendMessage {
 		try {
 			String msg = in.readLine();
 			System.out.println("SendMessage: " + msg);
+			if (msg == null) {
+				incoming.close();
+			}
 			return msg;
 		}
 		catch (IOException e) {

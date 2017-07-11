@@ -477,11 +477,6 @@ public class StdMob implements Mobile, Container{
 	@Override
 	public void controlStatus(boolean statusChange) {
 		isControlled = statusChange;
-	}
-	
-	@Override
-	public void save() {
-		WorldServer.getGameState().saveMobile(this);
 	}	
 
 	@Override
@@ -490,11 +485,7 @@ public class StdMob implements Mobile, Container{
 		if (isInducting()) {
 			inductionSkill.shutDown();
 		}
-	//	for (Holdable h : new HashSet<Holdable>(inventory.values())) {
-	//		h.removeFromWorld();
-	//	}
 		mobLocation.removeItemFromLocation(this);
-	//	WorldServer.gameState.removeMob(this.getName() + this.getId());
 	}
 	
 	@Override

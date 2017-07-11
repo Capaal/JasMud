@@ -182,27 +182,6 @@ public class GameState {
 			e.printStackTrace();
 			return null;
 		}
-	}	
-
-	// PLAYERS ONLY (Mobs should just load from hardcoding defaults)
-	public void saveMobile(Mobile player) {	
-		FileOutputStream fos = null;
-		try {		
-			WorldServer.xstream.toXML(player, new FileWriter(new File("./Players/" + player.getName() + player.getPassword() + ".xml")));
-			for (Holdable s : player.viewInventory().values()) {
-				s.delete();
-			}
-		} catch(Exception e) {
-		    e.printStackTrace(); // this obviously needs to be refined.
-		} finally {
-		    if(fos!=null) {
-		        try{ 
-		            fos.close();
-		        } catch (IOException e) {
-		            e.printStackTrace(); // this obviously needs to be refined.
-		        }
-		    }
-		}
 	}
 	
 	public void saveItem(Holdable item) {

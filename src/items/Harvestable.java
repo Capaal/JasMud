@@ -54,7 +54,7 @@ public class Harvestable extends StationaryItem {
 		if (remainingQuantity < 0) {
 			remainingQuantity = 0;
 			if (!running) {
-				schedule();
+				WorldServer.getGameState().getEffectExecutor().schedule(() -> reset(), timeToReset, TimeUnit.SECONDS);
 				running = true;
 			}
 			return false;
@@ -66,27 +66,12 @@ public class Harvestable extends StationaryItem {
 		return true;
 	} 
 	
-	
-
-	private class SkillWrapper implements Runnable {
-		public SkillWrapper() {}
-		public void run() {
-			reset();
-			running = false;
-		}		
-	}
-	
-	private void schedule() {
-		SkillWrapper wrapper = new SkillWrapper();
-		WorldServer.getGameState().getEffectExecutor().schedule(wrapper, timeToReset, TimeUnit.SECONDS); //20s for test
-	}
-	//end timer stuff
-	
 	// possible to access by outside methods - reset on daily for example
 	public void reset() {
 		Random n = new Random();
 		remainingQuantity = n.nextInt(maxQuantity - 1) + 1; //between 1 and max, no zero
 		System.out.println(this.type.toString() + " reset done.");
+		running = false;
 	}
 	
 	//not sure this is correct, why not just use an arraylist to store the type?
