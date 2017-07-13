@@ -36,7 +36,7 @@ public class Shove extends Skills implements InformsAggro {
 			MoveShove move = new MoveShove(finalTarget, "move " + dir + " " + currentPlayer.getName());
 			move.setShover(currentPlayer); // TODO use last aggressor?
 			WorldServer.getGameState().addToQueue(move);
-			informLastAggressor();
+			informLastAggressor(currentPlayer, finalTarget);
 		//	messageOthersAway(targetName + "is suddenly shoved into this location.", Arrays.asList(finalTarget), endContainer);
 		}
 		
@@ -83,15 +83,5 @@ public class Shove extends Skills implements InformsAggro {
 		if (!setTarget()) {return false;}
 		if (!setDirection()) {return false;}
 		return true;
-	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Shove(currentPlayer, fullCommand);
-	}
-
-
-	@Override
-	public void informLastAggressor() {
-		finalTarget.informLastAggressor(currentPlayer);
 	}
 }

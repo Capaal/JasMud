@@ -55,9 +55,5 @@ public class Examine extends Skills {
 		if (!searchForExamine()) {return false;}
 		return true;
 	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Examine(currentPlayer, fullCommand);
-	}
 }
 

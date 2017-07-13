@@ -59,10 +59,4 @@ public class RollDice extends Skills {
 	//	}
 		return true;
 	}
-
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new RollDice(currentPlayer, fullCommand);
-	}
-
 }

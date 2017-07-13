@@ -43,9 +43,4 @@ public class Nod extends Skills {
 		}		
 		return true;
 	}
-	
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Nod(currentPlayer, fullCommand);
-	}
 }

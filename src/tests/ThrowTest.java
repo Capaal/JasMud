@@ -26,7 +26,6 @@ import processes.LocationBuilder;
 import processes.MobileBuilder;
 import processes.Skills;
 import processes.StdMob;
-import processes.Type;
 import processes.WorldServer;
 import skills.Throw;
 
@@ -43,13 +42,13 @@ public class ThrowTest {
 	public void testCannotThrowTwiceInstantly() {
 		new Throw(currentPlayer, "throw dagger target").run();
 		new Throw(currentPlayer, "throw dagger target").run();
-		verify(target, Mockito.times(1)).takeDamage(Type.SHARP,  expectedDamage);
+		verify(target, Mockito.times(1)).takeDamage(expectedDamage);
 	}	
 	
 	@Test
 	public void testBasic() {
 		new Throw(currentPlayer, "throw dagger target").run();
-		verify(target, Mockito.times(1)).takeDamage(Type.SHARP,  expectedDamage);
+		verify(target, Mockito.times(1)).takeDamage(expectedDamage);
 	}	
 	
 	@Test
@@ -75,7 +74,7 @@ public class ThrowTest {
 	public void testCannotThrowDeadMobiles() {
 		when(target.isDead()).thenReturn(true);
 		new Throw(currentPlayer, "throw dagger target").run();
-		verify(target, Mockito.times(0)).takeDamage(Type.SHARP,  expectedDamage);		
+		verify(target, Mockito.times(0)).takeDamage(expectedDamage);		
 	}
 	
 	@Test
@@ -94,13 +93,13 @@ public class ThrowTest {
 		location.removeItemFromLocation(target);
 		when(target.getContainer()).thenReturn(newLocation);
 		new Throw(currentPlayer, "throw dagger target").run();
-		verify(target, Mockito.times(0)).takeDamage(Type.SHARP,  expectedDamage);		
+		verify(target, Mockito.times(0)).takeDamage(expectedDamage);		
 	}
 	
 	@Test
 	public void testEnemyPresent() {
 		new Throw(currentPlayer, "throw dagger target").run();
-		verify(target).takeDamage(Type.SHARP,  expectedDamage);
+		verify(target).takeDamage(expectedDamage);
 	}
 	
 	@Test
@@ -115,7 +114,7 @@ public class ThrowTest {
 		location.removeItemFromLocation(target);
 		when(target.getContainer()).thenReturn(newLocation);
 		new Throw(currentPlayer, "throw dagger target north").run();
-		verify(target).takeDamage(Type.SHARP, expectedDamage);
+		verify(target).takeDamage(expectedDamage);
 	}
 	
 	@Test
@@ -126,7 +125,7 @@ public class ThrowTest {
 		lb.complete();
 		Location newLocation = lb.getFinishedLocation();
 		new Throw(currentPlayer, "throw dagger target north").run();
-		verify(target, Mockito.times(0)).takeDamage(Type.SHARP,  expectedDamage);	
+		verify(target, Mockito.times(0)).takeDamage(expectedDamage);	
 	}
 	
 	@BeforeClass

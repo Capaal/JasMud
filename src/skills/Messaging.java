@@ -116,10 +116,6 @@ public class Messaging extends Skills {
 	//	}
 		return true;
 	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Messaging(currentPlayer, fullCommand);
-	}
 	
 	@Override
 	public String displaySyntax() {

@@ -26,6 +26,11 @@ public class CharacterSheet extends Skills {
 		sb.append("/");
 		sb.append(currentPlayer.getMaxHp());
 		sb.append("\n");
+		sb.append("Mana: ");
+		sb.append(currentPlayer.getCurrentMana());
+		sb.append("/");
+		sb.append("105"); // max mana?
+		sb.append("\n");
 		sb.append("Class: ");
 		sb.append(currentPlayer.getClassName());
 		sb.append("\n");
@@ -43,11 +48,6 @@ public class CharacterSheet extends Skills {
 	protected boolean preSkillChecks() {
 		// TODO Auto-generated method stub
 		return true;
-	}
-
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new CharacterSheet(currentPlayer, fullCommand);
 	}
 
 }

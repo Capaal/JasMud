@@ -21,23 +21,12 @@ public class Shieldblock extends InductionSkill {
 	public class InnerShieldBlock extends InnerSkill {		
 		public InnerShieldBlock(Mobile currentPlayer, String fullCommand) {
 			super(currentPlayer, fullCommand);
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
 		public void performSkill() {
 			changeBlocking(false);	
 		}
-
-		@Override
-		public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-			return new InnerShieldBlock(currentPlayer, fullCommand);
-		}
-	}
-	
-	@Override
-	public InnerSkill getInnerSkill(Mobile currentPlayer, String fullCommand) {
-		return new InnerShieldBlock(currentPlayer, fullCommand);
 	}
 
 	// On activation, begins blocking.
@@ -47,7 +36,7 @@ public class Shieldblock extends InductionSkill {
 	@Override
 	protected void performSkill() {
 		if (preSkillChecks()) {
-			scheduleInduction(1, 4000); // Triggers this skill's "run()" in 4 seconds. Interruptible.
+			scheduleInduction(new InnerShieldBlock(currentPlayer, fullCommand), 1, 4000); // Triggers this skill's "run()" in 4 seconds. Interruptible.
 			currentPlayer.setInduction(this);
 			changeBlocking(true);
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());

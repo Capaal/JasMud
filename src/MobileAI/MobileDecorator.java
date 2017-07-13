@@ -13,8 +13,6 @@ import processes.Location;
 import processes.SendMessage;
 import processes.SkillBook;
 import processes.Skills;
-import processes.Type;
-import skills.Greet;
 import processes.Equipment.EquipmentSlot;
 import effects.PassiveCondition;
 import interfaces.Cooldown;
@@ -132,8 +130,13 @@ public abstract class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public void takeDamage(Type types, int d) {
-		decoratedMobile.takeDamage(types, d);
+	public void takeDamage(int d) {
+		decoratedMobile.takeDamage(d);
+	}
+	
+	@Override
+	public void takeDamageIgnoresArmor(int damage) {
+		decoratedMobile.takeDamage(damage);
 	}
 
 	@Override

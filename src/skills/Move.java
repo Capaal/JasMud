@@ -26,32 +26,31 @@ public class Move extends Skills {
 	
 	@Override
 	protected void performSkill() {
-		stopFollowing();
-		if (preSkillChecks()) {
-	
-			if (endContainer == null) {
-				messageSelf("You can't go that way!");
-				onFail();
-				return;
-			}
-			if (isDirectionBlocked(startContainer, directionEnum)) {
-				//no messageSelf? TODO
-				onFail();
-				return;
-			}
-			
-			displayLeaveMsg();
-			currentPlayer.moveHoldable(endContainer);
-			displayEnterMsg();
-			
-			Look look = new Look(currentPlayer, "");
-			look.run();
-			moveFollowers();
-			stopFollowing();
-			
-		} else {
+		stopFollowing();	
+		if (endContainer == null) {
+			messageSelf("You can't go that way!");
 			onFail();
+			return;
 		}
+		if (isDirectionBlocked(startContainer, directionEnum)) {
+			//no messageSelf? TODO
+			onFail();
+			return;
+		}
+		
+		displayLeaveMsg();
+		currentPlayer.moveHoldable(endContainer);
+		displayEnterMsg();
+		
+		Look look = new Look(currentPlayer, "");
+		look.run();
+		moveFollowers();
+		stopFollowing();
+		
+		// I removed the below because it doesn't work with the new preSkillCheks() check done in skills, but might break moveFollow or fearFollow
+	//	} else {
+	//		onFail();
+	//	}
 	}
 	
 	@Override
@@ -83,14 +82,6 @@ public class Move extends Skills {
 			return false;
 		}
 	}
-	
-/*	protected boolean checkDoor() { //might crash if directionEnum is null TODO
-		if (isDoorBlocking(startContainer, directionEnum)) {
-			messageSelf("The door is closed before you.");
-			return false;
-		}
-		return true;
-	}*/
 	
 	protected void displayLeaveMsg() {
 		messageOthers(currentPlayer.getNameColored() + " leaves to the " + dir.toLowerCase() + ".", Arrays.asList(currentPlayer));
@@ -133,20 +124,16 @@ public class Move extends Skills {
 		return false;
 	}
 
+	// The onFail() hack allows moveFollow and others to stop following when failing to follow.
 	@Override
 	protected boolean preSkillChecks() {
-		if (!hasBalance()) {return false;}
-		if (!legsOk()) {return false;}
-		if (isRooted()) {return false;};
+		if (!hasBalance()) {onFail();return false;}
+		if (!legsOk()) {onFail();return false;}
+		if (isRooted()) {onFail();return false;};
 		startContainer = currentPlayer.getContainer();
 		endContainer = null;
-		if (!findDirection()) {return false;}
+		if (!findDirection()) {onFail();return false;}
 		return true;
-	}
-	
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Move(currentPlayer, fullCommand);
 	}
 	
 	@Override

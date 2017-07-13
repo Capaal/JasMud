@@ -7,7 +7,6 @@ import interfaces.InformsAggro;
 import interfaces.Mobile;
 import processes.InductionSkill;
 import processes.Skills;
-import processes.Type;
 
 public class LightningWhip extends InductionSkill implements InformsAggro {
 	
@@ -39,22 +38,12 @@ public class LightningWhip extends InductionSkill implements InformsAggro {
 				messageSelf(finalTarget.getName() + " blocks a whip strike.");
 				return;
 			}		
-			finalTarget.takeDamage(Type.COLD, calculateDamage());
+			finalTarget.takeDamage(calculateDamage());
 			messageSelf("Your lightning whip hits " + finalTarget.getNameColored() + ".");
 			messageTarget(currentPlayer.getNameColored() + " lightning lashes you.", Arrays.asList(finalTarget));
 			messageOthers(currentPlayer.getNameColored() + " whips " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget));
-			informLastAggressor();
+			informLastAggressor(currentPlayer, finalTarget);
 		}
-
-		@Override
-		public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-			return new InnerLightningWhip(currentPlayer, fullCommand);
-		}
-	}
-	
-	@Override
-	public InnerSkill getInnerSkill(Mobile currentPlayer, String fullCommand) {
-		return new InnerLightningWhip(currentPlayer, fullCommand);
 	}
 	
 	// Deals damage to a single target in currentPlayer's location 
@@ -62,7 +51,7 @@ public class LightningWhip extends InductionSkill implements InformsAggro {
 	@Override
 	protected void performSkill() {
 		if (preSkillChecks()) {
-			scheduleInduction(4, 2500, 1500); // Triggers this skill's "run()" in 1.5 seconds. and ticks every 2.5 seconds. Interruptible.
+			scheduleInduction(new InnerLightningWhip(currentPlayer, fullCommand), 4, 2500, 1500); // Triggers this skill's "run()" in 1.5 seconds. and ticks every 2.5 seconds. Interruptible.
 			currentPlayer.setInduction(this);
 			messageSelf("You begin whipping " + finalTarget.getName() + ".");
 			messageTarget(currentPlayer.getName() + " begins whipping you with lightning.", Arrays.asList(finalTarget));
@@ -74,16 +63,7 @@ public class LightningWhip extends InductionSkill implements InformsAggro {
 	}
 	
 	private void findTarget() {
-		possibleTarg = Syntax.TARGET.getStringInfo(fullCommand, this);
-		if (possibleTarg == "") {
-			messageSelf("Who are you trying to headshot?");
 		
-		}	
-		finalTarget = currentPlayer.getContainer().getMobileFromString(possibleTarg);
-		if (finalTarget == null) {
-			messageSelf("There is no \"" + possibleTarg + "\" for you to attack.");
-			
-		}	
 	}
 
 	@Override
@@ -106,18 +86,16 @@ public class LightningWhip extends InductionSkill implements InformsAggro {
 	@Override
 	protected boolean preSkillChecks() {
 		if (!hasBalance()) {return false;}	
-		findTarget();		
-		if (finalTarget == null) {return false;}
+		possibleTarg = Syntax.TARGET.getStringInfo(fullCommand, this);
+		if (possibleTarg == "") {
+			messageSelf("Who are you trying to whip?");
+			return false;
+		}	
+		finalTarget = currentPlayer.getContainer().getMobileFromString(possibleTarg);
+		if (finalTarget == null) {
+			messageSelf("There is no \"" + possibleTarg + "\" for you to attack.");
+			return false;
+		}		
 		return true;
-	}
-
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new LightningWhip(currentPlayer, fullCommand);
-	}
-	
-	@Override
-	public void informLastAggressor() {
-		finalTarget.informLastAggressor(currentPlayer);
 	}
 }

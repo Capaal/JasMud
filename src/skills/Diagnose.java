@@ -35,9 +35,4 @@ public class Diagnose extends Skills {
 		// TODO Auto-generated method stub
 		return true;
 	}
-	
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Diagnose(currentPlayer, fullCommand);
-	}
 }

@@ -4,6 +4,8 @@ import interfaces.Mobile;
 import processes.SkillBook;
 import processes.Skills;
 import processes.UsefulCommands;
+import skills.Arcanist.ArcanistBlock;
+import skills.Arcanist.ArcanistBlockRequired;
 import skills.Arcanist.ArcanistBuilder;
 import skills.Arcanist.ArcanistSkillbook;
 
@@ -26,9 +28,12 @@ public class ArcanistAnalyze extends Skills {
 			sb = currentSkill.getDamageBlock().describeOneself(sb);
 			sb = currentSkill.getSpeedBlock().describeOneself(sb);
 			sb = currentSkill.getTargettingBlock().describeOneself(sb);
-			sb.append(System.lineSeparator() + "Mana required: " + currentSkill.getMana());
-			sb.append(". Costing: ");
-			sb.append(currentSkill.calculateManaCost());
+			for (ArcanistBlockRequired rb : currentSkill.getRequiredBlocks()) {
+				sb = rb.describeOneself(sb);
+			}
+			for (ArcanistBlock selfB : currentSkill.getSelfBlocks()) {
+				sb = selfB.describeOneself(sb);
+			}
 			sb.append(System.lineSeparator() + "Syntax: " + currentSkill.getSyntax());
 			if (currentSkill.getCost() >= 0) {
 				sb.append(UsefulCommands.ANSI.GREEN);

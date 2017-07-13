@@ -5,7 +5,6 @@ import java.util.Arrays;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.InductionSkill;
-import processes.Skills;
 import items.Harvestable;
 import items.Harvestable.HarvestType;
 
@@ -31,33 +30,25 @@ public class Chop extends InductionSkill {
 		public void performSkill() {
 			if(!tree.changeRemaining(1)) {
 				messageSelf("The tree needs time to regrow.");
+				currentPlayer.killInduction();
 				return;
 			}
 			tree.harvest(currentPlayer);
-		}
-
-		@Override
-		public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-			return new InnerChop(currentPlayer, fullCommand);
-		}
-		
+		}		
 	}
 	
 	@Override
 	protected void performSkill() {
-		treeName = Syntax.ITEM.getStringInfo(fullCommand, this);
-		//check if already doing?
-		if (preSkillChecks()) {
-			tree = (Harvestable) treeItem;		
-			scheduleInduction(1, 5000); // Triggers this skill's "run()" in 5 seconds. Interruptible.
-			currentPlayer.setInduction(this);
-			messageSelf("You begin chopping.");
-			messageOthers(currentPlayer.getNameColored() + " begins chopping.", Arrays.asList(currentPlayer));
-		}
+		tree = (Harvestable) treeItem;		
+		scheduleInduction(new InnerChop(currentPlayer, fullCommand), 10, 5000); // Triggers this skill's "run()" in 5 seconds. Interruptible.
+		currentPlayer.setInduction(this);
+		messageSelf("You begin chopping.");
+		messageOthers(currentPlayer.getNameColored() + " begins chopping.", Arrays.asList(currentPlayer));	
 	}
 	
 	@Override
 	protected boolean preSkillChecks() {
+		treeName = Syntax.ITEM.getStringInfo(fullCommand, this);
 		//check if already doing?
 		if (treeName.equals("")) {
 			messageSelf("What are you trying to chop?");
@@ -87,23 +78,12 @@ public class Chop extends InductionSkill {
 
 	@Override
 	protected void inductionEnded() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Chop(currentPlayer, fullCommand);
-	}
-
-	@Override
-	public InnerSkill getInnerSkill(Mobile currentPlayer, String fullCommand) {
-		return new InnerChop(currentPlayer, fullCommand);
+		// TODO Auto-generated method stub		
 	}
 	
 	@Override
 	public String displaySyntax() {
-		return "CHOP [TREE]";
+		return "CHOP TREE";
 	}
 
 }

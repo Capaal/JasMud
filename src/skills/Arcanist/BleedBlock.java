@@ -13,7 +13,7 @@ public class BleedBlock implements ArcanistBlock {
 
 	@Override
 	public void perform(ArcanistSkill skill) {
-		for (Mobile t : skill.getCurrentData().targets) {
+		for (Mobile t : skill.getCurrentTargets()) {
 			t.addActiveCondition(new Bleed(t, intensity), 2); // The 1 is meaningless? Just need to be larger than 1 to keep ticking correctly.
 			t.tell("The spell tears your flesh, you begin to bleed.");
 		}

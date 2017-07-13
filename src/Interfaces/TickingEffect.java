@@ -1,8 +1,6 @@
 package interfaces;
 
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -83,16 +81,11 @@ public abstract class TickingEffect implements Runnable {
 		public void run() {
 			if (totalTimesRan < timesToRun) {
 				WorldServer.getGameState().addToQueue(wrappedEffect);
-	//			effectExecutor.execute(wrappedEffect);
 				totalTimesRan ++;
 			} else {
 				kill();
 			}
-		}
-		
-	//	public void modifyTimes(int times) {
-	//		timesToRun = times;
-	//	}		
+		}		
 		public synchronized void modifyTimesRan(int newTimes) {
 			totalTimesRan = newTimes;
 		}	

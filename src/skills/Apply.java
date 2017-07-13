@@ -102,11 +102,6 @@ public class Apply extends Skills {
 	}
 
 	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Apply(currentPlayer, fullCommand);
-	}
-
-	@Override
 	public String displaySyntax() {
 		return "APPLY [POISON] ON [WEAPON]";
 	}

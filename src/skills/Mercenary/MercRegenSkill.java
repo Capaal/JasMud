@@ -1,12 +1,9 @@
 package skills.Mercenary;
 
-import java.util.Arrays;
-
 import effects.MercRegen;
 import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Skills;
-import skills.Sleep;
 
 public class MercRegenSkill extends Skills {
 	
@@ -28,11 +25,6 @@ public class MercRegenSkill extends Skills {
 	protected boolean preSkillChecks() {
 		if (!hasBalance()) {return false;}
 		return true;
-	}
-
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new MercRegenSkill(currentPlayer, fullCommand);
 	}
 }
 

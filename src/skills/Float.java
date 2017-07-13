@@ -36,10 +36,5 @@ public class Float extends Skills {
 		if (!hasBalance()) {return false;}
 		return true;
 	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Float(currentPlayer, fullCommand);
-	}
-	
 }
 

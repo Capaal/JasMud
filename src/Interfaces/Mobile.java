@@ -1,6 +1,5 @@
 package interfaces;
 
-import items.Plant.PlantType;
 import items.StdItem;
 
 import java.util.EnumSet;
@@ -16,7 +15,6 @@ import processes.Location;
 import processes.SendMessage;
 import processes.Skills;
 import processes.SkillBook;
-import processes.Type;
 
 public interface Mobile extends Container {
 	
@@ -37,9 +35,8 @@ public interface Mobile extends Container {
 	public String getDescription();
 	public String getShortDescription();
 	public int getXpWorth();
-	public void takeDamage(Type types, int d);
+	public void takeDamage(int d);
 	public void tell(String msg);
-//	public void tellLine(String msg);
 	public Skills getCommand(String command);
 	public ContainerErrors acceptItem(Holdable item);
 	public boolean addPassiveCondition(PassiveCondition newEffect, int duration);
@@ -84,4 +81,5 @@ public interface Mobile extends Container {
 	public void changeBalanceMult(double change);
 	public double getBalanceMult();
 	public void informEntered(Mobile newMob);
+	public void takeDamageIgnoresArmor(int damage);
 }

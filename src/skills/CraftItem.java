@@ -9,10 +9,7 @@ import interfaces.Holdable;
 import interfaces.Mobile;
 import items.ItemBuilder;
 import items.StackableItem;
-import items.StationaryItem;
 import items.StdItem;
-import processes.CreateWorld;
-import processes.GameState;
 import processes.Skills;
 import processes.WorldServer;
 
@@ -31,9 +28,7 @@ public class CraftItem extends Skills {
 		allItemTemplates = WorldServer.getGameState().itemTemplates; //maybe list of only craftable items?
 	}
 	
-	protected void performSkill() {
-		itemToMake = Syntax.ITEM.getStringInfo(fullCommand, this);		
-		if (!preSkillChecks()) {return;}		
+	protected void performSkill() {	
 		List<StdItem> componentsNeeded = copyThis.getComponents();
 		TreeMap<String, Holdable> copyPlayerInv = currentPlayer.viewInventory();
 		while (quantity > 0) {			
@@ -108,6 +103,7 @@ public class CraftItem extends Skills {
 	}
 	
 	protected boolean preSkillChecks() {
+		itemToMake = Syntax.ITEM.getStringInfo(fullCommand, this);		
 		if (itemToMake == "") {
 			messageSelf("What are you trying to make? CRAFT LIST for all craftables."); //fail from no item specified
 			return false;
@@ -161,9 +157,4 @@ public class CraftItem extends Skills {
 			messageSelf(display.toString());
 		}
 	}	
-	
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new CraftItem(currentPlayer, fullCommand);
-	}
 }

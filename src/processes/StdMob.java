@@ -6,6 +6,7 @@ import items.Plant.PlantType;
 import items.StdItem;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
@@ -208,10 +209,15 @@ public class StdMob implements Mobile, Container{
 	
 	@Override
 	//TODO should be two methods or rename to changeLife
-	public synchronized void takeDamage(Type type, int damage) {
+	public synchronized void takeDamage(int damage) {
 		if(!(damage < 0)) {  //adjust dmg for defense
 			damage = damage - defense;
 		}
+		takeDamageIgnoresArmor(damage);
+	}	
+	
+	@Override
+	public void takeDamageIgnoresArmor(int damage) {
 		if (currentHp < damage) { //adjust dmg so hp won't be neg
 			damage = currentHp;
 		} 
@@ -226,7 +232,7 @@ public class StdMob implements Mobile, Container{
 		}
 		checkHp();	
 		displayPrompt();
-	}	
+	}
 
 	private void checkHp() {
 		if (currentHp <= 0 && !isDead) {
@@ -353,7 +359,7 @@ public class StdMob implements Mobile, Container{
 	}	
 	
 	@Override
-	public Collection<Holdable> getListMatchingString(String holdableString) {
+	public Collection<Holdable> getListMatchingString(String holdableString) {		
 		TreeMap<String, Holdable> inventoryView = viewInventory();
 		holdableString = holdableString.toLowerCase();		
 		SortedMap<String, Holdable> subMap = inventoryView.subMap(holdableString, true, holdableString + Character.MAX_VALUE, true);		

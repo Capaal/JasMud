@@ -11,18 +11,15 @@ import java.util.Date;
 
 import interfaces.Mobile;
 import processes.Skills;
-import processes.Skills.Syntax;
 
 public class Bug extends Skills {
 	
 	private String reportedText;
-	private int size;
 
 	public Bug(Mobile currentPlayer, String fullCommand) {
 		super("bug", "Recording and checking recorded bugs.", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
 		super.syntaxList.add(Syntax.MESSAGE);
-		size=0;
 	}
 	
 	@Override
@@ -49,10 +46,8 @@ public class Bug extends Skills {
 		            System.out.println(
 		                "Error reading file '"  + fileName + "'");                  
 		            // Or ex.printStackTrace();
-		        }
-				
-			} else {
-				
+		        }				
+			} else {				
 				Date date = Calendar.getInstance().getTime();
 				SimpleDateFormat dt = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 				
@@ -80,11 +75,6 @@ public class Bug extends Skills {
 			return false;
 		}
 		return true;
-	}
-	
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Bug(currentPlayer, fullCommand);
 	}
 
 	@Override

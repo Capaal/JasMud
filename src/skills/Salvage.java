@@ -71,9 +71,4 @@ public class Salvage extends Skills {
 		}
 		return true;
 	}
-	
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Salvage(currentPlayer, fullCommand);
-	}
 }

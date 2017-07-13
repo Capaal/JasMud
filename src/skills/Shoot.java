@@ -13,7 +13,6 @@ import processes.Equipment.EquipmentSlot;
 import processes.Location;
 import processes.Location.Direction;
 import processes.Skills;
-import processes.Type;
 
 public class Shoot extends Skills implements InformsAggro {
 	
@@ -35,15 +34,13 @@ public class Shoot extends Skills implements InformsAggro {
 	// Direction is OPTIONAL
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			messageSelf("You shoot " + finalTarget.getName() + ".");
-			messageTarget(currentPlayer.getNameColored() + " shoots you.", Arrays.asList(finalTarget));
-			messageOthers(currentPlayer.getNameColored() + " shoots " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget));
-			finalTarget.informLastAggressor(currentPlayer);
-			finalTarget.takeDamage(Type.SHARP, calculateDamage());
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
-			informLastAggressor();
-		}
+		messageSelf("You shoot " + finalTarget.getName() + ".");
+		messageTarget(currentPlayer.getNameColored() + " shoots you.", Arrays.asList(finalTarget));
+		messageOthers(currentPlayer.getNameColored() + " shoots " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget));
+		finalTarget.informLastAggressor(currentPlayer);
+		finalTarget.takeDamage(calculateDamage());
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+		informLastAggressor(currentPlayer, finalTarget);		
 	}		
 		
 	private int calculateDamage() {
@@ -115,37 +112,16 @@ public class Shoot extends Skills implements InformsAggro {
 	}	
 	
 	private boolean checkWeapon() {
-        //righthand primary for now
     	Holdable possBowLeft = currentPlayer.getEquipmentInSlot(EquipmentSlot.LEFTHAND);
     	Holdable possBowRight = currentPlayer.getEquipmentInSlot(EquipmentSlot.RIGHTHAND);
     	if ((possBowLeft != null && possBowLeft.getName().equals("bow")) || (possBowRight != null && possBowRight.getName().equals("bow"))) {
     		return true;
     	}
     	return false;
-    	
-    	
-	/*	if ((possBowLeft == null || (!possBow.getName().equals("bow")))) {
-			possBow = (StdItem) currentPlayer.getEquipmentInSlot(EquipmentSlot.RIGHTHAND);
-			if (possBow == null || (!possBow.getName().equals("bow"))) {
-				messageSelf("You are not wielding a bow.");
-				return false;
-			}
-		}
-		return true;*/
-	}
-	
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Shoot(currentPlayer, fullCommand);
 	}
 	
 	@Override
 	public String displaySyntax() {
 		return "SHOOT [TARGET] (DIR)";
-	}
-	
-	@Override
-	public void informLastAggressor() {
-		finalTarget.informLastAggressor(currentPlayer);
 	}
 }

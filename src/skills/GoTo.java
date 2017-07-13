@@ -53,11 +53,6 @@ public class GoTo extends Skills {
 		messageSelf("Player not online.");
 		return false;
 	}
-
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new GoTo(currentPlayer, fullCommand);
-	}
 	
 	@Override
 	public String displaySyntax() {

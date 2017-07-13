@@ -2,7 +2,6 @@ package effects;
 
 import interfaces.Mobile;
 import interfaces.TickingEffect;
-import processes.Type;
 
 public class Belladonna extends TickingEffect {
 	
@@ -23,7 +22,7 @@ public class Belladonna extends TickingEffect {
 				currentPlayer.addActiveCondition(new Unbalanced(currentPlayer), 100);
 			}
 		} else if (stack == 3) { 
-			currentPlayer.takeDamage(Type.NULL, currentPlayer.getMaxHp());
+			currentPlayer.takeDamage(currentPlayer.getMaxHp());
 			currentPlayer.tell("You finally succumb to the belladonna poison.");
 		}
 	}

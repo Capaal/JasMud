@@ -17,7 +17,7 @@ public class ItemBuilder {
 	protected String name = "";
 	protected String description = "default";
 	protected double weight = 1;
-	protected double balanceMult = 0;
+	protected double balanceMult = 1;
 	protected int maxDurability = 1;
 	protected int currentDurability = 1;
 	protected Container itemContainer;		

@@ -3,7 +3,6 @@ package skills.Arcanist;
 import java.util.List;
 
 import interfaces.Mobile;
-import processes.Type;
 
 public class DamageBlock implements ArcanistBlock {
 	
@@ -17,9 +16,9 @@ public class DamageBlock implements ArcanistBlock {
 	
 	@Override
 	public void perform(ArcanistSkill skill) {
-		for (Mobile t : skill.getCurrentData().targets) {
+		for (Mobile t : skill.getCurrentTargets()) {
 			if (!isBlocking(t)) { 
-				t.takeDamage(Type.BLUNT, damage);							
+				t.takeDamage(damage);							
 			}
 		}
 		if (addedEffects != null) { // UGLY, probably better solution, but by implementation empty is allowed but currently null is allowed.

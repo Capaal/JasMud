@@ -5,7 +5,6 @@ import effects.Bleed;
 import effects.Regen;
 import interfaces.Mobile;
 import items.StackableItem.StackableItemBuilder;
-import processes.Type;
 
 //almost same as stackable, except can't split quantity (sips)
 public class Drinkable extends StdItem {
@@ -48,7 +47,7 @@ public class Drinkable extends StdItem {
 	public enum DrinkType {
 		HEALTH() {
 			@Override public String drink(Mobile currentPlayer) {
-				currentPlayer.takeDamage(Type.BLUNT, -50);
+				currentPlayer.takeDamage(-50);
 				return "The warm liquid heals you a bit.";
 			}
 		},

@@ -3,6 +3,7 @@ package processes;
 import interfaces.*;
 import items.Door;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 import effects.Blocking;
@@ -30,8 +31,10 @@ public abstract class Skills implements Runnable {
 //		this.fullCommand = fullCommand;
 		if (preAllSkills()) {
 		//	currentPlayer.tell("\n");
-			performSkill();
-			displayPrompt();
+			if (preSkillChecks()) {
+				performSkill();
+				displayPrompt();
+			}
 		}
 	}
 	
@@ -57,7 +60,7 @@ public abstract class Skills implements Runnable {
 	
 	protected abstract void performSkill();
 	protected abstract boolean preSkillChecks();
-	public abstract Skills getNewInstance(Mobile currentPlayer, String fullCommand);
+//	public abstract Skills getNewInstance(Mobile currentPlayer, String fullCommand);
 	
 	protected void testForInduction() {
 		if (currentPlayer.isInducting()) {
@@ -269,6 +272,21 @@ public abstract class Skills implements Runnable {
 	public int hashCode() {
         return this.getClass().getName().hashCode();
     }
- 
+	
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		try {
+			return this.getClass().getDeclaredConstructor(Mobile.class, String.class).newInstance(currentPlayer, fullCommand);
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
+			// TODO Auto-generated catch block
+	//		e.printStackTrace();
+			System.err.println("GetNewInstance major bug.");
+			return null;
+		}
+//		return con.newInstance(currentPlayer, fullCommand);
+//		return this.getClass().getDeclaredConstructors(Arrays.asList(Mobile.class, String.class)).newInstance(currentPlayer, fullCommand);
+//		return new Clearmind(currentPlayer, fullCommand);
+	}
+//	myObject.getClass().getDeclaredConstructors(types list).newInstance(args list);
 
 }

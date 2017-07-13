@@ -6,8 +6,6 @@ import processes.ContainerErrors;
 
 public interface Container {
 	
-//	public Set<Holdable> inventory = Collections.synchronizedSortedSet(new TreeSet<Holdable>());
-
 	public TreeMap<String, Holdable> viewInventory();
 	public String getName();
 	public int getId();

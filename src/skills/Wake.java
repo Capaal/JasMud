@@ -21,7 +21,7 @@ public class Wake extends InductionSkill {
 	
 	public class InnerWake extends InnerSkill {		
 		public InnerWake(Mobile currentPlayer, String fullCommand) {
-			super(currentPlayer, "wake");
+			super(currentPlayer, fullCommand);
 		}
 
 		@Override
@@ -36,16 +36,6 @@ public class Wake extends InductionSkill {
 				messageSelf("You continue trying to wake up.");
 			}	
 		}
-
-		@Override
-		public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-			return new InnerWake(currentPlayer, fullCommand);
-		}
-	}
-	
-	@Override
-	public InnerSkill getInnerSkill(Mobile currentPlayer, String fullCommand) {
-		return new InnerWake(currentPlayer, description);
 	}
 
 	@Override
@@ -54,7 +44,7 @@ public class Wake extends InductionSkill {
 		if (target.equals("")) {
 			if (currentPlayer.hasCondition(PassiveCondition.SLEEP)) {
 				messageSelf("You start trying to wake yourself up.");
-				scheduleInduction(50, 2500);
+				scheduleInduction(new InnerWake(currentPlayer, fullCommand), 50, 2500);
 				currentPlayer.setInduction(this);
 			} else {
 				messageSelf("You're not asleep.");
@@ -89,9 +79,5 @@ public class Wake extends InductionSkill {
 	protected boolean preSkillChecks() {
 		// TODO Auto-generated method stub
 		return false;
-	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Wake(currentPlayer, fullCommand);
 	}
 }

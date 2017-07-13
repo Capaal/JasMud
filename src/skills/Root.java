@@ -18,14 +18,12 @@ public class Root extends Skills implements interfaces.InformsAggro {
 	
 	@Override
 	protected void performSkill() {
-		if(preSkillChecks()) {
-			finalTarget.addPassiveCondition(PassiveCondition.ROOT, -1);
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 2000);
-			messageSelf("Strong, ropey vines curl out of your hands towards " + finalTarget.getNameColored() + " and wrap themselves tightly around " + "their feet."); //finalTarget.getGenderHimHer()
-			messageTarget("Vines suddenly encircle your feet and root you to the spot.", Arrays.asList(finalTarget));
-			messageOthers("Living vines fly out from " + currentPlayer.getNameColored() + "'s hands and firmly binds " + finalTarget.getNameColored() + " to the ground.", Arrays.asList(currentPlayer, finalTarget)); 
-			informLastAggressor();
-		}
+		finalTarget.addPassiveCondition(PassiveCondition.ROOT, -1);
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 2000);
+		messageSelf("Strong, ropey vines curl out of your hands towards " + finalTarget.getNameColored() + " and wrap themselves tightly around " + "their feet."); //finalTarget.getGenderHimHer()
+		messageTarget("Vines suddenly encircle your feet and root you to the spot.", Arrays.asList(finalTarget));
+		messageOthers("Living vines fly out from " + currentPlayer.getNameColored() + "'s hands and firmly binds " + finalTarget.getNameColored() + " to the ground.", Arrays.asList(currentPlayer, finalTarget)); 
+		informLastAggressor(currentPlayer, finalTarget);		
 	}
 	
 	@Override
@@ -57,15 +55,5 @@ public class Root extends Skills implements interfaces.InformsAggro {
 			return true;
 		}
 		return false;
-	}
-	
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Root(currentPlayer, fullCommand);
-	}
-	
-	@Override
-	public void informLastAggressor() {
-		finalTarget.informLastAggressor(currentPlayer);
 	}
 }

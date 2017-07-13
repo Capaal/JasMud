@@ -68,8 +68,4 @@ public class Straighten extends Skills {
 		// TODO Auto-generated method stub
 		return true;
 	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Straighten(currentPlayer, fullCommand);
-	}
 }

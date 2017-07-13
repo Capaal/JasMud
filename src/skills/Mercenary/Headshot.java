@@ -12,7 +12,6 @@ import processes.Equipment.EquipmentSlot;
 import processes.InductionSkill;
 import processes.Location;
 import processes.Skills;
-import processes.Type;
 import processes.Location.Direction;
 import skills.Sleep;
 
@@ -45,18 +44,13 @@ public class Headshot extends InductionSkill implements InformsAggro {
 			if (isBlocking(finalTarget)) {  // Probably not complete still
 				return;
 			}		
-			finalTarget.takeDamage(Type.SHARP, calculateDamage());
+			finalTarget.takeDamage(calculateDamage());
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
 			messageSelf("You headshot " + finalTarget.getNameColored() + ".");
 			messageTarget(currentPlayer.getNameColored() + " headshots you.", Arrays.asList(finalTarget));
 			messageOthers(currentPlayer.getNameColored() + " headshots " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget));	
 			messageOthersAway(currentPlayer.getNameColored() + " headshots " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget), finalTarget.getContainer());	
-			informLastAggressor();
-		}
-
-		@Override
-		public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-			return new InnerHeadshot(currentPlayer, fullCommand);
+			informLastAggressor(currentPlayer, finalTarget);
 		}		
 	}
 	
@@ -68,7 +62,7 @@ public class Headshot extends InductionSkill implements InformsAggro {
 	protected void performSkill() {
 		allLocations = new HashSet<Location>();
 		if (preSkillChecks()) {
-			scheduleInduction(1, 2000); // Triggers this skill's "run()" in 2 seconds. Interruptible.
+			scheduleInduction(new InnerHeadshot(currentPlayer, fullCommand), 1, 2000); // Triggers this skill's "run()" in 2 seconds. Interruptible.
 			currentPlayer.setInduction(this);
 			messageSelf("You begin aiming at " + finalTarget.getName() + ".");
 			messageTarget(currentPlayer.getName() + " begins aiming at your head.", Arrays.asList(finalTarget));
@@ -161,11 +155,6 @@ public class Headshot extends InductionSkill implements InformsAggro {
 	}
 
 	@Override
-	public InnerSkill getInnerSkill(Mobile currentPlayer, String fullCommand) {
-		return new InnerHeadshot(currentPlayer, fullCommand);
-	}
-
-	@Override
 	protected boolean preSkillChecks() {
 		if (!hasBalance()) {return false;}
 		if (!weaponWielded()) {return false;}
@@ -175,17 +164,7 @@ public class Headshot extends InductionSkill implements InformsAggro {
 	}
 	
 	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Headshot(currentPlayer, fullCommand);
-	}
-	
-	@Override
 	public String displaySyntax() {
 		return "HEADSHOT [TARGET] (DIR)";
-	}
-	
-	@Override
-	public void informLastAggressor() {
-		finalTarget.informLastAggressor(currentPlayer);
 	}
 }

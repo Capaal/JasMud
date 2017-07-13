@@ -5,7 +5,6 @@ import interfaces.TickingEffect;
 import java.util.Random;
 
 import interfaces.Mobile;
-import processes.Type;
 
 public class Hallucination extends TickingEffect {
 	
@@ -26,7 +25,7 @@ public class Hallucination extends TickingEffect {
 			break;
 			case 3 :
 				currentPlayer.tell("You are bleeding. (HM3)");
-				currentPlayer.takeDamage(Type.BLEED, 5); //hallucinations are better with realism, but effect is less than real bleed
+				currentPlayer.takeDamage(5); //hallucinations are better with realism, but effect is less than real bleed
 			break;
 		}
 		wrapper.modifyTimesRan(1); // Hack to make infinite

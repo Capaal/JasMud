@@ -27,7 +27,7 @@ public class VineTrip extends Skills implements InformsAggro {
 			messageSelf("You encourage a vine to get in the way.");
 			messageTarget("A vine shoots out by your feet and trips you.", Arrays.asList(finalTarget));
 			messageOthers("A vine trips " + finalTarget.getNameColored() + ".", Arrays.asList(currentPlayer, finalTarget));
-			informLastAggressor();
+			informLastAggressor(currentPlayer, finalTarget);
 		}
 	}
 	
@@ -55,14 +55,5 @@ public class VineTrip extends Skills implements InformsAggro {
 		if (!hasBalance()) {return false;}
 		if (!setTarget()) {return false;}
 		return true;
-	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new VineTrip(currentPlayer, fullCommand);
-	}
-	
-	@Override
-	public void informLastAggressor() {
-		finalTarget.informLastAggressor(currentPlayer);
 	}
 }

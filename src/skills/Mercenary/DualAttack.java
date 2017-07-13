@@ -14,7 +14,6 @@ import items.Weapon;
 import processes.Location;
 import processes.Equipment;
 import processes.Skills;
-import processes.Type;
 
 public class DualAttack extends Skills implements InformsAggro {
 
@@ -27,7 +26,7 @@ public class DualAttack extends Skills implements InformsAggro {
     private double balAdjust = 1;   
  //   private int totalDmg;
  //   private String possibleTarg;
-    private Collection<Mobile> targets = null;
+    private List<Mobile> targets = null;
     private List<Weapon.MercEffect> effectsToApply = null;
     
     //Mercenary class skill, probably needs better name. Attacks target using wielded weapon. If weapon has special effect, applies.
@@ -45,7 +44,7 @@ public class DualAttack extends Skills implements InformsAggro {
         checkMercWeapons();
         regularRun();
     	currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance()); 
-    	informLastAggressor();
+    	informLastAggressor(currentPlayer, targets);
     }
 
     @Override
@@ -64,7 +63,7 @@ public class DualAttack extends Skills implements InformsAggro {
     		}
 			messageSelf("You attack " + m.getName() + ".");
 			messageTarget(currentPlayer.getName() + " attacks you.", Arrays.asList(m));
-			m.takeDamage(Type.SHARP, calculateDamage()); //calculate dmg once rather than mult times?
+			m.takeDamage(calculateDamage()); //calculate dmg once rather than mult times?
     	}
     	if (targets.size() > 1) {
     		messageOthers(currentPlayer.getName() + " attacks everyone at once.", Arrays.asList(currentPlayer));
@@ -84,7 +83,7 @@ public class DualAttack extends Skills implements InformsAggro {
         }
     	Location here = currentPlayer.getContainer();
         if (possibleTarg.equals("all")) {
-        	targets = here.getMobiles().values();
+        	targets = (List<Mobile>) here.getMobiles().values();
         	targets.remove(currentPlayer); //maybe remove friends or add an effect that's aoeEnemies etc
         	if (targets.isEmpty()) {
         		return false;
@@ -146,20 +145,6 @@ public class DualAttack extends Skills implements InformsAggro {
     
     private int calculateBalance() {
 		return (int) (3000 * rmercWeapon.getBalanceMult() * balAdjust);
-	}
-    
-    @Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new DualAttack(currentPlayer, fullCommand);
-	}
-    
-    @Override
-	public void informLastAggressor() {
-    	if (targets != null) {
-    		for (Mobile m : targets) {
-    			m.informLastAggressor(currentPlayer);
-    		}
-    	}
 	}
 }
 

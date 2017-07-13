@@ -62,8 +62,4 @@ public class Follow extends Skills {
 		}
 		return true;
 	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Follow(currentPlayer, fullCommand);
-	}
 }

@@ -2,12 +2,10 @@ package skills;
 
 import interfaces.Mobile;
 
-import java.util.Arrays;
 import java.util.Random;
 
 import effects.PassiveCondition;
 import processes.InductionSkill;
-import processes.Skills;
 
 //interruptible, repeating induction skill
 public class Struggle extends InductionSkill {
@@ -38,18 +36,13 @@ public class Struggle extends InductionSkill {
 				messageSelf("You continue to writhe against the bonds holding you.");
 			}	
 		}
-
-		@Override
-		public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-			return new InnerStruggle(currentPlayer, fullCommand);
-		}
 	}
 
 	@Override
 	protected void performSkill() {		
 		if (currentPlayer.hasCondition(PassiveCondition.ROOT)) {
 			messageSelf("You being struggling against the bonds holding you.");
-			scheduleInduction(50, 2500);
+			scheduleInduction(new InnerStruggle(currentPlayer, fullCommand), 50, 2500);
 			currentPlayer.setInduction(this);
 		} else {
 			messageSelf("You struggle against the futility of the world.");
@@ -70,14 +63,5 @@ public class Struggle extends InductionSkill {
 	@Override
 	protected boolean preSkillChecks() {
 		return true;
-	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Struggle(currentPlayer, fullCommand);
-	}
-
-	@Override
-	public InnerSkill getInnerSkill(Mobile currentPlayer, String fullCommand) {
-		return new InnerStruggle(currentPlayer, fullCommand);
 	}
 }

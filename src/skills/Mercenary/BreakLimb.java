@@ -7,7 +7,6 @@ import interfaces.InformsAggro;
 import interfaces.Mobile;
 import processes.Equipment.EquipmentSlot;
 import processes.Skills;
-import processes.Type;
 
 //TODO only breaks arms, legs disabled.
 public class BreakLimb extends Skills implements InformsAggro {
@@ -39,13 +38,12 @@ public class BreakLimb extends Skills implements InformsAggro {
 //				finalTarget.addPassiveCondition((PassiveCondition.BROKENLEGS),-1);
 			}
 			//the regular stuff a damaging atk does
-			finalTarget.informLastAggressor(currentPlayer);
-			finalTarget.takeDamage(Type.BLUNT, calculateDamage());
+			finalTarget.takeDamage(calculateDamage());
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
 			messageSelf("You target a specific limb and hit " + finalTarget.getNameColored() + " really hard.");
 		//	messageTarget(currentPlayer.getName() + " hits you with a targetted punch.", Arrays.asList(finalTarget));
 			messageOthers(currentPlayer.getNameColored() + " punches " + finalTarget.getNameColored() + " harder than usual.", Arrays.asList(currentPlayer, finalTarget));
-			informLastAggressor();
+			informLastAggressor(currentPlayer, finalTarget);
 		}
 	}
 	
@@ -100,15 +98,5 @@ public class BreakLimb extends Skills implements InformsAggro {
 			return false;
 		}
 		return true;
-	}
-	
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new BreakLimb(currentPlayer, fullCommand);
-	}
-
-	@Override
-	public void informLastAggressor() {
-		finalTarget.informLastAggressor(currentPlayer);
 	}
 }

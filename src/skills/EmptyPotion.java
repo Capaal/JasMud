@@ -49,8 +49,4 @@ public class EmptyPotion extends Skills {
 		}
 		return true;
 	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new EmptyPotion(currentPlayer, fullCommand);
-	}
 }

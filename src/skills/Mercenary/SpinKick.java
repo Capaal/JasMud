@@ -6,7 +6,6 @@ import effects.PassiveCondition;
 import interfaces.InformsAggro;
 import interfaces.Mobile;
 import processes.Skills;
-import processes.Type;
 import skills.Sleep;
 
 public class SpinKick extends Skills implements InformsAggro {
@@ -30,12 +29,12 @@ public class SpinKick extends Skills implements InformsAggro {
 			}
 			
 			finalTarget.informLastAggressor(currentPlayer);
-			finalTarget.takeDamage(Type.BLUNT, calculateDamage());
+			finalTarget.takeDamage(calculateDamage());
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
 			messageSelf("You spin around really fast and kick " + finalTarget.getNameColored() + ".");
 			messageTarget(currentPlayer.getNameColored() + " makes you stumble with a dizzying kick.", Arrays.asList(finalTarget));
 			messageOthers(currentPlayer.getNameColored() + " spins and kicks " + finalTarget.getNameColored() + ".", Arrays.asList(currentPlayer, finalTarget));
-			informLastAggressor();
+			informLastAggressor(currentPlayer, finalTarget);
 		}
 	}
 	
@@ -66,13 +65,4 @@ public class SpinKick extends Skills implements InformsAggro {
 		
 		return true;
 	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new SpinKick(currentPlayer, fullCommand);
-	}
-	
-	 @Override
-		public void informLastAggressor() {
-			finalTarget.informLastAggressor(currentPlayer);
-		}
 }

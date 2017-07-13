@@ -1,6 +1,5 @@
 package effects;
 
-import processes.Type;
 import interfaces.*;
 
 
@@ -23,7 +22,7 @@ public class Bleed extends TickingEffect {
 	
 	@Override
 	public void run() {
-		currentPlayer.takeDamage(Type.BLEED, intensity);	
+		currentPlayer.takeDamage(intensity);	
 		changeIntensity(-1);
 		if (intensity <=0) {
 			kill();

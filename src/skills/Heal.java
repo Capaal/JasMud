@@ -5,7 +5,6 @@ import java.util.Arrays;
 import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Skills;
-import processes.Type;
 
 public class Heal extends Skills {
 	
@@ -25,7 +24,7 @@ public class Heal extends Skills {
 		if (!hasBalance()) {return;}
 		finalTarget = setTarget(targetName);
 		if (preSkillChecks()) {
-			finalTarget.takeDamage(Type.BLUNT, calculateDamage());
+			finalTarget.takeDamage(calculateDamage());
 			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
 			if (finalTarget == currentPlayer) {
 				messageSelf("You heal yourself a bit.");
@@ -61,11 +60,6 @@ public class Heal extends Skills {
 			return false;
 		}		
 		return true;
-	}
-	
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Heal(currentPlayer, fullCommand);
 	}
 	
 	@Override

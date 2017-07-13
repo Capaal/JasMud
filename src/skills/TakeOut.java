@@ -127,9 +127,4 @@ public class TakeOut extends Skills {
 		}
 		return null;		
 	}
-	
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new TakeOut(currentPlayer, fullCommand);
-	}
 }

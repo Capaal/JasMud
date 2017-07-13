@@ -49,8 +49,4 @@ public class Drink extends Skills {
 		}
 		return true;
 	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Drink(currentPlayer, fullCommand);
-	}
 }

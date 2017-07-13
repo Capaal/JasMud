@@ -30,8 +30,4 @@ public class Sleep extends Skills {
 	protected boolean preSkillChecks() {
 		return true;
 	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Sleep(currentPlayer, fullCommand);
-	}
 }

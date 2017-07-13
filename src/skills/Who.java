@@ -14,6 +14,7 @@ public class Who extends Skills {
 	
 	@Override
 	protected void performSkill() {
+		if (!preSkillChecks()) {return;}
 		StringBuilder sb = new StringBuilder();
 		sb.append("All players online: \n");
 		for (PlayerPrompt m : WorldServer.getGameState().viewActiveClients()) {
@@ -27,12 +28,6 @@ public class Who extends Skills {
 
 	@Override
 	protected boolean preSkillChecks() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Who(currentPlayer, fullCommand);
+		return true;
 	}
 }

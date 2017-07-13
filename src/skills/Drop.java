@@ -92,8 +92,4 @@ public class Drop extends Skills {
 		if (itemToMove == null) { return false;}
 		return true;
 	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Drop(currentPlayer, fullCommand);
-	}
 }

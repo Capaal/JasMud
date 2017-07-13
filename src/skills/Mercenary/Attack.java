@@ -12,7 +12,6 @@ import processes.Equipment.EquipmentSlot;
 import processes.Location;
 import processes.Equipment;
 import processes.Skills;
-import processes.Type;
 import skills.Sleep;
 
 public class Attack extends Skills implements InformsAggro {
@@ -39,7 +38,7 @@ public class Attack extends Skills implements InformsAggro {
         if (preSkillChecks()) {	
 			messageSelf("You attack " + target.getName() + " with your " + possWeapon.getName() + ".");
 			messageTarget(currentPlayer.getName() + " attacks you with a " + possWeapon.getName() + ".", Arrays.asList(target));
-			informLastAggressor();
+			informLastAggressor(currentPlayer, target);
 			//applies effect and poison
 			//TODO message others
 			if (possWeapon instanceof Weapon) {
@@ -51,7 +50,7 @@ public class Attack extends Skills implements InformsAggro {
 				}
 				
 	    	}
-			target.takeDamage(Type.SHARP, calculateDamage());
+			target.takeDamage(calculateDamage());
 	    	currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance()); 
         }
     }
@@ -150,16 +149,6 @@ public class Attack extends Skills implements InformsAggro {
     
     private int calculateBalance() {
 		return (int) (baseBalance * possWeapon.getBalanceMult() * balAdjust);
-	}
-    
-    @Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Attack(currentPlayer, fullCommand);
-	}
-    
-    @Override
-	public void informLastAggressor() {
-    	target.informLastAggressor(currentPlayer);
 	}
 }
 

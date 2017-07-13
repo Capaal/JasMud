@@ -3,9 +3,9 @@ package skills.Arcanist.Commands;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import interfaces.Mobile;
-import processes.SkillBook;
 import processes.Skills;
 import processes.UsefulCommands;
 import skills.Arcanist.*;
@@ -137,16 +137,57 @@ public class ArcanistAlter extends Skills {
 			public  ArcanistBuilder getBlock(ArcanistBuilder build, String details) {
 				if (UsefulCommands.isInteger(details)) {				
 					int manaCost = Integer.parseInt(details);
-					if (manaCost >= 0 && manaCost <= 100) { // May not be negative nor more than 100 mana.
-						build.setMana(manaCost);
-						return build;
+					Iterator<ArcanistBlockRequired> iter = build.getRequiredBlocks().iterator();
+					while (iter.hasNext()) {
+					    if (iter.next() instanceof ManaBlock) {
+					        iter.remove();
+					    }
 					}
+					build.addRequiredBlock(new ManaBlock(manaCost));
+					return build;
+				//	if (manaCost >= 0 && manaCost <= 100) { // May not be negative nor more than 100 mana.
+				//		build.setMana(manaCost);
+				//		return build;
+				//	}
 				}
 				return null;
 			}
 			@Override
 			public String describeYourself() {
-				return "Alter Mana [Required Mana]: Sets the amount of mana to cast this spell. Cost: mana.";
+				return "Alter Mana [Required Mana]: Sets the amount of mana to cast this spell. Cost: -mana.";
+			}
+		},
+		
+		BLOODCOST() {
+			@Override
+			public  ArcanistBuilder getBlock(ArcanistBuilder build, String details) {
+				if (UsefulCommands.isInteger(details)) {				
+					int lifeCost = Integer.parseInt(details);
+					
+					// Lambda version
+					build.setRequiredBlocks(build.getRequiredBlocks().stream()
+							.filter(x -> x instanceof BloodBlock)
+							.collect(Collectors.toList()));
+					
+		//		build.getRequiredBlocks().removeAll(build.getRequiredBlocks()
+		//			.stream().filter(x -> x instanceof BloodBlock)
+		//			.collect(Collectors.toList()));
+					
+					// Regular version
+				//	Iterator<ArcanistBlockRequired> iter = build.getRequiredBlocks().iterator();
+				//	while (iter.hasNext()) {
+				//	    if (iter.next() instanceof BloodBlock) {
+				//	        iter.remove();
+				//	    }
+				//	}
+					build.addRequiredBlock(new BloodBlock(lifeCost));
+					return build;
+				}
+				return null;
+			}
+			@Override
+			public String describeYourself() {
+				return "Alter Bloodcost [Required Life]: Sets the amount of life that must be paid. Cost: +life.";
 			}
 		},
 		

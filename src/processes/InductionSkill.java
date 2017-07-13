@@ -2,44 +2,63 @@ package processes;
 
 import interfaces.Mobile;
 
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public abstract class InductionSkill extends Skills {
+	
+	protected final ScheduledExecutorService effectExecutor;
+	protected InductionWrapper wrapper;
 		
 	public InductionSkill(String name, String description, Mobile currentPlayer, String fullCommand) {
 		super(name, description, currentPlayer, fullCommand);
-	}
-
-	protected static ScheduledExecutorService effectExecutor = Executors.newScheduledThreadPool(1);
-	protected InductionWrapper wrapper;
+		effectExecutor = WorldServer.getGameState().getEffectExecutor();
+	}	
 	
 	public void shutDown() {
 		WorldServer.shutdownAndAwaitTermination(effectExecutor);
 	}
+	/**
+	 * Call if induction ends successfully, Usually to add in a message.
+	 */
+	protected abstract void inductionEnded();
+	/**
+	 * Call if induction ends early, usually to add in a message.
+	 */
+	protected abstract void inductionKilled();
 	
-	protected abstract void inductionEnded(); // Induction ends successfully.
-	protected abstract void inductionKilled(); // Induction stopped early.
-	
-	public void scheduleInduction(int times, int interval) {
-		scheduleInduction(times, interval, interval);
+	/**
+	 * Schedules induction ticking, defaults InitialWait to interval.
+	 * @param skill InnerSkill that you want to trigger.
+	 * @param times How many times it should try to trigger.
+	 * @param interval Amount of time between triggering.
+	 */
+	public void scheduleInduction(InnerSkill skill, int times, int interval) {
+		scheduleInduction(skill, times, interval, interval);
 	}
 	
-	public abstract InnerSkill getInnerSkill(Mobile currentPlayer, String fullCommand);
-	
-	public void scheduleInduction(int times, int interval, int initialWait) {
-		if (times == 0 || interval <= 50 || interval <= 0 || initialWait < 0) {
+	/**
+	 * Schedules induction ticking.
+	 * @param skill InnerSkill that you want to trigger.
+	 * @param times How many times it should try to trigger.
+	 * @param interval Amount of time between triggering.
+	 * @param initialWait How long to wait before the first tick.
+	 * @throws IllegalArgumentException times != 0, interval !<= 50 milliseconds, skill != null, initialWait !< 0 millseconds.
+	 */
+	public void scheduleInduction(InnerSkill skill, int times, int interval, int initialWait) {
+		if (times == 0 || interval <= 50 || skill == null || initialWait < 0) {
 			throw new IllegalArgumentException("Invalid duration or times: " + interval + " " + times + " " + initialWait);
 		}
-		InnerSkill innerSkill = getInnerSkill(currentPlayer, fullCommand);
-		wrapper = new InductionWrapper(innerSkill, times);
+		wrapper = new InductionWrapper(skill, times);
 		ScheduledFuture<?> future = effectExecutor.scheduleWithFixedDelay(wrapper, initialWait, interval, TimeUnit.MILLISECONDS);
 		wrapper.setOwnFuture(future);			
 	}
 	
+	/**
+	 * Interrupts an induction skill. Stops future ticks, removes current induction skill from player's current, and calls inductionKilled()
+	 */
 	public void interrupt() {
 		wrapper.interrupt();	
 		currentPlayer.setInduction(null);
@@ -79,7 +98,7 @@ public abstract class InductionSkill extends Skills {
 		
 		public void run() {
 			if (totalTimesRan < timesToRun) {
-				WorldServer.getGameState().addToQueue(wrappedInnerSkill.getNewInstance(currentPlayer, "")); 
+				WorldServer.getGameState().addToQueue(wrappedInnerSkill); 
 				totalTimesRan ++;
 				if (totalTimesRan == timesToRun) {
 					future.cancel(true);

@@ -48,9 +48,5 @@ public class MoveFear extends Move {
 	@Override protected void moveFollowers() {
 		currentPlayer.moveFollowers("move " + dir);
 	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new MoveFear(currentPlayer, fullCommand);
-	}
 }
 

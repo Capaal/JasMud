@@ -1,6 +1,5 @@
 package effects;
 
-import processes.Type;
 import interfaces.*;
 
 //does not extend Regen because can't figure out good way to change interval
@@ -18,7 +17,7 @@ public class MercRegen extends TickingEffect {
 	
 	@Override
 	public void run() {
-		currentPlayer.takeDamage(Type.REGEN, intensity);		
+		currentPlayer.takeDamage(intensity);		
 		wrapper.modifyTimesRan(1); //this might be a silly hack to make infinite
 	}
 	

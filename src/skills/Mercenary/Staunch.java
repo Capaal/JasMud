@@ -4,7 +4,6 @@ import interfaces.Mobile;
 import effects.Bleed;
 import effects.PassiveCondition;
 import processes.Skills;
-import skills.Sleep;
 
 public class Staunch extends Skills { 
 	
@@ -36,10 +35,5 @@ public class Staunch extends Skills {
 	protected boolean preSkillChecks() {
 		if (!hasBalance()) {return false;}
 		return true;
-	}
-	
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Staunch(currentPlayer, fullCommand);
 	}
 }

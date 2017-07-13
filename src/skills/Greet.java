@@ -52,8 +52,4 @@ public class Greet extends Skills {
 		}
 		return true;
 	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Greet(currentPlayer, fullCommand);
-	}
 }

@@ -46,9 +46,4 @@ public class Close extends Skills {
 	protected boolean preSkillChecks() {
 		return true;
 	}
-	
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Close(currentPlayer, fullCommand);
-	}
 }

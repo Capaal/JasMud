@@ -43,10 +43,4 @@ public class Say extends Skills {
 		}
 		return true;
 	}
-	
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Say(currentPlayer, fullCommand);
-	}
-
 }

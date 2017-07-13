@@ -1,10 +1,7 @@
 package skills;
 
 import interfaces.Mobile;
-import processes.Skills;
 
-
-// TODO stop following on fail follow (bad timing on doors closed etc.)
 public class MoveFollow extends Move {
 	
 	public MoveFollow(Mobile currentPlayer, String fullCommand) {
@@ -12,18 +9,10 @@ public class MoveFollow extends Move {
 	}
 
 	@Override protected void stopFollowing() {
-		// Blank, we do not want to stop following.
+		// Blank, we do not want to stop following whenever we move and follow.
 	}
 	
-	//@Override
-//	public void removeFollower(Follow follow) {
-		// Blank because we don't want to remove our followers.
-//	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new MoveFollow(currentPlayer, fullCommand);
-	}
-	
+	// Stops following if you fail to follow.
 	@Override
 	protected void onFail() {
 		super.stopFollowing();

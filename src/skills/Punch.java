@@ -3,13 +3,11 @@ package skills;
 import java.util.Arrays;
 
 import effects.PassiveCondition;
-import interfaces.Holdable;
 import interfaces.InformsAggro;
 import interfaces.Mobile;
 import processes.Skills;
-import processes.Type;
 
-public class Punch extends Skills implements InformsAggro{
+public class Punch extends Skills implements InformsAggro {
 	
 	private final int intensity = 10;
 	private String targetName;
@@ -23,18 +21,15 @@ public class Punch extends Skills implements InformsAggro{
 	}	
 	
 	// Deals damage to a single target in currentPlayer's location
-	// ADD CHECK FOR ISDEAD()
 	@Override
 	protected void performSkill() {
-		targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
-		if (preSkillChecks()) {
-			informLastAggressor();
-			finalTarget.takeDamage(Type.BLUNT, calculateDamage());
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
-			messageSelf("You punch " + finalTarget.getName());
-			messageTarget(currentPlayer.getNameColored() + " punches you.", Arrays.asList(finalTarget));
-			messageOthers(currentPlayer.getNameColored() + " punches " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget));
-		}
+		informLastAggressor(currentPlayer, finalTarget);
+		finalTarget.takeDamage(calculateDamage());
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
+		messageSelf("You punch " + finalTarget.getName());
+		messageTarget(currentPlayer.getNameColored() + " punches you.", Arrays.asList(finalTarget));
+		messageOthers(currentPlayer.getNameColored() + " punches " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget));
+		
 	}
 
 	private int calculateDamage() {
@@ -63,6 +58,7 @@ public class Punch extends Skills implements InformsAggro{
 
 	@Override
 	protected boolean preSkillChecks() {
+		targetName = Syntax.TARGET.getStringInfo(fullCommand, this);
 		if (targetName.equals("")) {
 			messageSelf("Specify target.");
 			return false;
@@ -78,15 +74,5 @@ public class Punch extends Skills implements InformsAggro{
 			return false;
 		}
 		return true;
-	}
-	
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Punch(currentPlayer, fullCommand);
-	}
-
-	@Override
-	public void informLastAggressor() {
-		finalTarget.informLastAggressor(currentPlayer);
 	}
 }

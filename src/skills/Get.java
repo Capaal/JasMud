@@ -25,17 +25,14 @@ public class Get extends Skills {
 	// Moves a HOLDABLE from the LOCATION of the CURRENTPLAYER into their INVENTORY.
 	// Requires Balance, Syntax = "get sword" or "get dagger1234" or "get gold 26"
 	@Override
-	protected void performSkill() {
-		possItem = Syntax.ITEM.getStringInfo(fullCommand, this);
-		if (preSkillChecks()) {
-			Location here = currentPlayer.getContainer();
-			itemToMove = here.getHoldableFromString(possItem);
-			if (itemToMove == null) {
-				messageSelf("You can't find that item.");
-				return;
-			}	
-			getItem();
-		}
+	protected void performSkill() {		
+		Location here = currentPlayer.getContainer();
+		itemToMove = here.getHoldableFromString(possItem);
+		if (itemToMove == null) {
+			messageSelf("You can't find that item.");
+			return;
+		}	
+		getItem();		
 	}
 	
 	private void getItem() {
@@ -99,6 +96,7 @@ public class Get extends Skills {
 
 	@Override
 	protected boolean preSkillChecks() {
+		possItem = Syntax.ITEM.getStringInfo(fullCommand, this);
 		if (possItem.equals("")) {
 			messageSelf("Get what?");
 			return false;
@@ -106,9 +104,5 @@ public class Get extends Skills {
 		if (!hasBalance()) {return false;}
 		if (brokenArms()) {return false;}
 		return true;
-	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Get(currentPlayer, fullCommand);
 	}
 }

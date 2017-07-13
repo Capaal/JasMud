@@ -102,10 +102,6 @@ public class Give extends Skills {
 		}
 		return true;
 	}
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Give(currentPlayer, fullCommand);
-	}
 	
 	@Override
 	public String displaySyntax() {

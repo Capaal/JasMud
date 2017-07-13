@@ -9,7 +9,6 @@ import interfaces.Mobile;
 import items.StdItem;
 import processes.Location;
 import processes.Skills;
-import processes.Type;
 import processes.Location.Direction;
 
 public class Throw extends Skills implements InformsAggro {
@@ -31,16 +30,15 @@ public class Throw extends Skills implements InformsAggro {
 	
 	// Deals throw damage to a single target in currentPlayer's location or designated direction
 	@Override
-	protected void performSkill() {
-		if (!preSkillChecks()) {return;};		
-		finalTarget.takeDamage(Type.SHARP, calculateDamage());
+	protected void performSkill() {		
+		finalTarget.takeDamage(calculateDamage());
 		itemToThrow.moveHoldable(finalLoc);
 		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
 		messageSelf("You throw " + itemToThrow.getName() + " at " + finalTarget.getNameColored() + ".");
 		messageTarget(currentPlayer.getNameColored() + " throws " + itemToThrow.getName() + " at you.", Arrays.asList(finalTarget));
 		messageOthers(currentPlayer.getNameColored() + " throws " + itemToThrow.getName() + " at " + finalTarget.getNameColored(), Arrays.asList(currentPlayer, finalTarget));
 		messageOthersAway(finalTarget.getNameColored() + "is hit with a thrown " +  itemToThrow.getName() + ".", Arrays.asList(finalTarget), finalLoc);
-		informLastAggressor();
+		informLastAggressor(currentPlayer, finalTarget);
 	}	
 	
 	@Override
@@ -128,15 +126,5 @@ public class Throw extends Skills implements InformsAggro {
 	private Location getLoc(String dir) {
 		Location mobLocation = currentPlayer.getContainer();
 		return mobLocation.getLocation(dir);
-	}
-	
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Throw(currentPlayer, fullCommand);
-	}
-	
-	@Override
-	public void informLastAggressor() {
-		finalTarget.informLastAggressor(currentPlayer);
 	}
 }

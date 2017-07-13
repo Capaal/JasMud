@@ -6,7 +6,6 @@ import effects.Regen;
 import interfaces.Container;
 import interfaces.Cooldown;
 import interfaces.Mobile;
-import processes.Type;
 
 public class Plant extends StackableItem{
 
@@ -40,7 +39,7 @@ public class Plant extends StackableItem{
 				if (currentPlayer.getCurrentHp() >= currentPlayer.getMaxHp()) {
 					return failMsg;
 				}
-				currentPlayer.takeDamage(Type.BLUNT, -20);
+				currentPlayer.takeDamage(-20);
 				return "The herb soothes your wounds and restores some life.";
 			}
 		},
@@ -100,21 +99,11 @@ public class Plant extends StackableItem{
 			
 		};
 		
-		PlantType(int cooldown) { this.COOLDOWN = cooldown;}
+		PlantType(int cooldown) { this.COOLDOWN = cooldown;}		
 		
 		@Override
-		public boolean isOnCooldown(Mobile currentPlayer) {
-			return currentPlayer.isOnCooldown(this);
-		}
-
-		@Override
-		public void addCooldown(Mobile currentPlayer) {
-			currentPlayer.addCooldown(this);
-		}
-		
-		@Override
-		public void removeCooldown(Mobile currentPlayer) {
-			currentPlayer.removeCooldown(this);
+		public String coolDownRemovedMessages() {
+			return "You can eat a " + this.toString().toLowerCase() + " again.";
 		}
 		
 		public String failMsg = "The plant doesn't seem to have an effect.";

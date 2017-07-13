@@ -1,5 +1,6 @@
 package skills.Arcanist;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,29 +13,36 @@ public class ArcanistSkill extends Skills implements interfaces.InformsAggro {
 	private final DamageBlock damageBlock;
 	private final SpeedBlock speedBlock;
 	private final TargettingBlock targettingBlock;
-	private final int manaCost;
 	
-	private ArcanistsData currentData; // Right now just targets array, necessary?
+	private final List<ArcanistBlockRequired> requiredBlocks;
+	private final List<ArcanistBlock> selfBlocks;
+//	private final int manaCost;
+	
+	private List<Mobile> currentTargets; // Right now just targets array, necessary?
 	
 	// Build from a ArcanistBuilder, probably build via CREATE and ALTER
 	public ArcanistSkill(ArcanistBuilder build) {
 		super(build.getName(), build.getDescrption(), null, null);
 		super.syntaxList.addAll(build.getSyntax());
-		currentData = new ArcanistsData();
+		currentTargets = new ArrayList<Mobile>();
 		damageBlock = build.getDamageBlock();
 		speedBlock = build.getSpeedBlock();
 		targettingBlock = build.getTargettingBlock();
-		manaCost = build.getMana();
+		requiredBlocks = build.getRequiredBlocks();
+		selfBlocks = build.getSelfBlocks();
+	//	manaCost = build.getMana();
 	}
 	
 	public ArcanistSkill(ArcanistSkill self, Mobile currentPlayer, String fullCommand) {
 		super(self.getName(), self.getDescription(), currentPlayer, fullCommand);
 		super.syntaxList.addAll(self.syntaxList);
-		currentData = new ArcanistsData();
+		currentTargets = new ArrayList<Mobile>();
 		damageBlock = self.damageBlock;
 		speedBlock = self.speedBlock;
 		targettingBlock = self.targettingBlock;
-		manaCost = self.manaCost;
+		requiredBlocks = self.requiredBlocks;
+		selfBlocks = self.selfBlocks;
+//		manaCost = self.manaCost;
 	}
 	
 	
@@ -51,26 +59,26 @@ public class ArcanistSkill extends Skills implements interfaces.InformsAggro {
 	}
 
 	public void setTargets(List<Mobile> targets) {
-		getCurrentData().targets = targets;
+		currentTargets = new ArrayList<Mobile>(targets);
 	}
 	
-	public ArcanistsData getCurrentData() {
-		return currentData;
-	}
-	
-	class ArcanistsData {
-		protected List<Mobile> targets;		
+	public List<Mobile> getCurrentTargets() {
+		return currentTargets;
 	}
 
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			messages(); // Still messages people who block.
-			damageBlock.perform(this);
-			speedBlock.perform(this);
-			currentPlayer.changeMana(-manaCost);
-			informLastAggressor();
+		messages(); // Still messages people who block.
+		damageBlock.perform(this);
+		speedBlock.perform(this);
+		for (ArcanistBlockRequired rb : requiredBlocks) {
+			rb.perform(this);
 		}
+		for (ArcanistBlock sb : selfBlocks) {
+			sb.perform(this);
+		}
+		informLastAggressor(currentPlayer, currentTargets);
+		
 	}
 	
 	private void messages() {
@@ -79,7 +87,7 @@ public class ArcanistSkill extends Skills implements interfaces.InformsAggro {
 		// I LIKE THE LAST CHOICE. Simple and easy, just say they got hit by something, and effects will add extras
 		// Maybe some choices later of different pre-made messages. and then we start selling messages....
 		// What about targets that block the attack? So many things AOE complicate...
-		for (Mobile t : currentData.targets) {
+		for (Mobile t : currentTargets) {
 			messageTarget(currentPlayer.getNameColored() + " casts a spell on you.", Arrays.asList(t));
 			messageSelf("You cast a spell at " + t.getName());
 			messageOthers(currentPlayer.getNameColored() + " casts a spell on " + t.getNameColored(), Arrays.asList(currentPlayer, t));
@@ -91,22 +99,20 @@ public class ArcanistSkill extends Skills implements interfaces.InformsAggro {
 		if (!hasBalance()) {
 			return false;
 		}	
-		if (!hasMana()) {
-			return false;
+		for (ArcanistBlockRequired rb : requiredBlocks) {
+			if (!rb.doesMeetRequirement(currentPlayer)) {
+				return false;
+			}
 		}
+		// now checks for required mana in manablock
+	//	if (!hasMana()) {
+	///		return false;
+		//}
 //		if (isBlocking(finalTarget)) {  // Actually true? an effect to get extra points? oh geeze. Also, AOE doesn't care here? // Cost to make unblockable?
 //			return false;
 //		}
 		targettingBlock.perform(this);
-		if (currentData.targets == null) {
-			return false;
-		}
-		return true;
-	}
-	
-	public boolean hasMana() {
-		if (currentPlayer.getCurrentMana() < manaCost) {
-			messageSelf("You're too mentally drained to cast.");
+		if (currentTargets.size() == 0) {
 			return false;
 		}
 		return true;
@@ -124,17 +130,16 @@ public class ArcanistSkill extends Skills implements interfaces.InformsAggro {
 		build.setSpeed(speedBlock);
 		build.setTargettingBlock(targettingBlock);
 		build.setSyntax(targettingBlock.getSyntax());
-		build.setMana(manaCost);
+		build.setRequiredBlocks(requiredBlocks);
+		build.setSelfBlocks(selfBlocks);
 		return build;
 	}
 
 	// Assumes all arcanist spells will cause aggro EXCEPT for heals. // TODO bit hacky, what about slight heal + paralyze?
 	@Override
-	public void informLastAggressor() {
-		if (currentData != null && !(damageBlock instanceof DamageBlockHeal)) {
-			for (Mobile m : currentData.targets) {
-				m.informLastAggressor(getCurrentPlayer());
-			}			
+	public void informLastAggressor(Mobile currentPlayer, List<Mobile> toInform) {
+		if (!(damageBlock instanceof DamageBlockHeal)) {
+			toInform.stream().forEach(x -> x.informLastAggressor(currentPlayer));
 		}		
 	}
 }

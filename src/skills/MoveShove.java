@@ -43,9 +43,4 @@ public class MoveShove extends Move {
 	@Override protected void moveFollowers() {
 		currentPlayer.moveFollowers("move " + dir);
 	}
-	
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new MoveShove(currentPlayer, fullCommand);
-	}
 }

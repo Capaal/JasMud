@@ -17,42 +17,32 @@ public class Clearmind extends Skills implements Cooldown {
 	public Clearmind(Mobile currentPlayer, String fullCommand) {
 		super("clearmind", "Cures mental afflictions", currentPlayer, fullCommand);
 		super.syntaxList.add(Syntax.SKILL);
-	}	
-	
+	}		
 	
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			//can do switch/case here? TODO
-			if (currentPlayer.hasCondition(PassiveCondition.DIZZY)) {
-				currentPlayer.removeCondition(PassiveCondition.DIZZY);
-				messageSelf("Dizzy cured.");
-				cureCooldown();
-			} else if (currentPlayer.hasCondition(new Fear(currentPlayer))) {
-				currentPlayer.removeCondition(new Fear(currentPlayer));
-				messageSelf("Fear cured.");
-				cureCooldown();
-			} else if (currentPlayer.hasCondition(PassiveCondition.CONFUSED)) {
-				currentPlayer.removeCondition(PassiveCondition.CONFUSED);
-				messageSelf("Confusion cured.");
-				cureCooldown();
-			} else {
-				messageSelf("Your mind is already clear.");
-			}
-		}
+		//can do switch/case here? TODO
+		if (currentPlayer.hasCondition(PassiveCondition.DIZZY)) {
+			currentPlayer.removeCondition(PassiveCondition.DIZZY);
+			messageSelf("Dizzy cured.");
+			startCooldown();
+		} else if (currentPlayer.hasCondition(new Fear(currentPlayer))) {
+			currentPlayer.removeCondition(new Fear(currentPlayer));
+			messageSelf("Fear cured.");
+			startCooldown();
+		} else if (currentPlayer.hasCondition(PassiveCondition.CONFUSED)) {
+			currentPlayer.removeCondition(PassiveCondition.CONFUSED);
+			messageSelf("Confusion cured.");
+			startCooldown();
+		} else {
+			messageSelf("Your mind is already clear.");
+		}		
 	}
 	
 	//can do this like Straighten instead? TODO
-	private void cureCooldown() {
+	private void startCooldown() {
 		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 1000);
-		addCooldown(currentPlayer);
-		WorldServer.getGameState().getEffectExecutor().schedule(() -> setOffCooldown(), COOLDOWNLENGTH, TimeUnit.MILLISECONDS);	
-	}
-	
-	
-	private void setOffCooldown() { 
-		messageSelf("You are again able to clear your mind.");
-		removeCooldown(currentPlayer);
+		addCooldown(currentPlayer, COOLDOWNLENGTH);
 	}	
 	
 	@Override
@@ -64,27 +54,9 @@ public class Clearmind extends Skills implements Cooldown {
 		if (!hasBalance()) {return false;}
 		return true;
 	}
-	
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Clearmind(currentPlayer, fullCommand);
-	}
-
 
 	@Override
-	public boolean isOnCooldown(Mobile currentPlayer) {
-		return currentPlayer.isOnCooldown(this);
-	}
-
-
-	@Override
-	public void addCooldown(Mobile currentPlayer) {
-		currentPlayer.addCooldown(this);
-	}
-
-
-	@Override
-	public void removeCooldown(Mobile currentPlayer) {
-		currentPlayer.removeCooldown(this);
+	public String coolDownRemovedMessages() {
+		return "You are again able to clear your mind.";
 	}
 }

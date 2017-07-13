@@ -1,6 +1,5 @@
 package effects;
 
-import processes.Type;
 import interfaces.*;
 
 public class Regen extends TickingEffect {
@@ -16,7 +15,7 @@ public class Regen extends TickingEffect {
 	}
 	@Override
 	public void run() {
-		currentPlayer.takeDamage(Type.REGEN, intensity);		
+		currentPlayer.takeDamage(intensity);		
 	}
 	
 	@Override // TODO
