@@ -27,19 +27,11 @@ public class Shove extends Skills implements InformsAggro {
 	
 	@Override
 	protected void performSkill() {
-	
-		if (preSkillChecks()) {
-		//	messageSelf("You shove " + finalTarget.getName() + " to the " + dir + ".");
-		//	messageTarget(currentPlayer.getName() + " shoves you away.", Arrays.asList(finalTarget));
-		//	messageOthers(currentPlayer.getName() + " shoves " + finalTarget.getName() + " away.", Arrays.asList(currentPlayer, finalTarget));
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
-			MoveShove move = new MoveShove(finalTarget, "move " + dir + " " + currentPlayer.getName());
-			move.setShover(currentPlayer); // TODO use last aggressor?
-			WorldServer.getGameState().addToQueue(move);
-			informLastAggressor(currentPlayer, finalTarget);
-		//	messageOthersAway(targetName + "is suddenly shoved into this location.", Arrays.asList(finalTarget), endContainer);
-		}
-		
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+		MoveShove move = new MoveShove(finalTarget, "move " + dir + " " + currentPlayer.getName());
+		move.setShover(currentPlayer); // TODO use last aggressor?
+		WorldServer.getGameState().addToQueue(move);
+		informLastAggressor(currentPlayer, finalTarget);	
 	}
 	
 	private boolean setTarget() {

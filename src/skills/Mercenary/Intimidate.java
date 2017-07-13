@@ -6,7 +6,6 @@ import effects.Fear;
 import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Skills;
-import skills.Sleep;
 
 public class Intimidate extends Skills {
 	
@@ -21,15 +20,12 @@ public class Intimidate extends Skills {
 
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			mobileToFear.addActiveCondition(new Fear(mobileToFear), 20);
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 2000);
-			messageSelf("You fear someone.");
-			messageTarget("Someone fears you.", Arrays.asList(mobileToFear));
-			messageOthers(mobileToFear.getNameColored() + " suddenly looks around with a panicked expression.", Arrays.asList(mobileToFear,currentPlayer));
-		}
+		mobileToFear.addActiveCondition(new Fear(mobileToFear), 20); // Adds fear, ticks 20 times.
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 2000);
+		messageTarget(currentPlayer.getNameColored() + " fears you.", Arrays.asList(mobileToFear));
+		messageSelf("You fear " + mobileToFear.getNameColored());
+		messageOthers(mobileToFear.getNameColored() + " suddenly looks around with a panicked expression.", Arrays.asList(mobileToFear,currentPlayer));	
 	}
-
 	
 	private boolean setTarget() {
 		targetName = Syntax.TARGET.getStringInfo(fullCommand, this);

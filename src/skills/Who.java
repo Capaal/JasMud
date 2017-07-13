@@ -14,7 +14,6 @@ public class Who extends Skills {
 	
 	@Override
 	protected void performSkill() {
-		if (!preSkillChecks()) {return;}
 		StringBuilder sb = new StringBuilder();
 		sb.append("All players online: \n");
 		for (PlayerPrompt m : WorldServer.getGameState().viewActiveClients()) {

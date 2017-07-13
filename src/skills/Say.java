@@ -18,11 +18,8 @@ public class Say extends Skills {
 
 	@Override
 	protected void performSkill() {
-		words = Syntax.MESSAGE.getStringInfo(fullCommand, this);
-		if (preSkillChecks()) {
-			messageSelf("You say: \"" + words + "\".");
-			messageOthers(currentPlayer.getNameColored() + " says, \"" + words + "\".", Arrays.asList(currentPlayer));
-		}
+		messageSelf("You say: \"" + words + "\".");
+		messageOthers(currentPlayer.getNameColored() + " says, \"" + words + "\".", Arrays.asList(currentPlayer));
 	}
 	
 	//checks for dumb, silence, etc
@@ -32,6 +29,7 @@ public class Say extends Skills {
 
 	@Override
 	protected boolean preSkillChecks() {
+		words = Syntax.MESSAGE.getStringInfo(fullCommand, this);
 		if (!canTalk()) {
 			messageSelf("You can't talk.");
 			return false;

@@ -35,24 +35,22 @@ public class Attack extends Skills implements InformsAggro {
 
     @Override
 	protected void performSkill() {
-        if (preSkillChecks()) {	
-			messageSelf("You attack " + target.getName() + " with your " + possWeapon.getName() + ".");
-			messageTarget(currentPlayer.getName() + " attacks you with a " + possWeapon.getName() + ".", Arrays.asList(target));
-			informLastAggressor(currentPlayer, target);
-			//applies effect and poison
-			//TODO message others
-			if (possWeapon instanceof Weapon) {
-				Weapon weapon = (Weapon) possWeapon;
-				weapon.applyEffect(target);
-			//	messageOthers(target.getName() + weapon.displayEffectOthers(),Arrays.asList(currentPlayer));
-				if (!weapon.getAppliedList().isEmpty()) {
-					messageTarget(weapon.applyPlant(target), Arrays.asList(target));
-				}
-				
-	    	}
-			target.takeDamage(calculateDamage());
-	    	currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance()); 
-        }
+		messageSelf("You attack " + target.getName() + " with your " + possWeapon.getName() + ".");
+		messageTarget(currentPlayer.getName() + " attacks you with a " + possWeapon.getName() + ".", Arrays.asList(target));
+		informLastAggressor(currentPlayer, target);
+		//applies effect and poison
+		//TODO message others
+		if (possWeapon instanceof Weapon) {
+			Weapon weapon = (Weapon) possWeapon;
+			weapon.applyEffect(target);
+		//	messageOthers(target.getName() + weapon.displayEffectOthers(),Arrays.asList(currentPlayer));
+			if (!weapon.getAppliedList().isEmpty()) {
+				messageTarget(weapon.applyPlant(target), Arrays.asList(target));
+			}
+			
+    	}
+		target.takeDamage(calculateDamage());
+    	currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance()); 
     }
 
     @Override

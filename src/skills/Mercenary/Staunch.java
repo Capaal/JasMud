@@ -15,20 +15,18 @@ public class Staunch extends Skills {
 	
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			if (currentPlayer.hasCondition(new Bleed(currentPlayer, 1))) {
-				currentPlayer.addActiveCondition(new Bleed(currentPlayer, -5), 10);
-				if (currentPlayer.hasCondition(new Bleed(currentPlayer, 1))) {
-					messageSelf("You manage to stop some of your bleeding.");
-				} else {
-					messageSelf("Bleeding cured.");
-				}
-				currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+		Bleed bleedChange = new Bleed(currentPlayer, -1);
+		if (currentPlayer.hasCondition(bleedChange)) {
+			currentPlayer.addActiveCondition(bleedChange, 1); // Times arbitrary, because bleed doesn't care.
+			if (currentPlayer.hasCondition(bleedChange)) {
+				messageSelf("You manage to stop some of your bleeding.");
 			} else {
-				messageSelf("You're not bleeding.");
+				messageSelf("Bleeding cured.");
 			}
+			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 1000);
+		} else {
+			messageSelf("You're not bleeding.");
 		}
-
 	}
 
 	@Override

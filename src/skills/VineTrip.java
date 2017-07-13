@@ -20,16 +20,14 @@ public class VineTrip extends Skills implements InformsAggro {
 
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
-			finalTarget.addPassiveCondition(PassiveCondition.BALANCE, 1700);
-			finalTarget.killInduction();
-			messageSelf("You encourage a vine to get in the way.");
-			messageTarget("A vine shoots out by your feet and trips you.", Arrays.asList(finalTarget));
-			messageOthers("A vine trips " + finalTarget.getNameColored() + ".", Arrays.asList(currentPlayer, finalTarget));
-			informLastAggressor(currentPlayer, finalTarget);
-		}
-	}
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
+		finalTarget.addPassiveCondition(PassiveCondition.BALANCE, 1700);
+		finalTarget.killInduction();
+		messageSelf("You encourage a vine to get in the way.");
+		messageTarget("A vine shoots out by your feet and trips you.", Arrays.asList(finalTarget));
+		messageOthers("A vine trips " + finalTarget.getNameColored() + ".", Arrays.asList(currentPlayer, finalTarget));
+		informLastAggressor(currentPlayer, finalTarget);
+	}	
 	
 	private boolean setTarget() {
 		String targetName = Syntax.TARGET.getStringInfo(fullCommand, this);

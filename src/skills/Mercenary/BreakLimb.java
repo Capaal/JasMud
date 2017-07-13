@@ -26,25 +26,23 @@ public class BreakLimb extends Skills implements InformsAggro {
 	
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			//checks if slot specified is a hand, then checks if hand is already broken
-			//sets limb to broken, unwield if hand
-			if (slot.equals(EquipmentSlot.LEFTHAND)) {
-				breakarm(PassiveCondition.BROKENLEFTARM);
-			} else if (slot.equals(EquipmentSlot.RIGHTHAND)) {
-				breakarm(PassiveCondition.BROKENRIGHTARM);
-	//		} else if (slot.equals(EquipmentSlot.LEGS)) {
-			//	messageTarget("Your legs are broken.", Arrays.asList(finalTarget));
+		//checks if slot specified is a hand, then checks if hand is already broken
+		//sets limb to broken, unwield if hand
+		if (slot.equals(EquipmentSlot.LEFTHAND)) {
+			breakarm(PassiveCondition.BROKENLEFTARM);
+		} else if (slot.equals(EquipmentSlot.RIGHTHAND)) {
+			breakarm(PassiveCondition.BROKENRIGHTARM);
+//		} else if (slot.equals(EquipmentSlot.LEGS)) {
+		//	messageTarget("Your legs are broken.", Arrays.asList(finalTarget));
 //				finalTarget.addPassiveCondition((PassiveCondition.BROKENLEGS),-1);
-			}
-			//the regular stuff a damaging atk does
-			finalTarget.takeDamage(calculateDamage());
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
-			messageSelf("You target a specific limb and hit " + finalTarget.getNameColored() + " really hard.");
-		//	messageTarget(currentPlayer.getName() + " hits you with a targetted punch.", Arrays.asList(finalTarget));
-			messageOthers(currentPlayer.getNameColored() + " punches " + finalTarget.getNameColored() + " harder than usual.", Arrays.asList(currentPlayer, finalTarget));
-			informLastAggressor(currentPlayer, finalTarget);
 		}
+		//the regular stuff a damaging atk does
+		finalTarget.takeDamage(calculateDamage());
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+		messageSelf("You target a specific limb and hit " + finalTarget.getNameColored() + " really hard.");
+	//	messageTarget(currentPlayer.getName() + " hits you with a targetted punch.", Arrays.asList(finalTarget));
+		messageOthers(currentPlayer.getNameColored() + " punches " + finalTarget.getNameColored() + " harder than usual.", Arrays.asList(currentPlayer, finalTarget));
+		informLastAggressor(currentPlayer, finalTarget);
 	}
 	
 	private Mobile setTarget(String targetName) {

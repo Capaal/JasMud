@@ -18,20 +18,18 @@ public class Drink extends Skills {
 	
 	@Override
 	protected void performSkill() {
-		potionName = Syntax.ITEM.getStringInfo(fullCommand, this);
-		if (preSkillChecks()) {
-			Drinkable potion = (Drinkable)potionItem;		
-			//drinks the damn thing
-			if(!potion.changeSips(1)) {
-				messageSelf("There are no more sips left in your potion.");
-				return;
-			}
-			messageSelf(potion.drink(currentPlayer));
-			messageSelf("You take a sip of your " + potionName + ".");
+		Drinkable potion = (Drinkable)potionItem;		
+		//drinks the damn thing
+		if(!potion.changeSips(1)) {
+			messageSelf("There are no more sips left in your potion.");
+			return;
 		}
+		messageSelf(potion.drink(currentPlayer));
+		messageSelf("You take a sip of your " + potionName + ".");
 	}
 	
 	protected boolean preSkillChecks() {
+		potionName = Syntax.ITEM.getStringInfo(fullCommand, this);
 		if (potionName.equals("")) {
 			messageSelf("What are you trying to drink?");
 			return false;

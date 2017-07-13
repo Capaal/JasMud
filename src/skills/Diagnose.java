@@ -32,7 +32,6 @@ public class Diagnose extends Skills {
 
 	@Override
 	protected boolean preSkillChecks() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 }

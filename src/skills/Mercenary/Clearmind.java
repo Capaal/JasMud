@@ -4,11 +4,8 @@ import interfaces.Cooldown;
 import interfaces.Mobile;
 import effects.PassiveCondition;
 
-import java.util.concurrent.TimeUnit;
-
 import effects.Fear;
 import processes.Skills;
-import processes.WorldServer;
 
 public class Clearmind extends Skills implements Cooldown {
 	

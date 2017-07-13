@@ -4,11 +4,10 @@ import effects.PassiveCondition;
 import interfaces.Mobile;
 import items.Plant.PlantType;
 import processes.Skills;
-import processes.Skills.Syntax;
 
 public class ListAll extends Skills {
 	
-	String toList;
+	private String toList;
 
 	public ListAll(Mobile currentPlayer, String fullCommand) {
 		super("list", "Informational skill - list things in a category (plants, condis).", currentPlayer, fullCommand);

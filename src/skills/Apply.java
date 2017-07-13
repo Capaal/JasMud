@@ -7,7 +7,6 @@ import interfaces.Mobile;
 import items.Plant;
 import items.Weapon;
 import processes.Skills;
-import processes.Skills.Syntax;
 
 public class Apply extends Skills {
 	
@@ -26,16 +25,6 @@ public class Apply extends Skills {
 
 	@Override
 	protected void performSkill() {
-		if(!preSkillChecks()) {return;}
-		if (!(itemToApply instanceof Plant)) {
-			messageSelf("You can't apply that.");
-			return;
-		}
-		if (!(target instanceof Weapon)) {
-			messageSelf("Applying the " + itemToApplyName + "won't have any affect.");
-			return;
-		}
-		
 		String quantityToApply = Syntax.QUANTITY.getStringInfo(fullCommand, this);
 		int quantity = 1;
 		if (!quantityToApply.isEmpty()) {
@@ -43,8 +32,7 @@ public class Apply extends Skills {
 			if (quantity > itemToApply.getQuantity()) {
 				quantity = itemToApply.getQuantity();
 			}
-		}
-		
+		}		
 		Plant plant = (Plant) itemToApply;
 		for (int i=0; i<=quantity; i++) {
 			((Weapon)target).getAppliedList().add(plant);
@@ -88,10 +76,16 @@ public class Apply extends Skills {
 			messageSelf("You don't see a \"" + possibleTarget + "\".");
 			return false;
 		}
-		
+		if (!(itemToApply instanceof Plant)) {
+			messageSelf("You can't apply that.");
+			return false;
+		}
+		if (!(target instanceof Weapon)) {
+			messageSelf("Applying the " + itemToApplyName + "won't have any affect.");
+			return false;
+		}		
 		return true;
-	}
-	
+	}	
 	
 	private boolean checkItem() {
 		itemToApply = currentPlayer.getHoldableFromString(itemToApplyName);

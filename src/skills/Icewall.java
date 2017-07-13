@@ -25,20 +25,17 @@ public class Icewall extends Skills {
 
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 4000);
-			messageSelf("You cast a wall of ice to the " + direction.name().toLowerCase() + ".");
-			messageOthers(currentPlayer.getNameColored() + " casts a wall of ice to the " + direction.name().toLowerCase() + ".",
-					Arrays.asList(currentPlayer));
-			messageOthersAway(currentPlayer.getNameColored() + " casts a wall of ice to the " + (otherLocation.getDirectionToLocation(currentPlayer.getContainer()).name().toLowerCase()) + ".",
-					Arrays.asList(currentPlayer), otherLocation);
-			Blocking block = new Blocking("Icewall");
-			Location currentLocation = currentPlayer.getContainer();
-			currentLocation.addBlocking(direction, block);
-			ScheduledExecutorService effectExecutor = WorldServer.getGameState().getEffectExecutor();
-	//		effectExecutor.schedule(() -> block.destroy(), 10000, TimeUnit.MILLISECONDS);	
-			effectExecutor.schedule(() -> currentLocation.removeBlocking(direction, block), 10000, TimeUnit.MILLISECONDS);	
-		}
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 4000);
+		messageSelf("You cast a wall of ice to the " + direction.name().toLowerCase() + ".");
+		messageOthers(currentPlayer.getNameColored() + " casts a wall of ice to the " + direction.name().toLowerCase() + ".",
+				Arrays.asList(currentPlayer));
+		messageOthersAway(currentPlayer.getNameColored() + " casts a wall of ice to the " + (otherLocation.getDirectionToLocation(currentPlayer.getContainer()).name().toLowerCase()) + ".",
+				Arrays.asList(currentPlayer), otherLocation);
+		Blocking block = new Blocking("Icewall");
+		Location currentLocation = currentPlayer.getContainer();
+		currentLocation.addBlocking(direction, block);
+		ScheduledExecutorService effectExecutor = WorldServer.getGameState().getEffectExecutor();
+		effectExecutor.schedule(() -> currentLocation.removeBlocking(direction, block), 10000, TimeUnit.MILLISECONDS);	
 	}
 
 	@Override

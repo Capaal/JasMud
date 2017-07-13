@@ -14,11 +14,9 @@ public class MercRegenSkill extends Skills {
 
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			currentPlayer.addActiveCondition(new MercRegen(currentPlayer, -5), 5);
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
-			messageSelf("You gain regeneration.");
-		}
+		currentPlayer.addActiveCondition(new MercRegen(currentPlayer, -5), 5); // Heals for 5 percent every tick, and ticks 5 times. (25% total).
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+		messageSelf("You gain regeneration.");	
 	}
 
 	@Override

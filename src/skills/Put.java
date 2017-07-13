@@ -30,9 +30,7 @@ public class Put extends Skills {
 	@Override //checks each container if previous is full
 	protected void performSkill() {
 		//sets item, container, qty
-		if (preSkillChecks()) {
-			putItem();
-		}
+		putItem();
 	}
 	
 	private void putItem() {		

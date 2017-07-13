@@ -19,7 +19,6 @@ public class Unwield extends Skills {
 	
 	@Override
 	protected void performSkill() {
-		if(!preSkillChecks()) {return;}
 		currentPlayer.unEquip(wantSlot);
 		messageSelf("You unwield a " + itemToUnwield.getName().toString() + " from your " + wantSlot.toString().toLowerCase() + ".");	
 	}

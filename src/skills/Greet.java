@@ -1,6 +1,5 @@
 package skills;
 
-import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Location;
 
@@ -21,16 +20,13 @@ public class Greet extends Skills {
 
 	@Override
 	public void performSkill() {
-		target = setTarget();
-		if (preSkillChecks()) {
-			if (canTalk()) {
-				messageSelf("You greet " + target.getNameColored() + " in a friendly manner.");
-				messageOthers(currentPlayer.getNameColored() + " greets " + target.getNameColored() + " in a friendly manner.", Arrays.asList(currentPlayer, target));
-				messageTarget(currentPlayer.getNameColored() + " greets you in a friendly manner.", Arrays.asList(target));
-				((Location)currentPlayer.getContainer()).notifyQuest(Quest.Trigger.GREETS);
-			} else {
-				messageSelf("You can't talk.");
-			}
+		if (canTalk()) {
+			messageSelf("You greet " + target.getNameColored() + " in a friendly manner.");
+			messageOthers(currentPlayer.getNameColored() + " greets " + target.getNameColored() + " in a friendly manner.", Arrays.asList(currentPlayer, target));
+			messageTarget(currentPlayer.getNameColored() + " greets you in a friendly manner.", Arrays.asList(target));
+			((Location)currentPlayer.getContainer()).notifyQuest(Quest.Trigger.GREETS);
+		} else {
+			messageSelf("You can't talk.");
 		}
 	}
 	
@@ -46,6 +42,7 @@ public class Greet extends Skills {
 
 	@Override
 	protected boolean preSkillChecks() {
+		target = setTarget();
 		if (target == null) {
 			messageSelf("Whom do you wish to greet?");
 			return false;

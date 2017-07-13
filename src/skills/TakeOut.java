@@ -28,7 +28,6 @@ public class TakeOut extends Skills {
 
 	@Override
 	protected void performSkill() {
-		if (!preSkillChecks()) {return;}
 		takeOut();		
 	}
 		
@@ -69,9 +68,7 @@ public class TakeOut extends Skills {
 			}
 			containerName = "";
 			if (containerName.equals("")) {containerName = h.getName();};
-		}
-		
-		
+		}		
 		//checks optional qty
 		origQty = 1;
 		if (!Syntax.QUANTITY.getStringInfo(fullCommand, this).equals("")) {

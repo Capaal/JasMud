@@ -11,7 +11,6 @@ public class Open extends Skills {
 	
 	private Door door;
 	private Direction dir;
-	private String dirString;
 	
 	public Open(Mobile currentPlayer, String fullCommand) {
 		super("open", "Opening doors.", currentPlayer, fullCommand);
@@ -22,17 +21,14 @@ public class Open extends Skills {
 
 	@Override
 	protected void performSkill() {
-		dirString = Syntax.DIRECTION.getStringInfo(fullCommand, this);
-		if (preSkillChecks()) {
-			door.alterDoor(true);
-			messageSelf("You open the door to your " + dir.toString().toLowerCase() + ".");
-			messageOthers(currentPlayer.getNameColored() + " opens the door to the " + dir.toString().toLowerCase() + ".", Arrays.asList(currentPlayer));
-		}
+		door.alterDoor(true);
+		messageSelf("You open the door to your " + dir.toString().toLowerCase() + ".");
+		messageOthers(currentPlayer.getNameColored() + " opens the door to the " + dir.toString().toLowerCase() + ".", Arrays.asList(currentPlayer));
 	}
 
 	@Override
 	protected boolean preSkillChecks() {
-		dir = Direction.getDirectionName(dirString);
+		dir = Direction.getDirectionName(Syntax.DIRECTION.getStringInfo(fullCommand, this));
 		if (dir == null) {
 			messageSelf("There is not a direction that way, nor a door.");
 			return false;

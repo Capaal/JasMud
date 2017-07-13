@@ -6,8 +6,6 @@ import java.util.Random;
 import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.InductionSkill;
-import processes.Skills;
-
 
 public class Wake extends InductionSkill {
 	
@@ -77,7 +75,6 @@ public class Wake extends InductionSkill {
 
 	@Override
 	protected boolean preSkillChecks() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 }

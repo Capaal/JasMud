@@ -2,7 +2,6 @@ package skills.Mercenary;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import effects.PassiveCondition;
@@ -18,16 +17,13 @@ import processes.Skills;
 public class DualAttack extends Skills implements InformsAggro {
 
     private int intensity = 8;
-//    private Mobile finalTarget; //replaced with targets list
     private Holdable rightWeapon;
     private Holdable leftWeapon;
     private StdItem rmercWeapon;
     private StdItem lmercWeapon;
     private double balAdjust = 1;   
- //   private int totalDmg;
- //   private String possibleTarg;
-    private List<Mobile> targets = null;
-    private List<Weapon.MercEffect> effectsToApply = null;
+    private List<Mobile> targets;
+    private List<Weapon.MercEffect> effectsToApply;
     
     //Mercenary class skill, probably needs better name. Attacks target using wielded weapon. If weapon has special effect, applies.
     //Uses right hand only - dual wield uses both hands+weapons
@@ -40,7 +36,6 @@ public class DualAttack extends Skills implements InformsAggro {
     //may need to apply effects and damage once?
     @Override
 	protected void performSkill() {
-        if (!preSkillChecks()) {return;};	
         checkMercWeapons();
         regularRun();
     	currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance()); 
@@ -54,7 +49,6 @@ public class DualAttack extends Skills implements InformsAggro {
         if (!weaponWielded()) {return false;}
         return true;
     }
-
 
     private void regularRun() {
     	for (Mobile m : targets) {

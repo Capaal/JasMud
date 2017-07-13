@@ -385,6 +385,11 @@ public class StdMob implements Mobile, Container{
 		return effectManager.registerPassiveEffectDestroyAfterXMilliseconds(newEffect, duration);
 	}
 	
+	/**
+	 * Adds a tickingEffect to this Mobile's event manager.
+	 * @param newEffect Ticking Effect to be added.
+	 * @param times int number of times to tick.
+	 */
 	@Override
 	public boolean addActiveCondition(TickingEffect newEffect, int times) {
 		return effectManager.registerActiveEffect(newEffect, times);

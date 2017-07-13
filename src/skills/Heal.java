@@ -20,20 +20,15 @@ public class Heal extends Skills {
 	// Deals damage to a single target in currentPlayer's location
 	@Override
 	protected void performSkill() {
-		String targetName = Syntax.TARGET.getStringInfo(fullCommand, this).toLowerCase();
-		if (!hasBalance()) {return;}
-		finalTarget = setTarget(targetName);
-		if (preSkillChecks()) {
-			finalTarget.takeDamage(calculateDamage());
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
-			if (finalTarget == currentPlayer) {
-				messageSelf("You heal yourself a bit.");
-				messageOthers(currentPlayer.getName() + " heals a bit.", Arrays.asList(currentPlayer, finalTarget));
-			} else {
-				messageSelf("You heal " + finalTarget.getName());
-				messageTarget(currentPlayer.getNameColored() + " heals you.", Arrays.asList(finalTarget));
-				messageOthers(currentPlayer.getNameColored() + " heals " + finalTarget.getNameColored() + ".", Arrays.asList(currentPlayer, finalTarget));
-			}
+		finalTarget.takeDamage(calculateDamage());
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+		if (finalTarget == currentPlayer) {
+			messageSelf("You heal yourself a bit.");
+			messageOthers(currentPlayer.getName() + " heals a bit.", Arrays.asList(currentPlayer, finalTarget));
+		} else {
+			messageSelf("You heal " + finalTarget.getName());
+			messageTarget(currentPlayer.getNameColored() + " heals you.", Arrays.asList(finalTarget));
+			messageOthers(currentPlayer.getNameColored() + " heals " + finalTarget.getNameColored() + ".", Arrays.asList(currentPlayer, finalTarget));
 		}
 	}
 
@@ -51,6 +46,9 @@ public class Heal extends Skills {
 
 	@Override
 	protected boolean preSkillChecks() {
+		String targetName = Syntax.TARGET.getStringInfo(fullCommand, this).toLowerCase();
+		if (!hasBalance()) {return false;}
+		finalTarget = setTarget(targetName);
 		if (finalTarget == null) {
 			messageSelf("You can't heal that.");
 			return false;

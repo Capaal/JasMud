@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import interfaces.Mobile;
 import processes.Skills;
-import processes.WorldServer;
 
 public class Follow extends Skills {
 	
@@ -20,30 +19,15 @@ public class Follow extends Skills {
 
 	@Override
 	protected void performSkill() {		
-		if (preSkillChecks()) {		
-			startFollowing();
-			messageSelf("You are now following " + finalTarget.getName());
-			messageTarget(currentPlayer.getName() + " has started following you.", Arrays.asList(finalTarget));
-		}
+		startFollowing();
+		messageSelf("You are now following " + finalTarget.getName());
+		messageTarget(currentPlayer.getName() + " has started following you.", Arrays.asList(finalTarget));
 	}
 	
 	private void startFollowing() {
 		currentPlayer.setFollowing(finalTarget);
 		finalTarget.addFollower(currentPlayer);
-	//	following = ((Move)finalTarget.getCommand("move"));
-	//	following.addFollower(this);
 	}
-	
-//	public void move(String fullCommand) {
-//		WorldServer.gameState.addToQueue(new MoveFollow(currentPlayer, fullCommand));
-//	}
-	
-//	public void stopFollowing() {
-//		if (following != null) {
-//			following.removeFollower(this);
-//			following = null;
-//		}
-//	}
 	
 	protected boolean preSkillChecks() {
 		String possibleTarg = Syntax.TARGET.getStringInfo(fullCommand, this);

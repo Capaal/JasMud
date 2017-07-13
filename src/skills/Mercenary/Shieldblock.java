@@ -5,11 +5,8 @@ import java.util.Arrays;
 import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
-import processes.Equipment;
 import processes.Equipment.EquipmentSlot;
 import processes.InductionSkill;
-import processes.Skills;
-import skills.Sleep;
 
 public class Shieldblock extends InductionSkill {
 	
@@ -35,12 +32,10 @@ public class Shieldblock extends InductionSkill {
 	// should be interrupted if shield unwielded (or force unwielded/dropped) TODO
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			scheduleInduction(new InnerShieldBlock(currentPlayer, fullCommand), 1, 4000); // Triggers this skill's "run()" in 4 seconds. Interruptible.
-			currentPlayer.setInduction(this);
-			changeBlocking(true);
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());
-		}
+		scheduleInduction(new InnerShieldBlock(currentPlayer, fullCommand), 1, 4000); // Triggers this skill's "run()" in 4 seconds. Interruptible.
+		currentPlayer.setInduction(this);
+		changeBlocking(true);
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, calculateBalance());		
 	}
 	
 	private boolean weaponWielded() {
@@ -65,8 +60,7 @@ public class Shieldblock extends InductionSkill {
 		currentPlayer.changeBlocking(b);
 		if (b) {
 			messageSelf("You raise your shield, defending against incoming attacks.");
-			messageOthers(currentPlayer.getName() + " raises their shield in defence.", Arrays.asList(currentPlayer));
-						
+			messageOthers(currentPlayer.getName() + " raises their shield in defence.", Arrays.asList(currentPlayer));						
 		} else {
 			messageSelf("You lower your shield, no longer defending.");
 			messageOthers(currentPlayer.getName() + " lowers their shield.", Arrays.asList(currentPlayer));
@@ -80,8 +74,7 @@ public class Shieldblock extends InductionSkill {
 
 	@Override
 	protected void inductionEnded() {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 	@Override
@@ -89,10 +82,5 @@ public class Shieldblock extends InductionSkill {
 		if (!hasBalance()) {return false;}
 		if (!weaponWielded()) {return false;}	
 		return true;
-	}
-
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new Shieldblock(currentPlayer, fullCommand);
 	}
 }

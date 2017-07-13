@@ -18,21 +18,19 @@ public class EmptyPotion extends Skills {
 	
 	@Override
 	protected void performSkill() {
-		potionName = Syntax.ITEM.getStringInfo(fullCommand, this);
-		if (preSkillChecks()) {
-			Drinkable potion = (Drinkable)potionItem;
-			//empties - changes sips by -currentSips
-			if(potion.getSips() == 0) {
-				messageSelf("That potion is already empty.");
-				return;
-			}
-			potion.changeSips(potion.getSips()); 
-			messageSelf("You empty the potion.");
+		Drinkable potion = (Drinkable)potionItem;
+		//empties - changes sips by -currentSips
+		if(potion.getSips() == 0) {
+			messageSelf("That potion is already empty.");
+			return;
 		}
+		potion.changeSips(potion.getSips()); 
+		messageSelf("You empty the potion.");
 	}
 	
 	@Override
 	protected boolean preSkillChecks() {
+		potionName = Syntax.ITEM.getStringInfo(fullCommand, this);
 		if (potionName.equals("")) {
 			messageSelf("What are you trying to empty?");
 			return false;

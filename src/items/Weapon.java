@@ -104,14 +104,10 @@ public class Weapon extends StdItem {
 
 		BLEED() {
 			@Override public boolean applyEffect(Mobile target) {
-				if (target.hasCondition(new Bleed(target, 10))) {
-					return true;
+				if (target.addActiveCondition(new Bleed(target, 5), 5)) { // Times arbitrary, bleed doesn't care.
+					target.tell("The serraded blade deeply gashes your flesh.");					
 				}
-				if (target.addActiveCondition(new Bleed(target, 10), 5)) {
-					target.tell("Bleeding caused.");
-					return true;
-				}
-				return failedApply(target);
+				return true;
 			}
 		},	
 		

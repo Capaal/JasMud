@@ -24,52 +24,50 @@ public class Bug extends Skills {
 	
 	@Override
 	protected void performSkill() {
-		reportedText = Syntax.MESSAGE.getStringInfo(fullCommand, this);
-		if (preSkillChecks()) {
-			if (reportedText.equalsIgnoreCase("list")) {
-				String fileName = "Bugs.txt";
-				String line = null;
-				try {
-					FileReader fileReader = new FileReader(fileName);
-		            BufferedReader bufferedReader =  new BufferedReader(fileReader);
-		            while((line = bufferedReader.readLine()) != null) {
-		                messageSelf(line);
-		            }   
-		            bufferedReader.close();
-				}
-	            
-		        catch(FileNotFoundException ex) {
-		            System.out.println(
-		                "Unable to open file '" + fileName + "'");                
-		        }
-		        catch(IOException ex) {
-		            System.out.println(
-		                "Error reading file '"  + fileName + "'");                  
-		            // Or ex.printStackTrace();
-		        }				
-			} else {				
-				Date date = Calendar.getInstance().getTime();
-				SimpleDateFormat dt = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
-				
-				String thisBug = "(Date) " + dt.format(date) + " (Player) " + currentPlayer.getNameColored() + ": " + reportedText;
-				
-				FileWriter fw = null;
-					try {
-						fw = new FileWriter("Bugs.txt", true);
-					} catch (IOException e) {
-				}
-				try {
-					fw.write(thisBug + System.getProperty("line.separator"));
-					fw.close();
-				} catch (IOException ee) {
-				
-				}
-				messageSelf("Your bug has been reported.");
+		if (reportedText.equalsIgnoreCase("list")) {
+			String fileName = "Bugs.txt";
+			String line = null;
+			try {
+				FileReader fileReader = new FileReader(fileName);
+	            BufferedReader bufferedReader =  new BufferedReader(fileReader);
+	            while((line = bufferedReader.readLine()) != null) {
+	                messageSelf(line);
+	            }   
+	            bufferedReader.close();
 			}
+            
+	        catch(FileNotFoundException ex) {
+	            System.out.println(
+	                "Unable to open file '" + fileName + "'");                
+	        }
+	        catch(IOException ex) {
+	            System.out.println(
+	                "Error reading file '"  + fileName + "'");                  
+	            // Or ex.printStackTrace();
+	        }				
+		} else {				
+			Date date = Calendar.getInstance().getTime();
+			SimpleDateFormat dt = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+			
+			String thisBug = "(Date) " + dt.format(date) + " (Player) " + currentPlayer.getNameColored() + ": " + reportedText;
+			
+			FileWriter fw = null;
+				try {
+					fw = new FileWriter("Bugs.txt", true);
+				} catch (IOException e) {
+			}
+			try {
+				fw.write(thisBug + System.getProperty("line.separator"));
+				fw.close();
+			} catch (IOException ee) {
+			
+			}
+			messageSelf("Your bug has been reported.");
 		}
 	}
 	
 	protected boolean preSkillChecks() {
+		reportedText = Syntax.MESSAGE.getStringInfo(fullCommand, this);
 		if (reportedText.equals("")) {
 			messageSelf("You can't submit an empty bug message.");
 			return false;

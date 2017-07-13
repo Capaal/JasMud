@@ -5,7 +5,6 @@ import java.util.Arrays;
 import interfaces.Mobile;
 import processes.Skills;
 import processes.UsefulCommands;
-import processes.Skills.Syntax;
 
 public class RollDice extends Skills {
 	
@@ -21,24 +20,19 @@ public class RollDice extends Skills {
 
 	@Override
 	protected void performSkill() {
-		diceWanted = Syntax.ITEM.getStringInfo(fullCommand, this);
-		if (preSkillChecks()) {
-			for (int i=1;i<=numOfDice;i++) {
-				int roll = (int) (Math.random() * sidesOfDice) + 1;
-				messageSelf("You roll a " + diceWanted.toUpperCase() +  " and it comes to: " +  roll);
-				messageOthers(currentPlayer.getName() + "rolls and " + diceWanted.toUpperCase() + " and it comes to: " +  roll, Arrays.asList(currentPlayer));
-			}
+		for (int i=1;i<=numOfDice;i++) {
+			int roll = (int) (Math.random() * sidesOfDice) + 1;
+			messageSelf("You roll a " + diceWanted.toUpperCase() +  " and it comes to: " +  roll);
+			messageOthers(currentPlayer.getName() + "rolls and " + diceWanted.toUpperCase() + " and it comes to: " +  roll, Arrays.asList(currentPlayer));
 		}
-	}
-
-
-	String failMsg = "Syntax: ROLL #D# (Example: Roll 2D20 or Roll D20)";
+	}	
 	
 	@Override
 	protected boolean preSkillChecks() {
+		diceWanted = Syntax.ITEM.getStringInfo(fullCommand, this);
 		//checks for extra characters other than numbers and 'D' - example false for D2O0
 		if (diceWanted.equals("")) {
-			messageSelf(failMsg);
+			messageSelf(displaySyntax());
 			return false;
 		}
 		numOfDice = 1;
@@ -49,7 +43,7 @@ public class RollDice extends Skills {
 		} else if (splitWords.length==2 && splitWords[0].equalsIgnoreCase("d") && UsefulCommands.isInteger(splitWords[1])) {
 			sidesOfDice = Integer.parseInt(splitWords[1]);
 		} else {
-			messageSelf(failMsg);
+			messageSelf(displaySyntax());
 			return false;
 		}
 		
@@ -58,5 +52,10 @@ public class RollDice extends Skills {
 	//		return false;
 	//	}
 		return true;
+	}
+	
+	@Override
+	public String displaySyntax() {
+		return "Syntax: ROLL #D# (Example: Roll 2D20 or Roll D20)";
 	}
 }

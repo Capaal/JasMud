@@ -3,13 +3,11 @@ package skills;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 import interfaces.Holdable;
 import interfaces.Mobile;
 import items.ItemBuilder;
 import items.StdItem;
-import processes.CreateWorld;
 import processes.Skills;
 import processes.WorldServer;
 
@@ -27,23 +25,21 @@ public class Salvage extends Skills {
 	}
 	
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			deleteThis.removeFromWorld(); //removes the salvaged item
-			//salvages. currently set at 50% chance to salvage each component
-			List<StdItem> components = salvageThis.getComponents(); 
-			for (StdItem i : components) {
-				Random chance = new Random();
-				int p = chance.nextInt(100);
-				if (p>50) {
-					ItemBuilder toCopy = allItemTemplates.get(i.getName()); // Are all components actually stored in this list?
-					toCopy.setItemContainer(currentPlayer);
-					toCopy.complete();
-					messageSelf(toCopy.getName() + " salvaged.");
-				} else {
-					messageSelf("You weren't able to salvage the " + i.getName() + " this time.");
-				}
-			}	
-		}
+		deleteThis.removeFromWorld(); //removes the salvaged item
+		//salvages. currently set at 50% chance to salvage each component
+		List<StdItem> components = salvageThis.getComponents(); 
+		for (StdItem i : components) {
+			Random chance = new Random();
+			int p = chance.nextInt(100);
+			if (p>50) {
+				ItemBuilder toCopy = allItemTemplates.get(i.getName()); // Are all components actually stored in this list?
+				toCopy.setItemContainer(currentPlayer);
+				toCopy.complete();
+				messageSelf(toCopy.getName() + " salvaged.");
+			} else {
+				messageSelf("You weren't able to salvage the " + i.getName() + " this time.");
+			}
+		}	
 	}
 
 	@Override

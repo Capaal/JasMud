@@ -14,6 +14,7 @@ public class Give extends Skills {
 	
 	private Holdable itemToMove;
 	private Mobile mobileToGive;
+	private String possItem;
 	
 	public Give(Mobile currentPlayer, String fullCommand) {
 		super("give", "Giving items to others.", currentPlayer, fullCommand);
@@ -22,47 +23,41 @@ public class Give extends Skills {
 		//add filler "to"? TODO
 		super.syntaxList.add(Syntax.TARGET);
 		super.syntaxList.add(Syntax.QUANTITY);
-	}
-	
-	private String possItem;
-	
+	}	
 	// Moves a HOLDABLE from the CURRENTPLAYER's INVENTORY to the MOBILE who is in currentPlayer's LOCATION.
 	// Requires balance, syntax = "give goblin2334 dagger " or "give andrew sword1532 "
 	@Override
 	protected void performSkill() {
-		possItem = Syntax.ITEM.getStringInfo(fullCommand, this);
-		if (preSkillChecks()) {
-			int qty = -1;
-			if (!Syntax.QUANTITY.getStringInfo(fullCommand, this).equals("")) {			
-				try {
-					qty = Integer.parseInt(Syntax.QUANTITY.getStringInfo(fullCommand, this)); 
-				} catch (NumberFormatException fail) {
-					System.out.println("User error: 'Give' optional qty not a number. Optional ignored.");
-				}
+		int qty = -1;
+		if (!Syntax.QUANTITY.getStringInfo(fullCommand, this).equals("")) {			
+			try {
+				qty = Integer.parseInt(Syntax.QUANTITY.getStringInfo(fullCommand, this)); 
+			} catch (NumberFormatException fail) {
+				System.out.println("User error: 'Give' optional qty not a number. Optional ignored.");
 			}
-			if (qty == -1) { // defaults to full stack
-				ContainerErrors err = itemToMove.moveHoldable((Mobile)mobileToGive);
-				if (err == null) {
-					messageSelf("You give " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".");
-					messageTarget(currentPlayer.getNameColored() + " gives you " + itemToMove + ".", Arrays.asList(mobileToGive));
-					messageOthers(currentPlayer.getNameColored() + " gives " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".", Arrays.asList(currentPlayer));
-				} else {
-					System.out.println(currentPlayer.getName() + " is holding an item that can't be dropped: " + itemToMove.getName());
-					messageSelf(err.display(itemToMove.getName()));
-				}
-			} else {
-				ContainerErrors err = itemToMove.moveHoldable((Mobile)mobileToGive, qty);
-				if (err == null) {
-					messageSelf("You give " + qty + " " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".");
-					messageTarget(currentPlayer.getNameColored() + " gives you " + qty + " " + itemToMove + ".", Arrays.asList(mobileToGive));
-					messageOthers(currentPlayer.getNameColored() + " gives " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".", Arrays.asList(currentPlayer));
-				} else {
-					System.out.println(currentPlayer.getName() + " is holding an item that can't be dropped: " + itemToMove.getName());
-					messageSelf(err.display(itemToMove.getName()));
-				}
-			}		
-			questCares(itemToMove, (Mobile)mobileToGive);		
 		}
+		if (qty == -1) { // defaults to full stack
+			ContainerErrors err = itemToMove.moveHoldable((Mobile)mobileToGive);
+			if (err == null) {
+				messageSelf("You give " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".");
+				messageTarget(currentPlayer.getNameColored() + " gives you " + itemToMove + ".", Arrays.asList(mobileToGive));
+				messageOthers(currentPlayer.getNameColored() + " gives " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".", Arrays.asList(currentPlayer));
+			} else {
+				System.out.println(currentPlayer.getName() + " is holding an item that can't be dropped: " + itemToMove.getName());
+				messageSelf(err.display(itemToMove.getName()));
+			}
+		} else {
+			ContainerErrors err = itemToMove.moveHoldable((Mobile)mobileToGive, qty);
+			if (err == null) {
+				messageSelf("You give " + qty + " " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".");
+				messageTarget(currentPlayer.getNameColored() + " gives you " + qty + " " + itemToMove + ".", Arrays.asList(mobileToGive));
+				messageOthers(currentPlayer.getNameColored() + " gives " + itemToMove.getName() + " to " + mobileToGive.getNameColored() + ".", Arrays.asList(currentPlayer));
+			} else {
+				System.out.println(currentPlayer.getName() + " is holding an item that can't be dropped: " + itemToMove.getName());
+				messageSelf(err.display(itemToMove.getName()));
+			}
+		}		
+		questCares(itemToMove, (Mobile)mobileToGive);		
 	}
 	
 	private boolean brokenArms() {
@@ -84,6 +79,7 @@ public class Give extends Skills {
 
 	@Override
 	protected boolean preSkillChecks() {
+		possItem = Syntax.ITEM.getStringInfo(fullCommand, this);
 		if (possItem.equals("")) {
 			messageSelf("Give what to who? Syntax: GIVE [item] [player]");
 			return false;

@@ -6,7 +6,6 @@ import effects.PassiveCondition;
 import interfaces.InformsAggro;
 import interfaces.Mobile;
 import processes.InductionSkill;
-import processes.Skills;
 
 public class LightningWhip extends InductionSkill implements InformsAggro {
 	
@@ -50,12 +49,10 @@ public class LightningWhip extends InductionSkill implements InformsAggro {
 	// Target MUST be targettable BOTH at the START and at the END of induction.
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			scheduleInduction(new InnerLightningWhip(currentPlayer, fullCommand), 4, 2500, 1500); // Triggers this skill's "run()" in 1.5 seconds. and ticks every 2.5 seconds. Interruptible.
-			currentPlayer.setInduction(this);
-			messageSelf("You begin whipping " + finalTarget.getName() + ".");
-			messageTarget(currentPlayer.getName() + " begins whipping you with lightning.", Arrays.asList(finalTarget));
-		}
+		scheduleInduction(new InnerLightningWhip(currentPlayer, fullCommand), 4, 2500, 1500); // Triggers this skill's "run()" in 1.5 seconds. and ticks every 2.5 seconds. Interruptible.
+		currentPlayer.setInduction(this);
+		messageSelf("You begin whipping " + finalTarget.getName() + ".");
+		messageTarget(currentPlayer.getName() + " begins whipping you with lightning.", Arrays.asList(finalTarget));
 	}		
 		
 	private int calculateDamage() {
@@ -68,7 +65,7 @@ public class LightningWhip extends InductionSkill implements InformsAggro {
 
 	@Override
 	public void inductionKilled() {
-		messageSelf("You stop whipping " + possibleTarg + ".");
+		messageSelf("You stop whipping " + finalTarget.getNameColored() + ".");
 		inductionEnded();
 	}	
 	

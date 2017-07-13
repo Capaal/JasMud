@@ -7,13 +7,10 @@ import java.util.Set;
 import effects.PassiveCondition;
 import interfaces.InformsAggro;
 import interfaces.Mobile;
-import processes.Equipment;
 import processes.Equipment.EquipmentSlot;
 import processes.InductionSkill;
 import processes.Location;
-import processes.Skills;
 import processes.Location.Direction;
-import skills.Sleep;
 
 public class Headshot extends InductionSkill implements InformsAggro {
 	
@@ -41,7 +38,7 @@ public class Headshot extends InductionSkill implements InformsAggro {
 				messageSelf("There is no \"" + possibleTarg + "\" for you to attack.");
 				return;
 			}	
-			if (isBlocking(finalTarget)) {  // Probably not complete still
+			if (isBlocking(finalTarget)) { 
 				return;
 			}		
 			finalTarget.takeDamage(calculateDamage());
@@ -59,14 +56,11 @@ public class Headshot extends InductionSkill implements InformsAggro {
 	// REQUIRES ranged weapon (eventually)
 	// Direction is OPTIONAL, defaults to currentPlayer's location
 	@Override
-	protected void performSkill() {
-		allLocations = new HashSet<Location>();
-		if (preSkillChecks()) {
-			scheduleInduction(new InnerHeadshot(currentPlayer, fullCommand), 1, 2000); // Triggers this skill's "run()" in 2 seconds. Interruptible.
-			currentPlayer.setInduction(this);
-			messageSelf("You begin aiming at " + finalTarget.getName() + ".");
-			messageTarget(currentPlayer.getName() + " begins aiming at your head.", Arrays.asList(finalTarget));
-		}
+	protected void performSkill() {		
+		scheduleInduction(new InnerHeadshot(currentPlayer, fullCommand), 1, 2000); // Triggers this skill's "run()" in 2 seconds 1 time. Interruptible.
+		currentPlayer.setInduction(this);
+		messageSelf("You begin aiming at " + finalTarget.getName() + ".");
+		messageTarget(currentPlayer.getName() + " begins aiming at your head.", Arrays.asList(finalTarget));
 	}		
 		
 	private int calculateDamage() {
@@ -156,6 +150,7 @@ public class Headshot extends InductionSkill implements InformsAggro {
 
 	@Override
 	protected boolean preSkillChecks() {
+		allLocations = new HashSet<Location>();
 		if (!hasBalance()) {return false;}
 		if (!weaponWielded()) {return false;}
 		if (!findAllLocations()) {return false;}		

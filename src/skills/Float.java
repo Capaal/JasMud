@@ -18,17 +18,13 @@ public class Float extends Skills {
 
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			if (currentPlayer.hasCondition(new Levitate(currentPlayer))) {
-				messageSelf("You are already levitating.");
-				return;
-			}
-	
-			currentPlayer.addActiveCondition(new Levitate(currentPlayer), 4);
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
-		//	messageSelf("You float up a foot above the ground."); //done in levitate effect
-			messageOthers(currentPlayer.getNameColored() + "floats into the air.", Arrays.asList(currentPlayer));
+		if (currentPlayer.hasCondition(new Levitate(currentPlayer))) { // could let stackedInstance() handle this, either resetting time or whatever.
+			messageSelf("You are already levitating.");
+			return;
 		}
+		currentPlayer.addActiveCondition(new Levitate(currentPlayer), 4);
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+		messageOthers(currentPlayer.getNameColored() + "floats into the air.", Arrays.asList(currentPlayer));
 	}
 
 	@Override

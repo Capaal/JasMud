@@ -1,6 +1,5 @@
 package skills.Mercenary;
 
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,8 +7,6 @@ import java.util.Map;
 import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Skills;
-import processes.Skills.Syntax;
-import skills.Sleep;
 
 public class Straighten extends Skills {
 	
@@ -40,8 +37,7 @@ public class Straighten extends Skills {
 			fixBroken(affectedList.get(slot));
 		}
 		failMsg();
-	}
-		
+	}		
 	
 	private boolean fixBroken(PassiveCondition thisLimb) {
 		if (currentPlayer.hasCondition(thisLimb)) {
@@ -53,7 +49,6 @@ public class Straighten extends Skills {
 		} 
 		return false;
 	}
-
 	
 	private void failMsg() {
 		if (slot.equals("")) {

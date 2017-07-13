@@ -17,26 +17,23 @@ public class Info extends Skills {
 	
 	@Override
 	protected void performSkill() {
-		toInfo = Syntax.ITEM.getStringInfo(fullCommand, this);
-		if (preSkillChecks()) {
-			if (toInfo.equals("here")) {
-				if (currentPlayer.getContainer().viewInventory().keySet().isEmpty()) {
-					messageSelf("There is nothing on the ground.");
-				} else {
-					listAllInfo(currentPlayer.getContainer());
-				}
-			} else if (toInfo.equals("inventory")) {
-				if (currentPlayer.viewInventory().keySet().isEmpty()) {
-					messageSelf("You are holding nothing.");
-				} else {
-					listAllInfo(currentPlayer);
-				}
-			} else { //specific item			
-				if (searchForItem(currentPlayer.getContainer())) {return;} // Search on ground.
-				else if (searchForItem(currentPlayer)) {return;} // Search in inventory.
-				else {
-					messageSelf("You can't find that item."); 
-				}
+		if (toInfo.equals("here")) {
+			if (currentPlayer.getContainer().viewInventory().keySet().isEmpty()) {
+				messageSelf("There is nothing on the ground.");
+			} else {
+				listAllInfo(currentPlayer.getContainer());
+			}
+		} else if (toInfo.equals("inventory")) {
+			if (currentPlayer.viewInventory().keySet().isEmpty()) {
+				messageSelf("You are holding nothing.");
+			} else {
+				listAllInfo(currentPlayer);
+			}
+		} else { //specific item			
+			if (searchForItem(currentPlayer.getContainer())) {return;} // Search on ground.
+			else if (searchForItem(currentPlayer)) {return;} // Search in inventory.
+			else {
+				messageSelf("You can't find that item."); 
 			}
 		}
 	}
@@ -60,6 +57,7 @@ public class Info extends Skills {
 
 	@Override
 	protected boolean preSkillChecks() {
+		toInfo = Syntax.ITEM.getStringInfo(fullCommand, this);
 		if (toInfo.equals("")) {
 			messageSelf("Info what/where?");
 			return false;

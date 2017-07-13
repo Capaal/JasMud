@@ -6,7 +6,6 @@ import effects.PassiveCondition;
 import interfaces.InformsAggro;
 import interfaces.Mobile;
 import processes.Skills;
-import skills.Sleep;
 
 public class SpinKick extends Skills implements InformsAggro {
 
@@ -22,20 +21,16 @@ public class SpinKick extends Skills implements InformsAggro {
 	
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			if (!(finalTarget.hasCondition(PassiveCondition.DIZZY))) {
-				finalTarget.addPassiveCondition((PassiveCondition.DIZZY),-1);
-				messageTarget("You feel dizzy.", Arrays.asList(finalTarget));
-			}
-			
-			finalTarget.informLastAggressor(currentPlayer);
-			finalTarget.takeDamage(calculateDamage());
-			currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
-			messageSelf("You spin around really fast and kick " + finalTarget.getNameColored() + ".");
-			messageTarget(currentPlayer.getNameColored() + " makes you stumble with a dizzying kick.", Arrays.asList(finalTarget));
-			messageOthers(currentPlayer.getNameColored() + " spins and kicks " + finalTarget.getNameColored() + ".", Arrays.asList(currentPlayer, finalTarget));
-			informLastAggressor(currentPlayer, finalTarget);
+		if (!(finalTarget.hasCondition(PassiveCondition.DIZZY))) {
+			finalTarget.addPassiveCondition((PassiveCondition.DIZZY),-1);
+			messageTarget("You feel dizzy.", Arrays.asList(finalTarget));
 		}
+		finalTarget.takeDamage(calculateDamage());
+		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
+		messageSelf("You spin around really fast and kick " + finalTarget.getNameColored() + ".");
+		messageTarget(currentPlayer.getNameColored() + " makes you stumble with a dizzying kick.", Arrays.asList(finalTarget));
+		messageOthers(currentPlayer.getNameColored() + " spins and kicks " + finalTarget.getNameColored() + ".", Arrays.asList(currentPlayer, finalTarget));
+		informLastAggressor(currentPlayer, finalTarget);		
 	}
 	
 	private boolean setTarget() {
@@ -61,8 +56,7 @@ public class SpinKick extends Skills implements InformsAggro {
 	protected boolean preSkillChecks() {
 		if (!hasBalance()) {return false;}
 		if (!setTarget()) {return false;}
-		if (isBlocking(finalTarget)) {return false;}  // Probably not complete still
-		
+		if (isBlocking(finalTarget)) {return false;}
 		return true;
 	}
 }

@@ -18,16 +18,12 @@ public class Examine extends Skills {
 
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			if (possibleItem == null) {
-				messageSelf(possibleMob.getDescription());
-				return;
-			} else {
-				messageSelf(possibleItem.getExamine());
-			}
+		if (possibleItem == null) {
+			messageSelf(possibleMob.getDescription());
+			return;
 		} else {
-			messageSelf("You can't find that to examine it."); 
-		}
+			messageSelf(possibleItem.getExamine());
+		}		
 	}
 
 	private boolean searchForExamine() {
@@ -40,7 +36,10 @@ public class Examine extends Skills {
 		if (possibleItem == null) {
 			possibleMob = null;
 			possibleMob = currentPlayer.getContainer().getMobileFromString(toExamine);
-			if (possibleMob == null) { return false; }
+			if (possibleMob == null) { 
+				messageSelf("You can't find that to examine it."); 
+				return false; 
+			}
 		}
 		return true;
 	}

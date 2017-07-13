@@ -21,7 +21,6 @@ public class Struggle extends InductionSkill {
 		
 		public InnerStruggle(Mobile currentPlayer, String fullCommand) {
 			super(currentPlayer, fullCommand);
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override

@@ -9,7 +9,6 @@ import processes.Location;
 import processes.PlayerPrompt;
 import processes.Skills;
 import processes.WorldServer;
-import processes.Skills.Syntax;
 
 public class GoTo extends Skills {
 	
@@ -24,12 +23,10 @@ public class GoTo extends Skills {
 
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			Location l = target.getContainer();
-			currentPlayer.moveHoldable(l);
-			messageSelf("You go-to " + target.getNameColored() + ".");
-			messageOthers(currentPlayer.getNameColored() + " suddenly appears here.", Arrays.asList(currentPlayer));
-		}
+		Location l = target.getContainer();
+		currentPlayer.moveHoldable(l);
+		messageSelf("You go-to " + target.getNameColored() + ".");
+		messageOthers(currentPlayer.getNameColored() + " suddenly appears here.", Arrays.asList(currentPlayer));
 	}
 
 	@Override
