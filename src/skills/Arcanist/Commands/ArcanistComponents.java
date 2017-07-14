@@ -19,9 +19,7 @@ public class ArcanistComponents extends Skills {
 
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			messageSelf(component.describeType());
-		}
+		messageSelf(component.describeType());
 	}
 
 	@Override
@@ -50,11 +48,6 @@ public class ArcanistComponents extends Skills {
 		}			
 		messageSelf(sb.toString());
 	}
-
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new ArcanistComponents(currentPlayer, fullCommand);
-	}
 	
 	private enum ComponentGroups {
 		BASICS(Arrays.asList(ArcanistComponentsFactory.DAMAGE, ArcanistComponentsFactory.MANA,
@@ -67,7 +60,7 @@ public class ArcanistComponents extends Skills {
 			
 		},
 		
-		EFFECTS(Arrays.asList(ArcanistComponentsFactory.BLEED, ArcanistComponentsFactory.HEAL)) {
+		EFFECTS(Arrays.asList(ArcanistComponentsFactory.BLEED, ArcanistComponentsFactory.HEAL, ArcanistComponentsFactory.CONDITION)) {
 			
 		};
 		

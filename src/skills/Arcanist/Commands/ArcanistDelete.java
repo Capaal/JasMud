@@ -2,7 +2,6 @@ package skills.Arcanist.Commands;
 
 import interfaces.Mobile;
 import processes.Skills;
-import processes.Skills.Syntax;
 import skills.Arcanist.ArcanistSkill;
 import skills.Arcanist.ArcanistSkillbook;
 
@@ -19,10 +18,8 @@ public class ArcanistDelete extends Skills {
 
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			currentBook.remove(spell);
-			messageSelf("Spell successfully forgotten.");
-		}
+		currentBook.remove(spell);
+		messageSelf("Spell successfully forgotten.");
 	}
 
 	@Override
@@ -45,10 +42,4 @@ public class ArcanistDelete extends Skills {
 		}
 		return true;
 	}
-
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new ArcanistDelete(currentPlayer, fullCommand);
-	}
-
 }

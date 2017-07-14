@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import effects.PassiveCondition;
 import interfaces.Mobile;
 import processes.Skills;
 import processes.UsefulCommands;
@@ -31,28 +32,26 @@ public class ArcanistAlter extends Skills {
 
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			// Case of DESCRIPTION
-			if (factory.equals(ArcanistComponentsFactory.DESCRIPTION)) {
-				String[] split = fullCommand.split(" ", 3);
-				if (split.length > 2) {
-					currentSkill = factory.getBlock(currentSkill, split[2]);
-					messageSelf("Alteration successful.");
-				} else {
-					messageSelf("Alteration unsuccessful, the component details were invalid.");
-				}
-				// All other cases.
+		// Case of DESCRIPTION
+		if (factory.equals(ArcanistComponentsFactory.DESCRIPTION)) {
+			String[] split = fullCommand.split(" ", 3);
+			if (split.length > 2) {
+				currentSkill = factory.getBlock(currentSkill, split[2]);
+				messageSelf("Alteration successful.");
 			} else {
-				currentSkill = factory.getBlock(currentSkill, Syntax.ITEM.getStringInfo(fullCommand, this));
-				if (currentSkill == null) {
-					messageSelf("Alteration unsuccessful, the component details were invalid.");				
+				messageSelf("Alteration unsuccessful, the component details were invalid.");
+			}
+			// All other cases.
+		} else {
+			currentSkill = factory.getBlock(currentSkill, Syntax.ITEM.getStringInfo(fullCommand, this));
+			if (currentSkill == null) {
+				messageSelf("Alteration unsuccessful, the component details were invalid.");				
+			} else {
+				messageSelf("Alteration successful.");
+				if (currentSkill.isValid()) {
+					messageSelf("COMPLETE to finalize this spell.");
 				} else {
-					messageSelf("Alteration successful.");
-					if (currentSkill.isValid()) {
-						messageSelf("COMPLETE to finalize this spell.");
-					} else {
-						messageSelf("Further alteration necessary before spell completion.");
-					}
+					messageSelf("Further alteration necessary before spell completion.");
 				}
 			}
 		}
@@ -262,6 +261,42 @@ public class ArcanistAlter extends Skills {
 				if (!details.equals("")) {
 					build.setDescription(details);
 					return build;
+				}
+				return null;
+			}
+			
+			public String describeYourself() {
+				return " Alter Description [description]: Alters your personal description. Cost: Free!.";
+			}
+			
+		},
+		
+		// TODO Very tenative. Generic, not balanced, can cause balance, sleep, and other stuff.
+		// Does NOT apply a limited duration, so if a condi that is usually very temparary is added...
+		CONDITION() {
+			@Override
+			public  ArcanistBuilder getBlock(ArcanistBuilder build, String details) {
+				if (!details.equals("")) {
+					PassiveCondition condi;
+					try {
+						condi = PassiveCondition.valueOf(details.toUpperCase());
+						List<ArcanistBlock> effects = build.getDamageBlock().getAddedEffects();
+						if (effects == null) {
+							effects = new ArrayList<ArcanistBlock>();
+						}
+						Iterator<ArcanistBlock> iter = effects.iterator();
+						while (iter.hasNext()) {
+							ArcanistBlock block = iter.next();
+						    if (block instanceof PassiveConditionBlock && ((PassiveConditionBlock)block).condiToApply.equals(condi)) {
+						    	iter.remove();
+						    }
+						}
+						effects.add(new PassiveConditionBlock(condi));
+						build.setDamage(build.getDamageBlock().getNewInstance(build.getDamageBlock().getDamage(), effects));
+						return build;
+					} catch (IllegalArgumentException e) {
+						return null;
+					}
 				}
 				return null;
 			}

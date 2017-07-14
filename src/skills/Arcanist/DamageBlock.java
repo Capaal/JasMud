@@ -83,10 +83,6 @@ public class DamageBlock implements ArcanistBlock {
 		return true;
 	}
 
-	public void addEffect(ArcanistBlock newBlock) {
-		addedEffects.add(newBlock);
-	}
-
 	public int getDamage() {
 		return damage;
 	}

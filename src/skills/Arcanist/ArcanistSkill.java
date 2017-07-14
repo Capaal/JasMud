@@ -77,8 +77,7 @@ public class ArcanistSkill extends Skills implements interfaces.InformsAggro {
 		for (ArcanistBlock sb : selfBlocks) {
 			sb.perform(this);
 		}
-		informLastAggressor(currentPlayer, currentTargets);
-		
+		informLastAggressor(currentPlayer, currentTargets);		
 	}
 	
 	private void messages() {
@@ -117,11 +116,6 @@ public class ArcanistSkill extends Skills implements interfaces.InformsAggro {
 		}
 		return true;
 	}
-
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new ArcanistSkill(this, currentPlayer, fullCommand);
-	}
 	
 	public ArcanistBuilder getNewBuilder() {
 		ArcanistBuilder build = new ArcanistBuilder(getName());
@@ -133,6 +127,11 @@ public class ArcanistSkill extends Skills implements interfaces.InformsAggro {
 		build.setRequiredBlocks(requiredBlocks);
 		build.setSelfBlocks(selfBlocks);
 		return build;
+	}
+	
+	@Override
+	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
+		return new ArcanistSkill(this, currentPlayer, fullCommand);
 	}
 
 	// Assumes all arcanist spells will cause aggro EXCEPT for heals. // TODO bit hacky, what about slight heal + paralyze?

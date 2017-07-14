@@ -10,13 +10,11 @@ import skills.Arcanist.ArcanistSkill;
 public interface WhoTargettingBlock {
 
 	public List<Mobile> findWho(ArcanistSkill skill, List<Location> locations);
-
 	public int determineCost();
-
+	public Syntax requestSyntax();
 	public StringBuilder describeOneself(StringBuilder sb);
 	
-	public enum WhoTargettingFactory {
-		
+	public enum WhoTargettingFactory {		
 		TARGET() {
 			@Override
 			protected WhoTargettingBlock getImplementation() {
@@ -79,6 +77,7 @@ public interface WhoTargettingBlock {
 		private WhoTargettingFactory() {}
 		
 		protected abstract WhoTargettingBlock getImplementation();
+		public abstract void describeOneself(StringBuilder sb);
 		
 		public static WhoTargettingBlock getWho(String who) {
 			for (WhoTargettingFactory w : WhoTargettingFactory.values()) {
@@ -87,11 +86,6 @@ public interface WhoTargettingBlock {
 				}
 			}
 			return null;
-		}
-
-		public abstract void describeOneself(StringBuilder sb);
+		}		
 	}
-
-	public Syntax requestSyntax();
-
 }

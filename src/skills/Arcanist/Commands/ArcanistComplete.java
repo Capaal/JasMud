@@ -1,9 +1,7 @@
 package skills.Arcanist.Commands;
 
 import interfaces.Mobile;
-import processes.SkillBook;
 import processes.Skills;
-import processes.Skills.Syntax;
 import skills.Arcanist.ArcanistBuilder;
 import skills.Arcanist.ArcanistSkill;
 import skills.Arcanist.ArcanistSkillbook;
@@ -20,14 +18,12 @@ public class ArcanistComplete extends Skills {
 
 	@Override
 	protected void performSkill() {
-		if (preSkillChecks()) {
-			ArcanistSkill newSkill = currentSkill.complete();
-			if (newSkill != null) {
-				currentBook.addSkill(newSkill);
-				messageSelf("Spell scribed successfully!");
-			} else {
-				throw new IllegalStateException("Complete should never have failed this far!");
-			}
+		ArcanistSkill newSkill = currentSkill.complete();
+		if (newSkill != null) {
+			currentBook.addSkill(newSkill);
+			messageSelf("Spell scribed successfully!");
+		} else {
+			throw new IllegalStateException("Complete should never have failed this far!");
 		}		
 	}
 
@@ -50,10 +46,4 @@ public class ArcanistComplete extends Skills {
 		}
 		return true;
 	}
-
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new ArcanistComplete(currentPlayer, fullCommand);
-	}
-
 }

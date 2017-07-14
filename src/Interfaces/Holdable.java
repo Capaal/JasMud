@@ -1,7 +1,6 @@
 package interfaces;
 
 import processes.ContainerErrors;
-import processes.Location;
 
 // This is the basiest base item hopefully.
 // SHOULD only define something that can be HELD by CONTAINERs

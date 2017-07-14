@@ -1,7 +1,6 @@
 package skills.Arcanist.Commands;
 
 import interfaces.Mobile;
-import processes.SkillBook;
 import processes.Skills;
 import processes.UsefulCommands;
 import skills.Arcanist.ArcanistBuilder;
@@ -20,19 +19,17 @@ public class ArcanistCreate extends Skills {
 
 	@Override
 	protected void performSkill() {
-		spellName = Syntax.TARGET.getStringInfo(fullCommand, this);
-		currentBook = ArcanistSkillbook.getCurrentBook(currentPlayer);
-		if (preSkillChecks()) {
-			if (currentBook.getCurrentSkillBuilder() != null) {
-				messageSelf("Previous scriblings have been forgotten.");
-			}
-			currentBook.setBuilder(new ArcanistBuilder(spellName));
-			messageSelf(spellName + " scribing began. ALTERations necessary for completion.");
+		if (currentBook.getCurrentSkillBuilder() != null) {
+			messageSelf("Previous scriblings have been forgotten.");
 		}
+		currentBook.setBuilder(new ArcanistBuilder(spellName));
+		messageSelf(spellName + " scribing began. ALTERations necessary for completion.");
 	}
 
 	@Override
 	protected boolean preSkillChecks() {
+		spellName = Syntax.TARGET.getStringInfo(fullCommand, this);
+		currentBook = ArcanistSkillbook.getCurrentBook(currentPlayer);
 		if (currentBook == null) {
 			messageSelf("But you have no book for which to scribe!");
 			System.out.println("Serious bug, player missing ArcanistSkillbook but used CREATE.");
@@ -51,11 +48,6 @@ public class ArcanistCreate extends Skills {
 			return false;
 		}
 		return true;
-	}
-
-	@Override
-	public Skills getNewInstance(Mobile currentPlayer, String fullCommand) {
-		return new ArcanistCreate(currentPlayer, fullCommand);
 	}
 
 	private boolean doesSkillExist() {
