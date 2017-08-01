@@ -20,6 +20,11 @@
 * For Telnet: open [Your IP] 2587
 * Mud Client: Connect to you IP on the given port (2587).
 
+### Getting Started on the Code ###
+* WorldServer is the Main. Controls Socket connections to the game.
+* WorldServer creates PlayerPrompts which is the main loop a player lives within.
+* Otherwise: See Processes for most of the driving code and other folders for Game Implementation code (skills, items etc).
+
 ### Contribution guidelines ###
 
 * This is a fairly personal project and is not generally open to contribution. However, that does not mean
