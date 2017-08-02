@@ -1,13 +1,15 @@
 package processes;
+
 import java.net.*; // Needed for Socket.
 import java.io.*; // Needed for PrintWriter and Reader.
 
+// Socket sending and receiving class.
 public class SendMessage {
 
 	protected BufferedReader in;
 	protected PrintWriter out;
 	protected Socket incoming;
-	protected final int width = 80;
+	protected final int width = 80; // Defines max line length. // TODO give extra control to user.
 	
 	public SendMessage(Socket incoming) throws IOException {
 		if (incoming == null) {
@@ -18,14 +20,7 @@ public class SendMessage {
 		this.out = new PrintWriter(new OutputStreamWriter(incoming.getOutputStream()), true);	
 	}
 	
-	// ERROR: Causing delays in display the line.
-	// Prints message to user, does not "return" to next line.
-//	public void printMessageLine(String msg) {
-//		out.print(msg);
-//		out.flush();
-//	}
-	
-	// Prints any message sent to it.
+	// Prints a message to the user linked with the Socket.
 	public void printMessage(String msg) {
 		out.println(msg);
 		out.flush();
@@ -34,7 +29,7 @@ public class SendMessage {
 		}
 	}
 	
-	// Sends back what user types to be analyzed.
+	// Get what user types to be analyzed.
 	public String getMessage() {
 		try {
 			String msg = in.readLine();

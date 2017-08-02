@@ -20,12 +20,13 @@ public class Drink extends Skills {
 	protected void performSkill() {
 		Drinkable potion = (Drinkable)potionItem;		
 		//drinks the damn thing
-		if(!potion.changeSips(1)) {
+		if (potion.getSips() > 0) {
+			potion.changeSips(-1);
+			messageSelf("You take a sip of your " + potionName + ".");
+			potion.drink(currentPlayer);			
+		} else {
 			messageSelf("There are no more sips left in your potion.");
-			return;
-		}
-		messageSelf(potion.drink(currentPlayer));
-		messageSelf("You take a sip of your " + potionName + ".");
+		}		
 	}
 	
 	protected boolean preSkillChecks() {

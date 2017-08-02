@@ -1,24 +1,21 @@
-package processes;
+package skills;
 
 import interfaces.Mobile;
+import processes.Skills;
+import processes.WorldServer;
 
 import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+// Defines a skill that triggers a second part after an initial wait that is interruptible.
+// Nearly any skill will interrupt the wait (by calling killInduction()).
 public abstract class InductionSkill extends Skills {
 	
-	protected final ScheduledExecutorService effectExecutor;
 	protected InductionWrapper wrapper;
 		
 	public InductionSkill(String name, String description, Mobile currentPlayer, String fullCommand) {
 		super(name, description, currentPlayer, fullCommand);
-		effectExecutor = WorldServer.getGameState().getEffectExecutor();
-	}	
-	
-	public void shutDown() {
-		WorldServer.shutdownAndAwaitTermination(effectExecutor);
 	}
 	/**
 	 * Call if induction ends successfully, Usually to add in a message.
@@ -52,7 +49,7 @@ public abstract class InductionSkill extends Skills {
 			throw new IllegalArgumentException("Invalid duration or times: " + interval + " " + times + " " + initialWait);
 		}
 		wrapper = new InductionWrapper(skill, times);
-		ScheduledFuture<?> future = effectExecutor.scheduleWithFixedDelay(wrapper, initialWait, interval, TimeUnit.MILLISECONDS);
+		ScheduledFuture<?> future = WorldServer.getGameState().getEffectExecutor().scheduleWithFixedDelay(wrapper, initialWait, interval, TimeUnit.MILLISECONDS);
 		wrapper.setOwnFuture(future);			
 	}
 	
@@ -65,6 +62,7 @@ public abstract class InductionSkill extends Skills {
 		inductionKilled();
 	}	
 	
+	// Defines the second portion of skill that triggers after the wait.
 	protected abstract class InnerSkill extends Skills {		
 		public InnerSkill(Mobile currentPlayer, String fullCommand) {
 			super("", "", currentPlayer, fullCommand);
@@ -85,6 +83,7 @@ public abstract class InductionSkill extends Skills {
 		}
 	}
 	
+	// Specialized wrapper that can run x number of times and is interruptible.
 	protected class InductionWrapper implements Runnable {
 		private final InnerSkill wrappedInnerSkill;	
 		private int timesToRun;

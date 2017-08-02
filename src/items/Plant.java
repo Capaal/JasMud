@@ -7,6 +7,7 @@ import interfaces.Container;
 import interfaces.Cooldown;
 import interfaces.Mobile;
 
+// Stackable Items that can be "eaten" i.e. consumed causing an effect.
 public class Plant extends StackableItem{
 
 	private PlantType type;
@@ -24,11 +25,9 @@ public class Plant extends StackableItem{
 		return type.use(currentPlayer);
 	}
 	
-	@Override 	public void splitAndNew(int number, Container finalLocation) {		
-		PlantItemBuilder newStack = (PlantItemBuilder) this.newBuilder();
-		newStack.setQuantity(number);
+	@Override public void splitAndNew(int number, Container finalLocation) {		
+		PlantItemBuilder newStack = new PlantItemBuilder(this);
 		newStack.setItemContainer(finalLocation);
-		newStack.setPlantType(this.type);
 		newStack.complete();	
 	}
 	
@@ -117,7 +116,17 @@ public class Plant extends StackableItem{
 	
 
 	public static class PlantItemBuilder extends StackableItemBuilder {
+		public PlantItemBuilder(Plant item) {
+			super(item);
+			this.herbType = item.type;
+		}
+
+		public PlantItemBuilder() {
+			// TODO Auto-generated constructor stub
+		}
+
 		private PlantType herbType = PlantType.ALOE;
+		
 		public PlantType getPlantType() {return herbType;}
 		public void setPlantType(PlantType herbType) {this.herbType = herbType;}
 		
@@ -125,19 +134,4 @@ public class Plant extends StackableItem{
 			return new Plant(this);
 		} 
 	}
-	
-	@Override public ItemBuilder newBuilder() {
-		return newBuilder(new PlantItemBuilder());
-	}
-
-
-	
-	
-	
-	/*protected ItemBuilder newBuilder(StackableItemBuilder newBuild) {
-		super.newBuilder(newBuild);
-		return newBuild;
-	} */ // Should not be necessary, identical to stackableitem's
-
-
 }

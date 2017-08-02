@@ -12,8 +12,7 @@ public class PassiveConditionBlock implements ArcanistBlock {
 
 	@Override
 	public void perform(ArcanistSkill skill) {
-		skill.getCurrentTargets().stream().forEach(x -> x.addPassiveCondition(condiToApply,-1));
-		
+		skill.getCurrentTargets().stream().forEach(x -> x.addPassiveCondition(condiToApply,-1));		
 	}
 
 	@Override

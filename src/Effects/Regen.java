@@ -19,12 +19,11 @@ public class Regen extends TickingEffect {
 	}
 	
 	@Override // TODO
-	public boolean stackedInstance(TickingEffect stackedInstance, int times) {
+	public void stackedInstance(TickingEffect stackedInstance, int times) {
 		// set to maxIntensity in case the new regen is better? Or just replace?
 		// then changes countdown wrapper's remaining times to run and resets counter.
 		// OR should we just re-create the wrapper??? we've practically re-made it.
 		wrapper.modifyTimesRan(0);
-		return true;
 	}
 	
 	@Override public String getInfo() {

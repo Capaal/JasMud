@@ -3,7 +3,6 @@ package processes;
 import java.util.*;
 import java.util.Map.Entry;
 
-import processes.Location.Direction;
 import processes.LocationBuilder.LocationConnectionDataBox;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -18,14 +17,13 @@ import items.Door;
  *  Contains all information relating to each "room" a player may visit.
  *  Should be initiated safely using LocationBuilder
  */
-
 @XStreamAlias("Location")
 public class Location implements Container {
 		
 	private final int id;
 	private final String name;
 	private final String description;
-	private Map<Direction, LocationConnection> locationMap;
+	private Map<Direction, LocationConnection> locationMap; // Not final, new Locations will change this Location's map.
 	protected TreeMap<String, Holdable> inventory = new TreeMap<String, Holdable>();
 	protected TreeMap<String, Mobile> mobiles = new TreeMap<String, Mobile>();
 	
@@ -41,54 +39,37 @@ public class Location implements Container {
 		this.bondedQuest = builder.getQuest();
 		if (bondedQuest != null) {
 			bondedQuest.bondLocation(this);
-		}
-		
+		}		
 		// Build all Location Connections
 		locationMap = new HashMap<Direction, LocationConnection>();
 		for (LocationConnectionDataBox db : builder.getLocationBuildingBlocks()) {
 			LocationConnection newLocCon = new LocationConnection(this, db.door, db.other);
 			locationMap.put(db.toOther, newLocCon);
 			db.other.setLocation(db.otherLocationToCurrentDirection, newLocCon);
-		}
-		
-		
-		
-	//	this.locationMap = builder.getlocationMap();
-		WorldServer.getGameState().addLocation(this.id, this);		
-	/*	for (Location otherLocation : builder.locationConnections.keySet()){
-			if (otherLocation != null) {
-				Direction directionToHere = builder.locationConnections.get(otherLocation).otherLocationToCurrentDirection;
-				Door connectingDoor = builder.locationConnections.get(otherLocation).door;
-				otherLocation.setLocation(this, connectingDoor, directionToHere);
-			} else {
-				System.out.println("Location: " + otherLocation + " does not exist to connect to." + this);
-			}
-		}*/
+		}		
+		WorldServer.getGameState().addLocation(this.id, this);	
 	}
 	
+	// OTHER Locations call this to set THIS location's direction to that new location.
 	private void setLocation(Direction directionToThere, LocationConnection newLocCon) {
 		this.locationMap.put(directionToThere, newLocCon);
 	}
-	
-	// Called from ANOTHER location when connecting locations.
-//	private void setLocation(Location futureLoc, Door door, Direction directionToThere) {
-//		this.locationMap.put(directionToThere, new LocationConnection(door, futureLoc));
-//	}	
 	
 	public Map<Direction, LocationConnection> getLocationMap() {
 		return new HashMap<Direction, LocationConnection>(locationMap);
 	}	
 	
 	public String getDescription() {return description;}			
-	public int getId() {return id;}
+	@Override public int getId() {return id;}
+	@Override public String getName() {return name;}
 	
 	// The HOLDABLE being moved is EXPECTED to handle adding/removing itself properly.
 	public ContainerErrors acceptItem(Holdable newItem) {
 		inventory.put(newItem.getName().toLowerCase() + newItem.getId(), newItem);
-		return null; //TODO should check the return
-
+		return null; // Always successful, no weight or type restrictions.
 	}	
 	
+	// Accepting Mobiles to the Location.
 	public void acceptItem(Mobile newMob) {
 		mobiles.put(newMob.getName().toLowerCase() + newMob.getId(), newMob);
 		for (Mobile m : mobiles.values()) {
@@ -98,17 +79,22 @@ public class Location implements Container {
 		// Add an effects.informEntered();
 	}
 	
-	//TODO implement a null location object?
+	/** Get Location based on string, specificity up to startsWith for wanted Direction.
+	* If string is invalid, uses null instead, thus returning a null value.
+	* @return Location Location that given string points to, or Null if none or invalid.
+	* @param dir String indicating desired direction with startsWith accuracy.
+	* @see Enum Direction.
+	*/
 	public Location getLocation(String dir) {
 		Direction trueDirection = Direction.getDirectionName(dir);
 		return getLocation(trueDirection);
-	/*	if (trueDirection == null) {
-			return null;
-		} else {
-			return getLocation(trueDirection);
-		}*/
 	}		
 	
+	/** Get Location based on DIRECTION eunum.
+	* @return Location Location that given Direction points to, or Null if none or invalid.
+	* @param dir Direction indicating desired direction.
+	* @see Enum Direction.
+	*/
 	public Location getLocation(Direction dir) {	
 		if (locationMap.get(dir) != null) {
 			return locationMap.get(dir).getNotOneself(this);
@@ -116,6 +102,12 @@ public class Location implements Container {
 		return null;
 	}
 	
+	/**
+	 * Gets door separating two locations defined by current Location's location Map and the given Direction.
+	 * There may only be one door, or none, separating locations.
+	 * @param dir Direction from current Location to search for the door.
+	 * @return Door returned if a door exists, Null if there is no door, or no location in said direction.
+	 */
 	public Door getDoor(Direction dir) {
 		LocationConnection con = locationMap.get(dir);
 		if (con == null) {
@@ -124,27 +116,49 @@ public class Location implements Container {
 		return con.getDoor();
 	}
 	
+	/**
+	 * Removes Holdable from this Location's Holdable List. 
+	 * @throws IllegalStateException thrown if Holdable is NOT present.
+	 */
 	public void removeItemFromLocation(Holdable oldItem) {
 		if ((inventory.remove(oldItem.getName().toLowerCase() + oldItem.getId()) == null)) {
 			System.out.println(inventory);
-			System.out.println("removeItemFromLocation failed to remove item: " + oldItem.getName() + oldItem.getId());
+			throw new IllegalStateException("removeItemFromLocation failed to remove Holdable: " + oldItem.getName() + oldItem.getId());
 		}
 	}
 	
+	/**
+	 * Removes Mobile from this Location's Mobile List. 
+	 * @throws IllegalStateException thrown if Mobile is NOT present.
+	 */
 	public void removeItemFromLocation(Mobile oldMob) {
 		if ((mobiles.remove(oldMob.getName().toLowerCase() + oldMob.getId()) == null)) {
 			throw new IllegalStateException("removeItemFromLocation failed to remove Mobile: " + oldMob.getName() + oldMob.getId());
 		}
 	}
 	
+	/**
+	 * Returns a VIEW of this Location's Inventory.
+	 * @return TreeMap<String,Holdable> is a sortable navigatable map.
+	 */
 	public TreeMap<String, Holdable> viewInventory() {
 		return new TreeMap<String, Holdable>(this.inventory);
 	}
 	
-	public TreeMap<String, Mobile> getMobiles() {
+	/**
+	 * Returns a VIEW of this Location's list of Mobiles.
+	 * @return TreeMap<String,Mobile> is a sortable navigatable map.
+	 */
+	public TreeMap<String, Mobile> viewMobiles() {
 		return new TreeMap<String, Mobile>(this.mobiles);
 	}
 	
+	/**
+	 * Attempts to locate the single most likely Mobile as designated by given string. Accepts both
+	 * name and name+id with startsWith accuracy.
+	 * @param mobileString String to use when searching for Mobile.
+	 * @return Mobile or Null if nothing within an acceptable accuracy is found.
+	 */
 	public Mobile getMobileFromString(String mobileString) {	
 		mobileString = mobileString.toLowerCase();
 		String ceiling = mobiles.ceilingKey(mobileString);
@@ -167,8 +181,7 @@ public class Location implements Container {
 	}
 	
 	@Override
-	public Holdable getHoldableFromString(String holdableString) {	
-		
+	public Holdable getHoldableFromString(String holdableString) {			
 		holdableString = holdableString.toLowerCase();
 		String ceiling = inventory.ceilingKey(holdableString);
 		String floor = inventory.floorKey(holdableString);			
@@ -188,10 +201,13 @@ public class Location implements Container {
 			}
 		}
 		return null;		
-	}
-
-	@Override public String getName() {return name;}
+	}	
 	
+	/**
+	 * Attempts to determine if current Location has any connection to the given Location, and returns which Direction if true.
+	 * @param askingLocation Location to which you want to find a location to.
+	 * @return Direction that connects to the given Location from the current Location.
+	 */
 	public Direction getDirectionToLocation(Location askingLocation) {
 		for (Entry<Direction, LocationConnection> entry : locationMap.entrySet()) {
 			if (entry.getValue().getNotOneself(this) == askingLocation) {
@@ -199,42 +215,9 @@ public class Location implements Container {
 			}
 		}
 		return null;
-	}
+	}	
 	
-//	public static TreeMap<String, String> fullDir;
-	
-/*	public static String getDirName(String dir) {		
-		if (fullDir == null) {
-			fullDir = new TreeMap<String, String>();
-			fullDir.put("n", "north");
-			fullDir.put("ne", "northeast");
-			fullDir.put("e","east");
-			fullDir.put("s", "south");
-			fullDir.put("se", "southeast");			
-			fullDir.put("sw", "southwest");
-			fullDir.put("w", "west");
-			fullDir.put("nw", "northwest");
-			fullDir.put("in", "in");
-			fullDir.put("o", "out");
-			fullDir.put("u", "up");
-			fullDir.put("d", "down");
-		}
-		if (fullDir.containsValue(dir)) {
-			return dir;
-		} else if (fullDir.containsKey(dir)) {
-			return fullDir.get(dir);
-		} else {
-			for (String s : fullDir.values()) {
-				if (s.startsWith(dir)) {
-					return s;
-				}
-			}
-		}
-		return null;
-	}*/
-	
-	public enum Direction {
-		
+	public enum Direction {		
 		NORTH() {
 			@Override
 			public String getOpp() {
@@ -372,6 +355,11 @@ public class Location implements Container {
 		public abstract String getOpp();
 		public abstract String getAbbreviation();
 		
+		/**
+		 * Returns Direction enum matching string supplied. Ignores case, allows abbreviation, and startswith.
+		 * @param commandDirection String of direction desired.
+		 * @return Direction direction enum, or null if string does not match any.
+		 */
 		public static Direction getDirectionName(String commandDirection) {
 			if (commandDirection.equals("")) {
 				return null;
@@ -401,6 +389,7 @@ public class Location implements Container {
 		return 100000;		
 	}
 
+	// Returns 0 because Location effectively has infinite capabilities.
 	@Override
 	public double getCurrentWeight() {
 		// TODO Auto-generated method stub
@@ -423,18 +412,43 @@ public class Location implements Container {
 	}
 
 	@Override public void changeWeight(double change) {
-		
+		// Blank, we do not allow Location's weight to change.
 	}
 
+	/**
+	 * Add Blocking effects, such as walls, to a Connection between two Locations based on the current Location and Direction given.
+	 * Blocking effects can stack, and do not remove each other.
+	 * @param direction Direction on which this blocking effect will be added.
+	 * @param blocking Blocking effect to be added.
+	 * @throws IllegalStateException thrown if desired Direction does not lead to a valid Location Connection.
+	 */
 	public void addBlocking(Direction direction, Blocking blocking) {
 		LocationConnection locDir = locationMap.get(direction);
+		if (locDir == null) {
+			throw new IllegalStateException("Blocking may only be added to existing connections.");
+		}
 		locDir.addBlocking(blocking);		
 	}
+	
+	/**
+	 * Remove Blocking effects, such as walls, from a Connection between two Locations based on the current Location and Direction given.
+	 * @param direction Direction on which this blocking effect will be removed.
+	 * @param blocking Blocking effect to be removed.
+	 * @throws IllegalStateException thrown if desired Direction does not lead to a valid Location Connection.
+	 */
 	public void removeBlocking(Direction direction, Blocking blocking) {
 		LocationConnection locDir = locationMap.get(direction);
+		if (locDir == null) {
+			throw new IllegalStateException("Blocking may only be renived to existing connections.");
+		}
 		locDir.removeBlocking(blocking);		
 	}
 
+	/**
+	 * Returns whether a direction is blocked by a Blocking Effect, unrelated from doors. TODO? Should doors be included here?
+	 * @param interestedDir Direction to look for a connection, then look for blocking effects.
+	 * @return boolean True if blocked, false otherwise included if there is no direction there.
+	 */
 	public boolean isDirectionBlocked(Direction interestedDir) {
 		LocationConnection locDir = locationMap.get(interestedDir);
 		if (locDir != null) {
@@ -443,11 +457,12 @@ public class Location implements Container {
 		return false;
 	}
 
-//	public LocationConnection getLocationConnection(Direction direction) {
-//		return locationMap.get(direction);
-//	}
-
-	public ArrayList<Blocking> getBlocking(Direction interestedDir) {
+	/**
+	 * Gets list of blocking effects in the given Direction.
+	 * @param interestedDir
+	 * @return List<Blocking>
+	 */
+	public List<Blocking> getBlocking(Direction interestedDir) {
 		LocationConnection locDir = locationMap.get(interestedDir);
 		return locDir.getBlocking();	
 	}

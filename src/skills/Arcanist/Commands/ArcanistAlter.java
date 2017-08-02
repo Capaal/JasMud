@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import effects.PassiveCondition;
 import interfaces.Mobile;
+import processes.Location.Direction;
 import processes.Skills;
 import processes.UsefulCommands;
 import skills.Arcanist.*;
@@ -72,10 +73,14 @@ public class ArcanistAlter extends Skills {
 		}
 		String componentName = Syntax.TARGET.getStringInfo(fullCommand, this);
 		String desiredName = Syntax.ITEM.getStringInfo(fullCommand, this);
-		if (componentName.equals("") || desiredName.equals("")) {
+	//	if (componentName.equals("") || desiredName.equals("")) { // Removed to test without a test for desiredName
+	//		messageSelf("To continue scribing: alter [component] [desired]");
+	//		return false;
+	//	}	
+		if (componentName.equals("")) {
 			messageSelf("To continue scribing: alter [component] [desired]");
 			return false;
-		}				
+		}	
 		factory = ArcanistComponentsFactory.getComponent(componentName);
 		if (factory == null) {
 			messageSelf("Your component to alter was invalid.");
@@ -270,6 +275,33 @@ public class ArcanistAlter extends Skills {
 			}
 			
 		},
+		// Not working great. Has SERIOUS syntax problems.
+		// If added, then where changed, will delete the expected SLOT syntax.
+		FORCEDMOVE() {
+			@Override
+			public  ArcanistBuilder getBlock(ArcanistBuilder build, String details) {
+				List<ArcanistBlock> effects = build.getDamageBlock().getAddedEffects();
+				if (effects == null) {
+					effects = new ArrayList<ArcanistBlock>();
+				}
+				Iterator<ArcanistBlock> iter = effects.iterator();
+				while (iter.hasNext()) {
+					ArcanistBlock block = iter.next();
+				    if (block instanceof ForcedMoveBlock) {
+				    	build.getSyntax().remove(((ForcedMoveBlock)block).positionInBuildSyntax);
+				    	iter.remove();
+				    }
+				}
+				effects.add(new ForcedMoveBlock(build));
+				build.setDamage(build.getDamageBlock().getNewInstance(build.getDamageBlock().getDamage(), effects));
+				return build;
+			}
+			
+			public String describeYourself() {
+				return " Alter forcedmove: Adds forced movement to your spell. Cost: Very High!";
+			}
+			
+		},
 		
 		// TODO Very tenative. Generic, not balanced, can cause balance, sleep, and other stuff.
 		// Does NOT apply a limited duration, so if a condi that is usually very temparary is added...
@@ -302,7 +334,7 @@ public class ArcanistAlter extends Skills {
 			}
 			
 			public String describeYourself() {
-				return " Alter Description [description]: Alters your personal description. Cost: Free!.";
+				return " Alter Condition [condition]: Adds a condition to your spell on hit. Cost: High!";
 			}
 			
 		},

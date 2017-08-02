@@ -22,10 +22,10 @@ public class EmptyPotion extends Skills {
 		//empties - changes sips by -currentSips
 		if(potion.getSips() == 0) {
 			messageSelf("That potion is already empty.");
-			return;
+		} else {
+			potion.changeSips(-potion.getSips()); 
+			messageSelf("You empty the potion.");
 		}
-		potion.changeSips(potion.getSips()); 
-		messageSelf("You empty the potion.");
 	}
 	
 	@Override

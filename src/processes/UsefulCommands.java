@@ -115,7 +115,7 @@ public class UsefulCommands {
 	
 	//duplicate of messageOthers in Skills
 	public static void messageOthers(Mobile currentPlayer, String msg, List<Mobile> toIgnore) {
-		for (Mobile h : currentPlayer.getContainer().getMobiles().values()) {
+		for (Mobile h : currentPlayer.getContainer().viewMobiles().values()) {
 			if (h.isControlled()) {
 				Boolean shouldTell = true;
 				if (h.equals(currentPlayer)) {

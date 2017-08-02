@@ -7,12 +7,14 @@ import interfaces.Holdable;
 import interfaces.Mobile;
 import items.Armor;
 
+// Equipment including armor and weapons, Possibly backpacks and pouches?
 public class Equipment {
 	
 	private Holdable rightHand;
 	private Holdable leftHand;
 	private Armor armor;
-	private Mobile bondedMobile;
+	
+	private final Mobile bondedMobile;
 	
 	public Equipment(Mobile mobile) {
 		this.bondedMobile = mobile;
@@ -22,9 +24,19 @@ public class Equipment {
 		bondedMobile = finishedMob;
 		rightHand = equipment.rightHand;
 		leftHand = equipment.leftHand;
+		armor = equipment.armor;
 	}
 
+	/**
+	 * Point an item as being in an equipment slot. Swaps out previous Holdable in slot to Mobile's inventory.
+	 * @param toWield Holdable to put into wielding slot. Must be allowed in slot.
+	 * @param slot EquipmentSlot enum defining allowed equipment slots.
+	 * @throws IllegalArgumentException if the Holdable cannot be placed in the desired slot.
+	 */
 	public void wield(Holdable toWield, EquipmentSlot slot) {
+		if (!toWield.getAllowedEquipSlots().contains(slot)) {
+			throw new IllegalArgumentException("Holdable may not occupy a slot it does not allow.");
+		}
 		switch(slot) {
 			case RIGHTHAND:
 				unwield(slot);
@@ -37,9 +49,6 @@ public class Equipment {
 			break;
 			
 			case ARMOR:
-				if (!(toWield instanceof Armor)) {
-					throw new IllegalArgumentException();
-				}
 				unwield(slot);
 				armor = (Armor)toWield;
 				bondedMobile.addDefense(((Armor)toWield).getDefenceMod());
@@ -52,6 +61,10 @@ public class Equipment {
 		}		
 	}
 	
+	/**
+	 * Removes whatever Holdable may be in desired slot and places in Mobile's inventory.
+	 * @param slot EquipmentEnum defining slot to unwield from.
+	 */
 	public void unwield(EquipmentSlot slot) {
 		Holdable item = slot.getItem(this);
 		if (item != null) {
@@ -60,6 +73,10 @@ public class Equipment {
 		}
 	}
 	
+	/**
+	 * Unwields a Holdable and places in Mobiles Inventory when the Slot of item is unknown.
+	 * @param item Holdable to search for an remove.
+	 */
 	public void unwield(Holdable item) {
 		if (rightHand != null && rightHand.equals(item)) {
 			unwield(EquipmentSlot.RIGHTHAND);
@@ -119,7 +136,7 @@ public class Equipment {
 		},
 		ARMOR(){
 			public Holdable getItem(Equipment equipment) {
-				return equipment.armor;		// TODO	
+				return equipment.armor;		
 			}
 			public void unwield(Equipment equipment) {
 				equipment.bondedMobile.addDefense(-equipment.armor.getDefenceMod());

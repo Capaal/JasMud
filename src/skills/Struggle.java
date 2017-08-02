@@ -5,7 +5,6 @@ import interfaces.Mobile;
 import java.util.Random;
 
 import effects.PassiveCondition;
-import processes.InductionSkill;
 
 //interruptible, repeating induction skill
 public class Struggle extends InductionSkill {

@@ -32,9 +32,8 @@ public class Bleed extends TickingEffect {
 	}
 	
 	@Override
-	public boolean stackedInstance(TickingEffect stackedInstance, int times) {
+	public void stackedInstance(TickingEffect stackedInstance, int times) {
 		changeIntensity(((Bleed)stackedInstance).intensity);
-		return true;
 	}
 	
 	public synchronized void changeIntensity(int change) {

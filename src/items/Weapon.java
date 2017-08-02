@@ -1,27 +1,25 @@
 package items;
 
 import java.util.ArrayDeque;
-import java.util.Iterator;
 import java.util.Queue;
 
 import effects.Bleed;
 import effects.Fear;
 import interfaces.Mobile;
 
-
 //may want to have multiple effects per weapon (aoe + bleed) someday
+
+// Specialized StdItem meant to handle special effects and oddities weapons might need to handle.
+// StdItems can be wielded as weapons, but can not do some of the advanced combat related things.
 public class Weapon extends StdItem {
 	
 	private MercEffect type;
-	private ArrayDeque<Plant> appliedPlants = new ArrayDeque<Plant>(); 
-
+	private ArrayDeque<Plant> appliedPlants = new ArrayDeque<Plant>(); // List of plants currently on weapon.
 	
 	public Weapon(WeaponItemBuilder build) {
 		super(build);
 		this.type = build.getMercEffect();
-	}
-	
-	
+	}	
 	
 	@Override 
 	public String getInfo() { 
@@ -69,16 +67,6 @@ public class Weapon extends StdItem {
 		return false;
 	}
 	
-	@Override public ItemBuilder newBuilder() {
-		return newBuilder(new WeaponItemBuilder());
-	}
-	
-	protected ItemBuilder newBuilder(WeaponItemBuilder newBuild) {
-		super.newBuilder(newBuild);
-		newBuild.setMercEffect(this.type);
-		return newBuild;
-	}
-	
 	public static class WeaponItemBuilder extends ItemBuilder {
 		
 		protected  Weapon.MercEffect mercEffect = null;
@@ -96,17 +84,12 @@ public class Weapon extends StdItem {
 		} 
 	}
 	
-//	public String displayEffectOthers() {
-//		return "";
-//	}
-	
 	public enum MercEffect {
 
 		BLEED() {
 			@Override public boolean applyEffect(Mobile target) {
-				if (target.addActiveCondition(new Bleed(target, 5), 5)) { // Times arbitrary, bleed doesn't care.
-					target.tell("The serraded blade deeply gashes your flesh.");					
-				}
+				target.addActiveCondition(new Bleed(target, 5), 5); // Times arbitrary, bleed doesn't care.
+				target.tell("The serraded blade deeply gashes your flesh.");	
 				return true;
 			}
 		},	
@@ -120,11 +103,10 @@ public class Weapon extends StdItem {
 				if (target.hasCondition(new Fear(target))) {
 					return true;
 				}
-				if (target.addActiveCondition(new Fear(target), 10)) {
-					target.tell("Fear applied.");
-					return true;
-				}
-				return failedApply(target);
+				target.addActiveCondition(new Fear(target), 10);
+				target.tell("Fear applied.");
+				return true;
+				
 			}
 			
 		},
@@ -149,14 +131,5 @@ public class Weapon extends StdItem {
 		public boolean applyEffect(Mobile target) {
 			return true;
 		}
-
-	//	public String displayEffectOthers() {
-	//		return displayEffectOthers;		
-	//	}
-		
-	//	private static String displayEffectOthers;
-		
 	}
-	
-
 }

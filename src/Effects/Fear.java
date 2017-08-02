@@ -17,8 +17,7 @@ public class Fear extends TickingEffect {
 	}
 	
 	@Override
-	public boolean stackedInstance(TickingEffect stackedInstance, int times) {
-		return true;
+	public void stackedInstance(TickingEffect stackedInstance, int times) {
 		// Do nothing, fear does not stack and does not modify existing fear.
 	}
 	

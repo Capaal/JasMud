@@ -12,15 +12,12 @@ import processes.Location.Direction;
 /*
  * Builder class for safely creating a Location
  * Typically follows the following steps:
- * LocationBuilder newLocation = new LocationBuilder();   Readies a new builder and sets variables to generics
- * newLocation.setID(int id);  Assigns ID for this new location.
- * newLocation.setName(String name);  Sets a brief name.
- * newLocation.setDescription(String description);  Longer description of location
- * newLocation.setGroundType(Groundtype groundtype);  See Location for Groundtype ENUMS
- * newLocation.north(int futureId, String connectionDirection)  EXAMPLE: newLocation.north(12, "south");
- * The Above should call the direction FROM THIS LOCATION to another EXISTING LOCATION (so NORTH of here is otherID and connects to here via it's south)	
- * Additional calls to south, east, in, up etc would follow for other EXISTING locations.
- * newLocation.complete();   Declares the new Location complete, a Location will be generated, and connections between locations created.
+ *		LocationBuilder newLoc30 = new LocationBuilder();
+		newLoc30.setName("Apartments north of Merchant Row");
+		newLoc30.setDescription("Some exciting description.");
+		newLoc30.addLocationConnection(Direction.SOUTH, 28);  Direction to another Location, that other Location's ID.
+		newLoc30.complete();
+   Declares the new Location complete, a Location will be generated, and connections between locations created.
  * Will over-write an Existing Location's connected locations if existing location's direction would connect to multiple locations.
  */
 public class LocationBuilder {
@@ -58,8 +55,9 @@ public class LocationBuilder {
 		this.id = WorldServer.getGameState().maxLocationId;		
 	}
 	
-	// If an instance of LocationBuilder has been completed via "complete()" then returns the generated Location.
-	// @Throws IllegalStateException
+	/** If an instance of LocationBuilder has been completed via "complete()" then returns the generated Location.
+	* @Throws IllegalStateException if complete() has not been called
+	*/
 	public Location getFinishedLocation() {
 		if (buildComplete) {
 			return finishedLocation;
@@ -68,39 +66,40 @@ public class LocationBuilder {
 		}
 	}
 	
-	public int getId() {
-		return id;
-	}
-	
+	public int getId() {return id;}	
 	public String getName() {return name;}
 	public void setName(String name) {this.name = name;}
 	public String getDescription() {return description;}
 	public void setDescription(String description) {this.description = description;}	
 
+	/**
+	 * Creates a LocationConnection between this new location and the designated other Location in the given direction.
+	 * Allows non-mirrored connections and creation of an unlocked Door.
+	 * @param directionToOtherLocation Direction from this new Location pointing to the given Location.
+	 * @param otherLocationId ID of the Location we want to connect to.
+	 * @param otherLocationToHereDirection Direction that other Location should get modified to make a connection to this new Location.
+	 * @param door Door if one is desired, or give Null.
+	 */
 	public void addLocationConnection(Direction directionToOtherLocation, int otherLocationId, Direction otherLocationToHereDirection, Door door) {			
 		if (WorldServer.getGameState().checkForLocation(otherLocationId)) { // If otherLocation already exists, continue.	
-			Location otherLocation = WorldServer.getGameState().viewLocations().get(otherLocationId);
-		
+			Location otherLocation = WorldServer.getGameState().viewLocations().get(otherLocationId);		
 			locationBuildingBlocks.add(new LocationConnectionDataBox(directionToOtherLocation, otherLocation, otherLocationToHereDirection, door));
-	}
-			// Need to know: Direction to other, other, other direction to here, door.
-			
-			/*if (directionToOtherLocation != null) { // if two-ways					
-				locationConnections.put(otherLocation, new LocationConnectionDataBox(door,otherLocationToHereDirection)); // Set up for the Other existing location to connect here.
-			}
-			locationMap.put(directionToOtherLocation, new LocationConnection(door, otherLocation));	// Set-up for this location to connect to other location.
-		} else {
-			throw new IllegalStateException("Other Location does not exist.");
-		}*/
+		}
 	}
 	
-	//overload of above method
+	/**
+	 * Creates a Location Connection between two Locations (this new one and an existing one). Simplified version of addLocation Connection
+	 * This version assumes connection is opposite directions (North from here connects to South in other Location). Assumes no Door.
+	 * @param directionToOtherLocation Direction to connect this Location to the Given Location.
+	 * @param otherLocationId ID of the Desired Location to connect to.
+	 */
 	public void addLocationConnection(Direction directionToOtherLocation, int otherLocationId) {
 		addLocationConnection(directionToOtherLocation, otherLocationId, Direction.getDirectionName(directionToOtherLocation.getOpp()), null);
 	}
 	
-	public class LocationConnectionDataBox {
-		
+	// Class representing the Data required to build a LocationConnection between two locations.
+	// LocationConnection cannot be built until THIS location is completed and exists, so information is stored here until ready.
+	public class LocationConnectionDataBox {		
 		final Location other;
 		final Direction toOther;
 		final Door door;

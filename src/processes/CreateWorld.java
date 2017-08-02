@@ -27,15 +27,15 @@ import skills.Arcanist.ArcanistSkillbook;
 import skills.Arcanist.Commands.*;
 import skills.Mercenary.*;
 
-public class CreateWorld {
-	
+// Generates game world on start-up. Location, Skills, Items, Mobiles, Classes.
+// Some versions for a fresh build with no previous game state is loaded.
+public class CreateWorld {	
 	
 	public static void loadMap() {
 		makeWorldFromNowhere();
 	}
 	
 	public static void createWorldWithItems() {
-//		makeWorldFromNowhere();
 		makeSkills();
 		makeItems();
 		spawnMobs();
@@ -43,7 +43,6 @@ public class CreateWorld {
 	}
 	
 	public static void createWorld() {
-	//	makeWorldFromNowhere();
 		makeSkills();
 		spawnMobs();
 		makeClasses();

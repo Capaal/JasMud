@@ -8,9 +8,9 @@ import effects.PassiveCondition;
 import interfaces.InformsAggro;
 import interfaces.Mobile;
 import processes.Equipment.EquipmentSlot;
-import processes.InductionSkill;
 import processes.Location;
 import processes.Location.Direction;
+import skills.InductionSkill;
 
 public class Headshot extends InductionSkill implements InformsAggro {
 	

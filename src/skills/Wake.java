@@ -5,7 +5,6 @@ import java.util.Random;
 
 import effects.PassiveCondition;
 import interfaces.Mobile;
-import processes.InductionSkill;
 
 public class Wake extends InductionSkill {
 	

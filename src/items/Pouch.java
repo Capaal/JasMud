@@ -1,27 +1,19 @@
 package items;
 
-import java.awt.List;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.NavigableMap;
-import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
-import interfaces.Container;
 import interfaces.Holdable;
-import items.Bag.BagItemBuilder;
 import processes.ContainerErrors;
 import processes.UsefulCommands;
 
 //Pouches for easy accessibility - can eat/rub/use directly out of a pouch as though in hand.
 public class Pouch extends Bag {
 	
-	private final ArrayList<Class<? extends Holdable>> allowedTypes;
-	private final Lock lock = new ReentrantLock();
+	private final ArrayList<Class<? extends Holdable>> allowedTypes; // i.e. can be define to ONLY hold plants.
 	
+	// Unlike Bag, can hold only 1 STACKABLE item, such as plants or coins.
 	private StackableItem inventory;
 
 	public Pouch(PouchItemBuilder build) {
@@ -57,11 +49,6 @@ public class Pouch extends Bag {
 			}
 		}	
 		return null;
-		/*
-		if (inventory != null && inventory.getName().equalsIgnoreCase(holdableString)) {
-			return inventory;
-		}
-		return null;*/
 	}
 	
 	@Override
@@ -81,10 +68,8 @@ public class Pouch extends Bag {
 	}
 	
 	@Override
-	public ContainerErrors acceptItem(Holdable newItem) {
-		lock.lock();
-		try {
-			if (!allowedTypes.contains(newItem.getClass())) {
+	public synchronized ContainerErrors acceptItem(Holdable newItem) {
+		 	if (!allowedTypes.contains(newItem.getClass())) {
 				return ContainerErrors.WRONGTYPE;
 			}
 			if (inventory != null || newItem.getWeight() > this.maxWeight) {
@@ -93,22 +78,14 @@ public class Pouch extends Bag {
 			inventory = (Plant) newItem;
 			changeWeight(newItem.getWeight());
 			return null;
-		} finally {
-			lock.unlock();
-		}
 	}
 	
 	@Override
-	public void removeItemFromLocation(Holdable oldItem) {
-		lock.lock();
-		try {
-			if (inventory == oldItem) {
-				inventory = null;
-			}
-			changeWeight(-oldItem.getWeight());
-		} finally {
-			lock.unlock();
+	public synchronized void removeItemFromLocation(Holdable oldItem) {
+		if (inventory == oldItem) {
+			inventory = null;
 		}
+		changeWeight(-oldItem.getWeight());
 	}
 	
 	@Override
@@ -129,16 +106,6 @@ public class Pouch extends Bag {
 			s.append("There is nothing in the pouch.");
 			return s.toString();
 		}
-	}
-	
-	@Override public ItemBuilder newBuilder() {		
-		return newBuilder(new PouchItemBuilder());
-	}
-	
-	protected ItemBuilder newBuilder(PouchItemBuilder newBuild) {
-		super.newBuilder(newBuild);
-		newBuild.allowedTypes = this.allowedTypes;
-		return newBuild;
 	}
 	
 	public static class PouchItemBuilder extends BagItemBuilder {	

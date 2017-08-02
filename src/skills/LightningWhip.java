@@ -5,7 +5,6 @@ import java.util.Arrays;
 import effects.PassiveCondition;
 import interfaces.InformsAggro;
 import interfaces.Mobile;
-import processes.InductionSkill;
 
 public class LightningWhip extends InductionSkill implements InformsAggro {
 	

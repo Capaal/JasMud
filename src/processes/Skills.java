@@ -27,12 +27,9 @@ public abstract class Skills implements Runnable {
 	}
 	
 	public void run() {	
-//		this.currentPlayer = currentPlayer;
-//		this.fullCommand = fullCommand;
-		if (preAllSkills()) {
-		//	currentPlayer.tell("\n");
-			if (preSkillChecks()) {
-				performSkill();
+		if (preAllSkills()) { // Default checks ALL skills make unless overridden.
+			if (preSkillChecks()) { // Abstract method for other checks unique to each skill 
+				performSkill(); // The skill's actual action
 				displayPrompt();
 			}
 		}
@@ -60,7 +57,6 @@ public abstract class Skills implements Runnable {
 	
 	protected abstract void performSkill();
 	protected abstract boolean preSkillChecks();
-//	public abstract Skills getNewInstance(Mobile currentPlayer, String fullCommand);
 	
 	protected void testForInduction() {
 		if (currentPlayer.isInducting()) {
@@ -68,6 +64,7 @@ public abstract class Skills implements Runnable {
 		}
 	}
 	
+	//TODO modify so isDirectionBlock checks BOTH doors and blocking effects.
 	public boolean isDirectionBlocked(Location currentLocation, Direction interestedDir) {
 		if (currentLocation == null) {
 			throw new IllegalArgumentException("Supplied location may not be null.");
@@ -92,9 +89,7 @@ public abstract class Skills implements Runnable {
 		}
 		messageSelf("You're off balance.");
 		return false;
-	}
-	
-	
+	}	
 	
 	public boolean isBlocking(Mobile target) {
 		if (target.isBlocking()) {
@@ -108,12 +103,8 @@ public abstract class Skills implements Runnable {
 		currentPlayer.tell(msg);
 	}
 	
-	protected double getPlayerBalanceMult() {
-		return currentPlayer.getBalanceMult();
-	}
-	
 	public void messageOthers(String msg, List<Mobile> toIgnore) {
-		for (Mobile h : currentPlayer.getContainer().getMobiles().values()) {
+		for (Mobile h : currentPlayer.getContainer().viewMobiles().values()) {
 			if (h.isControlled()) {
 				Boolean shouldTell = true;
 				if (h.equals(currentPlayer)) {
@@ -134,7 +125,7 @@ public abstract class Skills implements Runnable {
 	}
 	
 	public void messageOthersAway(String msg, List<Mobile> toIgnore, Location otherLoc) {
-		for (Mobile h : otherLoc.getMobiles().values()) {
+		for (Mobile h : otherLoc.viewMobiles().values()) {
 			if (h.isControlled()) {
 				if (!toIgnore.contains(h)) {
 					h.tell(msg);
@@ -278,15 +269,9 @@ public abstract class Skills implements Runnable {
 			return this.getClass().getDeclaredConstructor(Mobile.class, String.class).newInstance(currentPlayer, fullCommand);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
-			// TODO Auto-generated catch block
-	//		e.printStackTrace();
 			System.err.println("GetNewInstance major bug.");
 			return null;
 		}
-//		return con.newInstance(currentPlayer, fullCommand);
-//		return this.getClass().getDeclaredConstructors(Arrays.asList(Mobile.class, String.class)).newInstance(currentPlayer, fullCommand);
-//		return new Clearmind(currentPlayer, fullCommand);
 	}
-//	myObject.getClass().getDeclaredConstructors(types list).newInstance(args list);
 
 }

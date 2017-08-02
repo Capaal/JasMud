@@ -1,31 +1,18 @@
 package items;
 
 import processes.ContainerErrors;
-import processes.Location;
 import processes.StdMob;
-
-import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 import interfaces.Container;
 
-
+// Extension of StdItem that cannot be moved. Nor can it be created in any Container other than a Location.
 @XStreamAlias("StationaryItem")
 public class StationaryItem extends StdItem {
 
 	public StationaryItem(ItemBuilder build) {
 		super(build);
 		// TODO Auto-generated constructor stub
-	}
-	
-	@Override public ItemBuilder newBuilder() {
-		return newBuilder(new StationaryItemBuilder());
-	}
-	
-	protected ItemBuilder newBuilder(StationaryItemBuilder newBuild) {
-		super.newBuilder(newBuild);
-		return newBuild;
 	}
 	
 	public static class StationaryItemBuilder extends ItemBuilder {	

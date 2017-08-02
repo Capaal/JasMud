@@ -60,7 +60,8 @@ public class ArcanistComponents extends Skills {
 			
 		},
 		
-		EFFECTS(Arrays.asList(ArcanistComponentsFactory.BLEED, ArcanistComponentsFactory.HEAL, ArcanistComponentsFactory.CONDITION)) {
+		EFFECTS(Arrays.asList(ArcanistComponentsFactory.BLEED, ArcanistComponentsFactory.HEAL, ArcanistComponentsFactory.CONDITION,
+				ArcanistComponentsFactory.FORCEDMOVE)) {
 			
 		};
 		

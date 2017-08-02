@@ -14,7 +14,7 @@ public class WhoTargettingBlockAll implements WhoTargettingBlock {
 	public List<Mobile> findWho(ArcanistSkill skill, List<Location> locations) {
 		List<Mobile> everyone = new ArrayList<Mobile>();
 		for (Location l : locations) {
-			for (Mobile m : l.getMobiles().values()) {
+			for (Mobile m : l.viewMobiles().values()) {
 				everyone.add(m);
 			}
 		}

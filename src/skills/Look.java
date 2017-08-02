@@ -51,7 +51,7 @@ public class Look extends Skills {
 		boolean anItem = false;
 		StringBuilder sb = new StringBuilder();
 		sb.append("Looking around you see: ");
-		for (Mobile h : lookHere.getMobiles().values()) {
+		for (Mobile h : lookHere.viewMobiles().values()) {
 			sb.append(UsefulCommands.ANSI.YELLOW + h.getShortDescription() + descriptor(h) + UsefulCommands.ANSI.SANE);
 			anItem = true;
 		}

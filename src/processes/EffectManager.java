@@ -27,22 +27,20 @@ public class EffectManager {
 	 * For registering TickingEffects.
 	 * @param newEffect May not be null.
 	 * @param times Number of times to tick.
-	 * @return boolean True usually, false if stackedInstance of tickingEffect returns false.
 	 * @throws IllegalArgumentException Throws if newEffect is null or times <= 0.
 	 */
-	public synchronized boolean registerActiveEffect(TickingEffect newEffect, int times) {
+	public synchronized void registerActiveEffect(TickingEffect newEffect, int times) {
 		if (times <= 0 || newEffect == null) {
 			throw new IllegalArgumentException("Invalid times or Effect cannot be null: " + times);
 		}
 		for (TickingEffect effect : activeEffects) {
 			if (effect.equals(newEffect)) {
-				return effect.stackedInstance(newEffect, times);
+				effect.stackedInstance(newEffect, times);
+				return; // if newEffect's class is already present, do not create a new instance, just run stackedInstance.
 			}
 		}
-		newEffect.startTicking(times);
 		activeEffects.add(newEffect); // Registers this effect with the Mobile
-		newEffect.setLinkedManager(this);
-		return true;
+		newEffect.startTicking(times, this);	
 	}
 	/**
 	 * Registers PassiveCondion with a set duration.

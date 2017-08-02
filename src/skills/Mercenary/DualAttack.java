@@ -77,7 +77,7 @@ public class DualAttack extends Skills implements InformsAggro {
         }
     	Location here = currentPlayer.getContainer();
         if (possibleTarg.equals("all")) {
-        	targets = (List<Mobile>) here.getMobiles().values();
+        	targets = (List<Mobile>) here.viewMobiles().values();
         	targets.remove(currentPlayer); //maybe remove friends or add an effect that's aoeEnemies etc
         	if (targets.isEmpty()) {
         		return false;

@@ -23,8 +23,11 @@ public class MercRegen extends TickingEffect {
 	
 	@Override // TODO
 	//useless for this skill
-	public boolean stackedInstance(TickingEffect stackedInstance, int times) {
-		return true;
+	public void stackedInstance(TickingEffect stackedInstance, int times) {
+		// Set intensity to whatever is highest.
+		if (((MercRegen)stackedInstance).intensity > intensity) {
+			this.intensity = ((MercRegen)stackedInstance).intensity;
+		}
 	}
 	
 	@Override public String getInfo() {

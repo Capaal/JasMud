@@ -10,12 +10,14 @@ import java.util.TreeMap;
 import effects.PassiveCondition;
 import processes.ContainerErrors;
 import processes.Equipment.EquipmentSlot;
-import processes.InductionSkill;
+import skills.InductionSkill;
 import processes.Location;
 import processes.SendMessage;
 import processes.Skills;
 import processes.SkillBook;
 
+// Defines base version of Mobiles.
+// Mobiles defined as creature capable of moving and interacting.
 public interface Mobile extends Container {
 	
 	public String getName();
@@ -40,7 +42,7 @@ public interface Mobile extends Container {
 	public Skills getCommand(String command);
 	public ContainerErrors acceptItem(Holdable item);
 	public boolean addPassiveCondition(PassiveCondition newEffect, int duration);
-	public boolean addActiveCondition(TickingEffect newEffect, int times);
+	public void addActiveCondition(TickingEffect newEffect, int times);
 //	public double getWeaponMultiplier(); TODO
 	public boolean hasCondition(TickingEffect effect);
 	public boolean hasCondition(PassiveCondition effect);

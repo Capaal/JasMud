@@ -40,7 +40,7 @@ public abstract class Quest {
 	}
 	
 	protected void sayHere(String msg) {
-		for (Mobile m : questLocation.getMobiles().values()) {
+		for (Mobile m : questLocation.viewMobiles().values()) {
 			if (m.isControlled()) {
 				m.tell(msg);
 			}

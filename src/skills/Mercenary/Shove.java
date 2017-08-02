@@ -28,7 +28,7 @@ public class Shove extends Skills implements InformsAggro {
 	@Override
 	protected void performSkill() {
 		currentPlayer.addPassiveCondition(PassiveCondition.BALANCE, 3000);
-		MoveShove move = new MoveShove(finalTarget, "move " + dir + " " + currentPlayer.getName());
+		MoveShove move = new MoveShove(finalTarget, "move " + dir + " " + currentPlayer.getName()); // currentPlayer Name seems to do nothing?
 		move.setShover(currentPlayer); // TODO use last aggressor?
 		WorldServer.getGameState().addToQueue(move);
 		informLastAggressor(currentPlayer, finalTarget);	

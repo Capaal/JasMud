@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import interfaces.Holdable;
 import interfaces.Mobile;
-import processes.InductionSkill;
 import items.Harvestable;
 import items.Harvestable.HarvestType;
 
@@ -28,12 +27,14 @@ public class Mine extends InductionSkill {
 
 		@Override
 		public void performSkill() {
-			if(!rock.changeRemaining(1)) {
+			if (rock.getRemainingQty() == 0) {
 				messageSelf("There are no more ores left in this rock.");
 				currentPlayer.killInduction();
-				return;
+			} else {
+				rock.harvest(currentPlayer);	
+				rock.changeRemaining(-1);
+				messageSelf("You mine away some of the rock.");
 			}
-			rock.harvest(currentPlayer);	
 		}
 	}
 	

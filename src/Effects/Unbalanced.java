@@ -34,9 +34,8 @@ public class Unbalanced extends TickingEffect {
 	}
 
 	@Override
-	public boolean stackedInstance(TickingEffect stackedInstance, int times) {
-		// TODO Auto-generated method stub
-		return false;
+	public void stackedInstance(TickingEffect stackedInstance, int times) {
+		// Ignored.
 	}
 
 }

@@ -3,6 +3,7 @@ package processes;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
+// Organizes list of skills to control order of unlocking, and simplifying given them out to particular classes.
 public class SkillBook {
 
 	protected NavigableMap<String, Skills> skillList;
@@ -15,24 +16,22 @@ public class SkillBook {
 		this.id = id;
 	}
 	
+	// Add a skill to this skill book.
 	public void addSkill(Skills newSkill) {
 		synchronized (skillList) {
 			skillList.put(newSkill.name.toLowerCase(), newSkill);
 		}
 	}	
 	
+	// Finds a particular skill in this skillbook, or null if unable.
+	// Uses startsWith.
 	public Skills getSkill(String skill) {
 		if (skill == null || skill.equals("")) {
 			return null;
 		}
-		return findSkill(skill.toLowerCase());
-	}
-	
-	// TODO change to find via name via how moveHoldable works.
-	private Skills findSkill(String skill) {
 		synchronized (skillList) {
-			String s = skillList.ceilingKey(skill);
-			if (s != null && s.startsWith(skill)) {
+			String s = skillList.ceilingKey(skill.toLowerCase());
+			if (s != null && s.startsWith(skill.toLowerCase())) {
 				return skillList.get(s);
 			}
 		}

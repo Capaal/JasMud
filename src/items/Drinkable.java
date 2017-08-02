@@ -4,7 +4,6 @@ import effects.PassiveCondition;
 import effects.Bleed;
 import effects.Regen;
 import interfaces.Mobile;
-import items.StackableItem.StackableItemBuilder;
 
 //almost same as stackable, except can't split quantity (sips)
 public class Drinkable extends StdItem {
@@ -25,67 +24,65 @@ public class Drinkable extends StdItem {
 		return this.currentSips;
 	}
 	
-	public boolean changeSips(int number) {
-		currentSips = currentSips - number; //should change this for fill
-		if (currentSips < 0) {
-			currentSips = 0;
-			return false;
+	/**
+	 * Changes current sips by given number. Negative to remove quantity. WILL remove/add sips up to max/min but returns false.
+	 * @param number Quantity of sips to add (+) or remove (-).
+	 * @throws IllegalArgumentException thrown if given number would cause currentSips to go above max or below 0.
+	 */
+	public void changeSips(int number) throws IllegalArgumentException {
+		int finalCount = currentSips + number;		
+		if (finalCount > maxSips || finalCount < 0) {
+			throw new IllegalArgumentException("Change in quantity cannot exceed bounds.");
 		}
-		if (currentSips > maxSips) {
-			currentSips = maxSips;
-			return false;
-		}
-		return true;
+		currentSips = finalCount;	
 	}
 	
-	public String drink(Mobile currentPlayer) {
-		return type.drink(currentPlayer);
-	}
+	// Triggers the drink's effect and displays appropriate message.
+	public void drink(Mobile currentPlayer) {
+		type.drink(currentPlayer);
+	}	
 	
-	
-	
+	// Enum list of each drink type, detailing their messages and effects.
 	public enum DrinkType {
 		HEALTH() {
-			@Override public String drink(Mobile currentPlayer) {
+			@Override public void drink(Mobile currentPlayer) {
 				currentPlayer.takeDamage(-50);
-				return "The warm liquid heals you a bit.";
+				currentPlayer.tell("The warm liquid heals you a bit.");
 			}
 		},
 		
 		DEFENSE() {
-			@Override public String drink(Mobile currentPlayer) {	
+			@Override public void drink(Mobile currentPlayer) {	
 				if (currentPlayer.addPassiveCondition(PassiveCondition.DEFENCE,  -1)) {
-					return "The potion makes you feel tougher.";
+					currentPlayer.tell("The potion makes you feel tougher.");
 				}
-				return failedSip();
+				currentPlayer.tell(failedSip());
 			}
 		},
 
 		BLEED() {
-			@Override public String drink(Mobile currentPlayer) {
-				if (currentPlayer.addActiveCondition(new Bleed(currentPlayer, 30), 10)){
-					return "The caustic liquid starts opening bloody wounds.";
-				}
-				return failedSip();
+			@Override public void drink(Mobile currentPlayer) {
+				currentPlayer.addActiveCondition(new Bleed(currentPlayer, 30), 10);
+				currentPlayer.tell("The caustic liquid starts opening bloody wounds.");
 			}
 		},
 			
 		ANTIDOTE() {
-			@Override public String drink(Mobile currentPlayer) {
+			@Override public void drink(Mobile currentPlayer) {
 				if (currentPlayer.hasCondition(new Bleed(currentPlayer, 0))) {
 				//	currentPlayer.removeCondition(Bleed.class); Would remove all bleeds
 					currentPlayer.addActiveCondition(new Bleed(currentPlayer, -40), 10); // To remove 40 from the bleed amount?
-					return "The soothing liquid closes your wounds.";
+					currentPlayer.tell("The soothing liquid closes your wounds.");
 				}
-				return failedSip();
+				currentPlayer.tell(failedSip());
 			}
 		},
 		
 		REGEN() {
-			@Override public String drink(Mobile currentPlayer) {
+			@Override public void drink(Mobile currentPlayer) {
 				currentPlayer.addActiveCondition(new Regen(currentPlayer, -10), 10); // 10 intensity, 5 times.
 //				currentPlayer.addActiveCondition(new Regen(currentPlayer, 10, 5)); // Heals 10 hitpoints every tick for 5 ticks.
-				return "The potion gives you a warm, healthy glow."; // Should this be on Regen's doOnCreation()?
+				currentPlayer.tell("The potion gives you a warm, healthy glow.");// Should this be on Regen's doOnCreation()?
 			}
 			
 		};
@@ -96,23 +93,9 @@ public class Drinkable extends StdItem {
 			return "The potion doesn't seem to have an effect.";
 		}
 		
-		public String drink(Mobile currentPlayer) {
-			return "Wrong method, tells the coders they screwed up.";
-		}
-		
-	}
-	
-	@Override public ItemBuilder newBuilder() {
-		System.out.println("Drinkable's newBuilder should not be called. Possible invalid state");
-		return newBuilder(new DrinkableItemBuilder());
-	}
-	
-	public ItemBuilder newBuilder(DrinkableItemBuilder newBuild) {
-		super.newBuilder(newBuild);
-		newBuild.setCurrentSips(this.currentSips);
-		newBuild.setMaxSips(this.maxSips);
-		newBuild.setDrinkType(this.type);
-		return newBuild;
+		public void drink(Mobile currentPlayer) {
+			System.out.println("Something odd happened, default drink type called.");
+		}		
 	}
 	
 	public static class DrinkableItemBuilder extends ItemBuilder {

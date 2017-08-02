@@ -39,9 +39,8 @@ public class Belladonna extends TickingEffect {
 	}
 
 	@Override //handles + and -
-	public boolean stackedInstance(TickingEffect stackedInstance, int times) {
+	public void stackedInstance(TickingEffect stackedInstance, int times) {
 		stack = stack + times;
-		return true;
 	}
 	
 	private void applyHallucin() {

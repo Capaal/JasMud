@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
 
-
+// TODO alter sockets creating PlayerPrompts to add task to thread pool, rather than another new thread.
 public class WorldServer {
 	
 	private static GameState gameState;
@@ -146,7 +146,7 @@ public class WorldServer {
 	private static void createXStream() {
 		xstream = new XStream();	
         xstream.alias("StdMob", StdMob.class);
-        xstream.registerConverter(new LocationConverter(WorldServer.gameState));
+        xstream.registerConverter(new LocationConverter());
 		xstream.alias("Location", Location.class);
 		xstream.alias("StdItem", StdItem.class);
 		xstream.alias("Stackable", StackableItem.class);

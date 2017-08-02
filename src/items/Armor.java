@@ -4,6 +4,7 @@ import java.util.EnumSet;
 
 import processes.Equipment.EquipmentSlot;
 
+// Mostly UnImplemented.
 public class Armor extends StdItem {
 
 	// Durability?

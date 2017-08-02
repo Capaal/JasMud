@@ -1,38 +1,26 @@
 package items;
 
-import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.thoughtworks.xstream.annotations.XStreamOmitField;
-
 import interfaces.Mobile;
-import processes.CreateWorld;
 import processes.WorldServer;
 
 
-//almost same as stackable, except can't split quantity
+// Implementation of Stationary Item that product Holdables.
 public class Harvestable extends StationaryItem {
 	
-	// Probably handle recovering IDs at some point
 	private int maxQuantity;
 	private int remainingQuantity;
 	private HarvestType type;
 	private boolean running = false;
-	private int timeToReset = 5;
-	//timer stuff
-//	@XStreamOmitField
-//	private ScheduledExecutorService effectExecutor;
+	private int timeToReset = 5; // Seconds
 
-	//add timeToRegen
 	public Harvestable(HarvestableItemBuilder build) {
 		super(build);
 		this.maxQuantity = build.getMaxQuantity();
 		this.remainingQuantity = maxQuantity;
 		this.type = build.getHarvestType();
-//		effectExecutor = Executors.newScheduledThreadPool(1);
 	}
 	
 	public int getRemainingQty() {
@@ -48,49 +36,37 @@ public class Harvestable extends StationaryItem {
 		return super.getInfo() + " - " + this.type.getEnumInfo(remainingQuantity);
 	}
 	
-	//shouldn't this just be removeOne?
-	public boolean changeRemaining(int number) {
-		remainingQuantity = remainingQuantity - number;
-		if (remainingQuantity < 0) {
-			remainingQuantity = 0;
+	/**
+	 * Changes quantity remaining of the Holdable produced by this object. Also begins resetting process if change brings quantity to 0.
+	 * @param number int quantity to modify current quantity.
+	 * @throws IllegalArgumentException thrown if change would cause remaining quantity to exceed max, or fall below 0.
+	 */
+	public void changeRemaining(int number) throws IllegalArgumentException {
+		int finalQuantity = remainingQuantity + number;
+		if (finalQuantity > maxQuantity || finalQuantity < 0) {
+			throw new IllegalArgumentException("Change may not cause quantity to exceed defined max, or fall below 0.");
+		}
+		remainingQuantity = finalQuantity;
+		if (remainingQuantity == 0) {
 			if (!running) {
 				WorldServer.getGameState().getEffectExecutor().schedule(() -> reset(), timeToReset, TimeUnit.SECONDS);
 				running = true;
 			}
-			return false;
 		}
-		if (remainingQuantity > maxQuantity) {
-			remainingQuantity = maxQuantity;
-			return false;
-		}
-		return true;
 	} 
 	
 	// possible to access by outside methods - reset on daily for example
-	public void reset() {
+	public synchronized void reset() {
 		Random n = new Random();
 		remainingQuantity = n.nextInt(maxQuantity - 1) + 1; //between 1 and max, no zero
-		System.out.println(this.type.toString() + " reset done.");
 		running = false;
 	}
 	
-	//not sure this is correct, why not just use an arraylist to store the type?
+	 // Creates a new Holdable of the type specified by HarvestableType, and creates it in Mobile's inventory.
 	public void harvest(Mobile currentPlayer) {
-		ItemBuilder toCopy = WorldServer.getGameState().itemTemplates.get(type.harvest(currentPlayer)); 
+		ItemBuilder toCopy = type.getTemplate();
 		toCopy.setItemContainer(currentPlayer);
 		toCopy.complete();
-	}
-	
-	@Override public ItemBuilder newBuilder() {
-		return newBuilder(new HarvestableItemBuilder());
-	}
-	
-	protected ItemBuilder newBuilder(HarvestableItemBuilder newBuild) {
-		super.newBuilder(newBuild);
-		newBuild.setCurrentQuantity(this.remainingQuantity);
-		newBuild.setMaxQuantity(this.maxQuantity);
-		newBuild.setHarvestType(this.type);
-		return newBuild;
 	}
 	
 	public static class HarvestableItemBuilder extends StationaryItemBuilder {		
@@ -114,11 +90,10 @@ public class Harvestable extends StationaryItem {
 	} 
 	
 	public enum HarvestType {
-		IRON() {
+		IRON("You manage to pick out a chunk of iron.") {
 			
-			@Override public String harvest(Mobile currentPlayer) {
-				currentPlayer.tell("You manage to pick out a chunk of iron."); //or return just "iron" and the message can otherwise be the same
-				return "iron";
+			@Override public ItemBuilder getTemplate() {
+				return  WorldServer.getGameState().itemTemplates.get("iron");
 			}
 			
 			@Override public String getEnumInfo(int remainingQuantity) {
@@ -126,10 +101,10 @@ public class Harvestable extends StationaryItem {
 			}
 		},
 		
-		WOOD() {
-			@Override public String harvest(Mobile currentPlayer) {	
-				currentPlayer.tell("You cut a log out of the tree.");
-				return "log";
+		WOOD("You cut a log out of the tree.") {
+			
+			@Override public ItemBuilder getTemplate() {
+				return WorldServer.getGameState().itemTemplates.get("log");
 			}
 			
 			@Override public String getEnumInfo(int remainingQuantity) {
@@ -169,29 +144,23 @@ public class Harvestable extends StationaryItem {
 			
 		};
 	
+		public final String message;
 		
-		private HarvestType() {}
+		private HarvestType(String setMessage) {
+			message = setMessage;
+		}
+		
+		public ItemBuilder getTemplate() {
+			return null;
+		}
 		
 		public String failedHarvest() {
 			return "You can't harvest this... thing.";
 		}
 		
-		public String harvest(Mobile currentPlayer) {
-			System.out.println("Error Harvestable harvest: this method should never run.");
-			return "";
-		}
-		
-		public void createHarvestedItem(Mobile currentPlayer, String itemToCreate) {
-			ItemBuilder toCopy = WorldServer.getGameState().itemTemplates.get(itemToCreate); 
-			toCopy.setItemContainer(currentPlayer);
-			toCopy.complete();
-		}
-		
 		public String getEnumInfo(int remainingQuantity) {
 			System.out.println("Error Harvestable getInfo: this method should never run.");
 			return "";
-		}
-		
-	}
-	
+		}		
+	}	
 }

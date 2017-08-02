@@ -45,7 +45,7 @@ public class VineTrip extends Skills implements InformsAggro {
 	}
 	
 	private int calculateBalance() {
-		return (int) (BASEBALANCE * getPlayerBalanceMult());
+		return (int) (BASEBALANCE * currentPlayer.getBalanceMult());
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import effects.PassiveCondition;
 import interfaces.Holdable;
 import interfaces.Mobile;
 import processes.Equipment.EquipmentSlot;
-import processes.InductionSkill;
+import skills.InductionSkill;
 
 public class Shieldblock extends InductionSkill {
 	

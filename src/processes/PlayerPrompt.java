@@ -2,14 +2,10 @@ package processes;
 
 import interfaces.Holdable;
 import interfaces.Mobile;
-import items.StackableItem;
-import items.StdItem;
 
 import java.net.*; // Needed for Socket.
 import java.io.*; // Needed for PrintWriter and BufferReader.
 import java.util.*; // Needed for keySet();
-
-import com.thoughtworks.xstream.XStream;
 
 import processes.Location.Direction;
 import skills.Look;
@@ -17,8 +13,8 @@ import skills.Look;
 // Represents a users connection to the game. They will connect, then choose what hero to play. It handles interaction with the system.
 public class PlayerPrompt implements Runnable {
 
-	protected Socket incoming;
-	protected SendMessage sendBack;	
+	protected final Socket incoming;
+	protected final SendMessage sendBack;	
 	protected Mobile currentPlayer;
 	
 	public static final String[] failMessages = new String[] {
@@ -39,66 +35,26 @@ public class PlayerPrompt implements Runnable {
 		this.sendBack = new SendMessage(incoming);	
 	}	
 
+	// Called when WorldServer successfully connects an incoming socket and creates the PlayerPrompt.
 	public void run() {	
-		LogIn();				
-		Look look = new Look(currentPlayer, "");
-		WorldServer.getGameState().addToQueue(look);
+		LogIn();	// Log in or creating new Mobile.
+		WorldServer.getGameState().addToQueue(new Look(currentPlayer, ""));
 		messageOthers(currentPlayer.getName() + " appears before you.",Arrays.asList(currentPlayer));
 		// The following is the User's infinite loop they play inside.	
 		boolean stayInsideLoop = true;
 		while (stayInsideLoop) {
-			if (incoming.isClosed()) {
+			if (testForDisconnect()) {
 				stayInsideLoop = false;
-				currentPlayer.removeFromWorld();
-				destroyConnection();
 				break;
-			}
-			//currentPlayer.displayPrompt();
-			String str = sendBack.getMessage();
+			}			
+			String str = sendBack.getMessage(); // Get User's message.
 			if (str != null) {
-				// This is what breaks the infinite loop and kills connection.
-				if (str.trim().equalsIgnoreCase("quit")) {
+				if (checkForExceptionalCommands(str)) {
 					stayInsideLoop = false;
-					currentPlayer.tell("Leaving the World...");
-					messageOthers(currentPlayer.getName() + " has left the world.",Arrays.asList(currentPlayer));
-					currentPlayer.removeFromWorld();
-					destroyConnection();
-					break;
-				} else if (str.trim().equalsIgnoreCase("shutdown")) { // Starts FULL game shutdown. Probably doesn't work right.
-					stayInsideLoop = false;
-					for (PlayerPrompt player : WorldServer.getGameState().viewActiveClients()) {
-			//			player.currentPlayer.save();
-			//			player.currentPlayer.removeFromWorld();
-						player.destroyConnection();
-					}
-					for (Location l : WorldServer.getGameState().viewLocations().values()) {
-						for (Holdable h : l.inventory.values()) {
-							h.save();
-							h.removeFromWorld();
-						}
-					}
-					WorldServer.saveGameState(WorldServer.GAMESTATEDEFAULTNAME);
-				//	WorldServer.getGameState().saveIdMaps();
-				//	WorldServer.getGameState().saveTemplates();					
-					WorldServer.shutdownAndAwaitTermination(WorldServer.executor);
-				} else {						
-					StringTokenizer st = new StringTokenizer(str);
-					String command = "";
-					if (st.hasMoreTokens()) {
-						command = st.nextToken();
-					}					
-					command = command.toLowerCase();
-					Skills com = null;
-					//TODO need alternate commands instead of this
-					Direction posDir = Direction.getDirectionName(command);
-					if (posDir != null) {
-						com = currentPlayer.getCommand("move");
-						str = "move " + posDir.toString();
-					} else {
-						com = currentPlayer.getCommand(command);
-					}
+				} else {
+					Skills com = getCommand(str);					
 					if (com != null) {		
-						WorldServer.getGameState().addToQueue(com.getNewInstance(currentPlayer, str));
+						WorldServer.getGameState().addToQueue(com);
 					} else {		
 						printFailMessages();
 					}
@@ -174,27 +130,14 @@ public class PlayerPrompt implements Runnable {
 			for (SkillBook s : bookList) {
 				newPlayer.addSkillBook(s.duplicate(), 100);
 			}
-		}
-		
+		}		
 		newPlayer.setName(enteredName);					
 		newPlayer.setPassword(enteredPass);		
 		newPlayer.setLocation(WorldServer.getGameState().viewLocations().get(1));  // Default starting location.
 		newPlayer.complete();
-		this.currentPlayer = newPlayer.getFinishedMob();		
-		
-		
-		
-	//	WorldServer.gameState.addMob(currentPlayer.getName() + currentPlayer.getId(), currentPlayer); This should be happening on mob creation.
-		
-		//adding hardcoded skillbook TEMP
-	//	currentPlayer.addBook(CreateWorld.generalSkills.duplicate(),100);	
-		//currentPlayer.addBook(WorldServer.getGameState().getBook(1), 100);	
-		//currentPlayer.addBook(WorldServer.getGameState().getBook(2), 100);
-		//currentPlayer.addBook(WorldServer.getGameState().getBook(3), 100);
+		this.currentPlayer = newPlayer.getFinishedMob();	
 		currentPlayer.setSendBack(sendBack);
 		currentPlayer.controlStatus(true);
-	//	currentPlayer.save(); 
-	//	WorldServer.gameState.addNewPlayer(enteredName, currentPlayer);
 	}
 	
 	private void printFailMessages() {
@@ -202,6 +145,65 @@ public class PlayerPrompt implements Runnable {
 		int selection = rand.nextInt(failMessages.length);
 		sendBack.printMessage(failMessages[selection]);
 		currentPlayer.displayPrompt();
+	}
+	
+	private boolean testForDisconnect() {
+		if (incoming.isClosed()) {
+			currentPlayer.removeFromWorld();
+			destroyConnection();
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean checkForExceptionalCommands(String str) {
+		if (str.trim().equalsIgnoreCase("quit")) {
+			currentPlayer.tell("Leaving the World...");
+			messageOthers(currentPlayer.getName() + " has left the world.",Arrays.asList(currentPlayer));
+			currentPlayer.removeFromWorld();
+			destroyConnection();
+			return true;
+		}
+		if (str.trim().equalsIgnoreCase("shutdown")) { // Starts FULL game shutdown.
+			for (PlayerPrompt player : WorldServer.getGameState().viewActiveClients()) {
+				player.destroyConnection();
+			}
+			// Save all items
+			for (Location l : WorldServer.getGameState().viewLocations().values()) {
+				for (Holdable h : l.inventory.values()) {
+					h.save();
+					h.removeFromWorld();
+				}
+			}
+			// Save GameState.
+			WorldServer.saveGameState(WorldServer.GAMESTATEDEFAULTNAME);				
+			WorldServer.shutdownAndAwaitTermination(WorldServer.executor);
+			return true;
+		}
+		return false;
+	}
+	
+	private Skills getCommand(String str) {
+		StringTokenizer st = new StringTokenizer(str);
+		String command = "";
+		if (st.hasMoreTokens()) {
+			command = st.nextToken();
+		}					
+		command = command.toLowerCase();
+		Skills com = null;
+		//TODO need alternate commands instead of this for shortcutting movement
+		Direction posDir = Direction.getDirectionName(command);
+		if (posDir != null) {
+			com = currentPlayer.getCommand("move");
+			str = "move " + posDir.toString();
+		} else {
+			com = currentPlayer.getCommand(command);
+		}
+		if (com != null) {
+			return com.getNewInstance(currentPlayer, str);
+		}
+		return null;
+		
 	}
 	
 	private void destroyConnection() {
@@ -216,7 +218,7 @@ public class PlayerPrompt implements Runnable {
 	
 	//duplicate of messageOthers in Skills
 	public void messageOthers(String msg, List<Mobile> toIgnore) {
-		for (Mobile h : currentPlayer.getContainer().getMobiles().values()) {
+		for (Mobile h : currentPlayer.getContainer().viewMobiles().values()) {
 			if (h.isControlled()) {
 				Boolean shouldTell = true;
 				if (h.equals(currentPlayer)) {
@@ -238,7 +240,6 @@ public class PlayerPrompt implements Runnable {
 	
 	public Mobile getPlayer() {
 		return this.currentPlayer;
-	}
-	
+	}	
 }
 

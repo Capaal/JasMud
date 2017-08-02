@@ -8,12 +8,12 @@ import java.util.TreeMap;
 
 import Quests.Quest;
 import processes.ContainerErrors;
-import processes.InductionSkill;
 import processes.Location;
 import processes.SendMessage;
 import processes.SkillBook;
 import processes.Skills;
 import processes.Equipment.EquipmentSlot;
+import skills.InductionSkill;
 import effects.PassiveCondition;
 import interfaces.Cooldown;
 import interfaces.Holdable;
@@ -21,6 +21,7 @@ import interfaces.Mobile;
 import interfaces.TickingEffect;
 import items.StdItem;
 
+// Decorator Pattern abstract for AI actions.
 public abstract class MobileDecorator implements Mobile {
 
 	protected final Mobile decoratedMobile;
@@ -31,6 +32,7 @@ public abstract class MobileDecorator implements Mobile {
 	
 	protected abstract void makeDecision();
 	
+	// Factory Enum to set-up AI action decorators.
 	public enum DecoratorType {
 			
 		AGGRESSIVE() {
@@ -160,8 +162,8 @@ public abstract class MobileDecorator implements Mobile {
 	}
 
 	@Override
-	public boolean addActiveCondition(TickingEffect newEffect, int times) {
-		return decoratedMobile.addActiveCondition(newEffect, times);
+	public void addActiveCondition(TickingEffect newEffect, int times) {
+		decoratedMobile.addActiveCondition(newEffect, times);
 	}
 
 	@Override

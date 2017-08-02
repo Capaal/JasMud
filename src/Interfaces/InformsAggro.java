@@ -2,6 +2,7 @@ package interfaces;
 
 import java.util.List;
 
+// Use with skills to ensure methods for triggering effects that are triggered on aggressive actions.
 public interface InformsAggro {
 	
 	/**

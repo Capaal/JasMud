@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import interfaces.Holdable;
 import interfaces.Mobile;
-import processes.InductionSkill;
 import items.Harvestable;
 import items.Harvestable.HarvestType;
 
@@ -28,12 +27,14 @@ public class Chop extends InductionSkill {
 
 		@Override
 		public void performSkill() {
-			if(!tree.changeRemaining(1)) {
+			if (tree.getRemainingQty() == 0) {
 				messageSelf("The tree needs time to regrow.");
 				currentPlayer.killInduction();
-				return;
+			} else {
+				tree.harvest(currentPlayer);
+				tree.changeRemaining(-1);
+				messageSelf(tree.getType().message);
 			}
-			tree.harvest(currentPlayer);
 		}		
 	}
 	

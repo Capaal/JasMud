@@ -18,9 +18,9 @@ public class StdItem implements Holdable{
 	protected final double physicalMult;
 	protected final double balanceMult; 
 	protected final List<StdItem> components; // Add to weapon interface? Make a craftable interface?
-	protected final boolean salvageable;
+	public final boolean salvageable;
 	protected final double weight;	
-	protected final Set<EquipmentSlot> allowedEquipSlots;
+	protected final EnumSet<EquipmentSlot> allowedEquipSlots;
 	protected int quantity = 1;
 	protected Container itemLocation;
 
@@ -44,18 +44,18 @@ public class StdItem implements Holdable{
 	@Override public String getDescription() {return description;}	
 	public double getPhysicalMult() {return physicalMult;}
 	public double getBalanceMult() {return balanceMult;}
-	public double getWeight() {return weight;}
-	@Override public Container getContainer() {return itemLocation;}	
+	@Override public double getWeight() {return weight;}
+	@Override public Container getContainer() {return itemLocation;}		
+	@Override public int getQuantity() {return quantity;}	
+	@Override public EnumSet<EquipmentSlot> getAllowedEquipSlots() {return EnumSet.copyOf(allowedEquipSlots);}
+	public List<StdItem> getComponents() {return new ArrayList<StdItem>(components);}	
+	public double getDamageMult() {return physicalMult;}	
 	
-	public int getQuantity() {return quantity;}
-	
-	public Set<EquipmentSlot> getAllowedEquipSlots() {return allowedEquipSlots;}
-	public List<StdItem> getComponents() {return components;}
-	
-	public double getDamageMult() {
-		return physicalMult;
-	}	
-	
+	/**
+	 * Moving Holdable from one container to another. Returns an error if future container refuses the Holdable.
+	 * @param finalLocation Container to which the Holdable should be moved.
+	 * @return ContainerErrors returned if final Container refuses Holdable, otherwise null.
+	 */
 	@Override
 	public ContainerErrors moveHoldable(Container finalLocation) {
 		ContainerErrors error = finalLocation.acceptItem(this);		
@@ -67,18 +67,19 @@ public class StdItem implements Holdable{
 		return error;
 	}	
 	
+	// Removes pointers to and from items related to container occupied.
 	@Override
 	public void removeFromWorld() {
 		this.getContainer().removeItemFromLocation(this);
 		this.itemLocation = null;
 	}
 	
-	// not sure how packs will work yet...
 	@Override
 	public void save() {
 		WorldServer.getGameState().saveItem(this);		
 	}
 
+	// Comparable via name+id
 	@Override
 	public int compareTo(Holdable other) {
 		String thisItem = this.getName()+this.getId();
@@ -86,6 +87,7 @@ public class StdItem implements Holdable{
 		return thisItem.compareToIgnoreCase(otherItem);
 	}
 	
+	// Equal if name+id match exactly 
 	@Override
 	public boolean equals(Object obj) {
 	    if (obj == null) {
@@ -102,23 +104,6 @@ public class StdItem implements Holdable{
 	  //  	return true;
 	   // }
 	//    return false;
-	}
-	
-	public ItemBuilder newBuilder() {
-		return newBuilder(new ItemBuilder());
-	}
-	
-	public ItemBuilder newBuilder(ItemBuilder newBuilder) {
-		newBuilder.setName(name);
-		newBuilder.setDamageMult(physicalMult);
-		newBuilder.setDescription(description);
-		newBuilder.setBalanceMult(balanceMult);
-		newBuilder.setItemContainer(itemLocation);
-	//	newBuilder.setAllowedSlots(allowedEquipSlots);
-		newBuilder.setComponents(components);
-		newBuilder.setSalvageable(salvageable);	
-		newBuilder.setWeight(weight);
-		return newBuilder;
 	}
 	
 	// Not game safe, but required for save/load
@@ -144,7 +129,7 @@ public class StdItem implements Holdable{
 		return this.getName();
 	}
 	
-	public  void addToStack(int quantity) {
+	public void addToStack(int quantity) {
 		throw new IllegalStateException("StdItem addToStack: StdItems cannot add to quantity.");
 	}
 	

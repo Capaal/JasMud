@@ -17,13 +17,9 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
-// Collections.synchronizedSortedSet(new TreeSet<Holdable>());
 // Might need to synchronize some of these.
-
-public class GameState {
-		
-	
-	// All players
+// Game state and save state.
+public class GameState {	
 	
 	private Map<String, Mobile> allPlayersList = new TreeMap<String, Mobile>();
 	
@@ -57,9 +53,7 @@ public class GameState {
 	@XStreamOmitField // TODO Should load mobs or generate on createWorld? I vote generate
 	private Map<String, Mobile> mobList = new TreeMap<String, Mobile>();
 	
-	// Collection of all skill books, Mobs then load a copy of each skill book. id/book
-	
-	
+	// Collection of all skill books, Mobs then load a copy of each skill book. id/book	
 	
 	@XStreamOmitField
 	private ScheduledExecutorService effectExecutor;

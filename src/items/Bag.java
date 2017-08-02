@@ -3,21 +3,19 @@ package items;
 import java.util.Collection;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import interfaces.Container;
 import interfaces.Holdable;
 import processes.ContainerErrors;
 import processes.UsefulCommands;
 
-//TODO LOCK access to currentWeight
+// Defines a basic implementation of a Holdable item that is also a Container.
+// Thus defines a container within a container.
 public class Bag extends StdItem implements Container { //wearable
 
 	protected TreeMap<String, Holdable> inventory = new TreeMap<String, Holdable>();	
 	
 	protected final double maxWeight;	
-	private final Lock lock = new ReentrantLock();
 	
 	protected double currentWeight;
 	
@@ -26,15 +24,18 @@ public class Bag extends StdItem implements Container { //wearable
 		maxWeight = build.getMaxWeight();
 	}
 
+	// Overrides Container, returning a copy of the internal inventory.
 	@Override
 	public TreeMap<String, Holdable> viewInventory() {
 		return new TreeMap<String, Holdable>(this.inventory);
 	}
 	
+	// Returns weight of self + weight of all help Holdables.
 	@Override public double getWeight() {
 		return getCurrentWeight() + weight;
 	}
 	
+	// Used specifically for the "examine" core skill when viewing Holdables.
 	@Override
 	public String getExamine() {
 		StringBuilder s = new StringBuilder();
@@ -57,35 +58,37 @@ public class Bag extends StdItem implements Container { //wearable
 			return ("That " + getName() + " is empty.");
 	}
 	
-	//TODO nothing cares about the error.
-	@Override
-	public ContainerErrors acceptItem(Holdable newItem) {
-		lock.lock();
-		try {
-			if ((getCurrentWeight() + newItem.getWeight()) > getMaxWeight()) {
-				return ContainerErrors.QTYFULL;
-			}
-			inventory.put(newItem.getName().toLowerCase() + newItem.getId(), newItem);
-			changeWeight(newItem.getWeight());
-			return null; // TODO should actually check from return
-		} finally {
-			lock.unlock();
+	/**
+	 * Adds given Holdable to Inventory assuming space is available.
+	 * @return ContainerErrors if fail, null otherwise.
+	 * @param newItem Holdable item to be added to this container.
+	 */
+	@Override public synchronized ContainerErrors acceptItem(Holdable newItem) {	
+		if ((getCurrentWeight() + newItem.getWeight()) > getMaxWeight()) {
+			return ContainerErrors.QTYFULL;
 		}
+		inventory.put(newItem.getName().toLowerCase() + newItem.getId(), newItem);
+		changeWeight(newItem.getWeight());
+		return null; // Success	
 	}	
 	
-	@Override
-	public void removeItemFromLocation(Holdable oldItem) {
-		lock.lock();
-		try {
-			if ((inventory.remove(oldItem.getName().toLowerCase() + oldItem.getId()) == null)) {
-				System.out.println("Failed to remove item from a bag (MAJOR BUG): " + oldItem);
-			}
-			changeWeight(-oldItem.getWeight());
-		} finally {
-			lock.unlock();
+	/**
+	 * Removes indicated Holdable from inventory of this container. Assumes item is present.
+	 * @throws IllegalArgumentException Thrown if item is not present to be removed.
+	 */
+	@Override public synchronized void removeItemFromLocation(Holdable oldItem) {	
+		if ((inventory.remove(oldItem.getName().toLowerCase() + oldItem.getId()) == null)) {
+			throw new IllegalStateException("Failed to remove item from a bag (MAJOR BUG): " + oldItem + " " + this.getShortDesc());
+		} else {
+			changeWeight(-oldItem.getWeight());		
 		}
 	}
 	
+	/**
+	 * Returns Holdable that matches given string within certain deviation, primarily startsWith.
+	 * @param HoldableString String to match against, either name or name + id.
+	 * @return Holdable that closest matches string, or null if none found.
+	 */
 	@Override
 	public Holdable getHoldableFromString(String holdableString) {
 		holdableString = holdableString.toLowerCase();
@@ -119,21 +122,22 @@ public class Bag extends StdItem implements Container { //wearable
 		return currentWeight;
 	}
 	
-	@Override public void changeWeight(double change) {
-		lock.lock();
-		try {
-			this.currentWeight += change;
-		} finally {
-			lock.unlock();
-		}
+	public synchronized void changeWeight(double change) {
+		this.currentWeight += change;
 	}
 	
+	/**
+	 * Returns list of Holdables closest matching given string. primarily startsWith.
+	 * @param holdableString String on which to match holdables against name and name + id.
+	 * @return Collection of Holdables matching given string. Or Empty collection.
+	 */
 	@Override
 	public Collection<Holdable> getListMatchingString(String holdableString) {
-		holdableString = holdableString.toLowerCase();		
+		holdableString = holdableString.toLowerCase();	
+		// Sub map between the given string and the given string + a large integer value to account for all id values.
 		SortedMap<String, Holdable> subMap = inventory.subMap(holdableString, true, holdableString + Character.MAX_VALUE, true);		
 		Collection<Holdable> set = subMap.values();
-		if (set.isEmpty() || set == null) {
+		if (set.isEmpty()) { // If none found, possible there is exactly 1, so try to get only 1.
 			Holdable h = getHoldableFromString(holdableString);
 			if (h != null) {
 				set.add(h);
@@ -142,16 +146,7 @@ public class Bag extends StdItem implements Container { //wearable
 		return set;
 	}
 	
-	// This do anyting/required?
-	@Override public ItemBuilder newBuilder() {
-		return newBuilder(new BagItemBuilder());
-	}
-	
-	protected ItemBuilder newBuilder(BagItemBuilder newBuild) {
-		super.newBuilder(newBuild);
-		return newBuild;
-	}
-	
+	// Extend ItemBuilder to handle extra Bag initialization required.
 	public static class BagItemBuilder extends ItemBuilder {
 		
 		private int maxWeight = 250;

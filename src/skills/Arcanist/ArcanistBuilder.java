@@ -9,7 +9,6 @@ import skills.Arcanist.Targetting.WhoTargettingBlockTarget;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 public class ArcanistBuilder {
 	
@@ -40,7 +39,6 @@ public class ArcanistBuilder {
 		targettingBlock = new TargettingBlock(new WhoTargettingBlockTarget(), new WhereTargettingBlockHere());
 		addRequiredBlock(new ManaBlock(0));
 		setSyntax(getTargettingBlock().getSyntax());
-//		mana = 0;
 	}
 	
 	public String getName() {
@@ -63,7 +61,7 @@ public class ArcanistBuilder {
 		return damageBlock;
 	}
 
-	public Collection<? extends Syntax> getSyntax() {
+	public List<Syntax> getSyntax() {
 		return syntaxList;
 	}
 

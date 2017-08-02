@@ -8,6 +8,7 @@ import processes.Location;
 import processes.Location.Direction;
 import skills.Look;
 
+// TODO Not implemented
 public class Levitate extends TickingEffect {
 	
 	//TODO Doesn't do anything
@@ -29,9 +30,8 @@ public class Levitate extends TickingEffect {
 	}
 	
 	@Override
-	public boolean stackedInstance(TickingEffect stackedInstance, int times) {
-		return true;
-		// Do nothing, fear does not stack and does not modify existing fear.
+	public void stackedInstance(TickingEffect stackedInstance, int times) {
+		// Not really implemented in any form...
 	}
 	
 	@Override

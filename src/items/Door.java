@@ -1,21 +1,22 @@
 package items;
 
-import java.util.ArrayList;
-
-// TODO door location, id, description, and so on. Is it a stdItem?
+// TODO door location, id, description, and so on. Is it a stdItem? no. Keys?
 public class Door {
 	
 	private boolean isOpen = true;
 	private boolean isLocked = false;
 //	private ArrayList<Key> validKeys = new ArrayList<Key>();
 	
-	// Returns true if door's state changed, else false
-	// Does not care about opening open doors, or closing closed doors TODO
+	/**
+	 * Alters isOpen to the given boolean state if door is not locked.
+	 * @param doorState boolean desired state (true = open).
+	 * @return boolean true if state is changed, false if locked.
+	 */
 	public boolean alterDoor(boolean doorState) {
 		// Closed and locked
 		if (isLocked && !isOpen) {
 			return false; // Needs to be unlocked first
-		} else { // Closed and unlocked, or open in any state. These 3 states can change regardless of locked.
+		} else { // Closed and unlocked, or open in any state.
 			isOpen = doorState;
 			return true;
 		}

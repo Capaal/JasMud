@@ -6,6 +6,10 @@ import effects.Blocking;
 import interfaces.Mobile;
 import items.Door;
 
+// Represents a "tunnel" between two locations, allowing doors and blocking effects to stop progress between the two.
+// Both Locations on each side of this "tunnel" should both share this same object, in their LocationMap represented in desired Direction
+// that would connect to the other Location.
+// TODO should isBlocking() include if door is closed?
 public class LocationConnection {
 	
 	private final Location newLocation;
@@ -37,10 +41,10 @@ public class LocationConnection {
 	
 	public void removeBlocking(Blocking block) {
 		blockingList.remove(block);
-		for (Mobile m : newLocation.getMobiles().values()) {
+		for (Mobile m : newLocation.viewMobiles().values()) {
 			m.tell("A " + block.getDescription() + " is no longer blocking your way.");
 		}
-		for (Mobile m : oldLocation.getMobiles().values()) {
+		for (Mobile m : oldLocation.viewMobiles().values()) {
 			m.tell("A " + block.getDescription() + " is no longer blocking your way.");
 		}
 	}

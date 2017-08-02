@@ -2,11 +2,9 @@ package processes;
 
 import interfaces.*;
 import items.ItemBuilder;
-import items.Plant.PlantType;
 import items.StdItem;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
@@ -14,6 +12,7 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import MobileAI.MobileDecorator.DecoratorType;
 import effects.*;
 import processes.Equipment.EquipmentSlot;
+import skills.InductionSkill;
 import skills.MoveFollow;
 
 /**
@@ -24,7 +23,6 @@ import skills.MoveFollow;
  * Undead might also be an extension, as they would have additional methods, or overwritten methods.
  * @author Jason
  */
-
 @XStreamAlias("StdMob")
 public class StdMob implements Mobile, Container{
 
@@ -35,7 +33,6 @@ public class StdMob implements Mobile, Container{
 	protected int currentHp; 
 	protected int currentMana;
 	protected int maxMana;
-//	@XStreamOmitField
 	protected Location mobLocation;
 	protected boolean isDead;
 	protected boolean isBlocking = false;
@@ -55,7 +52,6 @@ public class StdMob implements Mobile, Container{
 	protected TreeMap<String, Holdable> inventory;
 	@XStreamOmitField
 	protected InductionSkill inductionSkill = null;
-//	@XStreamOmitField
 	protected Map<SkillBook, Integer> skillBookList; //skillbook : player's level
 	protected List<ItemBuilder> dropsOnDeath;
 	@XStreamOmitField
@@ -72,8 +68,8 @@ public class StdMob implements Mobile, Container{
 	protected String className;
 	
 	public StdMob(MobileBuilder build) {
-		Mobile decoratedMob = decorate(build, this);
-		build.setFinishedMob(decoratedMob);
+		Mobile decoratedMob = decorate(build, this); // Recursively adds Mobile Decorators (such as AI) from the build onto mobile.
+		build.setFinishedMob(decoratedMob); // Ensures build has a pointer to the Decorated Mobile, not the base version.
 		this.id = build.getId();
 		this.name = build.getName();		
 		this.password = build.getPassword();
@@ -120,21 +116,14 @@ public class StdMob implements Mobile, Container{
 		return !hasCondition(PassiveCondition.BALANCE);
 	}
 	
-	@Override public String getDescription() {
-		return description;
-	}
+	@Override public String getDescription() {return description;}
 	
-	@Override public String getShortDescription() {
-		return name + shortDescription;
-	}
+	@Override public String getShortDescription() {return name + shortDescription;}
 	
-	@Override public int getCurrentMana() {
-		return currentMana;
-	}
+	@Override public int getCurrentMana() {return currentMana;}
 	
 	@Override public void changeMana(int change) {
 		if (change < 0) {
-			int allowedMaxChange = currentMana;
 			if (-change > currentMana) {
 				change = -currentMana;
 			}
@@ -147,7 +136,7 @@ public class StdMob implements Mobile, Container{
 		currentMana += change;		
 	}
 	
-	public void addDefense(int i) {
+	@Override public void addDefense(int i) {
 		//should calculate from equipment, effectors?, decorators, potions, herbs, etc
 		this.defense = this.defense + i;
 	}
@@ -238,7 +227,7 @@ public class StdMob implements Mobile, Container{
 		if (currentHp <= 0 && !isDead) {
 			tell("You collapse to the ground, unable to fight on.");
 			isDead = true;
-			for (Mobile m : getContainer().getMobiles().values()) {
+			for (Mobile m : getContainer().viewMobiles().values()) {
 				if (m instanceof Mobile && ((Mobile)m).isControlled() && !m.equals(this)) {
 					((Mobile)m).tell(getName() + " drops to the floor, dead.");
 				}
@@ -391,8 +380,8 @@ public class StdMob implements Mobile, Container{
 	 * @param times int number of times to tick.
 	 */
 	@Override
-	public boolean addActiveCondition(TickingEffect newEffect, int times) {
-		return effectManager.registerActiveEffect(newEffect, times);
+	public void addActiveCondition(TickingEffect newEffect, int times) {
+		effectManager.registerActiveEffect(newEffect, times);
 	}
 	
 	@Override
@@ -492,9 +481,8 @@ public class StdMob implements Mobile, Container{
 
 	@Override
 	public void removeFromWorld() {	
-//		save();
 		if (isInducting()) {
-			inductionSkill.shutDown();
+			inductionSkill.interrupt();
 		}
 		mobLocation.removeItemFromLocation(this);
 	}
