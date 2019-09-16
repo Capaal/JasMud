@@ -176,7 +176,7 @@ public class PlayerPrompt implements Runnable {
 				}
 			}
 			// Save GameState.
-			WorldServer.saveGameState(WorldServer.GAMESTATEDEFAULTNAME);				
+			WorldServer.saveGameState(WorldServer.getGameState().getSaveName());				
 			WorldServer.shutdownAndAwaitTermination(WorldServer.executor);
 			return true;
 		}

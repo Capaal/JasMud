@@ -23,7 +23,7 @@ public class WorldServer {
 	public static ServerSocket s;
 	public static XStream xstream;
 	
-	public static final String GAMESTATEDEFAULTNAME = "GameState.xml";
+	public static final String GAMESTATEDEFAULTNAME = "gamestate";
 	
 	public static void main(String[] args) {		
 		createXStream();
@@ -62,8 +62,8 @@ public class WorldServer {
 	public static void saveGameState(String gameStateName) {
 		FileOutputStream fos = null;
 		try {
-			WorldServer.xstream.toXML(WorldServer.getGameState(), new FileWriter(new File("./GameState.xml")));
-	//		WorldServer.xstream.toXML(WorldServer.getGameState(), new FileWriter(new File("./" + gameStateName)));
+	//		WorldServer.xstream.toXML(WorldServer.getGameState(), new FileWriter(new File("./GameState.xml")));
+			WorldServer.xstream.toXML(WorldServer.getGameState(), new FileWriter(new File(System.getProperty("user.dir") + "/" + gameStateName + "/" + gameStateName + ".xml")));
 		} catch(Exception e) {
 		    e.printStackTrace(); // this obviously needs to be refined.
 		} finally {
@@ -83,8 +83,8 @@ public class WorldServer {
 		CreateWorld.loadMap();
 		
 		try{		    
-			File xmlFile = new File("./GameState.xml");
-	    //    File xmlFile = new File("./" + gameStateName);
+		//	File xmlFile = new File("./GameState.xml");
+	        File xmlFile = new File(System.getProperty("user.dir") + "/" + gameStateName + "/" + gameStateName + ".xml");
 	        if (!xmlFile.exists()) {
 	        	System.out.println("Missing gamestate.");
 	        	return false;

@@ -61,7 +61,18 @@ public class GameState {
 	@XStreamOmitField
 	public static BlockingQueue<Runnable> SkillQueue;	
 	
+	public final String gameStateSaveName;
+	
 	public GameState() {
+		this(WorldServer.GAMESTATEDEFAULTNAME);		
+	}
+	
+	public String getSaveName() {
+		return gameStateSaveName;
+	}
+	
+	public GameState(String saveName) {
+		this.gameStateSaveName = saveName;
 		effectExecutor  = Executors.newScheduledThreadPool(1);
 		SkillQueue = new ArrayBlockingQueue<Runnable>(1024);
 		maxLocationId = 0;
@@ -179,10 +190,10 @@ public class GameState {
 	}
 	
 	public void saveItem(Holdable item) {
-		if (item.getContainer() != null) {
+		if (item != null && item.getContainer() != null) {
 			FileOutputStream fos = null;
 			try {
-				WorldServer.xstream.toXML(item, new FileWriter(new File("./Items/" + item.getName()+item.getId()+ ".xml")));
+				WorldServer.xstream.toXML(item, new FileWriter(new File(System.getProperty("user.dir") + "/" + gameStateSaveName + "/Items/" + item.getName()+item.getId()+ ".xml")));
 			} catch(Exception e) {
 			    e.printStackTrace(); // this obviously needs to be refined.
 			} finally {
@@ -199,7 +210,7 @@ public class GameState {
 
 	public boolean loadSavedItems() {		
 		File[] roots;
-		File fileDir = new File("./Items");
+		File fileDir = new File(System.getProperty("user.dir") + "/" + gameStateSaveName + "/Items");
 		roots = fileDir.listFiles();       
 	    for (File file : roots) {
 	    	if(file.exists() && (file.getName().endsWith(".xml")||file.getName().endsWith(".XML"))) {
