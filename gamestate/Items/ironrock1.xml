@@ -1,0 +1,18 @@
+<items.Harvestable>
+  <name>ironrock</name>
+  <id>1</id>
+  <description>default</description>
+  <physicalMult>1.0</physicalMult>
+  <balanceMult>1.0</balanceMult>
+  <components/>
+  <salvageable>false</salvageable>
+  <weight>1.0</weight>
+  <allowedEquipSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedEquipSlots>
+  <quantity>1</quantity>
+  <itemLocation class="Location">7</itemLocation>
+  <maxQuantity>8</maxQuantity>
+  <remainingQuantity>8</remainingQuantity>
+  <type>IRON</type>
+  <running>false</running>
+  <timeToReset>5</timeToReset>
+</items.Harvestable>

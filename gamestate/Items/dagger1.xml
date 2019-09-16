@@ -1,0 +1,52 @@
+<items.Weapon>
+  <name>dagger</name>
+  <id>1</id>
+  <description>It&apos;s a dagger!</description>
+  <physicalMult>1.0</physicalMult>
+  <balanceMult>1.0</balanceMult>
+  <components class="java.util.Arrays$ArrayList">
+    <a class="StdItem-array">
+      <StdItem>
+        <name>ingot</name>
+        <id>1</id>
+        <description>An iron ingot.</description>
+        <physicalMult>0.4</physicalMult>
+        <balanceMult>1.0</balanceMult>
+        <components class="java.util.Arrays$ArrayList">
+          <a class="StdItem-array">
+            <Stackable>
+              <name>iron</name>
+              <id>1</id>
+              <description>A piece of iron ore.</description>
+              <physicalMult>0.2</physicalMult>
+              <balanceMult>1.0</balanceMult>
+              <components/>
+              <salvageable>false</salvageable>
+              <weight>1.0</weight>
+              <allowedEquipSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedEquipSlots>
+              <quantity>2</quantity>
+              <descriptionMany>A pile of iron ore chunks.</descriptionMany>
+            </Stackable>
+          </a>
+        </components>
+        <salvageable>true</salvageable>
+        <weight>2.0</weight>
+        <allowedEquipSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedEquipSlots>
+        <quantity>1</quantity>
+      </StdItem>
+    </a>
+  </components>
+  <salvageable>true</salvageable>
+  <weight>1.5</weight>
+  <allowedEquipSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedEquipSlots>
+  <quantity>1</quantity>
+  <itemLocation class="Location">1</itemLocation>
+  <type>BLEED</type>
+  <appliedPlants serialization="custom">
+    <unserializable-parents/>
+    <java.util.ArrayDeque>
+      <default/>
+      <int>0</int>
+    </java.util.ArrayDeque>
+  </appliedPlants>
+</items.Weapon>

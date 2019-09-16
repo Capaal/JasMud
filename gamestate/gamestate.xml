@@ -1,0 +1,3509 @@
+<GameState>
+  <allPlayersList class="tree-map">
+    <entry>
+      <string>ASD</string>
+      <StdMob>
+        <name>ASD</name>
+        <password>asdf</password>
+        <id>4</id>
+        <maxHp>105</maxHp>
+        <currentHp>105</currentHp>
+        <currentMana>105</currentMana>
+        <maxMana>105</maxMana>
+        <mobLocation>1</mobLocation>
+        <isDead>false</isDead>
+        <isBlocking>false</isBlocking>
+        <equipment>
+          <bondedMobile class="StdMob" reference="../.."/>
+        </equipment>
+        <defense>0</defense>
+        <balanceMult>1.0</balanceMult>
+        <description>This is a mob.</description>
+        <xpWorth>0</xpWorth>
+        <shortDescription></shortDescription>
+        <experience>1</experience>
+        <level>0</level>
+        <age>0</age>
+        <isControlled>true</isControlled>
+        <inventory/>
+        <skillBookList>
+          <entry>
+            <skills.Arcanist.ArcanistSkillbook>
+              <skillList class="tree-map"/>
+              <name>spells</name>
+              <id>6</id>
+            </skills.Arcanist.ArcanistSkillbook>
+            <int>100</int>
+          </entry>
+          <entry>
+            <skills.Arcanist.ArcanistSkillbook>
+              <skillList class="tree-map"/>
+              <name>spells</name>
+              <id>6</id>
+            </skills.Arcanist.ArcanistSkillbook>
+            <int>100</int>
+          </entry>
+          <entry>
+            <processes.SkillBook>
+              <skillList class="tree-map">
+                <entry>
+                  <string>attack</string>
+                  <skills.Mercenary.Attack>
+                    <name>attack</name>
+                    <description>Attacking with style.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <intensity>8</intensity>
+                    <balAdjust>1.0</balAdjust>
+                    <baseBalance>3000</baseBalance>
+                  </skills.Mercenary.Attack>
+                </entry>
+                <entry>
+                  <string>break</string>
+                  <skills.Mercenary.BreakLimb>
+                    <name>break</name>
+                    <description>Break an arm or leg.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>SLOT</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <intensity>8</intensity>
+                  </skills.Mercenary.BreakLimb>
+                </entry>
+                <entry>
+                  <string>clearmind</string>
+                  <skills.Mercenary.Clearmind>
+                    <name>clearmind</name>
+                    <description>Cures mental afflictions</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <COOLDOWNLENGTH>5000</COOLDOWNLENGTH>
+                  </skills.Mercenary.Clearmind>
+                </entry>
+                <entry>
+                  <string>dualattack</string>
+                  <skills.Mercenary.DualAttack>
+                    <name>dualattack</name>
+                    <description>Attacking with two weapons.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <intensity>8</intensity>
+                    <balAdjust>1.0</balAdjust>
+                  </skills.Mercenary.DualAttack>
+                </entry>
+                <entry>
+                  <string>headshot</string>
+                  <skills.Mercenary.Headshot>
+                    <name>headshot</name>
+                    <description>Careful aim with a ranged weapon.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <intensity>30</intensity>
+                  </skills.Mercenary.Headshot>
+                </entry>
+                <entry>
+                  <string>intimidate</string>
+                  <skills.Mercenary.Intimidate>
+                    <name>intimidate</name>
+                    <description>Scaring others into fleeing.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Mercenary.Intimidate>
+                </entry>
+                <entry>
+                  <string>regen</string>
+                  <skills.Mercenary.MercRegenSkill>
+                    <name>regen</name>
+                    <description>Resisting damage.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Mercenary.MercRegenSkill>
+                </entry>
+                <entry>
+                  <string>shieldblock</string>
+                  <skills.Mercenary.Shieldblock>
+                    <name>shieldblock</name>
+                    <description>Careful guard against attacks.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Mercenary.Shieldblock>
+                </entry>
+                <entry>
+                  <string>shove</string>
+                  <skills.Mercenary.Shove>
+                    <name>shove</name>
+                    <description>Push someone forcefully into another location.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Mercenary.Shove>
+                </entry>
+                <entry>
+                  <string>spinkick</string>
+                  <skills.Mercenary.SpinKick>
+                    <name>spinkick</name>
+                    <description>Dizzy causing kick.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <intensity>8</intensity>
+                  </skills.Mercenary.SpinKick>
+                </entry>
+                <entry>
+                  <string>staunch</string>
+                  <skills.Mercenary.Staunch>
+                    <name>staunch</name>
+                    <description>Cures bleeding, a little at a time.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Mercenary.Staunch>
+                </entry>
+                <entry>
+                  <string>straighten</string>
+                  <skills.Mercenary.Straighten>
+                    <name>straighten</name>
+                    <description>Splinting of a broken arm or leg.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>SLOT</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <affectedList>
+                      <entry>
+                        <string>lefthand</string>
+                        <effects.PassiveCondition>BROKENLEFTARM</effects.PassiveCondition>
+                      </entry>
+                      <entry>
+                        <string>legs</string>
+                        <effects.PassiveCondition>BROKENLEGS</effects.PassiveCondition>
+                      </entry>
+                      <entry>
+                        <string>righthand</string>
+                        <effects.PassiveCondition>BROKENRIGHTARM</effects.PassiveCondition>
+                      </entry>
+                    </affectedList>
+                  </skills.Mercenary.Straighten>
+                </entry>
+              </skillList>
+              <name>mercenary</name>
+              <id>3</id>
+            </processes.SkillBook>
+            <int>100</int>
+          </entry>
+          <entry>
+            <processes.SkillBook>
+              <skillList class="tree-map">
+                <entry>
+                  <string>move</string>
+                  <skills.Move>
+                    <name>move</name>
+                    <description>Move around.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Move>
+                </entry>
+              </skillList>
+              <name>movement</name>
+              <id>1</id>
+            </processes.SkillBook>
+            <int>100</int>
+          </entry>
+          <entry>
+            <processes.SkillBook>
+              <skillList class="tree-map">
+                <entry>
+                  <string>alter</string>
+                  <skills.Arcanist.Commands.ArcanistAlter>
+                    <name>alter</name>
+                    <description>Altering the spell you are scribing: Alter [component] [desired]</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Arcanist.Commands.ArcanistAlter>
+                </entry>
+                <entry>
+                  <string>analyze</string>
+                  <skills.Arcanist.Commands.ArcanistAnalyze>
+                    <name>analyze</name>
+                    <description>Referencing the current state of your spell-to-be.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Arcanist.Commands.ArcanistAnalyze>
+                </entry>
+                <entry>
+                  <string>complete</string>
+                  <skills.Arcanist.Commands.ArcanistComplete>
+                    <name>complete</name>
+                    <description>Finishing a new spell you&apos;ve been scribing via CREAT and ALTER.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Arcanist.Commands.ArcanistComplete>
+                </entry>
+                <entry>
+                  <string>components</string>
+                  <skills.Arcanist.Commands.ArcanistComponents>
+                    <name>components</name>
+                    <description>Displays available components and their workings</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>COMPONENT</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Arcanist.Commands.ArcanistComponents>
+                </entry>
+                <entry>
+                  <string>create</string>
+                  <skills.Arcanist.Commands.ArcanistCreate>
+                    <name>create</name>
+                    <description>Start building a new spell: create [spellname]</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Arcanist.Commands.ArcanistCreate>
+                </entry>
+                <entry>
+                  <string>delete</string>
+                  <skills.Arcanist.Commands.ArcanistDelete>
+                    <name>delete</name>
+                    <description>Regaining space in your spellbook.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Arcanist.Commands.ArcanistDelete>
+                </entry>
+                <entry>
+                  <string>modify</string>
+                  <skills.Arcanist.Commands.ArcanistModify>
+                    <name>modify</name>
+                    <description>Prepares a spell to be altered.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Arcanist.Commands.ArcanistModify>
+                </entry>
+              </skillList>
+              <name>arcanist</name>
+              <id>5</id>
+            </processes.SkillBook>
+            <int>100</int>
+          </entry>
+          <entry>
+            <processes.SkillBook>
+              <skillList class="tree-map">
+                <entry>
+                  <string>goto</string>
+                  <skills.GoTo>
+                    <name>goto</name>
+                    <description>Teleport to someone.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.GoTo>
+                </entry>
+              </skillList>
+              <name>admin</name>
+              <id>4</id>
+            </processes.SkillBook>
+            <int>100</int>
+          </entry>
+          <entry>
+            <processes.SkillBook>
+              <skillList class="tree-map">
+                <entry>
+                  <string>apply</string>
+                  <skills.Apply>
+                    <name>apply</name>
+                    <description>Applying herbs and the such.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>FILLER</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>QUANTITY</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Apply>
+                </entry>
+                <entry>
+                  <string>bug</string>
+                  <skills.Bug>
+                    <name>bug</name>
+                    <description>Recording and checking recorded bugs.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>MESSAGE</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Bug>
+                </entry>
+                <entry>
+                  <string>character</string>
+                  <skills.CharacterSheet>
+                    <name>character</name>
+                    <description>Your character&apos;s info.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.CharacterSheet>
+                </entry>
+                <entry>
+                  <string>chop</string>
+                  <skills.Chop>
+                    <name>chop</name>
+                    <description>Chopping trees and maybe other things.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Chop>
+                </entry>
+                <entry>
+                  <string>close</string>
+                  <skills.Close>
+                    <name>close</name>
+                    <description>Closing objects.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Close>
+                </entry>
+                <entry>
+                  <string>craft</string>
+                  <skills.CraftItem>
+                    <name>craft</name>
+                    <description>Crafting all sorts of things.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TIMES</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <quantity>0</quantity>
+                    <allItemTemplates class="tree-map">
+                      <entry>
+                        <string>aloe</string>
+                        <items.Plant_-PlantItemBuilder>
+                          <damageMult>0.1</damageMult>
+                          <id>-1</id>
+                          <name>aloe</name>
+                          <description>default</description>
+                          <weight>0.1</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components/>
+                          <salvageable>false</salvageable>
+                          <quantity>100</quantity>
+                          <descriptionMany></descriptionMany>
+                          <herbType>ALOE</herbType>
+                        </items.Plant_-PlantItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>bag</string>
+                        <items.Bag_-BagItemBuilder>
+                          <damageMult>1.0</damageMult>
+                          <id>-1</id>
+                          <name>bag</name>
+                          <description>default</description>
+                          <weight>2.0</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components/>
+                          <salvageable>false</salvageable>
+                          <quantity>1</quantity>
+                          <maxWeight>250</maxWeight>
+                          <currentWeight>0</currentWeight>
+                        </items.Bag_-BagItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>belladonna</string>
+                        <items.Plant_-PlantItemBuilder>
+                          <damageMult>0.1</damageMult>
+                          <id>-1</id>
+                          <name>belladonna</name>
+                          <description>default</description>
+                          <weight>0.1</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components/>
+                          <salvageable>false</salvageable>
+                          <quantity>1</quantity>
+                          <descriptionMany></descriptionMany>
+                          <herbType>BELLADONNA</herbType>
+                        </items.Plant_-PlantItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>bleedpotion</string>
+                        <items.Drinkable_-DrinkableItemBuilder>
+                          <damageMult>0.2</damageMult>
+                          <id>-1</id>
+                          <name>bleedpotion</name>
+                          <description>Don&apos;t drink this.</description>
+                          <weight>0.5</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components/>
+                          <salvageable>false</salvageable>
+                          <quantity>1</quantity>
+                          <maxSips>2</maxSips>
+                          <drinkType>BLEED</drinkType>
+                          <currentSips>0</currentSips>
+                        </items.Drinkable_-DrinkableItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>bow</string>
+                        <items.Weapon_-WeaponItemBuilder>
+                          <damageMult>1.0</damageMult>
+                          <id>-1</id>
+                          <name>bow</name>
+                          <description>It&apos;s a bow!</description>
+                          <weight>2.0</weight>
+                          <balanceMult>1.5</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components class="java.util.Arrays$ArrayList">
+                            <a class="StdItem-array">
+                              <Stackable>
+                                <name>log</name>
+                                <id>1</id>
+                                <description>Previously part of a tree.</description>
+                                <physicalMult>0.2</physicalMult>
+                                <balanceMult>1.0</balanceMult>
+                                <components/>
+                                <salvageable>false</salvageable>
+                                <weight>1.0</weight>
+                                <allowedEquipSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedEquipSlots>
+                                <quantity>1</quantity>
+                                <descriptionMany>A pile of wood.</descriptionMany>
+                              </Stackable>
+                            </a>
+                          </components>
+                          <salvageable>true</salvageable>
+                          <quantity>1</quantity>
+                        </items.Weapon_-WeaponItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>chainmail</string>
+                        <items.Armor_-ArmorItemBuilder>
+                          <damageMult>1.0</damageMult>
+                          <id>-1</id>
+                          <name>chainmail</name>
+                          <description>default</description>
+                          <weight>35.0</weight>
+                          <balanceMult>0.1</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">ARMOR</allowedSlots>
+                          <components/>
+                          <salvageable>false</salvageable>
+                          <quantity>1</quantity>
+                          <defenceMod>5</defenceMod>
+                        </items.Armor_-ArmorItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>comfrey</string>
+                        <items.Plant_-PlantItemBuilder>
+                          <damageMult>0.1</damageMult>
+                          <id>-1</id>
+                          <name>comfrey</name>
+                          <description>default</description>
+                          <weight>0.1</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components/>
+                          <salvageable>false</salvageable>
+                          <quantity>1</quantity>
+                          <descriptionMany></descriptionMany>
+                          <herbType>COMFREY</herbType>
+                        </items.Plant_-PlantItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>dagger</string>
+                        <items.Weapon_-WeaponItemBuilder>
+                          <damageMult>1.0</damageMult>
+                          <id>2</id>
+                          <name>dagger</name>
+                          <description>It&apos;s a dagger!</description>
+                          <weight>1.5</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <itemContainer class="Location" reference="../../../../../../../../../../mobLocation"/>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components class="java.util.Arrays$ArrayList">
+                            <a class="StdItem-array">
+                              <StdItem>
+                                <name>ingot</name>
+                                <id>1</id>
+                                <description>An iron ingot.</description>
+                                <physicalMult>0.4</physicalMult>
+                                <balanceMult>1.0</balanceMult>
+                                <components class="java.util.Arrays$ArrayList">
+                                  <a class="StdItem-array">
+                                    <Stackable>
+                                      <name>iron</name>
+                                      <id>1</id>
+                                      <description>A piece of iron ore.</description>
+                                      <physicalMult>0.2</physicalMult>
+                                      <balanceMult>1.0</balanceMult>
+                                      <components/>
+                                      <salvageable>false</salvageable>
+                                      <weight>1.0</weight>
+                                      <allowedEquipSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedEquipSlots>
+                                      <quantity>2</quantity>
+                                      <descriptionMany>A pile of iron ore chunks.</descriptionMany>
+                                    </Stackable>
+                                  </a>
+                                </components>
+                                <salvageable>true</salvageable>
+                                <weight>2.0</weight>
+                                <allowedEquipSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedEquipSlots>
+                                <quantity>1</quantity>
+                              </StdItem>
+                            </a>
+                          </components>
+                          <salvageable>true</salvageable>
+                          <finishedItem class="items.Weapon">
+                            <name>dagger</name>
+                            <id>1</id>
+                            <description>It&apos;s a dagger!</description>
+                            <physicalMult>1.0</physicalMult>
+                            <balanceMult>1.0</balanceMult>
+                            <components class="java.util.Arrays$ArrayList" reference="../../components"/>
+                            <salvageable>true</salvageable>
+                            <weight>1.5</weight>
+                            <allowedEquipSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedEquipSlots>
+                            <quantity>1</quantity>
+                            <type>BLEED</type>
+                            <appliedPlants serialization="custom">
+                              <unserializable-parents/>
+                              <java.util.ArrayDeque>
+                                <default/>
+                                <int>0</int>
+                              </java.util.ArrayDeque>
+                            </appliedPlants>
+                          </finishedItem>
+                          <quantity>1</quantity>
+                          <mercEffect>BLEED</mercEffect>
+                        </items.Weapon_-WeaponItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>ginseng</string>
+                        <items.Plant_-PlantItemBuilder>
+                          <damageMult>0.1</damageMult>
+                          <id>-1</id>
+                          <name>ginseng</name>
+                          <description>default</description>
+                          <weight>0.1</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components/>
+                          <salvageable>false</salvageable>
+                          <quantity>1</quantity>
+                          <descriptionMany></descriptionMany>
+                          <herbType>GINSENG</herbType>
+                        </items.Plant_-PlantItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>healpotion</string>
+                        <items.Drinkable_-DrinkableItemBuilder>
+                          <damageMult>0.2</damageMult>
+                          <id>-1</id>
+                          <name>healpotion</name>
+                          <description>A potion made from sticks.</description>
+                          <weight>0.5</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components class="java.util.Arrays$ArrayList">
+                            <a class="StdItem-array">
+                              <items.Weapon>
+                                <name>stick</name>
+                                <id>2</id>
+                                <description>It&apos;s an evil stick.</description>
+                                <physicalMult>0.5</physicalMult>
+                                <balanceMult>1.0</balanceMult>
+                                <components/>
+                                <salvageable>false</salvageable>
+                                <weight>0.5</weight>
+                                <allowedEquipSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedEquipSlots>
+                                <quantity>1</quantity>
+                                <type>FEAR</type>
+                                <appliedPlants serialization="custom">
+                                  <unserializable-parents/>
+                                  <java.util.ArrayDeque>
+                                    <default/>
+                                    <int>0</int>
+                                  </java.util.ArrayDeque>
+                                </appliedPlants>
+                              </items.Weapon>
+                            </a>
+                          </components>
+                          <salvageable>false</salvageable>
+                          <quantity>1</quantity>
+                          <maxSips>2</maxSips>
+                          <drinkType>HEALTH</drinkType>
+                          <currentSips>0</currentSips>
+                        </items.Drinkable_-DrinkableItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>ingot</string>
+                        <items.ItemBuilder>
+                          <damageMult>0.4</damageMult>
+                          <id>5</id>
+                          <name>ingot</name>
+                          <description>An iron ingot.</description>
+                          <weight>2.0</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components class="java.util.Arrays$ArrayList" reference="../../../entry[8]/items.Weapon_-WeaponItemBuilder/components/a/StdItem/components"/>
+                          <salvageable>true</salvageable>
+                          <quantity>1</quantity>
+                        </items.ItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>iron</string>
+                        <items.StackableItem_-StackableItemBuilder>
+                          <damageMult>0.2</damageMult>
+                          <id>2</id>
+                          <name>iron</name>
+                          <description>A piece of iron ore.</description>
+                          <weight>1.0</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components reference="../../../entry[8]/items.Weapon_-WeaponItemBuilder/components/a/StdItem/components/a/Stackable/components"/>
+                          <salvageable>false</salvageable>
+                          <quantity>1</quantity>
+                          <descriptionMany>A pile of iron ore chunks.</descriptionMany>
+                        </items.StackableItem_-StackableItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>ironpotion</string>
+                        <items.Drinkable_-DrinkableItemBuilder>
+                          <damageMult>0.2</damageMult>
+                          <id>-1</id>
+                          <name>ironpotion</name>
+                          <description>A potion made from iron.</description>
+                          <weight>0.5</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components class="java.util.Arrays$ArrayList">
+                            <a class="StdItem-array">
+                              <Stackable>
+                                <name>iron</name>
+                                <id>2</id>
+                                <description>A piece of iron ore.</description>
+                                <physicalMult>0.2</physicalMult>
+                                <balanceMult>1.0</balanceMult>
+                                <components reference="../../../../../../entry[8]/items.Weapon_-WeaponItemBuilder/components/a/StdItem/components/a/Stackable/components"/>
+                                <salvageable>false</salvageable>
+                                <weight>1.0</weight>
+                                <allowedEquipSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedEquipSlots>
+                                <quantity>1</quantity>
+                                <descriptionMany>A pile of iron ore chunks.</descriptionMany>
+                              </Stackable>
+                            </a>
+                          </components>
+                          <salvageable>false</salvageable>
+                          <quantity>1</quantity>
+                          <maxSips>2</maxSips>
+                          <drinkType>DEFENSE</drinkType>
+                          <currentSips>0</currentSips>
+                        </items.Drinkable_-DrinkableItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>ironrock</string>
+                        <items.Harvestable_-HarvestableItemBuilder>
+                          <damageMult>1.0</damageMult>
+                          <id>1</id>
+                          <name>ironrock</name>
+                          <description>default</description>
+                          <weight>1.0</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <itemContainer class="Location">7</itemContainer>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components/>
+                          <salvageable>false</salvageable>
+                          <finishedItem class="items.Harvestable">
+                            <name>ironrock</name>
+                            <id>1</id>
+                            <description>default</description>
+                            <physicalMult>1.0</physicalMult>
+                            <balanceMult>1.0</balanceMult>
+                            <components reference="../../components"/>
+                            <salvageable>false</salvageable>
+                            <weight>1.0</weight>
+                            <allowedEquipSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedEquipSlots>
+                            <quantity>1</quantity>
+                            <maxQuantity>8</maxQuantity>
+                            <remainingQuantity>8</remainingQuantity>
+                            <type>IRON</type>
+                            <running>false</running>
+                            <timeToReset>5</timeToReset>
+                          </finishedItem>
+                          <quantity>1</quantity>
+                          <type>IRON</type>
+                          <maxQuantity>8</maxQuantity>
+                          <remainingQuantity>8</remainingQuantity>
+                        </items.Harvestable_-HarvestableItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>log</string>
+                        <items.StackableItem_-StackableItemBuilder>
+                          <damageMult>0.2</damageMult>
+                          <id>1</id>
+                          <name>log</name>
+                          <description>Previously part of a tree.</description>
+                          <weight>1.0</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components reference="../../../entry[5]/items.Weapon_-WeaponItemBuilder/components/a/Stackable/components"/>
+                          <salvageable>false</salvageable>
+                          <quantity>1</quantity>
+                          <descriptionMany>A pile of wood.</descriptionMany>
+                        </items.StackableItem_-StackableItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>oleander</string>
+                        <items.Plant_-PlantItemBuilder>
+                          <damageMult>0.1</damageMult>
+                          <id>-1</id>
+                          <name>oleander</name>
+                          <description>default</description>
+                          <weight>0.1</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components/>
+                          <salvageable>false</salvageable>
+                          <quantity>1</quantity>
+                          <descriptionMany></descriptionMany>
+                          <herbType>OLEANDER</herbType>
+                        </items.Plant_-PlantItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>pike</string>
+                        <items.Weapon_-WeaponItemBuilder>
+                          <damageMult>1.8</damageMult>
+                          <id>-1</id>
+                          <name>pike</name>
+                          <description>It&apos;s a pike!</description>
+                          <weight>6.0</weight>
+                          <balanceMult>1.5</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components class="java.util.Arrays$ArrayList">
+                            <a class="StdItem-array">
+                              <items.Weapon>
+                                <name>dagger</name>
+                                <id>2</id>
+                                <description>It&apos;s a dagger!</description>
+                                <physicalMult>1.0</physicalMult>
+                                <balanceMult>1.0</balanceMult>
+                                <components class="java.util.Arrays$ArrayList" reference="../../../../../../entry[8]/items.Weapon_-WeaponItemBuilder/components"/>
+                                <salvageable>true</salvageable>
+                                <weight>1.5</weight>
+                                <allowedEquipSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedEquipSlots>
+                                <quantity>1</quantity>
+                                <itemLocation class="Location" reference="../../../../../../../../../../../../../mobLocation"/>
+                                <type>BLEED</type>
+                                <appliedPlants serialization="custom">
+                                  <unserializable-parents/>
+                                  <java.util.ArrayDeque>
+                                    <default/>
+                                    <int>0</int>
+                                  </java.util.ArrayDeque>
+                                </appliedPlants>
+                              </items.Weapon>
+                              <items.Weapon>
+                                <name>stick</name>
+                                <id>1</id>
+                                <description>It&apos;s an evil stick.</description>
+                                <physicalMult>0.5</physicalMult>
+                                <balanceMult>1.0</balanceMult>
+                                <components reference="../../../../../../entry[10]/items.Drinkable_-DrinkableItemBuilder/components/a/items.Weapon/components"/>
+                                <salvageable>false</salvageable>
+                                <weight>0.5</weight>
+                                <allowedEquipSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedEquipSlots>
+                                <quantity>1</quantity>
+                                <type>FEAR</type>
+                                <appliedPlants serialization="custom">
+                                  <unserializable-parents/>
+                                  <java.util.ArrayDeque>
+                                    <default/>
+                                    <int>0</int>
+                                  </java.util.ArrayDeque>
+                                </appliedPlants>
+                              </items.Weapon>
+                            </a>
+                          </components>
+                          <salvageable>true</salvageable>
+                          <quantity>1</quantity>
+                        </items.Weapon_-WeaponItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>pouch</string>
+                        <items.Pouch_-PouchItemBuilder>
+                          <damageMult>1.0</damageMult>
+                          <id>-1</id>
+                          <name>pouch</name>
+                          <description>It&apos;s a pouch. Pouches hold one stackable item only.</description>
+                          <weight>0.5</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components/>
+                          <salvageable>false</salvageable>
+                          <quantity>1</quantity>
+                          <maxWeight>100</maxWeight>
+                          <currentWeight>0</currentWeight>
+                          <allowedTypes>
+                            <java-class>items.Plant</java-class>
+                          </allowedTypes>
+                        </items.Pouch_-PouchItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>regenpotion</string>
+                        <items.Drinkable_-DrinkableItemBuilder>
+                          <damageMult>0.2</damageMult>
+                          <id>-1</id>
+                          <name>regenpotion</name>
+                          <description>default</description>
+                          <weight>0.5</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components/>
+                          <salvageable>false</salvageable>
+                          <quantity>1</quantity>
+                          <maxSips>2</maxSips>
+                          <drinkType>REGEN</drinkType>
+                          <currentSips>0</currentSips>
+                        </items.Drinkable_-DrinkableItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>shield</string>
+                        <items.Weapon_-WeaponItemBuilder>
+                          <damageMult>1.0</damageMult>
+                          <id>-1</id>
+                          <name>shield</name>
+                          <description>It&apos;s a shield!</description>
+                          <weight>4.0</weight>
+                          <balanceMult>1.5</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components class="java.util.Arrays$ArrayList">
+                            <a class="StdItem-array">
+                              <StdItem>
+                                <name>ingot</name>
+                                <id>4</id>
+                                <description>An iron ingot.</description>
+                                <physicalMult>0.4</physicalMult>
+                                <balanceMult>1.0</balanceMult>
+                                <components class="java.util.Arrays$ArrayList" reference="../../../../../../entry[8]/items.Weapon_-WeaponItemBuilder/components/a/StdItem/components"/>
+                                <salvageable>true</salvageable>
+                                <weight>2.0</weight>
+                                <allowedEquipSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedEquipSlots>
+                                <quantity>1</quantity>
+                              </StdItem>
+                              <StdItem>
+                                <name>ingot</name>
+                                <id>5</id>
+                                <description>An iron ingot.</description>
+                                <physicalMult>0.4</physicalMult>
+                                <balanceMult>1.0</balanceMult>
+                                <components class="java.util.Arrays$ArrayList" reference="../../../../../../entry[8]/items.Weapon_-WeaponItemBuilder/components/a/StdItem/components"/>
+                                <salvageable>true</salvageable>
+                                <weight>2.0</weight>
+                                <allowedEquipSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedEquipSlots>
+                                <quantity>1</quantity>
+                              </StdItem>
+                            </a>
+                          </components>
+                          <salvageable>true</salvageable>
+                          <quantity>1</quantity>
+                        </items.Weapon_-WeaponItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>stick</string>
+                        <items.Weapon_-WeaponItemBuilder>
+                          <damageMult>0.5</damageMult>
+                          <id>2</id>
+                          <name>stick</name>
+                          <description>It&apos;s an evil stick.</description>
+                          <weight>0.5</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components reference="../../../entry[10]/items.Drinkable_-DrinkableItemBuilder/components/a/items.Weapon/components"/>
+                          <salvageable>false</salvageable>
+                          <quantity>1</quantity>
+                          <mercEffect>FEAR</mercEffect>
+                        </items.Weapon_-WeaponItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>sword</string>
+                        <items.Weapon_-WeaponItemBuilder>
+                          <damageMult>1.5</damageMult>
+                          <id>-1</id>
+                          <name>sword</name>
+                          <description>It&apos;s a sword!</description>
+                          <weight>5.0</weight>
+                          <balanceMult>1.2</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components class="java.util.Arrays$ArrayList">
+                            <a class="StdItem-array">
+                              <StdItem>
+                                <name>ingot</name>
+                                <id>2</id>
+                                <description>An iron ingot.</description>
+                                <physicalMult>0.4</physicalMult>
+                                <balanceMult>1.0</balanceMult>
+                                <components class="java.util.Arrays$ArrayList" reference="../../../../../../entry[8]/items.Weapon_-WeaponItemBuilder/components/a/StdItem/components"/>
+                                <salvageable>true</salvageable>
+                                <weight>2.0</weight>
+                                <allowedEquipSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedEquipSlots>
+                                <quantity>1</quantity>
+                              </StdItem>
+                              <StdItem>
+                                <name>ingot</name>
+                                <id>3</id>
+                                <description>An iron ingot.</description>
+                                <physicalMult>0.4</physicalMult>
+                                <balanceMult>1.0</balanceMult>
+                                <components class="java.util.Arrays$ArrayList" reference="../../../../../../entry[8]/items.Weapon_-WeaponItemBuilder/components/a/StdItem/components"/>
+                                <salvageable>true</salvageable>
+                                <weight>2.0</weight>
+                                <allowedEquipSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedEquipSlots>
+                                <quantity>1</quantity>
+                              </StdItem>
+                            </a>
+                          </components>
+                          <salvageable>true</salvageable>
+                          <quantity>1</quantity>
+                        </items.Weapon_-WeaponItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>tree</string>
+                        <items.Harvestable_-HarvestableItemBuilder>
+                          <damageMult>1.0</damageMult>
+                          <id>1</id>
+                          <name>tree</name>
+                          <description>default</description>
+                          <weight>1.0</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <itemContainer class="Location">6</itemContainer>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components/>
+                          <salvageable>false</salvageable>
+                          <finishedItem class="items.Harvestable">
+                            <name>tree</name>
+                            <id>1</id>
+                            <description>default</description>
+                            <physicalMult>1.0</physicalMult>
+                            <balanceMult>1.0</balanceMult>
+                            <components reference="../../components"/>
+                            <salvageable>false</salvageable>
+                            <weight>1.0</weight>
+                            <allowedEquipSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedEquipSlots>
+                            <quantity>1</quantity>
+                            <maxQuantity>8</maxQuantity>
+                            <remainingQuantity>8</remainingQuantity>
+                            <type>WOOD</type>
+                            <running>false</running>
+                            <timeToReset>5</timeToReset>
+                          </finishedItem>
+                          <quantity>1</quantity>
+                          <type>WOOD</type>
+                          <maxQuantity>8</maxQuantity>
+                          <remainingQuantity>8</remainingQuantity>
+                        </items.Harvestable_-HarvestableItemBuilder>
+                      </entry>
+                      <entry>
+                        <string>valerian</string>
+                        <items.Plant_-PlantItemBuilder>
+                          <damageMult>0.1</damageMult>
+                          <id>-1</id>
+                          <name>valerian</name>
+                          <description>default</description>
+                          <weight>0.1</weight>
+                          <balanceMult>1.0</balanceMult>
+                          <allowedSlots enum-type="processes.Equipment$EquipmentSlot">RIGHTHAND,LEFTHAND</allowedSlots>
+                          <components/>
+                          <salvageable>false</salvageable>
+                          <quantity>1</quantity>
+                          <descriptionMany></descriptionMany>
+                          <herbType>VALERIAN</herbType>
+                        </items.Plant_-PlantItemBuilder>
+                      </entry>
+                    </allItemTemplates>
+                  </skills.CraftItem>
+                </entry>
+                <entry>
+                  <string>diagnose</string>
+                  <skills.Diagnose>
+                    <name>diagnose</name>
+                    <description>Detect Diseases.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Diagnose>
+                </entry>
+                <entry>
+                  <string>drink</string>
+                  <skills.Drink>
+                    <name>drink</name>
+                    <description>Drinking liquids.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Drink>
+                </entry>
+                <entry>
+                  <string>drop</string>
+                  <skills.Drop>
+                    <name>drop</name>
+                    <description>Dropping Items.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>QUANTITY</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <quantity>0</quantity>
+                  </skills.Drop>
+                </entry>
+                <entry>
+                  <string>eat</string>
+                  <skills.Eat>
+                    <name>eat</name>
+                    <description>Eating things.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Eat>
+                </entry>
+                <entry>
+                  <string>examine</string>
+                  <skills.Examine>
+                    <name>examine</name>
+                    <description>Looking closly at things.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Examine>
+                </entry>
+                <entry>
+                  <string>follow</string>
+                  <skills.Follow>
+                    <name>follow</name>
+                    <description>Following others around.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Follow>
+                </entry>
+                <entry>
+                  <string>get</string>
+                  <skills.Get>
+                    <name>get</name>
+                    <description>Picking up items.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>QUANTITY</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <quantity>0</quantity>
+                  </skills.Get>
+                </entry>
+                <entry>
+                  <string>give</string>
+                  <skills.Give>
+                    <name>give</name>
+                    <description>Giving items to others.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>QUANTITY</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Give>
+                </entry>
+                <entry>
+                  <string>greet</string>
+                  <skills.Greet>
+                    <name>greet</name>
+                    <description>Greeting others, an invitation to chat.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Greet>
+                </entry>
+                <entry>
+                  <string>heal</string>
+                  <skills.Heal>
+                    <name>heal</name>
+                    <description>A little bit of healing.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <intensity>-30</intensity>
+                  </skills.Heal>
+                </entry>
+                <entry>
+                  <string>icewall</string>
+                  <skills.Icewall>
+                    <name>icewall</name>
+                    <description>Create a wall of ice, blocking movement into and out of your location.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Icewall>
+                </entry>
+                <entry>
+                  <string>info</string>
+                  <skills.Info>
+                    <name>info</name>
+                    <description>Specific details for objects.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Info>
+                </entry>
+                <entry>
+                  <string>inventory</string>
+                  <skills.Inventory>
+                    <name>inventory</name>
+                    <description>Viewing your items.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Inventory>
+                </entry>
+                <entry>
+                  <string>list</string>
+                  <skills.ListAll>
+                    <name>list</name>
+                    <description>Informational skill - list things in a category (plants, condis).</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.ListAll>
+                </entry>
+                <entry>
+                  <string>look</string>
+                  <skills.Look>
+                    <name>look</name>
+                    <description>Look around.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Look>
+                </entry>
+                <entry>
+                  <string>message</string>
+                  <skills.Messaging>
+                    <name>message</name>
+                    <description>Long distance communication.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>SLOT</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>MESSAGE</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Messaging>
+                </entry>
+                <entry>
+                  <string>mine</string>
+                  <skills.Mine>
+                    <name>mine</name>
+                    <description>Mining ores.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Mine>
+                </entry>
+                <entry>
+                  <string>move</string>
+                  <skills.Move>
+                    <name>move</name>
+                    <description>Move around.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Move>
+                </entry>
+                <entry>
+                  <string>nod</string>
+                  <skills.Nod>
+                    <name>nod</name>
+                    <description>Nodding to others, to encourage more details.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Nod>
+                </entry>
+                <entry>
+                  <string>open</string>
+                  <skills.Open>
+                    <name>open</name>
+                    <description>Opening doors.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Open>
+                </entry>
+                <entry>
+                  <string>punch</string>
+                  <skills.Punch>
+                    <name>punch</name>
+                    <description>Throwing a quick punch.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <intensity>10</intensity>
+                    <BASEBALANCE>3000</BASEBALANCE>
+                  </skills.Punch>
+                </entry>
+                <entry>
+                  <string>put</string>
+                  <skills.Put>
+                    <name>put</name>
+                    <description>Place an item in a container.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>FILLER</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>QUANTITY</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <originalQty>0</originalQty>
+                    <qty>0</qty>
+                  </skills.Put>
+                </entry>
+                <entry>
+                  <string>roll</string>
+                  <skills.RollDice>
+                    <name>roll</name>
+                    <description>Roll a die or two.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <numOfDice>0</numOfDice>
+                    <sidesOfDice>0</sidesOfDice>
+                  </skills.RollDice>
+                </entry>
+                <entry>
+                  <string>root</string>
+                  <skills.Root>
+                    <name>root</name>
+                    <description>Roots the target in place.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Root>
+                </entry>
+                <entry>
+                  <string>salvage</string>
+                  <skills.Salvage>
+                    <name>salvage</name>
+                    <description>Salvaging components of an item.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Salvage>
+                </entry>
+                <entry>
+                  <string>say</string>
+                  <skills.Say>
+                    <name>say</name>
+                    <description>Talking to others nearby.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>MESSAGE</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Say>
+                </entry>
+                <entry>
+                  <string>shoot</string>
+                  <skills.Shoot>
+                    <name>shoot</name>
+                    <description>A Quick shot or throw.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <intensity>20</intensity>
+                  </skills.Shoot>
+                </entry>
+                <entry>
+                  <string>skills</string>
+                  <skills.SkillList>
+                    <name>skills</name>
+                    <description>Inventory of your knowledge.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.SkillList>
+                </entry>
+                <entry>
+                  <string>sleep</string>
+                  <skills.Sleep>
+                    <name>sleep</name>
+                    <description>Sleeping.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Sleep>
+                </entry>
+                <entry>
+                  <string>struggle</string>
+                  <skills.Struggle>
+                    <name>struggle</name>
+                    <description>Struggling out of bonds.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <r serialization="custom">
+                      <java.util.Random>
+                        <default>
+                          <seed>31814653021245</seed>
+                          <nextNextGaussian>0.0</nextNextGaussian>
+                          <haveNextNextGaussian>false</haveNextNextGaussian>
+                        </default>
+                      </java.util.Random>
+                    </r>
+                  </skills.Struggle>
+                </entry>
+                <entry>
+                  <string>take</string>
+                  <skills.TakeOut>
+                    <name>take</name>
+                    <description>Taking items from containers.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>FILLER</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>QUANTITY</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <origQty>0</origQty>
+                    <qty>0</qty>
+                  </skills.TakeOut>
+                </entry>
+                <entry>
+                  <string>throw</string>
+                  <skills.Throw>
+                    <name>throw</name>
+                    <description>Throwing items.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <BASEDAMAGE>8</BASEDAMAGE>
+                    <BASEBALANCE>3000</BASEBALANCE>
+                  </skills.Throw>
+                </entry>
+                <entry>
+                  <string>unwield</string>
+                  <skills.Unwield>
+                    <name>unwield</name>
+                    <description>Unwielding items in your hands.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>SLOT</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Unwield>
+                </entry>
+                <entry>
+                  <string>vinetrip</string>
+                  <skills.VineTrip>
+                    <name>vinetrip</name>
+                    <description>Unbalance your target briefly.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <BASEBALANCE>2000</BASEBALANCE>
+                  </skills.VineTrip>
+                </entry>
+                <entry>
+                  <string>wake</string>
+                  <skills.Wake>
+                    <name>wake</name>
+                    <description>Waking from sleep.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <r serialization="custom">
+                      <java.util.Random>
+                        <default>
+                          <seed>69532360636117</seed>
+                          <nextNextGaussian>0.0</nextNextGaussian>
+                          <haveNextNextGaussian>false</haveNextNextGaussian>
+                        </default>
+                      </java.util.Random>
+                    </r>
+                  </skills.Wake>
+                </entry>
+                <entry>
+                  <string>whip</string>
+                  <skills.LightningWhip>
+                    <name>whip</name>
+                    <description>Powerful magical whip attack.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <intensity>10</intensity>
+                  </skills.LightningWhip>
+                </entry>
+                <entry>
+                  <string>who</string>
+                  <skills.Who>
+                    <name>who</name>
+                    <description>Shows logged in players.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Who>
+                </entry>
+                <entry>
+                  <string>wield</string>
+                  <skills.Wield>
+                    <name>wield</name>
+                    <description>Wielding items.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>SLOT</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Wield>
+                </entry>
+              </skillList>
+              <name>generals</name>
+              <id>2</id>
+            </processes.SkillBook>
+            <int>100</int>
+          </entry>
+        </skillBookList>
+        <dropsOnDeath/>
+        <messages/>
+        <currentWeight>0.0</currentWeight>
+        <cooldowns/>
+        <className>admin</className>
+      </StdMob>
+    </entry>
+    <entry>
+      <string>Capaal</string>
+      <StdMob>
+        <name>Capaal</name>
+        <password>Capaal</password>
+        <id>8</id>
+        <maxHp>105</maxHp>
+        <currentHp>105</currentHp>
+        <currentMana>105</currentMana>
+        <maxMana>105</maxMana>
+        <mobLocation reference="../../../entry/StdMob/mobLocation"/>
+        <isDead>false</isDead>
+        <isBlocking>false</isBlocking>
+        <equipment>
+          <bondedMobile class="StdMob" reference="../.."/>
+        </equipment>
+        <defense>0</defense>
+        <balanceMult>1.0</balanceMult>
+        <description>This is a mob.</description>
+        <xpWorth>0</xpWorth>
+        <shortDescription></shortDescription>
+        <experience>1</experience>
+        <level>0</level>
+        <age>0</age>
+        <isControlled>true</isControlled>
+        <inventory/>
+        <skillBookList>
+          <entry>
+            <skills.Arcanist.ArcanistSkillbook>
+              <skillList class="tree-map"/>
+              <name>spells</name>
+              <id>6</id>
+            </skills.Arcanist.ArcanistSkillbook>
+            <int>100</int>
+          </entry>
+          <entry>
+            <processes.SkillBook>
+              <skillList class="tree-map">
+                <entry>
+                  <string>alter</string>
+                  <skills.Arcanist.Commands.ArcanistAlter>
+                    <name>alter</name>
+                    <description>Altering the spell you are scribing: Alter [component] [desired]</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Arcanist.Commands.ArcanistAlter>
+                </entry>
+                <entry>
+                  <string>analyze</string>
+                  <skills.Arcanist.Commands.ArcanistAnalyze>
+                    <name>analyze</name>
+                    <description>Referencing the current state of your spell-to-be.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Arcanist.Commands.ArcanistAnalyze>
+                </entry>
+                <entry>
+                  <string>complete</string>
+                  <skills.Arcanist.Commands.ArcanistComplete>
+                    <name>complete</name>
+                    <description>Finishing a new spell you&apos;ve been scribing via CREAT and ALTER.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Arcanist.Commands.ArcanistComplete>
+                </entry>
+                <entry>
+                  <string>components</string>
+                  <skills.Arcanist.Commands.ArcanistComponents>
+                    <name>components</name>
+                    <description>Displays available components and their workings</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>COMPONENT</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Arcanist.Commands.ArcanistComponents>
+                </entry>
+                <entry>
+                  <string>create</string>
+                  <skills.Arcanist.Commands.ArcanistCreate>
+                    <name>create</name>
+                    <description>Start building a new spell: create [spellname]</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Arcanist.Commands.ArcanistCreate>
+                </entry>
+                <entry>
+                  <string>delete</string>
+                  <skills.Arcanist.Commands.ArcanistDelete>
+                    <name>delete</name>
+                    <description>Regaining space in your spellbook.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Arcanist.Commands.ArcanistDelete>
+                </entry>
+                <entry>
+                  <string>modify</string>
+                  <skills.Arcanist.Commands.ArcanistModify>
+                    <name>modify</name>
+                    <description>Prepares a spell to be altered.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Arcanist.Commands.ArcanistModify>
+                </entry>
+              </skillList>
+              <name>arcanist</name>
+              <id>5</id>
+            </processes.SkillBook>
+            <int>100</int>
+          </entry>
+          <entry>
+            <skills.Arcanist.ArcanistSkillbook>
+              <skillList class="tree-map"/>
+              <name>spells</name>
+              <id>6</id>
+            </skills.Arcanist.ArcanistSkillbook>
+            <int>100</int>
+          </entry>
+          <entry>
+            <processes.SkillBook>
+              <skillList class="tree-map">
+                <entry>
+                  <string>move</string>
+                  <skills.Move>
+                    <name>move</name>
+                    <description>Move around.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Move>
+                </entry>
+              </skillList>
+              <name>movement</name>
+              <id>1</id>
+            </processes.SkillBook>
+            <int>100</int>
+          </entry>
+          <entry>
+            <processes.SkillBook>
+              <skillList class="tree-map">
+                <entry>
+                  <string>apply</string>
+                  <skills.Apply>
+                    <name>apply</name>
+                    <description>Applying herbs and the such.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>FILLER</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>QUANTITY</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Apply>
+                </entry>
+                <entry>
+                  <string>bug</string>
+                  <skills.Bug>
+                    <name>bug</name>
+                    <description>Recording and checking recorded bugs.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>MESSAGE</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Bug>
+                </entry>
+                <entry>
+                  <string>character</string>
+                  <skills.CharacterSheet>
+                    <name>character</name>
+                    <description>Your character&apos;s info.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.CharacterSheet>
+                </entry>
+                <entry>
+                  <string>chop</string>
+                  <skills.Chop>
+                    <name>chop</name>
+                    <description>Chopping trees and maybe other things.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Chop>
+                </entry>
+                <entry>
+                  <string>close</string>
+                  <skills.Close>
+                    <name>close</name>
+                    <description>Closing objects.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Close>
+                </entry>
+                <entry>
+                  <string>craft</string>
+                  <skills.CraftItem>
+                    <name>craft</name>
+                    <description>Crafting all sorts of things.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TIMES</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <quantity>0</quantity>
+                    <allItemTemplates class="tree-map" reference="../../../../../../../../../entry/StdMob/skillBookList/entry[7]/processes.SkillBook/skillList/entry[6]/skills.CraftItem/allItemTemplates"/>
+                  </skills.CraftItem>
+                </entry>
+                <entry>
+                  <string>diagnose</string>
+                  <skills.Diagnose>
+                    <name>diagnose</name>
+                    <description>Detect Diseases.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Diagnose>
+                </entry>
+                <entry>
+                  <string>drink</string>
+                  <skills.Drink>
+                    <name>drink</name>
+                    <description>Drinking liquids.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Drink>
+                </entry>
+                <entry>
+                  <string>drop</string>
+                  <skills.Drop>
+                    <name>drop</name>
+                    <description>Dropping Items.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>QUANTITY</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <quantity>0</quantity>
+                  </skills.Drop>
+                </entry>
+                <entry>
+                  <string>eat</string>
+                  <skills.Eat>
+                    <name>eat</name>
+                    <description>Eating things.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Eat>
+                </entry>
+                <entry>
+                  <string>examine</string>
+                  <skills.Examine>
+                    <name>examine</name>
+                    <description>Looking closly at things.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Examine>
+                </entry>
+                <entry>
+                  <string>follow</string>
+                  <skills.Follow>
+                    <name>follow</name>
+                    <description>Following others around.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Follow>
+                </entry>
+                <entry>
+                  <string>get</string>
+                  <skills.Get>
+                    <name>get</name>
+                    <description>Picking up items.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>QUANTITY</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <quantity>0</quantity>
+                  </skills.Get>
+                </entry>
+                <entry>
+                  <string>give</string>
+                  <skills.Give>
+                    <name>give</name>
+                    <description>Giving items to others.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>QUANTITY</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Give>
+                </entry>
+                <entry>
+                  <string>greet</string>
+                  <skills.Greet>
+                    <name>greet</name>
+                    <description>Greeting others, an invitation to chat.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Greet>
+                </entry>
+                <entry>
+                  <string>heal</string>
+                  <skills.Heal>
+                    <name>heal</name>
+                    <description>A little bit of healing.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <intensity>-30</intensity>
+                  </skills.Heal>
+                </entry>
+                <entry>
+                  <string>icewall</string>
+                  <skills.Icewall>
+                    <name>icewall</name>
+                    <description>Create a wall of ice, blocking movement into and out of your location.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Icewall>
+                </entry>
+                <entry>
+                  <string>info</string>
+                  <skills.Info>
+                    <name>info</name>
+                    <description>Specific details for objects.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Info>
+                </entry>
+                <entry>
+                  <string>inventory</string>
+                  <skills.Inventory>
+                    <name>inventory</name>
+                    <description>Viewing your items.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Inventory>
+                </entry>
+                <entry>
+                  <string>list</string>
+                  <skills.ListAll>
+                    <name>list</name>
+                    <description>Informational skill - list things in a category (plants, condis).</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.ListAll>
+                </entry>
+                <entry>
+                  <string>look</string>
+                  <skills.Look>
+                    <name>look</name>
+                    <description>Look around.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Look>
+                </entry>
+                <entry>
+                  <string>message</string>
+                  <skills.Messaging>
+                    <name>message</name>
+                    <description>Long distance communication.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>SLOT</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>MESSAGE</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Messaging>
+                </entry>
+                <entry>
+                  <string>mine</string>
+                  <skills.Mine>
+                    <name>mine</name>
+                    <description>Mining ores.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Mine>
+                </entry>
+                <entry>
+                  <string>move</string>
+                  <skills.Move>
+                    <name>move</name>
+                    <description>Move around.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Move>
+                </entry>
+                <entry>
+                  <string>nod</string>
+                  <skills.Nod>
+                    <name>nod</name>
+                    <description>Nodding to others, to encourage more details.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Nod>
+                </entry>
+                <entry>
+                  <string>open</string>
+                  <skills.Open>
+                    <name>open</name>
+                    <description>Opening doors.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Open>
+                </entry>
+                <entry>
+                  <string>punch</string>
+                  <skills.Punch>
+                    <name>punch</name>
+                    <description>Throwing a quick punch.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <intensity>10</intensity>
+                    <BASEBALANCE>3000</BASEBALANCE>
+                  </skills.Punch>
+                </entry>
+                <entry>
+                  <string>put</string>
+                  <skills.Put>
+                    <name>put</name>
+                    <description>Place an item in a container.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>FILLER</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>QUANTITY</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <originalQty>0</originalQty>
+                    <qty>0</qty>
+                  </skills.Put>
+                </entry>
+                <entry>
+                  <string>roll</string>
+                  <skills.RollDice>
+                    <name>roll</name>
+                    <description>Roll a die or two.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <numOfDice>0</numOfDice>
+                    <sidesOfDice>0</sidesOfDice>
+                  </skills.RollDice>
+                </entry>
+                <entry>
+                  <string>root</string>
+                  <skills.Root>
+                    <name>root</name>
+                    <description>Roots the target in place.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Root>
+                </entry>
+                <entry>
+                  <string>salvage</string>
+                  <skills.Salvage>
+                    <name>salvage</name>
+                    <description>Salvaging components of an item.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Salvage>
+                </entry>
+                <entry>
+                  <string>say</string>
+                  <skills.Say>
+                    <name>say</name>
+                    <description>Talking to others nearby.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>MESSAGE</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Say>
+                </entry>
+                <entry>
+                  <string>shoot</string>
+                  <skills.Shoot>
+                    <name>shoot</name>
+                    <description>A Quick shot or throw.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <intensity>20</intensity>
+                  </skills.Shoot>
+                </entry>
+                <entry>
+                  <string>skills</string>
+                  <skills.SkillList>
+                    <name>skills</name>
+                    <description>Inventory of your knowledge.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.SkillList>
+                </entry>
+                <entry>
+                  <string>sleep</string>
+                  <skills.Sleep>
+                    <name>sleep</name>
+                    <description>Sleeping.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Sleep>
+                </entry>
+                <entry>
+                  <string>struggle</string>
+                  <skills.Struggle>
+                    <name>struggle</name>
+                    <description>Struggling out of bonds.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <r serialization="custom">
+                      <java.util.Random>
+                        <default>
+                          <seed>31001735938285</seed>
+                          <nextNextGaussian>0.0</nextNextGaussian>
+                          <haveNextNextGaussian>false</haveNextNextGaussian>
+                        </default>
+                      </java.util.Random>
+                    </r>
+                  </skills.Struggle>
+                </entry>
+                <entry>
+                  <string>take</string>
+                  <skills.TakeOut>
+                    <name>take</name>
+                    <description>Taking items from containers.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>FILLER</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>QUANTITY</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <origQty>0</origQty>
+                    <qty>0</qty>
+                  </skills.TakeOut>
+                </entry>
+                <entry>
+                  <string>throw</string>
+                  <skills.Throw>
+                    <name>throw</name>
+                    <description>Throwing items.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <BASEDAMAGE>8</BASEDAMAGE>
+                    <BASEBALANCE>3000</BASEBALANCE>
+                  </skills.Throw>
+                </entry>
+                <entry>
+                  <string>unwield</string>
+                  <skills.Unwield>
+                    <name>unwield</name>
+                    <description>Unwielding items in your hands.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>SLOT</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Unwield>
+                </entry>
+                <entry>
+                  <string>vinetrip</string>
+                  <skills.VineTrip>
+                    <name>vinetrip</name>
+                    <description>Unbalance your target briefly.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <BASEBALANCE>2000</BASEBALANCE>
+                  </skills.VineTrip>
+                </entry>
+                <entry>
+                  <string>wake</string>
+                  <skills.Wake>
+                    <name>wake</name>
+                    <description>Waking from sleep.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <r serialization="custom">
+                      <java.util.Random>
+                        <default>
+                          <seed>70231469281694</seed>
+                          <nextNextGaussian>0.0</nextNextGaussian>
+                          <haveNextNextGaussian>false</haveNextNextGaussian>
+                        </default>
+                      </java.util.Random>
+                    </r>
+                  </skills.Wake>
+                </entry>
+                <entry>
+                  <string>whip</string>
+                  <skills.LightningWhip>
+                    <name>whip</name>
+                    <description>Powerful magical whip attack.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <intensity>10</intensity>
+                  </skills.LightningWhip>
+                </entry>
+                <entry>
+                  <string>who</string>
+                  <skills.Who>
+                    <name>who</name>
+                    <description>Shows logged in players.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Who>
+                </entry>
+                <entry>
+                  <string>wield</string>
+                  <skills.Wield>
+                    <name>wield</name>
+                    <description>Wielding items.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>SLOT</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Wield>
+                </entry>
+              </skillList>
+              <name>generals</name>
+              <id>2</id>
+            </processes.SkillBook>
+            <int>100</int>
+          </entry>
+          <entry>
+            <processes.SkillBook>
+              <skillList class="tree-map">
+                <entry>
+                  <string>attack</string>
+                  <skills.Mercenary.Attack>
+                    <name>attack</name>
+                    <description>Attacking with style.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <intensity>8</intensity>
+                    <balAdjust>1.0</balAdjust>
+                    <baseBalance>3000</baseBalance>
+                  </skills.Mercenary.Attack>
+                </entry>
+                <entry>
+                  <string>break</string>
+                  <skills.Mercenary.BreakLimb>
+                    <name>break</name>
+                    <description>Break an arm or leg.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>SLOT</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <intensity>8</intensity>
+                  </skills.Mercenary.BreakLimb>
+                </entry>
+                <entry>
+                  <string>clearmind</string>
+                  <skills.Mercenary.Clearmind>
+                    <name>clearmind</name>
+                    <description>Cures mental afflictions</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <COOLDOWNLENGTH>5000</COOLDOWNLENGTH>
+                  </skills.Mercenary.Clearmind>
+                </entry>
+                <entry>
+                  <string>dualattack</string>
+                  <skills.Mercenary.DualAttack>
+                    <name>dualattack</name>
+                    <description>Attacking with two weapons.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <intensity>8</intensity>
+                    <balAdjust>1.0</balAdjust>
+                  </skills.Mercenary.DualAttack>
+                </entry>
+                <entry>
+                  <string>headshot</string>
+                  <skills.Mercenary.Headshot>
+                    <name>headshot</name>
+                    <description>Careful aim with a ranged weapon.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <intensity>30</intensity>
+                  </skills.Mercenary.Headshot>
+                </entry>
+                <entry>
+                  <string>intimidate</string>
+                  <skills.Mercenary.Intimidate>
+                    <name>intimidate</name>
+                    <description>Scaring others into fleeing.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Mercenary.Intimidate>
+                </entry>
+                <entry>
+                  <string>regen</string>
+                  <skills.Mercenary.MercRegenSkill>
+                    <name>regen</name>
+                    <description>Resisting damage.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Mercenary.MercRegenSkill>
+                </entry>
+                <entry>
+                  <string>shieldblock</string>
+                  <skills.Mercenary.Shieldblock>
+                    <name>shieldblock</name>
+                    <description>Careful guard against attacks.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Mercenary.Shieldblock>
+                </entry>
+                <entry>
+                  <string>shove</string>
+                  <skills.Mercenary.Shove>
+                    <name>shove</name>
+                    <description>Push someone forcefully into another location.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Mercenary.Shove>
+                </entry>
+                <entry>
+                  <string>spinkick</string>
+                  <skills.Mercenary.SpinKick>
+                    <name>spinkick</name>
+                    <description>Dizzy causing kick.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <intensity>8</intensity>
+                  </skills.Mercenary.SpinKick>
+                </entry>
+                <entry>
+                  <string>staunch</string>
+                  <skills.Mercenary.Staunch>
+                    <name>staunch</name>
+                    <description>Cures bleeding, a little at a time.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.Mercenary.Staunch>
+                </entry>
+                <entry>
+                  <string>straighten</string>
+                  <skills.Mercenary.Straighten>
+                    <name>straighten</name>
+                    <description>Splinting of a broken arm or leg.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>SLOT</processes.Skills_-Syntax>
+                    </syntaxList>
+                    <affectedList>
+                      <entry>
+                        <string>lefthand</string>
+                        <effects.PassiveCondition>BROKENLEFTARM</effects.PassiveCondition>
+                      </entry>
+                      <entry>
+                        <string>legs</string>
+                        <effects.PassiveCondition>BROKENLEGS</effects.PassiveCondition>
+                      </entry>
+                      <entry>
+                        <string>righthand</string>
+                        <effects.PassiveCondition>BROKENRIGHTARM</effects.PassiveCondition>
+                      </entry>
+                    </affectedList>
+                  </skills.Mercenary.Straighten>
+                </entry>
+              </skillList>
+              <name>mercenary</name>
+              <id>3</id>
+            </processes.SkillBook>
+            <int>100</int>
+          </entry>
+          <entry>
+            <processes.SkillBook>
+              <skillList class="tree-map">
+                <entry>
+                  <string>goto</string>
+                  <skills.GoTo>
+                    <name>goto</name>
+                    <description>Teleport to someone.</description>
+                    <syntaxList>
+                      <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                      <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                    </syntaxList>
+                  </skills.GoTo>
+                </entry>
+              </skillList>
+              <name>admin</name>
+              <id>4</id>
+            </processes.SkillBook>
+            <int>100</int>
+          </entry>
+        </skillBookList>
+        <dropsOnDeath/>
+        <messages/>
+        <currentWeight>0.0</currentWeight>
+        <cooldowns/>
+        <className>admin</className>
+      </StdMob>
+    </entry>
+    <entry>
+      <string>FarmerJames</string>
+      <MobileAI.AggresiveMobileDecorator>
+        <decoratedMobile class="MobileAI.EntersMobileDecorator">
+          <decoratedMobile class="StdMob">
+            <name>FarmerJames</name>
+            <password></password>
+            <id>6</id>
+            <maxHp>105</maxHp>
+            <currentHp>105</currentHp>
+            <currentMana>105</currentMana>
+            <maxMana>105</maxMana>
+            <mobLocation>4</mobLocation>
+            <isDead>false</isDead>
+            <isBlocking>false</isBlocking>
+            <equipment>
+              <bondedMobile class="MobileAI.AggresiveMobileDecorator" reference="../../../.."/>
+            </equipment>
+            <defense>0</defense>
+            <balanceMult>1.0</balanceMult>
+            <description>A farmer who looks down on his luck. (try GREETing him)</description>
+            <xpWorth>0</xpWorth>
+            <shortDescription>, a poor, tired farmer</shortDescription>
+            <experience>1</experience>
+            <level>0</level>
+            <age>0</age>
+            <isControlled>false</isControlled>
+            <inventory/>
+            <skillBookList/>
+            <dropsOnDeath/>
+            <messages/>
+            <currentWeight>0.0</currentWeight>
+            <cooldowns/>
+          </decoratedMobile>
+          <doesOnEnter class="null"/>
+          <lastRan>1568673224049</lastRan>
+          <TIMEBETWEENTRIGGERS>5000</TIMEBETWEENTRIGGERS>
+        </decoratedMobile>
+        <appointedSkill class="skills.Punch">
+          <name>punch</name>
+          <description>Throwing a quick punch.</description>
+          <syntaxList>
+            <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+            <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+          </syntaxList>
+          <intensity>10</intensity>
+          <BASEBALANCE>3000</BASEBALANCE>
+        </appointedSkill>
+        <noTargetTimer>0</noTargetTimer>
+        <MAXTIMER>10</MAXTIMER>
+        <TIMEBETWEENTICKS>800</TIMEBETWEENTICKS>
+      </MobileAI.AggresiveMobileDecorator>
+    </entry>
+    <entry>
+      <string>goblin</string>
+      <MobileAI.ChasingMobileDecorator>
+        <decoratedMobile class="MobileAI.AggresiveMobileDecorator">
+          <decoratedMobile class="StdMob">
+            <name>goblin</name>
+            <password></password>
+            <id>5</id>
+            <maxHp>105</maxHp>
+            <currentHp>105</currentHp>
+            <currentMana>105</currentMana>
+            <maxMana>105</maxMana>
+            <mobLocation reference="../../../../../entry/StdMob/mobLocation"/>
+            <isDead>false</isDead>
+            <isBlocking>false</isBlocking>
+            <equipment>
+              <bondedMobile class="MobileAI.ChasingMobileDecorator" reference="../../../.."/>
+            </equipment>
+            <defense>0</defense>
+            <balanceMult>1.0</balanceMult>
+            <description>A short, ugly goblin glares at you.</description>
+            <xpWorth>0</xpWorth>
+            <shortDescription>, an ugly goblin</shortDescription>
+            <experience>1</experience>
+            <level>0</level>
+            <age>0</age>
+            <isControlled>false</isControlled>
+            <inventory/>
+            <skillBookList/>
+            <dropsOnDeath/>
+            <messages/>
+            <currentWeight>0.0</currentWeight>
+            <cooldowns/>
+          </decoratedMobile>
+          <appointedSkill class="skills.Punch">
+            <name>punch</name>
+            <description>Throwing a quick punch.</description>
+            <syntaxList>
+              <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+              <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+            </syntaxList>
+            <intensity>10</intensity>
+            <BASEBALANCE>3000</BASEBALANCE>
+          </appointedSkill>
+          <noTargetTimer>0</noTargetTimer>
+          <MAXTIMER>10</MAXTIMER>
+          <TIMEBETWEENTICKS>800</TIMEBETWEENTICKS>
+        </decoratedMobile>
+        <appointedSkill class="skills.Move">
+          <name>move</name>
+          <description>Move around.</description>
+          <syntaxList>
+            <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+            <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+          </syntaxList>
+        </appointedSkill>
+        <noTargetTimer>0</noTargetTimer>
+        <MAXTIMER>10</MAXTIMER>
+        <TIMEBETWEENTICKS>800</TIMEBETWEENTICKS>
+      </MobileAI.ChasingMobileDecorator>
+    </entry>
+    <entry>
+      <string>horse</string>
+      <MobileAI.ChasingMobileDecorator>
+        <decoratedMobile class="MobileAI.AggresiveMobileDecorator">
+          <decoratedMobile class="StdMob">
+            <name>horse</name>
+            <password></password>
+            <id>7</id>
+            <maxHp>105</maxHp>
+            <currentHp>105</currentHp>
+            <currentMana>105</currentMana>
+            <maxMana>105</maxMana>
+            <mobLocation reference="../../../../../entry/StdMob/mobLocation"/>
+            <isDead>false</isDead>
+            <isBlocking>false</isBlocking>
+            <equipment>
+              <bondedMobile class="MobileAI.ChasingMobileDecorator" reference="../../../.."/>
+            </equipment>
+            <defense>0</defense>
+            <balanceMult>1.0</balanceMult>
+            <description>A horse stands here.</description>
+            <xpWorth>0</xpWorth>
+            <shortDescription>, a chestnut mare</shortDescription>
+            <experience>1</experience>
+            <level>0</level>
+            <age>0</age>
+            <isControlled>false</isControlled>
+            <inventory/>
+            <skillBookList/>
+            <dropsOnDeath/>
+            <messages/>
+            <currentWeight>0.0</currentWeight>
+            <cooldowns/>
+          </decoratedMobile>
+          <appointedSkill class="skills.Punch">
+            <name>punch</name>
+            <description>Throwing a quick punch.</description>
+            <syntaxList>
+              <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+              <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+            </syntaxList>
+            <intensity>10</intensity>
+            <BASEBALANCE>3000</BASEBALANCE>
+          </appointedSkill>
+          <noTargetTimer>0</noTargetTimer>
+          <MAXTIMER>10</MAXTIMER>
+          <TIMEBETWEENTICKS>800</TIMEBETWEENTICKS>
+        </decoratedMobile>
+        <appointedSkill class="skills.Move">
+          <name>move</name>
+          <description>Move around.</description>
+          <syntaxList>
+            <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+            <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+          </syntaxList>
+        </appointedSkill>
+        <noTargetTimer>0</noTargetTimer>
+        <MAXTIMER>10</MAXTIMER>
+        <TIMEBETWEENTICKS>800</TIMEBETWEENTICKS>
+      </MobileAI.ChasingMobileDecorator>
+    </entry>
+  </allPlayersList>
+  <idMap>
+    <entry>
+      <string>dagger</string>
+      <int>2</int>
+    </entry>
+    <entry>
+      <string>ironrock</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>log</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>tree</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>mobile</string>
+      <int>8</int>
+    </entry>
+    <entry>
+      <string>iron</string>
+      <int>2</int>
+    </entry>
+    <entry>
+      <string>stick</string>
+      <int>2</int>
+    </entry>
+    <entry>
+      <string>ingot</string>
+      <int>5</int>
+    </entry>
+  </idMap>
+  <itemTemplates class="tree-map" reference="../allPlayersList/entry/StdMob/skillBookList/entry[7]/processes.SkillBook/skillList/entry[6]/skills.CraftItem/allItemTemplates"/>
+  <deletedPlayers class="tree-map"/>
+  <AllSkillBooks>
+    <entry>
+      <int>1</int>
+      <processes.SkillBook>
+        <skillList class="tree-map">
+          <entry>
+            <string>move</string>
+            <skills.Move>
+              <name>move</name>
+              <description>Move around.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Move>
+          </entry>
+        </skillList>
+        <name>movement</name>
+        <id>1</id>
+      </processes.SkillBook>
+    </entry>
+    <entry>
+      <int>2</int>
+      <processes.SkillBook>
+        <skillList class="tree-map">
+          <entry>
+            <string>apply</string>
+            <skills.Apply>
+              <name>apply</name>
+              <description>Applying herbs and the such.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>FILLER</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>QUANTITY</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Apply>
+          </entry>
+          <entry>
+            <string>bug</string>
+            <skills.Bug>
+              <name>bug</name>
+              <description>Recording and checking recorded bugs.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>MESSAGE</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Bug>
+          </entry>
+          <entry>
+            <string>character</string>
+            <skills.CharacterSheet>
+              <name>character</name>
+              <description>Your character&apos;s info.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.CharacterSheet>
+          </entry>
+          <entry>
+            <string>chop</string>
+            <skills.Chop>
+              <name>chop</name>
+              <description>Chopping trees and maybe other things.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Chop>
+          </entry>
+          <entry>
+            <string>close</string>
+            <skills.Close>
+              <name>close</name>
+              <description>Closing objects.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Close>
+          </entry>
+          <entry>
+            <string>craft</string>
+            <skills.CraftItem>
+              <name>craft</name>
+              <description>Crafting all sorts of things.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TIMES</processes.Skills_-Syntax>
+              </syntaxList>
+              <quantity>0</quantity>
+              <allItemTemplates class="tree-map" reference="../../../../../../../allPlayersList/entry/StdMob/skillBookList/entry[7]/processes.SkillBook/skillList/entry[6]/skills.CraftItem/allItemTemplates"/>
+            </skills.CraftItem>
+          </entry>
+          <entry>
+            <string>diagnose</string>
+            <skills.Diagnose>
+              <name>diagnose</name>
+              <description>Detect Diseases.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Diagnose>
+          </entry>
+          <entry>
+            <string>drink</string>
+            <skills.Drink>
+              <name>drink</name>
+              <description>Drinking liquids.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Drink>
+          </entry>
+          <entry>
+            <string>drop</string>
+            <skills.Drop>
+              <name>drop</name>
+              <description>Dropping Items.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>QUANTITY</processes.Skills_-Syntax>
+              </syntaxList>
+              <quantity>0</quantity>
+            </skills.Drop>
+          </entry>
+          <entry>
+            <string>eat</string>
+            <skills.Eat>
+              <name>eat</name>
+              <description>Eating things.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Eat>
+          </entry>
+          <entry>
+            <string>examine</string>
+            <skills.Examine>
+              <name>examine</name>
+              <description>Looking closly at things.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Examine>
+          </entry>
+          <entry>
+            <string>follow</string>
+            <skills.Follow>
+              <name>follow</name>
+              <description>Following others around.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Follow>
+          </entry>
+          <entry>
+            <string>get</string>
+            <skills.Get>
+              <name>get</name>
+              <description>Picking up items.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>QUANTITY</processes.Skills_-Syntax>
+              </syntaxList>
+              <quantity>0</quantity>
+            </skills.Get>
+          </entry>
+          <entry>
+            <string>give</string>
+            <skills.Give>
+              <name>give</name>
+              <description>Giving items to others.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>QUANTITY</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Give>
+          </entry>
+          <entry>
+            <string>greet</string>
+            <skills.Greet>
+              <name>greet</name>
+              <description>Greeting others, an invitation to chat.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Greet>
+          </entry>
+          <entry>
+            <string>heal</string>
+            <skills.Heal>
+              <name>heal</name>
+              <description>A little bit of healing.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+              </syntaxList>
+              <intensity>-30</intensity>
+            </skills.Heal>
+          </entry>
+          <entry>
+            <string>icewall</string>
+            <skills.Icewall>
+              <name>icewall</name>
+              <description>Create a wall of ice, blocking movement into and out of your location.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Icewall>
+          </entry>
+          <entry>
+            <string>info</string>
+            <skills.Info>
+              <name>info</name>
+              <description>Specific details for objects.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Info>
+          </entry>
+          <entry>
+            <string>inventory</string>
+            <skills.Inventory>
+              <name>inventory</name>
+              <description>Viewing your items.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Inventory>
+          </entry>
+          <entry>
+            <string>list</string>
+            <skills.ListAll>
+              <name>list</name>
+              <description>Informational skill - list things in a category (plants, condis).</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.ListAll>
+          </entry>
+          <entry>
+            <string>look</string>
+            <skills.Look>
+              <name>look</name>
+              <description>Look around.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Look>
+          </entry>
+          <entry>
+            <string>message</string>
+            <skills.Messaging>
+              <name>message</name>
+              <description>Long distance communication.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>SLOT</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>MESSAGE</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Messaging>
+          </entry>
+          <entry>
+            <string>mine</string>
+            <skills.Mine>
+              <name>mine</name>
+              <description>Mining ores.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Mine>
+          </entry>
+          <entry>
+            <string>move</string>
+            <skills.Move>
+              <name>move</name>
+              <description>Move around.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Move>
+          </entry>
+          <entry>
+            <string>nod</string>
+            <skills.Nod>
+              <name>nod</name>
+              <description>Nodding to others, to encourage more details.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Nod>
+          </entry>
+          <entry>
+            <string>open</string>
+            <skills.Open>
+              <name>open</name>
+              <description>Opening doors.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Open>
+          </entry>
+          <entry>
+            <string>punch</string>
+            <skills.Punch>
+              <name>punch</name>
+              <description>Throwing a quick punch.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+              </syntaxList>
+              <intensity>10</intensity>
+              <BASEBALANCE>3000</BASEBALANCE>
+            </skills.Punch>
+          </entry>
+          <entry>
+            <string>put</string>
+            <skills.Put>
+              <name>put</name>
+              <description>Place an item in a container.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>FILLER</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>QUANTITY</processes.Skills_-Syntax>
+              </syntaxList>
+              <originalQty>0</originalQty>
+              <qty>0</qty>
+            </skills.Put>
+          </entry>
+          <entry>
+            <string>roll</string>
+            <skills.RollDice>
+              <name>roll</name>
+              <description>Roll a die or two.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+              </syntaxList>
+              <numOfDice>0</numOfDice>
+              <sidesOfDice>0</sidesOfDice>
+            </skills.RollDice>
+          </entry>
+          <entry>
+            <string>root</string>
+            <skills.Root>
+              <name>root</name>
+              <description>Roots the target in place.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Root>
+          </entry>
+          <entry>
+            <string>salvage</string>
+            <skills.Salvage>
+              <name>salvage</name>
+              <description>Salvaging components of an item.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Salvage>
+          </entry>
+          <entry>
+            <string>say</string>
+            <skills.Say>
+              <name>say</name>
+              <description>Talking to others nearby.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>MESSAGE</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Say>
+          </entry>
+          <entry>
+            <string>shoot</string>
+            <skills.Shoot>
+              <name>shoot</name>
+              <description>A Quick shot or throw.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+              </syntaxList>
+              <intensity>20</intensity>
+            </skills.Shoot>
+          </entry>
+          <entry>
+            <string>skills</string>
+            <skills.SkillList>
+              <name>skills</name>
+              <description>Inventory of your knowledge.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.SkillList>
+          </entry>
+          <entry>
+            <string>sleep</string>
+            <skills.Sleep>
+              <name>sleep</name>
+              <description>Sleeping.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Sleep>
+          </entry>
+          <entry>
+            <string>struggle</string>
+            <skills.Struggle>
+              <name>struggle</name>
+              <description>Struggling out of bonds.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+              </syntaxList>
+              <r serialization="custom">
+                <java.util.Random>
+                  <default>
+                    <seed>135960487430730</seed>
+                    <nextNextGaussian>0.0</nextNextGaussian>
+                    <haveNextNextGaussian>false</haveNextNextGaussian>
+                  </default>
+                </java.util.Random>
+              </r>
+            </skills.Struggle>
+          </entry>
+          <entry>
+            <string>take</string>
+            <skills.TakeOut>
+              <name>take</name>
+              <description>Taking items from containers.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>FILLER</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>QUANTITY</processes.Skills_-Syntax>
+              </syntaxList>
+              <origQty>0</origQty>
+              <qty>0</qty>
+            </skills.TakeOut>
+          </entry>
+          <entry>
+            <string>throw</string>
+            <skills.Throw>
+              <name>throw</name>
+              <description>Throwing items.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+              </syntaxList>
+              <BASEDAMAGE>8</BASEDAMAGE>
+              <BASEBALANCE>3000</BASEBALANCE>
+            </skills.Throw>
+          </entry>
+          <entry>
+            <string>unwield</string>
+            <skills.Unwield>
+              <name>unwield</name>
+              <description>Unwielding items in your hands.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>SLOT</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Unwield>
+          </entry>
+          <entry>
+            <string>vinetrip</string>
+            <skills.VineTrip>
+              <name>vinetrip</name>
+              <description>Unbalance your target briefly.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+              </syntaxList>
+              <BASEBALANCE>2000</BASEBALANCE>
+            </skills.VineTrip>
+          </entry>
+          <entry>
+            <string>wake</string>
+            <skills.Wake>
+              <name>wake</name>
+              <description>Waking from sleep.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+              </syntaxList>
+              <r serialization="custom">
+                <java.util.Random>
+                  <default>
+                    <seed>46462855552768</seed>
+                    <nextNextGaussian>0.0</nextNextGaussian>
+                    <haveNextNextGaussian>false</haveNextNextGaussian>
+                  </default>
+                </java.util.Random>
+              </r>
+            </skills.Wake>
+          </entry>
+          <entry>
+            <string>whip</string>
+            <skills.LightningWhip>
+              <name>whip</name>
+              <description>Powerful magical whip attack.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+              </syntaxList>
+              <intensity>10</intensity>
+            </skills.LightningWhip>
+          </entry>
+          <entry>
+            <string>who</string>
+            <skills.Who>
+              <name>who</name>
+              <description>Shows logged in players.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Who>
+          </entry>
+          <entry>
+            <string>wield</string>
+            <skills.Wield>
+              <name>wield</name>
+              <description>Wielding items.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>SLOT</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Wield>
+          </entry>
+        </skillList>
+        <name>generals</name>
+        <id>2</id>
+      </processes.SkillBook>
+    </entry>
+    <entry>
+      <int>3</int>
+      <processes.SkillBook>
+        <skillList class="tree-map">
+          <entry>
+            <string>attack</string>
+            <skills.Mercenary.Attack>
+              <name>attack</name>
+              <description>Attacking with style.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+              </syntaxList>
+              <intensity>8</intensity>
+              <balAdjust>1.0</balAdjust>
+              <baseBalance>3000</baseBalance>
+            </skills.Mercenary.Attack>
+          </entry>
+          <entry>
+            <string>break</string>
+            <skills.Mercenary.BreakLimb>
+              <name>break</name>
+              <description>Break an arm or leg.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>SLOT</processes.Skills_-Syntax>
+              </syntaxList>
+              <intensity>8</intensity>
+            </skills.Mercenary.BreakLimb>
+          </entry>
+          <entry>
+            <string>clearmind</string>
+            <skills.Mercenary.Clearmind>
+              <name>clearmind</name>
+              <description>Cures mental afflictions</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+              </syntaxList>
+              <COOLDOWNLENGTH>5000</COOLDOWNLENGTH>
+            </skills.Mercenary.Clearmind>
+          </entry>
+          <entry>
+            <string>dualattack</string>
+            <skills.Mercenary.DualAttack>
+              <name>dualattack</name>
+              <description>Attacking with two weapons.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+              </syntaxList>
+              <intensity>8</intensity>
+              <balAdjust>1.0</balAdjust>
+            </skills.Mercenary.DualAttack>
+          </entry>
+          <entry>
+            <string>headshot</string>
+            <skills.Mercenary.Headshot>
+              <name>headshot</name>
+              <description>Careful aim with a ranged weapon.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+              </syntaxList>
+              <intensity>30</intensity>
+            </skills.Mercenary.Headshot>
+          </entry>
+          <entry>
+            <string>intimidate</string>
+            <skills.Mercenary.Intimidate>
+              <name>intimidate</name>
+              <description>Scaring others into fleeing.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Mercenary.Intimidate>
+          </entry>
+          <entry>
+            <string>regen</string>
+            <skills.Mercenary.MercRegenSkill>
+              <name>regen</name>
+              <description>Resisting damage.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Mercenary.MercRegenSkill>
+          </entry>
+          <entry>
+            <string>shieldblock</string>
+            <skills.Mercenary.Shieldblock>
+              <name>shieldblock</name>
+              <description>Careful guard against attacks.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Mercenary.Shieldblock>
+          </entry>
+          <entry>
+            <string>shove</string>
+            <skills.Mercenary.Shove>
+              <name>shove</name>
+              <description>Push someone forcefully into another location.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>DIRECTION</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Mercenary.Shove>
+          </entry>
+          <entry>
+            <string>spinkick</string>
+            <skills.Mercenary.SpinKick>
+              <name>spinkick</name>
+              <description>Dizzy causing kick.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+              </syntaxList>
+              <intensity>8</intensity>
+            </skills.Mercenary.SpinKick>
+          </entry>
+          <entry>
+            <string>staunch</string>
+            <skills.Mercenary.Staunch>
+              <name>staunch</name>
+              <description>Cures bleeding, a little at a time.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Mercenary.Staunch>
+          </entry>
+          <entry>
+            <string>straighten</string>
+            <skills.Mercenary.Straighten>
+              <name>straighten</name>
+              <description>Splinting of a broken arm or leg.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>SLOT</processes.Skills_-Syntax>
+              </syntaxList>
+              <affectedList>
+                <entry>
+                  <string>lefthand</string>
+                  <effects.PassiveCondition>BROKENLEFTARM</effects.PassiveCondition>
+                </entry>
+                <entry>
+                  <string>legs</string>
+                  <effects.PassiveCondition>BROKENLEGS</effects.PassiveCondition>
+                </entry>
+                <entry>
+                  <string>righthand</string>
+                  <effects.PassiveCondition>BROKENRIGHTARM</effects.PassiveCondition>
+                </entry>
+              </affectedList>
+            </skills.Mercenary.Straighten>
+          </entry>
+        </skillList>
+        <name>mercenary</name>
+        <id>3</id>
+      </processes.SkillBook>
+    </entry>
+    <entry>
+      <int>4</int>
+      <processes.SkillBook>
+        <skillList class="tree-map">
+          <entry>
+            <string>goto</string>
+            <skills.GoTo>
+              <name>goto</name>
+              <description>Teleport to someone.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.GoTo>
+          </entry>
+        </skillList>
+        <name>admin</name>
+        <id>4</id>
+      </processes.SkillBook>
+    </entry>
+    <entry>
+      <int>5</int>
+      <processes.SkillBook>
+        <skillList class="tree-map">
+          <entry>
+            <string>alter</string>
+            <skills.Arcanist.Commands.ArcanistAlter>
+              <name>alter</name>
+              <description>Altering the spell you are scribing: Alter [component] [desired]</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>ITEM</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Arcanist.Commands.ArcanistAlter>
+          </entry>
+          <entry>
+            <string>analyze</string>
+            <skills.Arcanist.Commands.ArcanistAnalyze>
+              <name>analyze</name>
+              <description>Referencing the current state of your spell-to-be.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Arcanist.Commands.ArcanistAnalyze>
+          </entry>
+          <entry>
+            <string>complete</string>
+            <skills.Arcanist.Commands.ArcanistComplete>
+              <name>complete</name>
+              <description>Finishing a new spell you&apos;ve been scribing via CREAT and ALTER.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Arcanist.Commands.ArcanistComplete>
+          </entry>
+          <entry>
+            <string>components</string>
+            <skills.Arcanist.Commands.ArcanistComponents>
+              <name>components</name>
+              <description>Displays available components and their workings</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>COMPONENT</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Arcanist.Commands.ArcanistComponents>
+          </entry>
+          <entry>
+            <string>create</string>
+            <skills.Arcanist.Commands.ArcanistCreate>
+              <name>create</name>
+              <description>Start building a new spell: create [spellname]</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Arcanist.Commands.ArcanistCreate>
+          </entry>
+          <entry>
+            <string>delete</string>
+            <skills.Arcanist.Commands.ArcanistDelete>
+              <name>delete</name>
+              <description>Regaining space in your spellbook.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Arcanist.Commands.ArcanistDelete>
+          </entry>
+          <entry>
+            <string>modify</string>
+            <skills.Arcanist.Commands.ArcanistModify>
+              <name>modify</name>
+              <description>Prepares a spell to be altered.</description>
+              <syntaxList>
+                <processes.Skills_-Syntax>SKILL</processes.Skills_-Syntax>
+                <processes.Skills_-Syntax>TARGET</processes.Skills_-Syntax>
+              </syntaxList>
+            </skills.Arcanist.Commands.ArcanistModify>
+          </entry>
+        </skillList>
+        <name>arcanist</name>
+        <id>5</id>
+      </processes.SkillBook>
+    </entry>
+    <entry>
+      <int>6</int>
+      <skills.Arcanist.ArcanistSkillbook>
+        <skillList class="tree-map"/>
+        <name>spells</name>
+        <id>6</id>
+      </skills.Arcanist.ArcanistSkillbook>
+    </entry>
+  </AllSkillBooks>
+  <maxLocationId>42</maxLocationId>
+  <classToBooks class="tree-map">
+    <entry>
+      <string>admin</string>
+      <list>
+        <processes.SkillBook reference="../../../../AllSkillBooks/entry[5]/processes.SkillBook"/>
+        <processes.SkillBook reference="../../../../AllSkillBooks/entry[3]/processes.SkillBook"/>
+        <processes.SkillBook reference="../../../../AllSkillBooks/entry[4]/processes.SkillBook"/>
+        <processes.SkillBook reference="../../../../AllSkillBooks/entry/processes.SkillBook"/>
+        <processes.SkillBook reference="../../../../AllSkillBooks/entry[2]/processes.SkillBook"/>
+        <skills.Arcanist.ArcanistSkillbook reference="../../../../AllSkillBooks/entry[6]/skills.Arcanist.ArcanistSkillbook"/>
+        <skills.Arcanist.ArcanistSkillbook reference="../../../../AllSkillBooks/entry[6]/skills.Arcanist.ArcanistSkillbook"/>
+      </list>
+    </entry>
+    <entry>
+      <string>arcanist</string>
+      <list>
+        <processes.SkillBook reference="../../../../AllSkillBooks/entry/processes.SkillBook"/>
+        <processes.SkillBook reference="../../../../AllSkillBooks/entry[2]/processes.SkillBook"/>
+        <processes.SkillBook reference="../../../../AllSkillBooks/entry[5]/processes.SkillBook"/>
+        <skills.Arcanist.ArcanistSkillbook reference="../../../../AllSkillBooks/entry[6]/skills.Arcanist.ArcanistSkillbook"/>
+      </list>
+    </entry>
+    <entry>
+      <string>mercenary</string>
+      <list>
+        <processes.SkillBook reference="../../../../AllSkillBooks/entry/processes.SkillBook"/>
+        <processes.SkillBook reference="../../../../AllSkillBooks/entry[2]/processes.SkillBook"/>
+        <processes.SkillBook reference="../../../../AllSkillBooks/entry[3]/processes.SkillBook"/>
+      </list>
+    </entry>
+  </classToBooks>
+  <gameStateSaveName>gamestate</gameStateSaveName>
+</GameState>
